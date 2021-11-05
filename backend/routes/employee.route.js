@@ -5,11 +5,12 @@ const employeeControllers = require("../controllers/employee.controller");
 // Router-level middleware
 router.param("employeeId", employeeControllers.getEmployeeById);
 // router.get("/employee/:employeeId", employeeControllers.getOneEmployee);
-router.get("/employee", employeeControllers.getAllEmployee);
-router.post("/employee/create", employeeControllers.createEmployee);
+router.get("/getAll", employeeControllers.getAllEmployee);
+router.post("/create", employeeControllers.createEmployee);
+router.delete("/:employeeId/delete", employeeControllers.deleteEmployee);
+router.patch("/deleteall", employeeControllers.deleteAllEmployee);
+router.put("/:employeeId/put", employeeControllers.putemployee);
 // router.post("/employee/createmultipleemployee", employeeControllers.createMultipleEmployee);
-// router.put("/employee/:employeeId/put", employeeControllers.putemployee);
-// router.delete("/employee/:employeeId/delete", employeeControllers.deletEemployee);
-// router.patch("/employee/deleteall", employeeControllers.deleteMultiplEemployee);
+
 
 module.exports = router;
