@@ -4,13 +4,14 @@ const Schema = mongoose.Schema;
 const validator = require("validator");
 
 // https://mongoosejs.com/docs/schematypes.html
+// https://docs.mongodb.com/manual/reference/operator/aggregation/strLenCP/
 const employeeSchema = new Schema({
   name: {
     type: String,
     required: true,
     default: "Employee",
     minlength: 2,
-    maxlength: 10,
+    maxlength: 150,
   },
   gender: {
     type: String,
@@ -43,10 +44,14 @@ const employeeSchema = new Schema({
   },
   role: {
     type: String,
+    max: 10,
+    default: "Employee",
   },
   isDeleted: {
     type: Boolean,
+    default: false,
   },
 });
 
+// Collection name that will appear in MongoDB
 module.exports = mongoose.model("employee", employeeSchema);

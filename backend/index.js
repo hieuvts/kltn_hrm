@@ -35,8 +35,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.use("/api", employeeRoute);
 app.use("/api",departmentRoute)
+app.use("/api", employeeRoute);
 app.get("/testapi", (req, res) => {
   res.send("Hello World!!!");
 });
