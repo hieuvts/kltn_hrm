@@ -10,8 +10,9 @@ const getEmployeeById = async (req, res, next, employeeId) => {
       res.status(404).json({
         message: "[ERROR] [Controller] Employee not found!",
       });
+      return;
     } else {
-      console.log("[ERROR] [get] Failed!");
+      console.log("Employee found!");
     }
     req.employee = result;
     next();
@@ -66,6 +67,9 @@ const createEmployee = async (req, res) => {
 
 const putEmployee = async (req, res) => {
   const employee = req.employee;
+  // typeof req.body.name === "undefined"
+  //   ? (employee.name = employee.name)
+  //   : (employee.name = req.body.name);
   typeof req.body.name !== "undefined" && (employee.name = req.body.name);
   typeof req.body.gender !== "undefined" && (employee.gender = req.body.gender);
   typeof req.body.dateOfBirth !== "undefined" &&
@@ -93,19 +97,42 @@ const putEmployee = async (req, res) => {
   });
 };
 
+// findOneAndDelete() returns the deleted document after having deleted it
+// (in case you need its contents after the delete operation);
+// deleteOne() is used to delete a single document
+// remove() is a deprecated function and has been replaced by deleteOne()
+// (to delete a single document) and deleteMany() (to delete multiple documents)
+// findOneAndDelete() should be able to delete on _id.
+
 const deleteEmployee = async (req, res) => {
-  console.log("Invoked deleteEmployee");
+  // console.log("Invoked deleteEmployee");
   // Take req.employee value from previous function "getEmployeeById"
   const employee = req.employee;
-  employee.remove((error, result) => {
+  // employee.remove((error, result) => {
+  //   if (error || !result) {
+  //     res
+  //       .status(400)
+  //       .json({ message: "[ERROR] [delete] Something went wrong" });
+  //   } else {
+  //     res.status(200).json({
+  //       message: "Delete employee successfully!",
+  //       deletedEmployee: employee,
+  //     });
+  //   }
+  // });
+
+  // result= `1` if MongoDB deleted a doc,
+  // `0` if no docs matched the filter `{ name: ... }`
+  Employee.deleteOne({ _id: employee._id }, (error, result) => {
     if (error || !result) {
-      res
-        .status(400)
-        .json({ message: "[ERROR] [delete] Something went wrong" });
+      res.status(400).json({
+        message: "Can't delete!!!",
+        error: error,
+      });
     } else {
       res.status(200).json({
-        message: "Delete employee successfully!",
-        deletedEmployee: employee,
+        message: "Delete successfully!",
+        result: result,
       });
     }
   });
@@ -135,4 +162,5 @@ module.exports = {
   createEmployee,
   deleteEmployee,
   deleteAllEmployee,
+  putEmployee,
 };
