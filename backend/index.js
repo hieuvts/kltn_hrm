@@ -34,7 +34,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.use("/api", employeeRoute);
+app.use("/api/employee", employeeRoute);
 app.get("/testapi", (req, res) => {
   res.send("Hello World!!!");
 });
