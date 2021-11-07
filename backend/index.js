@@ -4,6 +4,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const employeeRoute = require("./routes/employee.route");
+const departmentRoute = require("./routes/department.route")
 const app = express();
 app.use(cors());
 // Parses incoming requests with JSON payloads and is based on body-parser
@@ -34,7 +35,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.use("/api/employee", employeeRoute);
+app.use("/api",departmentRoute)
+app.use("/api", employeeRoute);
 app.get("/testapi", (req, res) => {
   res.send("Hello World!!!");
 });
