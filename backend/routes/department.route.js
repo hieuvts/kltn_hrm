@@ -8,8 +8,8 @@ router.param("departmentID", departmentControllers.getDepartmentById);
 router.get("/department", departmentControllers.getAllDepartment);
 router.post("/department/create", departmentControllers.createDepartment);
 // router.post("/employee/createmultipleemployee", employeeControllers.createMultipleEmployee);
-// router.put("/employee/:employeeId/put", employeeControllers.putemployee);
-// router.delete("/employee/:employeeId/delete", employeeControllers.deletEemployee);
-// router.patch("/employee/deleteall", employeeControllers.deleteMultiplEemployee);
+router.put("/department/:departmentID/put", departmentControllers.putDepartment);
+router.delete("/department/:departmentID/delete", departmentControllers.deleteDepartment);
+router.patch("/department/deleteall", departmentControllers.deleteAllDepartment);
 
 module.exports = router;
