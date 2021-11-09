@@ -1,11 +1,11 @@
-const project = require("../models/project.model");
+const Project = require("../models/project.model");
 
 const getprojectById = async (req, res, next, projectId) => {
   // Get project details from project model and
   // attach to request object
   // https://expressjs.com/en/4x/api.html#router.param
   console.log("Trigger getprojectByID");
-  project.findById(projectId).exec((error, result) => {
+  Project.findById(projectId).exec((error, result) => {
     if (error || !result) {
       res.status(404).json({
         message: "[ERROR] [Controller] project not found!",
@@ -35,7 +35,7 @@ const getOneproject = async (req, res) => {
 
 const getAllproject = async (req, res) => {
   console.log("Trigger getAllproject");
-  const projects = await project.find();
+  const projects = await Project.find();
   if (projects) {
     res.status(200).json({
       message: "Get all project successfully!",
@@ -50,7 +50,7 @@ const getAllproject = async (req, res) => {
 
 const createproject = async (req, res) => {
   console.log("Invoked createproject");
-  const project = new project(req.body);
+  const project = new Project(req.body);
   project.save((error, result) => {
     if (error || !result) {
       res.status(400).json({
@@ -77,7 +77,7 @@ const putproject = async (req, res) => {
   typeof req.body.isDeleted !== "undefined" &&
     (project.isDeleted = req.body.isDeleted);
 
-  project.save((error, result) => {
+  Project.save((error, result) => {
     if (error || !result) {
       return res.status(400).json({
         message: "[UPDATE] Something went wrong",
@@ -117,7 +117,7 @@ const deleteproject = async (req, res) => {
 
   // result= `1` if MongoDB deleted a doc,
   // `0` if no docs matched the filter `{ name: ... }`
-  project.deleteOne({ _id: project._id }, (error, result) => {
+  Project.deleteOne({ _id: project._id }, (error, result) => {
     if (error || !result) {
       res.status(400).json({
         message: "Can't delete!!!",
@@ -138,7 +138,7 @@ const deleteAllproject = async (req, res) => {
   // Removes all documents that match the filter from a collection.
   // To delete all documents in a collection,
   // pass in an empty document ({ }).
-  project.deleteMany((error, result) => {
+  Project.deleteMany((error, result) => {
     if (error || !result) {
       return res.status(400).json({
         message: "[ERROR] [deleteAll] Something went wrong",

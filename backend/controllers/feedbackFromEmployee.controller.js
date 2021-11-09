@@ -1,4 +1,4 @@
-const FeedbackFromEmployee = require("../models/FeedbackFromEmployee.model");
+const FeedbackFromEmployee = require("../models/feedbackfromemployee.model");
 
 // GET BY ID
 const getFeedbackFromEmployeeById = async (req, res, next, FeedbackFromEmployeeId) => {
@@ -6,7 +6,7 @@ const getFeedbackFromEmployeeById = async (req, res, next, FeedbackFromEmployeeI
   // attach to request object
   // https://expressjs.com/en/4x/api.html#router.param
   console.log("Trigger getFeedbackFromEmployeeByID");
-  FeedbackFromEmployee.findById(FeedbackFromEmployeeId).exec((error, result) => {
+  feedbackFromEmployee.findById(FeedbackFromEmployeeId).exec((error, result) => {
     if (error || !result) {
       res.status(404).json({
         message: "[ERROR] [Controller] FeedbackFromEmployee not found!",
@@ -21,11 +21,11 @@ const getFeedbackFromEmployeeById = async (req, res, next, FeedbackFromEmployeeI
 
 // GET ALL
 const getAllFeedbackFromEmployee = async (req, res) => {
-  const FeedbackFromEmployees = await FeedbackFromEmployee.find();
-  if (FeedbackFromEmployees) {
+  const feedbackFromEmployees = await FeedbackFromEmployee.find();
+  if (feedbackFromEmployees) {
     res.status(200).json({
       message: "Get all FeedbackFromEmployee successfully!",
-      FeedbackFromEmployees: FeedbackFromEmployees,
+      feedbackFromEmployees: feedbackFromEmployees,
     });
   } else {
     res.status(400).json({
@@ -37,8 +37,8 @@ const getAllFeedbackFromEmployee = async (req, res) => {
 // Create FeedbackFromEmployee
 const createFeedbackFromEmployee = async (req, res) => {
   console.log("Invoked create FeedbackFromEmployee");
-  const FeedbackFromEmployee = new FeedbackFromEmployee(req.body);
-  FeedbackFromEmployee.save((error, result) => {
+  const feedbackFromEmployee = new FeedbackFromEmployee(req.body);
+  feedbackFromEmployee.save((error, result) => {
     if (error || !result) {
       res.status(400).json({
         message: "[ERROR] [post] ",
@@ -54,18 +54,18 @@ const createFeedbackFromEmployee = async (req, res) => {
 
 // Update FeedbackFromEmployee
 const putFeedbackFromEmployee = async (req, res) => {
-  const FeedbackFromEmployee = req.FeedbackFromEmployee;
+  const feedbackFromEmployee = req.FeedbackFromEmployee;
   // typeof req.body.name === "undefined"
   //   ? (FeedbackFromEmployee.name = FeedbackFromEmployee.name)
   //   : (FeedbackFromEmployee.name = req.body.name);
-  typeof req.body.title !== "undefined" && (FeedbackFromEmployee.name = req.body.title);
-  typeof req.body.content !== "undefined" && (FeedbackFromEmployee.content = req.body.content);
+  typeof req.body.title !== "undefined" && (feedbackFromEmployee.name = req.body.title);
+  typeof req.body.content !== "undefined" && (feedbackFromEmployee.content = req.body.content);
   typeof req.body.dateOfBirth !== "undefined" &&
-    (FeedbackFromEmployee.employeeID = req.body.employeeID);
+    (feedbackFromEmployee.employeeID = req.body.employeeID);
   typeof req.body.isDeleted !== "undefined" &&
-    (FeedbackFromEmployee.isDeleted = req.body.isDeleted);
+    (feedbackFromEmployee.isDeleted = req.body.isDeleted);
 
-  FeedbackFromEmployee.save((error, result) => {
+    feedbackFromEmployee.save((error, result) => {
     if (error || !result) {
       return res.status(400).json({
         message: "[UPDATE] Something went wrong",
@@ -81,9 +81,9 @@ const putFeedbackFromEmployee = async (req, res) => {
 
 // Delete one FeedbackFromEmployee
 const deleteFeedbackFromEmployee = async (req, res ) => {
-  const FeedbackFromEmployee = req.FeedbackFromEmployee;
+  const feedbackFromEmployee = req.FeedbackFromEmployee;
 
-  FeedbackFromEmployee.deleteOne({ _id: FeedbackFromEmployee._id }, (error, result) => {
+  feedbackFromEmployee.deleteOne({ _id: FeedbackFromEmployee._id }, (error, result) => {
     if (error || !result) {
       res.status(400).json({
         message: "Can't delete!!!",

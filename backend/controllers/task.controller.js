@@ -1,11 +1,11 @@
-const task = require("../models/task.model");
+const Task = require("../models/task.model");
 
 const gettaskById = async (req, res, next, taskId) => {
   // Get task details from task model and
   // attach to request object
   // https://expressjs.com/en/4x/api.html#router.param
   console.log("Trigger gettaskByID");
-  task.findById(taskId).exec((error, result) => {
+  Task.findById(taskId).exec((error, result) => {
     if (error || !result) {
       res.status(404).json({
         message: "[ERROR] [Controller] task not found!",
@@ -35,7 +35,7 @@ const getOnetask = async (req, res) => {
 
 const getAlltask = async (req, res) => {
   console.log("Trigger getAlltask");
-  const tasks = await task.find();
+  const tasks = await Task.find();
   if (tasks) {
     res.status(200).json({
       message: "Get all task successfully!",
@@ -50,7 +50,7 @@ const getAlltask = async (req, res) => {
 
 const createtask = async (req, res) => {
   console.log("Invoked createtask");
-  const task = new task(req.body);
+  const task = new Task(req.body);
   task.save((error, result) => {
     if (error || !result) {
       res.status(400).json({
@@ -66,7 +66,7 @@ const createtask = async (req, res) => {
 };
 
 const puttask = async (req, res) => {
-  const task = req.task;
+  const task = req.Task;
   // typeof req.body.name === "undefined"
   //   ? (task.name = task.name)
   //   : (task.name = req.body.name);
@@ -142,7 +142,7 @@ const deleteAlltask = async (req, res) => {
   // Removes all documents that match the filter from a collection.
   // To delete all documents in a collection,
   // pass in an empty document ({ }).
-  task.deleteMany((error, result) => {
+  Task.deleteMany((error, result) => {
     if (error || !result) {
       return res.status(400).json({
         message: "[ERROR] [deleteAll] Something went wrong",

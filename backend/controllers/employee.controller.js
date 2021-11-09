@@ -79,7 +79,7 @@ const putEmployee = async (req, res) => {
   typeof req.body.email !== "undefined" && (employee.email = req.body.email);
   typeof req.body.address !== "undefined" &&
     (employee.address = req.body.address);
-  typeof req.body.role !== "undefined" && (employee.role = req.body.role);
+  typeof req.body.roleID !== "undefined" && (employee.roleID = req.body.roleID);
   typeof req.body.isDeleted !== "undefined" &&
     (employee.isDeleted = req.body.isDeleted);
 

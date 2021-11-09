@@ -19,7 +19,7 @@ const feedbackFromEmployeeScheema = new Schema({
         maxlength: 1000
     },
     employeeID: {
-        type: string,
+        type: String,
         default: "",
         required: true
     },
@@ -27,4 +27,4 @@ const feedbackFromEmployeeScheema = new Schema({
         type: Boolean
     }
 });
-module.exports = mongoose.model("feedbackFromEmployee", feedbackFromEmployeeScheema);
+module.exports = mongoose.model("feedbackfromemployee", feedbackFromEmployeeScheema);
