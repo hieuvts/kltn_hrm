@@ -66,18 +66,22 @@ const createproject = async (req, res) => {
 };
 
 const putproject = async (req, res) => {
-  const project = req.project;
+  const project = req.Project;
   // typeof req.body.name === "undefined"
   //   ? (project.name = project.name)
   //   : (project.name = req.body.name);
-  typeof req.body.projectname !== "undefined" && (project.projectname = req.body.projectname);
-  typeof req.body.customer !== "undefined" && (project.customer = req.body.customer);
-  typeof req.body.startDate !== "undefined" &&
-    (project.startDate = req.body.startDate);
+  typeof req.body.name !== "undefined" && (project.name = req.body.name);
+  typeof req.body.volume !== "undefined" && (project.volume = req.body.volume);
+  typeof req.body.employeeID !== "undefined" &&
+    (project.employeeID = req.body.employeeID);
+  typeof req.body.difficulty !== "undefined" &&
+    (project.difficulty = req.body.difficulty);
+  typeof req.body.projectID !== "undefined" && (project.projectID = req.body.projectID);
+  typeof req.body.role !== "undefined" && (project.role = req.body.role);
   typeof req.body.isDeleted !== "undefined" &&
     (project.isDeleted = req.body.isDeleted);
 
-  Project.save((error, result) => {
+  project.save((error, result) => {
     if (error || !result) {
       return res.status(400).json({
         message: "[UPDATE] Something went wrong",
@@ -85,7 +89,7 @@ const putproject = async (req, res) => {
       });
     }
     res.json({
-      message: "Update project successfully",
+      message: "Update user successfully",
       project: project,
     });
   });
@@ -99,7 +103,7 @@ const putproject = async (req, res) => {
 // findOneAndDelete() should be able to delete on _id.
 
 const deleteproject = async (req, res) => {
-  // console.log("Invoked deleteproject");
+   console.log("Invoked deleteproject");
   // Take req.project value from previous function "getprojectById"
   const project = req.project;
   // project.remove((error, result) => {
@@ -117,7 +121,7 @@ const deleteproject = async (req, res) => {
 
   // result= `1` if MongoDB deleted a doc,
   // `0` if no docs matched the filter `{ name: ... }`
-  Project.deleteOne({ _id: project._id }, (error, result) => {
+  project.deleteOne({ _id: project._id }, (error, result) => {
     if (error || !result) {
       res.status(400).json({
         message: "Can't delete!!!",

@@ -103,9 +103,9 @@ const puttask = async (req, res) => {
 // findOneAndDelete() should be able to delete on _id.
 
 const deletetask = async (req, res) => {
-  // console.log("Invoked deletetask");
+   console.log("Invoked deletetask");
   // Take req.task value from previous function "gettaskById"
-  const task = req.task;
+  const task = req.Task;
   // task.remove((error, result) => {
   //   if (error || !result) {
   //     res
@@ -121,7 +121,7 @@ const deletetask = async (req, res) => {
 
   // result= `1` if MongoDB deleted a doc,
   // `0` if no docs matched the filter `{ name: ... }`
-  task.deleteOne({ _id: task._id }, (error, result) => {
+  Task.deleteOne({ _id: Task._id }, (error, result) => {
     if (error || !result) {
       res.status(400).json({
         message: "Can't delete!!!",

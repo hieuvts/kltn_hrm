@@ -47,6 +47,16 @@ const employeeSchema = new Schema({
     max: 10,
     default: "roleID",
   },
+  departmentID:{
+    type: String,
+    max: 10,
+    default: "departmentID",
+  },
+  projectID:{
+    type: String,
+    max: 10,
+    default: "projectID",
+  },
   isDeleted: {
     type: Boolean,
     default: false,

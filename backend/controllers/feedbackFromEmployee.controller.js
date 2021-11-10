@@ -6,7 +6,7 @@ const getFeedbackFromEmployeeById = async (req, res, next, FeedbackFromEmployeeI
   // attach to request object
   // https://expressjs.com/en/4x/api.html#router.param
   console.log("Trigger getFeedbackFromEmployeeByID");
-  feedbackFromEmployee.findById(FeedbackFromEmployeeId).exec((error, result) => {
+  FeedbackFromEmployee.findById(FeedbackFromEmployeeId).exec((error, result) => {
     if (error || !result) {
       res.status(404).json({
         message: "[ERROR] [Controller] FeedbackFromEmployee not found!",
@@ -60,7 +60,7 @@ const putFeedbackFromEmployee = async (req, res) => {
   //   : (FeedbackFromEmployee.name = req.body.name);
   typeof req.body.title !== "undefined" && (feedbackFromEmployee.name = req.body.title);
   typeof req.body.content !== "undefined" && (feedbackFromEmployee.content = req.body.content);
-  typeof req.body.dateOfBirth !== "undefined" &&
+  typeof req.body.employeeID !== "undefined" &&
     (feedbackFromEmployee.employeeID = req.body.employeeID);
   typeof req.body.isDeleted !== "undefined" &&
     (feedbackFromEmployee.isDeleted = req.body.isDeleted);

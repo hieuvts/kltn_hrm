@@ -105,7 +105,7 @@ const putEmployee = async (req, res) => {
 // findOneAndDelete() should be able to delete on _id.
 
 const deleteEmployee = async (req, res) => {
-  // console.log("Invoked deleteEmployee");
+  //console.log("Invoked deleteEmployee");
   // Take req.employee value from previous function "getEmployeeById"
   const employee = req.employee;
   // employee.remove((error, result) => {
