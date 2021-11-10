@@ -82,7 +82,6 @@ const putDepartment = async (req, res) => {
 // Delete one Department
 const deleteDepartment = async (req, res ) => {
   const department = req.department;
-
   department.deleteOne({ _id: department._id }, (error, result) => {
     if (error || !result) {
       res.status(400).json({

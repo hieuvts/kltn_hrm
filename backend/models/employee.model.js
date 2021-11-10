@@ -42,10 +42,20 @@ const employeeSchema = new Schema({
     required: true,
     max: 150,
   },
-  role: {
+  roleID: {
     type: String,
     max: 10,
-    default: "Employee",
+    default: "roleID",
+  },
+  departmentID:{
+    type: String,
+    max: 10,
+    default: "departmentID",
+  },
+  projectID:{
+    type: String,
+    max: 10,
+    default: "projectID",
   },
   isDeleted: {
     type: Boolean,

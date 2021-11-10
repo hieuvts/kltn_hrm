@@ -79,7 +79,7 @@ const putEmployee = async (req, res) => {
   typeof req.body.email !== "undefined" && (employee.email = req.body.email);
   typeof req.body.address !== "undefined" &&
     (employee.address = req.body.address);
-  typeof req.body.role !== "undefined" && (employee.role = req.body.role);
+  typeof req.body.roleID !== "undefined" && (employee.roleID = req.body.roleID);
   typeof req.body.isDeleted !== "undefined" &&
     (employee.isDeleted = req.body.isDeleted);
 
@@ -105,7 +105,7 @@ const putEmployee = async (req, res) => {
 // findOneAndDelete() should be able to delete on _id.
 
 const deleteEmployee = async (req, res) => {
-  // console.log("Invoked deleteEmployee");
+  //console.log("Invoked deleteEmployee");
   // Take req.employee value from previous function "getEmployeeById"
   const employee = req.employee;
   // employee.remove((error, result) => {

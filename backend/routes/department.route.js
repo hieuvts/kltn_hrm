@@ -3,13 +3,13 @@ const router = express.Router();
 const departmentControllers = require("../controllers/department.controller");
 
 // Router-level middleware
-router.param("departmentID", departmentControllers.getDepartmentById);
-// router.get("/employee/:employeeId", employeeControllers.getOneEmployee);
-router.get("/department", departmentControllers.getAllDepartment);
-router.post("/department/create", departmentControllers.createDepartment);
-// router.post("/employee/createmultipleemployee", employeeControllers.createMultipleEmployee);
-router.put("/department/:departmentID/put", departmentControllers.putDepartment);
-router.delete("/department/:departmentID/delete", departmentControllers.deleteDepartment);
-router.patch("/department/deleteall", departmentControllers.deleteAllDepartment);
+router.param("departmentId", departmentControllers.getDepartmentById);
+// router.get("/department/:departmentId", departmentControllers.getOnedepartment);
+router.get("/getAll", departmentControllers.getAllDepartment);
+router.post("/create", departmentControllers.createDepartment);
+router.delete("/:departmentId/delete", departmentControllers.deleteDepartment);
+router.patch("/deleteall", departmentControllers.deleteAllDepartment);
+router.put("/:departmentId/put", departmentControllers.putDepartment);
+// router.post("/department/createmultipledepartment", departmentControllers.createMultipledepartment);
 
 module.exports = router;
