@@ -6,8 +6,8 @@ import { padding, typography } from '@mui/system';
 import { createTheme } from '@mui/system';
 import { create } from '@mui/material/styles/createTransitions';
 import { ThemeProvider } from '@emotion/react';
-function Login() {
-    const paperstyle = { padding: 20, height: '60vh', width: 300, margin: "100px auto" };
+function Login({handleChange}) {
+    const paperstyle = { padding: 20, height: '66vh', width: 310, margin: "0 auto" };
     const avatarStyle = { backgroundColor: '#5048E4' };
     const inputStyle = { marginTop: "8px"};
     const buttonStyle ={backgroundColor: '#5048E4'}
@@ -33,7 +33,7 @@ function Login() {
                     <Link style={{ textDecoration: 'none' }} href="#">Quên mật khẩu ?</Link>
                 </Typography>
                 <Typography> Đăng nhập hoặc 
-                    <Link style={{ textDecoration: 'none' }}  href="#"> Đăng ký ngay</Link>
+                    <Link style={{ textDecoration: 'none' }}  href="#" onClick={()=> handleChange("evnet",1)}> Đăng ký ngay</Link>
                 </Typography>
             </Paper>
         </Grid>
