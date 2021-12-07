@@ -1,11 +1,8 @@
 import React from "react";
 import { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+
+import { Link } from "react-router-dom";
+
 import {
   Toolbar,
   IconButton,
@@ -25,28 +22,18 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import SearchIcon from "@mui/icons-material/Search";
-import { styled, alpha, useTheme } from "@mui/material/styles";
 
-import "./App.css";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import Apartment from "@mui/icons-material/Apartment";
+import Engineering from "@mui/icons-material/Engineering";
+import Mode from "@mui/icons-material/Mode";
+import Error from "@mui/icons-material/Error";
+import SearchIcon from "@mui/icons-material/Search";
+
+import { styled, alpha, useTheme } from "@mui/material/styles";
 
 const drawerWidth = 240;
 
-const customeTheme = createTheme({
-  palette: {
-    warning: {
-      // This is green.A700 as hex.
-      main: "#11cb5f",
-    },
-    hieu12: {
-      // This is green.A700 as hex.
-      main: "#fd4faf",
-    },
-  },
-});
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -107,7 +94,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   })
 );
 
-const AppBar = styled(MuiAppBar, {
+const MyDrawer = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
   transition: theme.transitions.create(["margin", "width"], {
@@ -133,10 +120,43 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   justifyContent: "flex-end",
 }));
 
-function App() {
+const pageList = [
+  {
+    title: "Dashboard",
+    path: "/",
+    icon: <DashboardIcon />,
+    className: "nav-text",
+  },
+  {
+    title: "Employee",
+    path: "/employee",
+    icon: <Engineering />,
+    className: "nav-text",
+  },
+  {
+    title: "Department",
+    path: "/department",
+    icon: <Apartment />,
+    className: "nav-text",
+  },
+  {
+    title: "Others",
+    path: "/others",
+    icon: <Mode />,
+    className: "nav-text",
+  },
+  {
+    title: "404",
+    path: "/404",
+    icon: <Error />,
+    className: "nav-text",
+  },
+];
+
+export default function AppBarComponent() {
   const theme = useTheme();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+  const [title, setTitle] = useState("HRM");
   const handleDrawerOpen = () => {
     setIsDrawerOpen(true);
   };
@@ -146,13 +166,13 @@ function App() {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed">
+      <MyDrawer position="fixed">
         <Toolbar>
           <IconButton
             size="large"
             color="inherit"
             aria-label="menu"
-            sx={{...(isDrawerOpen && { display: "none" }) }}
+            sx={{ ...(isDrawerOpen && { display: "none" }) }}
             onClick={handleDrawerOpen}
           >
             <MenuIcon />
@@ -170,9 +190,9 @@ function App() {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          <Button color="inherit">LOGIN</Button>
+          <Button variant="contained">LOGIN</Button>
         </Toolbar>
-      </AppBar>
+      </MyDrawer>
       <Drawer
         sx={{
           width: drawerWidth,
@@ -198,36 +218,27 @@ function App() {
         </DrawerHeader>
         <Divider />
         <List sx={{ backgroundColor: "#1976d2", color: "white" }}>
-          {["Dashboard", "Employee", "Department", "Others"].map(
-            (text, index) => (
-              <ListItem button key={text}>
+          {pageList.map((page, index) => (
+            <Link to={page.path}>
+              <ListItem
+                button
+                key={index}
+                onClick={() =>
+                  console.log(`Debug nav ${page.title}, ${page.path}`)
+                }
+              >
                 <ListItemIcon
                   sx={{ backgroundColor: "#1976d2", color: "white" }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {page.icon}
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText primary={page.title} />
               </ListItem>
-            )
-          )}
+            </Link>
+          ))}
         </List>
       </Drawer>
-      <Main open={isDrawerOpen}>
-        <DrawerHeader />
-        <Typography paragraph>
-          Dolore sunt exercitation sint exercitation cupidatat velit. Pariatur
-          nisi excepteur aliquip aute cupidatat anim ad ex anim ipsum. Nostrud
-          aliquip veniam excepteur mollit reprehenderit.
-        </Typography>
-        <h1 style={{ color: "blue" }}>Admin Dashboard</h1>
-        <ThemeProvider theme={customeTheme}>
-          <Button color="warning">Warning</Button>
-          <Button color="primary">Primary</Button>
-          <Button color="hieu12">hieu12</Button>
-        </ThemeProvider>
-      </Main>
+      <Main open={isDrawerOpen}></Main>
     </Box>
   );
 }
-
-export default App;

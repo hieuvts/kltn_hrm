@@ -1,11 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter } from "react-router-dom";
+import MyDrawer from "./components/MyDrawer";
+import App from "./App.jsx";
+import CssBaseline from "@mui/material/CssBaseline";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+  <App />,
 
+  document.getElementById("root")
+);
