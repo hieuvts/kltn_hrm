@@ -30,6 +30,8 @@ import Mode from "@mui/icons-material/Mode";
 import Error from "@mui/icons-material/Error";
 import SearchIcon from "@mui/icons-material/Search";
 
+import { FcAssistant } from "react-icons/fc";
+
 import { styled, alpha, useTheme } from "@mui/material/styles";
 
 const Search = styled("div")(({ theme }) => ({
@@ -197,7 +199,7 @@ export default function AppBarComponent() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" sx={{ flexGrow: 1 }} component="div">
+          <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
             Dashboard
           </Typography>
 
@@ -214,8 +216,19 @@ export default function AppBarComponent() {
         </Toolbar>
       </AppBar>
       <MyDrawer variant="permanent" open={isDrawerOpen}>
-        <DrawerHeader>
-          <h4>Drawer Header</h4>
+        <DrawerHeader sx={{ backgroundColor: "#1976d2", color: "white" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignContent: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <FcAssistant size="60" />
+            <h2>HRM</h2>
+          </Box>
+
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
@@ -225,7 +238,12 @@ export default function AppBarComponent() {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <List sx={{ backgroundColor: "#1976d2", color: "white" }}>
+        <List
+          sx={{
+            backgroundColor: "#1976d2",
+            color: "white",
+          }}
+        >
           {pageList.map((page, index) => (
             <Link
               style={{ textDecoration: "none", color: "white" }}
@@ -234,12 +252,19 @@ export default function AppBarComponent() {
               <ListItem
                 button
                 key={index}
+                sx={{
+                  ":hover": {
+                    backgroundColor: "#3b8edf",
+                  },
+                }}
                 onClick={() =>
                   console.log(`Debug nav ${page.title}, ${page.path}`)
                 }
               >
                 <ListItemIcon
-                  sx={{ backgroundColor: "#1976d2", color: "white" }}
+                  sx={{
+                    color: "white",
+                  }}
                 >
                   {page.icon}
                 </ListItemIcon>
@@ -250,6 +275,7 @@ export default function AppBarComponent() {
         </List>
       </MyDrawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <DrawerHeader />
         <Typography paragraph>
           Exercitation anim non adipisicing elit nisi ad aliqua laboris sint
           Lorem aute ut nulla. In nisi cupidatat cillum laboris duis non

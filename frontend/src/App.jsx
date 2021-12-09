@@ -5,17 +5,20 @@ import Department from "./pages/Department";
 import Employee from "./pages/Dashboard";
 import Others from "./pages/Others";
 import AboutUs from "./pages/AboutUs";
-
-import MiniDrawer from "./test2.jsx";
+import NotFound from "./pages/404NotFound";
 
 export default function App() {
   return (
     <>
       <BrowserRouter>
-        {/* <MyDrawer /> */}
-        <MiniDrawer />
+        <MyDrawer />
         <div
-          style={{ marginLeft: "240px", boderColor: "black", border: "solid", height: '100' }}
+          style={{
+            marginLeft: "240px",
+            boderColor: "black",
+            border: "solid",
+            height: "100",
+          }}
         >
           <Routes>
             <Route path="/" element={<Dashboard />} />
@@ -24,6 +27,7 @@ export default function App() {
             <Route path="/employee" element={<Employee />} />
             <Route path="/others" element={<Others />} />
             <Route path="/about" element={<AboutUs />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </BrowserRouter>

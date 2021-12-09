@@ -5,7 +5,4 @@ import MyDrawer from "./components/MyDrawer";
 import App from "./App.jsx";
 import CssBaseline from "@mui/material/CssBaseline";
 
-ReactDOM.render(
-  <App />,
-  document.getElementById("root")
-);
+ReactDOM.render(<App />, document.getElementById("root"));
