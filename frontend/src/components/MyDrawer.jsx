@@ -11,9 +11,9 @@ import {
   InputBase,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar from "@mui/material/AppBar";
+import MuiDrawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -31,8 +31,6 @@ import Error from "@mui/icons-material/Error";
 import SearchIcon from "@mui/icons-material/Search";
 
 import { styled, alpha, useTheme } from "@mui/material/styles";
-
-const drawerWidth = 240;
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -73,51 +71,71 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+// Mini variant drawer
+const drawerWidth = 240;
+const openedMixin = (theme) => ({
+  width: drawerWidth,
+  transition: theme.transitions.create("width", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflowX: "hidden",
+});
 
-// Persistent Drawer
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
-  ({ theme, open }) => ({
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: `-${drawerWidth}px`,
-    ...(open && {
-      transition: theme.transitions.create("margin", {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      marginLeft: 0,
-    }),
-  })
-);
+const closedMixin = (theme) => ({
+  transition: theme.transitions.create("width", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  overflowX: "hidden",
+  width: `calc(${theme.spacing(7)} + 1px)`,
+  [theme.breakpoints.up("sm")]: {
+    width: `calc(${theme.spacing(9)} + 1px)`,
+  },
+});
 
-const MyDrawer = styled(MuiAppBar, {
+const DrawerHeader = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-end",
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+}));
+
+const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
-  transition: theme.transitions.create(["margin", "width"], {
+  zIndex: theme.zIndex.drawer + 1,
+  transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
+    marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
+    transition: theme.transitions.create(["width", "margin"], {
+      easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
 }));
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
+const MyDrawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: "nowrap",
+  boxSizing: "border-box",
+  ...(open && {
+    ...openedMixin(theme),
+    "& .MuiDrawer-paper": openedMixin(theme),
+  }),
+  ...(!open && {
+    ...closedMixin(theme),
+    "& .MuiDrawer-paper": closedMixin(theme),
+  }),
 }));
 
 const pageList = [
@@ -156,7 +174,6 @@ const pageList = [
 export default function AppBarComponent() {
   const theme = useTheme();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [title, setTitle] = useState("HRM");
   const handleDrawerOpen = () => {
     setIsDrawerOpen(true);
   };
@@ -166,14 +183,17 @@ export default function AppBarComponent() {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <MyDrawer position="fixed">
+      <AppBar position="fixed" open={isDrawerOpen}>
         <Toolbar>
           <IconButton
-            size="large"
             color="inherit"
-            aria-label="menu"
-            sx={{ ...(isDrawerOpen && { display: "none" }) }}
+            aria-label="open drawer"
             onClick={handleDrawerOpen}
+            edge="start"
+            sx={{
+              marginRight: "36px",
+              ...(isDrawerOpen && { display: "none" }),
+            }}
           >
             <MenuIcon />
           </IconButton>
@@ -192,20 +212,8 @@ export default function AppBarComponent() {
           </Search>
           <Button variant="contained">LOGIN</Button>
         </Toolbar>
-      </MyDrawer>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: drawerWidth,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={isDrawerOpen}
-      >
+      </AppBar>
+      <MyDrawer variant="permanent" open={isDrawerOpen}>
         <DrawerHeader>
           <h4>Drawer Header</h4>
           <IconButton onClick={handleDrawerClose}>
@@ -219,7 +227,10 @@ export default function AppBarComponent() {
         <Divider />
         <List sx={{ backgroundColor: "#1976d2", color: "white" }}>
           {pageList.map((page, index) => (
-            <Link to={page.path}>
+            <Link
+              style={{ textDecoration: "none", color: "white" }}
+              to={page.path}
+            >
               <ListItem
                 button
                 key={index}
@@ -237,8 +248,36 @@ export default function AppBarComponent() {
             </Link>
           ))}
         </List>
-      </Drawer>
-      <Main open={isDrawerOpen}></Main>
+      </MyDrawer>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Typography paragraph>
+          Exercitation anim non adipisicing elit nisi ad aliqua laboris sint
+          Lorem aute ut nulla. In nisi cupidatat cillum laboris duis non
+          reprehenderit proident exercitation aute. Veniam aliquip consectetur
+          id nnderit amet tempor incididunt ut ullamco reprehenderit eu elit.
+          Reprehenderit occaecat proident minim non ut. Ut adipisicing cillum eu
+          aute pariatur tempor non eu veniam Lorem est qui enim duis. Ut laborum
+          deserunt consectetur commodo reprehenderit do eu voluptate ipsum.
+          Pariatur quis magna incididunt minim eu adipisicing id sint sit
+          aliquip tempor. Officia irure quis sit consequat nisi labore. Veniam
+          ipsum pariatur nisi qui anim tempor minim cillum. Amet adipisicing
+          dolor ad Lorem amet tempor mollit.
+        </Typography>
+        <Divider />
+        <Typography paragraph>
+          Exercitation anim non adipisicing elit nisi ad aliqua laboris sint
+          Lorem aute ut nulla. In nisi cupidatat cillum laboris duis non
+          reprehenderit proident exercitation aute. Veniam aliquip consectetur
+          id nnderit amet tempor incididunt ut ullamco reprehenderit eu elit.
+          Reprehenderit occaecat proident minim non ut. Ut adipisicing cillum eu
+          aute pariatur tempor non eu veniam Lorem est qui enim duis. Ut laborum
+          deserunt consectetur commodo reprehenderit do eu voluptate ipsum.
+          Pariatur quis magna incididunt minim eu adipisicing id sint sit
+          aliquip tempor. Officia irure quis sit consequat nisi labore. Veniam
+          ipsum pariatur nisi qui anim tempor minim cillum. Amet adipisicing
+          dolor ad Lorem amet tempor mollit.
+        </Typography>
+      </Box>
     </Box>
   );
 }

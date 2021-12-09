@@ -7,6 +7,5 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 ReactDOM.render(
   <App />,
-
   document.getElementById("root")
 );
