@@ -246,12 +246,12 @@ export default function AppBarComponent() {
         >
           {pageList.map((page, index) => (
             <Link
+              key={index}
               style={{ textDecoration: "none", color: "white" }}
               to={page.path}
             >
               <ListItem
                 button
-                key={index}
                 sx={{
                   ":hover": {
                     backgroundColor: "#3b8edf",
