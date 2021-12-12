@@ -1,6 +1,13 @@
 import React from "react";
-import { useState } from "react";
 
+import { useState } from "react";
+import Dashboard from "../pages/Dashboard";
+import Department from "../pages/Department";
+import Employee from "../pages/Employee";
+import Others from "../pages/Others";
+import AboutUs from "../pages/AboutUs";
+import NotFound from "../pages/404NotFound";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 import {
@@ -143,7 +150,7 @@ const MyDrawer = styled(MuiDrawer, {
 const pageList = [
   {
     title: "Dashboard",
-    path: "/",
+    path: "/dashboard",
     icon: <DashboardIcon />,
     className: "nav-text",
   },
@@ -226,7 +233,7 @@ export default function AppBarComponent() {
             }}
           >
             <FcAssistant size="60" />
-            <h2>HRM</h2>
+            <h3>HRM</h3>
           </Box>
 
           <IconButton onClick={handleDrawerClose}>
@@ -237,7 +244,7 @@ export default function AppBarComponent() {
             )}
           </IconButton>
         </DrawerHeader>
-        <Divider />
+        {isDrawerOpen && <Divider />}
         <List
           sx={{
             backgroundColor: "#1976d2",
@@ -276,33 +283,16 @@ export default function AppBarComponent() {
       </MyDrawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Typography paragraph>
-          Exercitation anim non adipisicing elit nisi ad aliqua laboris sint
-          Lorem aute ut nulla. In nisi cupidatat cillum laboris duis non
-          reprehenderit proident exercitation aute. Veniam aliquip consectetur
-          id nnderit amet tempor incididunt ut ullamco reprehenderit eu elit.
-          Reprehenderit occaecat proident minim non ut. Ut adipisicing cillum eu
-          aute pariatur tempor non eu veniam Lorem est qui enim duis. Ut laborum
-          deserunt consectetur commodo reprehenderit do eu voluptate ipsum.
-          Pariatur quis magna incididunt minim eu adipisicing id sint sit
-          aliquip tempor. Officia irure quis sit consequat nisi labore. Veniam
-          ipsum pariatur nisi qui anim tempor minim cillum. Amet adipisicing
-          dolor ad Lorem amet tempor mollit.
-        </Typography>
-        <Divider />
-        <Typography paragraph>
-          Exercitation anim non adipisicing elit nisi ad aliqua laboris sint
-          Lorem aute ut nulla. In nisi cupidatat cillum laboris duis non
-          reprehenderit proident exercitation aute. Veniam aliquip consectetur
-          id nnderit amet tempor incididunt ut ullamco reprehenderit eu elit.
-          Reprehenderit occaecat proident minim non ut. Ut adipisicing cillum eu
-          aute pariatur tempor non eu veniam Lorem est qui enim duis. Ut laborum
-          deserunt consectetur commodo reprehenderit do eu voluptate ipsum.
-          Pariatur quis magna incididunt minim eu adipisicing id sint sit
-          aliquip tempor. Officia irure quis sit consequat nisi labore. Veniam
-          ipsum pariatur nisi qui anim tempor minim cillum. Amet adipisicing
-          dolor ad Lorem amet tempor mollit.
-        </Typography>
+
+        <Routes>
+          <Route path="" element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="department" element={<Department />} />
+          <Route path="employee" element={<Employee />} />
+          <Route path="others" element={<Others />} />
+          <Route path="about" element={<AboutUs />} />
+          <Route path="*" element={<Navigate to="404" />} />
+        </Routes>
       </Box>
     </Box>
   );
