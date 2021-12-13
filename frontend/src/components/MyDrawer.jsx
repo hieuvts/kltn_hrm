@@ -245,41 +245,40 @@ export default function AppBarComponent() {
           </IconButton>
         </DrawerHeader>
         {isDrawerOpen && <Divider />}
-        <List
-          sx={{
-            backgroundColor: "#1976d2",
-            color: "white",
-          }}
+        <div
+          style={{ height: "100%", backgroundColor: "#1976d2", color: "white" }}
         >
-          {pageList.map((page, index) => (
-            <Link
-              key={index}
-              style={{ textDecoration: "none", color: "white" }}
-              to={page.path}
-            >
-              <ListItem
-                button
-                sx={{
-                  ":hover": {
-                    backgroundColor: "#3b8edf",
-                  },
-                }}
-                onClick={() =>
-                  console.log(`Debug nav ${page.title}, ${page.path}`)
-                }
+          <List>
+            {pageList.map((page, index) => (
+              <Link
+                key={index}
+                style={{ textDecoration: "none", color: "white" }}
+                to={page.path}
               >
-                <ListItemIcon
+                <ListItem
+                  button
                   sx={{
-                    color: "white",
+                    ":hover": {
+                      backgroundColor: "#3b8edf",
+                    },
                   }}
+                  onClick={() =>
+                    console.log(`Debug nav ${page.title}, ${page.path}`)
+                  }
                 >
-                  {page.icon}
-                </ListItemIcon>
-                <ListItemText primary={page.title} />
-              </ListItem>
-            </Link>
-          ))}
-        </List>
+                  <ListItemIcon
+                    sx={{
+                      color: "white",
+                    }}
+                  >
+                    {page.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={page.title} />
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+        </div>
       </MyDrawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
