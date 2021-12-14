@@ -20,7 +20,10 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import Avatar from "@mui/material/Avatar";
 import { visuallyHidden } from "@mui/utils";
+import avatarMale from "../assets/icons/avatarMale.png";
+import avatarFemale from "../assets/icons/avatarFemale.png";
 
 import CreateDummyEmployees from "../utilities/createDummyEmployees";
 function createData(name, gender, email, address, phone, registrationDate) {
@@ -394,7 +397,24 @@ export default function EnhancedTable() {
                         padding="none"
                         align="right"
                       >
-                        {row.name}
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Avatar
+                            alt={row.name}
+                            src={
+                              row.gender === "Male" ? avatarMale : avatarFemale
+                            }
+                            sx={{
+                              alignSelf: "center",
+                            }}
+                          />
+                          {row.name}
+                        </Box>
                       </TableCell>
                       <TableCell align="right">{row.gender}</TableCell>
                       <TableCell align="right">{row.email}</TableCell>
