@@ -5,7 +5,7 @@ import Dashboard from "../pages/Dashboard";
 import Department from "../pages/Department";
 import Employee from "../pages/Employee";
 import Others from "../pages/Others";
-import AboutUs from "../pages/AboutUs";
+import AboutUs from "../pages/aboutUs";
 import NotFound from "../pages/404NotFound";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
