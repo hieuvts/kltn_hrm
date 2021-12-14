@@ -1,3 +1,10 @@
+import React from "react";
+import PropTypes from 'prop-types';
+import { styled, alpha } from "@mui/material/styles";
+import { InputBase } from "@mui/material";
+
+import SearchIcon from "@mui/icons-material/Search";
+
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -12,6 +19,9 @@ const Search = styled("div")(({ theme }) => ({
     marginLeft: theme.spacing(3),
     width: "auto",
   },
+  border: "solid",
+  borderWidth: "1px",
+  borderColor: "grey",
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -38,3 +48,20 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+export default function MySearchBox(props) {
+  return (
+    <Search>
+      <SearchIconWrapper>
+        <SearchIcon />
+      </SearchIconWrapper>
+      <StyledInputBase
+        placeholder={props.placeholder}
+        inputProps={{ "aria-label": "search" }}
+        fullWidth
+      />
+    </Search>
+  );
+}
+MySearchBox.propTypes = {
+  placeholder: PropTypes.string,
+};

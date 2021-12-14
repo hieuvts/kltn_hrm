@@ -15,49 +15,7 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 
 import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-  border: "solid",
-  borderWidth: "1px",
-  borderColor: "grey",
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 1),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
+import MySearchBox from "../components/StyledSearchBox";
 
 export default function Employee() {
   const pathnames = location.pathname.split("/").filter((x) => x);
@@ -109,19 +67,9 @@ export default function Employee() {
       </Grid>
 
       {/* Search box */}
-      <Paper elevation={1} sx={{ mt: 3 }}>
-        <Box sx={{ p: 3 }}>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-              fullWidth
-            />
-          </Search>
-        </Box>
+
+      <Paper elevation={1} sx={{ mt: 3, p: 3 }}>
+        <MySearchBox placeholder="Search for customer..." />
       </Paper>
     </>
   );
