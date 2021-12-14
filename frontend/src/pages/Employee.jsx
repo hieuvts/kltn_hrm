@@ -16,6 +16,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
 import MySearchBox from "../components/StyledSearchBox";
+import EnhancedTable from "../components/CustomerList";
 
 export default function Employee() {
   const pathnames = location.pathname.split("/").filter((x) => x);
@@ -71,6 +72,9 @@ export default function Employee() {
       <Paper elevation={1} sx={{ mt: 3, p: 3 }}>
         <MySearchBox placeholder="Search for customer..." />
       </Paper>
+      <div>
+        <EnhancedTable />
+      </div>
     </>
   );
 }

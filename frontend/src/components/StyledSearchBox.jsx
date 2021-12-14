@@ -5,6 +5,7 @@ import { InputBase } from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
 
+// TODO: use CustomSearchBox here
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
