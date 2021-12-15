@@ -36,8 +36,10 @@ import Engineering from "@mui/icons-material/Engineering";
 import Mode from "@mui/icons-material/Mode";
 import Error from "@mui/icons-material/Error";
 import SearchIcon from "@mui/icons-material/Search";
-
+import { VscProject } from "react-icons/vsc";
 import { FcAssistant } from "react-icons/fc";
+
+import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
 
 import { styled, alpha, useTheme } from "@mui/material/styles";
 
@@ -167,6 +169,12 @@ const pageList = [
     className: "nav-text",
   },
   {
+    title: "Project",
+    path: "/department",
+    icon: <VscProject />,
+    className: "nav-text",
+  },
+  {
     title: "Others",
     path: "/others",
     icon: <Mode />,
@@ -183,12 +191,20 @@ const pageList = [
 export default function AppBarComponent() {
   const theme = useTheme();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [selectedTabTitle, setSelectedTabTitle] = useState("Dashboard");
+
   const handleDrawerOpen = () => {
     setIsDrawerOpen(true);
   };
   const handleDrawerClose = () => {
     setIsDrawerOpen(false);
   };
+  const handleChangeTabTitle = (title) => {
+    setSelectedTabTitle(title);
+  };
+
+  const pathnames = location.pathname.split("/").filter((x) => x);
+  const currentPathname = pathnames.slice(-1)[0];
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -207,7 +223,7 @@ export default function AppBarComponent() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
-            Dashboard
+            {CapitalizeFirstLetter(currentPathname)}
           </Typography>
 
           <Search>
@@ -223,17 +239,29 @@ export default function AppBarComponent() {
         </Toolbar>
       </AppBar>
       <MyDrawer variant="permanent" open={isDrawerOpen}>
-        <DrawerHeader sx={{ backgroundColor: "#1976d2", color: "white" }}>
+        <DrawerHeader
+          sx={{
+            backgroundColor: "#1976d2",
+            color: "white",
+            alignContent: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <Box
             sx={{
               display: "flex",
-              flexDirection: "row",
-              alignContent: "center",
-              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
             <FcAssistant size="60" />
-            <h3>HRM</h3>
+            <Typography
+              variant="h4"
+              sx={{
+                ml: 2,
+              }}
+            >
+              HRM
+            </Typography>
           </Box>
 
           <IconButton onClick={handleDrawerClose}>
@@ -245,41 +273,45 @@ export default function AppBarComponent() {
           </IconButton>
         </DrawerHeader>
         {isDrawerOpen && <Divider />}
-        <List
-          sx={{
-            backgroundColor: "#1976d2",
-            color: "white",
-          }}
+        <div
+          style={{ height: "100%", backgroundColor: "#1976d2", color: "white" }}
         >
-          {pageList.map((page, index) => (
-            <Link
-              key={index}
-              style={{ textDecoration: "none", color: "white" }}
-              to={page.path}
-            >
-              <ListItem
-                button
-                sx={{
-                  ":hover": {
-                    backgroundColor: "#3b8edf",
-                  },
-                }}
-                onClick={() =>
-                  console.log(`Debug nav ${page.title}, ${page.path}`)
-                }
-              >
-                <ListItemIcon
-                  sx={{
-                    color: "white",
-                  }}
+          <List>
+            {pageList.map((page, index) => (
+              <>
+                <Link
+                  key={index}
+                  style={{ textDecoration: "none", color: "white" }}
+                  to={page.path}
                 >
-                  {page.icon}
-                </ListItemIcon>
-                <ListItemText primary={page.title} />
-              </ListItem>
-            </Link>
-          ))}
-        </List>
+                  <ListItem
+                    button
+                    sx={{
+                      ":hover": {
+                        backgroundColor: "#3b8edf",
+                      },
+                    }}
+                    onClick={() => handleChangeTabTitle(page.title)}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        color: "white",
+                      }}
+                    >
+                      {page.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={page.title} />
+                  </ListItem>
+                </Link>
+                <Divider
+                  variant="inset"
+                  component="li"
+                  sx={{ background: "white" }}
+                />
+              </>
+            ))}
+          </List>
+        </div>
       </MyDrawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
