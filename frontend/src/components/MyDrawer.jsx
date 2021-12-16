@@ -5,7 +5,7 @@ import Dashboard from "../pages/Dashboard";
 import Department from "../pages/Department";
 import Employee from "../pages/Employee";
 import Others from "../pages/Others";
-import AboutUs from "../pages/aboutUs";
+import AboutUs from "../pages/AboutUs";
 import NotFound from "../pages/404NotFound";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -152,12 +152,14 @@ const MyDrawer = styled(MuiDrawer, {
 const pageList = [
   {
     title: "Dashboard",
+    key: "dashboard",
     path: "/dashboard",
     icon: <DashboardIcon />,
     className: "nav-text",
   },
   {
     title: "Employee",
+    key: "employee",
     path: "/employee",
     icon: <Engineering />,
     className: "nav-text",
@@ -165,24 +167,28 @@ const pageList = [
   {
     title: "Department",
     path: "/department",
+    key: "department",
     icon: <Apartment />,
     className: "nav-text",
   },
   {
     title: "Project",
-    path: "/department",
+    path: "/project",
+    key: "project",
     icon: <VscProject />,
     className: "nav-text",
   },
   {
     title: "Others",
     path: "/others",
+    key: "others",
     icon: <Mode />,
     className: "nav-text",
   },
   {
     title: "404",
     path: "/404",
+    key: "404",
     icon: <Error />,
     className: "nav-text",
   },
@@ -278,7 +284,7 @@ export default function AppBarComponent() {
         >
           <List>
             {pageList.map((page, index) => (
-              <>
+              <div key = {page.key}>
                 <Link
                   key={index}
                   style={{ textDecoration: "none", color: "white" }}
@@ -308,7 +314,7 @@ export default function AppBarComponent() {
                   component="li"
                   sx={{ background: "white" }}
                 />
-              </>
+              </div>
             ))}
           </List>
         </div>
