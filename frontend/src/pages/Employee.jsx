@@ -19,9 +19,8 @@ import MySearchBox from "../components/StyledSearchBox";
 import EnhancedTable from "../components/CustomerList";
 
 //Redux
-import { Provider, useDispatch } from "react-redux";
-import store from "../stores/store";
-import { getEmployeeInfo, getEmployeeAsync } from "../stores/employeeSlice";
+import { useDispatch } from "react-redux";
+import { getEmployeeAsync } from "../stores/employeeSlice";
 
 export default function Employee() {
   const dispatch = useDispatch();
@@ -37,68 +36,57 @@ export default function Employee() {
     <>
       <Button
         variant="outlined"
-        onClick={() =>
-          dispatch(
-            getEmployeeInfo({
-              name: `new name ${Math.floor(Math.random() * 10)}`,
-              data: "new data",
-            })
-          )
-        }
+        sx={{ mb: 5 }}
+        onClick={() => dispatch(getEmployeeAsync())}
       >
-        Test dispatch redux m
-      </Button>
-      <Button variant="outlined" onClick={() => dispatch(getEmployeeAsync())}>
-        Test dispatch ASYNC THUNK
+        fetch Employee List from server
       </Button>
       <Breadcrumbs aria-label="breadcrumb">
         <Link underline="hover" color="inherit" href="/">
           Home
         </Link>
 
-        {pathnames.map((path, idx) => (
+        {pathnames.map((pathName, idx) => (
           <Link
             underline="hover"
             color="text.primary"
-            href={path}
+            href={pathName}
             aria-current="page"
             key={idx}
           >
-            {CapitalizeFirstLetter(path)}
+            {CapitalizeFirstLetter(pathName)}
           </Link>
         ))}
       </Breadcrumbs>
 
-      {/* <Typography variant="h4">Employee</Typography> */}
-      <Grid container justifyContent="flex-end" textAlign="right">
-        <Grid item xs={12} md={3}>
+      <Grid
+        container
+        justifyContent="flex-end"
+        textAlign={{ sm: "right", md: "center" }}
+        padding={{ sm: 5, md: 0 }}
+      >
+        <Grid item xs={4} md={2}>
           <Button variant="link">
             <FileUploadOutlinedIcon fontSize="medium" />
-            <Typography variant="h6" sx={{ px: 1 }}>
-              Import
-            </Typography>
+            <Typography variant="h6">Import</Typography>
           </Button>
         </Grid>
-        <Grid item xs={12} md={3}>
+        <Grid item xs={4} md={2}>
           <Button variant="link">
             <FileDownloadOutlinedIcon fontSize="medium" />
-            <Typography variant="h6" sx={{ px: 1 }}>
-              Export
-            </Typography>
+            <Typography variant="h6">Export</Typography>
           </Button>
         </Grid>
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={2} paddingTop={{ sm: 2, md: 0 }}>
           <Button variant="contained">
-            <Typography variant="h6" sx={{ px: 1 }}>
-              Add Employee
-            </Typography>
+            <Typography variant="h6">Add Employee</Typography>
           </Button>
         </Grid>
       </Grid>
 
       {/* Search box */}
 
-      <Paper elevation={1} sx={{ mt: 3, p: 3 }}>
+      <Paper elevation={1} sx={{ my: 3, p: 3 }}>
         <MySearchBox placeholder="Search for customer..." />
       </Paper>
       <div>

@@ -9,7 +9,7 @@ export default function CreateDummyEmployees(quantity) {
       "gender": "{{random 'Male' 'Female' 'Other'}}",
       "email": "{{email}}",
       "address": "{{int 1 100}} {{street}}, {{city}}",
-      "phone": "{{phone "+84 xxx xxx xxx"}}",
+      "phoneNumber": "{{phone "+84 xxx xxx xxx"}}",
       "registrationDate": "{{date '2021' '2025'}}",
       "age": "{{int 18 65}}"
     }

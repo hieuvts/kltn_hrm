@@ -1,10 +1,18 @@
-import {
-  configureStore,
-  createAsyncThunk,
-  createSlice,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-const initialState = { name: "Init name", gender: 1 };
+const initialState = [
+  {
+    name: "Initial Data",
+    gender: "Initial Data",
+    dateOfBirth: "2020-01-31T17:00:00.000Z",
+    phoneNumber: "0359545405",
+    address: "Initial Data",
+    roleID: "1",
+    departmentID: "4243",
+    projectID: "1",
+    isDeleted: false,
+  },
+];
 
 export const getEmployeeAsync = createAsyncThunk(
   "employee/getAll",
@@ -12,10 +20,28 @@ export const getEmployeeAsync = createAsyncThunk(
     const res = await fetch("http://localhost:8000/api/employee/getAll");
     if (res.ok) {
       const resFromServer = await res.json();
-      const employees = resFromServer.employees;
-      return { employees };
+      const employee = resFromServer.employees;
+      return { employee };
     } else {
       console.log("[FAILED] getEmployeeAsync: ", res.status);
+    }
+  }
+);
+
+export const addEmployeeAsync = createAsyncThunk(
+  "employee/addEmployee",
+  async () => {
+    const res = await fetch("http://localhost:8000/api/employee/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ _id: payload._id }),
+    });
+
+    if (res.ok) {
+      const employee = await res.json();
+      return { employee };
     }
   }
 );
@@ -26,7 +52,6 @@ export const employeeSlice = createSlice({
     getEmployeeInfo: (state, action) => {
       console.log("[employeeSlice.js] action.payload=", action.payload);
       state.name = action.payload.name;
-      console.log("[employeeSlice.js] action.payload=", action.payload);
     },
   },
   extraReducers: {
@@ -39,9 +64,9 @@ export const employeeSlice = createSlice({
     [getEmployeeAsync.fulfilled]: (state, actions) => {
       console.log(
         "[Fulfilled] getEmployeeAsync actions.payload.employees= ",
-        actions.payload.employees
+        actions.payload.employee
       );
-      return actions.payload;
+      return actions.payload.employee;
     },
   },
 });

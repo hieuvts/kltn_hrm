@@ -29,8 +29,8 @@ import CreateDummyEmployees from "../utilities/createDummyEmployees";
 
 //Redux
 import { useSelector } from "react-redux";
-import { getEmployeeInfo } from "../stores/employeeSlice";
-const rows = CreateDummyEmployees(20);
+import { getEmployeeAsync } from "../stores/employeeSlice";
+// var rows = CreateDummyEmployees(20);
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -215,7 +215,11 @@ export default function EnhancedTable() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  // Redux: get employee list from server
+  var rows = useSelector((state) => state.employee);
+  // useEffect(() => {
+  //   dispatch(getEmployeeAsync());
+  // }, []);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -252,12 +256,10 @@ export default function EnhancedTable() {
   };
 
   const handleChangePage = (event, newPage) => {
-    console.log("new page: ", newPage);
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    console.log("row per page: ", event);
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -267,16 +269,9 @@ export default function EnhancedTable() {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-  //Redux
-  const dataFromReduxTest = useSelector(getEmployeeInfo);
+
   return (
     <Box sx={{ width: "100%" }}>
-      <Paper elevation={2} sx={{ p: 3, my: 2 }}>
-        Data from redux store:
-        <Typography variant="h3">
-          {dataFromReduxTest.payload.employee.name}
-        </Typography>
-      </Paper>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
@@ -350,7 +345,7 @@ export default function EnhancedTable() {
                       <TableCell align="right">{row.gender}</TableCell>
                       <TableCell align="right">{row.email}</TableCell>
                       <TableCell align="right">{row.address}</TableCell>
-                      <TableCell align="right">{row.phone}</TableCell>
+                      <TableCell align="right">{row.phoneNumber}</TableCell>
                       <TableCell align="right">
                         {row.registrationDate}
                       </TableCell>
