@@ -26,70 +26,11 @@ import avatarMale from "../assets/icons/avatarMale.png";
 import avatarFemale from "../assets/icons/avatarFemale.png";
 
 import CreateDummyEmployees from "../utilities/createDummyEmployees";
-function createData(name, gender, email, address, phone, registrationDate) {
-  return {
-    name,
-    gender,
-    email,
-    address,
-    phone,
-    registrationDate,
-  };
-}
+
+//Redux
+import { useSelector } from "react-redux";
+import { getEmployeeInfo } from "../stores/employeeSlice";
 const rows = CreateDummyEmployees(20);
-// const rows = testDummyJSON.map((value, idx) => {
-//   createData(value);
-// });
-// const rows = [
-//   createData(
-//     "Hieu Pham",
-//     "Male",
-//     "hieu@gmail.com",
-//     "Trang Bom, Dong Nai",
-//     "0359545405",
-//     "14/12/2021"
-//   ),
-//   createData(
-//     "Vinh Hoang",
-//     "Male",
-//     "vinh@gmail.com",
-//     "Tan An, Long An",
-//     "0359545405",
-//     "14/12/2021"
-//   ),
-//   createData(
-//     "Vinh Hoang 2",
-//     "Male",
-//     "vinh@yopmail.com",
-//     "Tan An, Tan An, Long An",
-//     "0359545405",
-//     "14/12/2021"
-//   ),
-//   createData(
-//     "Vinh Hoang 3",
-//     "Male",
-//     "vinh@yopmail.com",
-//     "Tan An, Tan An, Long An",
-//     "0359545405",
-//     "14/12/2021"
-//   ),
-//   createData(
-//     "Vinh Hoang 4",
-//     "Male",
-//     "vinh@yopmail.com",
-//     "Tan An, Tan An, Long An",
-//     "0359545405",
-//     "14/12/2021"
-//   ),
-//   createData(
-//     "Vinh Hoang 5",
-//     "Male",
-//     "vinh@yopmail.com",
-//     "Tan An, Tan An, Long An",
-//     "0359545405",
-//     "14/12/2021"
-//   ),
-// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -106,20 +47,6 @@ function getComparator(order, orderBy) {
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
-
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
-// function stableSort(array, comparator) {
-//   const stabilizedThis = array.map((el, index) => [el, index]);
-//   stabilizedThis.sort((a, b) => {
-//     const order = comparator(a[0], b[0]);
-//     if (order !== 0) {
-//       return order;
-//     }
-//     return a[1] - b[1];
-//   });
-//   return stabilizedThis.map((el) => el[0]);
-// }
 
 const headCells = [
   {
@@ -224,7 +151,9 @@ EnhancedTableHead.propTypes = {
 
 const EnhancedTableToolbar = (props) => {
   const { numSelected } = props;
-
+  const handleDelete = () => {
+    console.log("Click delete button");
+  };
   return (
     <Toolbar
       sx={{
@@ -261,7 +190,7 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={() => handleDelete()}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -282,10 +211,9 @@ EnhancedTableToolbar.propTypes = {
 
 export default function EnhancedTable() {
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleRequestSort = (event, property) => {
@@ -324,16 +252,14 @@ export default function EnhancedTable() {
   };
 
   const handleChangePage = (event, newPage) => {
+    console.log("new page: ", newPage);
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
+    console.log("row per page: ", event);
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-  };
-
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -341,16 +267,23 @@ export default function EnhancedTable() {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
+  //Redux
+  const dataFromReduxTest = useSelector(getEmployeeInfo);
   return (
     <Box sx={{ width: "100%" }}>
+      <Paper elevation={2} sx={{ p: 3, my: 2 }}>
+        Data from redux store:
+        <Typography variant="h3">
+          {dataFromReduxTest.payload.employee.name}
+        </Typography>
+      </Paper>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
+            size="medium"
           >
             <EnhancedTableHead
               numSelected={selected.length}
@@ -361,8 +294,6 @@ export default function EnhancedTable() {
               rowCount={rows.length}
             />
             <TableBody>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                 rows.slice().sort(getComparator(order, orderBy)) */}
               {rows
                 .slice()
                 .sort(getComparator(order, orderBy))
@@ -378,7 +309,7 @@ export default function EnhancedTable() {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={index}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -429,7 +360,7 @@ export default function EnhancedTable() {
               {emptyRows > 0 && (
                 <TableRow
                   style={{
-                    height: (dense ? 33 : 53) * emptyRows,
+                    height: 53 * emptyRows,
                   }}
                 >
                   <TableCell colSpan={6} />
@@ -448,10 +379,6 @@ export default function EnhancedTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
     </Box>
   );
 }

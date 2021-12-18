@@ -278,14 +278,14 @@ export default function AppBarComponent() {
         >
           <List>
             {pageList.map((page, index) => (
-              <>
+              <div key={index}>
                 <Link
-                  key={index}
                   style={{ textDecoration: "none", color: "white" }}
                   to={page.path}
                 >
                   <ListItem
                     button
+                    key={index}
                     sx={{
                       ":hover": {
                         backgroundColor: "#3b8edf",
@@ -308,7 +308,7 @@ export default function AppBarComponent() {
                   component="li"
                   sx={{ background: "white" }}
                 />
-              </>
+              </div>
             ))}
           </List>
         </div>
