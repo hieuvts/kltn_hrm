@@ -21,7 +21,7 @@ import EnhancedTable from "../components/CustomerList";
 //Redux
 import { Provider, useDispatch } from "react-redux";
 import store from "../stores/store";
-import { getEmployeeInfo } from "../stores/employeeSlice";
+import { getEmployeeInfo, getEmployeeAsync } from "../stores/employeeSlice";
 
 export default function Employee() {
   const dispatch = useDispatch();
@@ -46,7 +46,10 @@ export default function Employee() {
           )
         }
       >
-        Test dispatch redux
+        Test dispatch redux m
+      </Button>
+      <Button variant="outlined" onClick={() => dispatch(getEmployeeAsync())}>
+        Test dispatch ASYNC THUNK
       </Button>
       <Breadcrumbs aria-label="breadcrumb">
         <Link underline="hover" color="inherit" href="/">
