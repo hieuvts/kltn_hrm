@@ -70,7 +70,7 @@ export default function Department() {
       {/* Search box */}
 
       <Paper elevation={1} sx={{ mt: 3, p: 3 }}>
-        <MySearchBox placeholder="Search for customer..." />
+        <MySearchBox placeholder="Search for Department" />
       </Paper>
       <div>
         <EnhancedTable />

@@ -19,6 +19,7 @@ import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { FcNumericalSorting21 } from "react-icons/fc";
 import { visuallyHidden } from "@mui/utils";
@@ -60,6 +61,12 @@ function descendingComparator(a, b, orderBy) {
         disablePadding: false,
         label: "MANAGER",
       },
+      {
+        id: "actions",
+        numeric: false, 
+        disablePadding: true, 
+        label: "Actions"
+      }
   ];
 
   function DepartmentTableHead(props) {
@@ -156,7 +163,7 @@ DepartmentTableHead.propTypes = {
             id="tableTitle"
             component="div"
           >
-            
+            Department List
           </Typography>
         )}
   
@@ -238,7 +245,14 @@ DepartmentTableHead.propTypes = {
     };
   
     const isSelected = (name) => selected.indexOf(name) !== -1;
-  
+    const editOnClick = (data) => {
+      console.log(data.name + " edit clicked");
+    }
+
+    const deleteOnClick = (data) => {
+      console.log(data.name + " delete clicked");
+    }
+
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
       page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -302,6 +316,12 @@ DepartmentTableHead.propTypes = {
                         </TableCell>
                         <TableCell align="center">{row.amount}</TableCell>
                         <TableCell align="center">{row.manager}</TableCell>
+                        <TableCell align="center">
+                          <Box>
+                            <IconButton onClick= {editOnClick(row)}> <EditIcon/> </IconButton>
+                            <IconButton onClick ={deleteOnClick(row)}> <DeleteIcon/> </IconButton>
+                          </Box>
+                        </TableCell>
                       </TableRow>
                     );
                   })}
