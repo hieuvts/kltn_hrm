@@ -26,11 +26,9 @@ import avatarMale from "../assets/icons/avatarMale.png";
 import avatarFemale from "../assets/icons/avatarFemale.png";
 
 import CreateDummyEmployees from "../utilities/createDummyEmployees";
-
-//Redux
 import { useSelector } from "react-redux";
-import { getEmployeeAsync } from "../stores/employeeSlice";
-import { useGetEmployeeQuery } from "../stores/employeeSlice_RTK";
+//Redux
+
 // var rows = CreateDummyEmployees(20);
 
 function descendingComparator(a, b, orderBy) {
@@ -221,8 +219,9 @@ export default function EnhancedTable() {
   // useEffect(() => {
   //   dispatch(getEmployeeAsync());
   // }, []);
-  const { data, error, isLoading, isSuccess, isError } = useGetEmployeeQuery();
-  const row = data;
+
+  var rows = useSelector((state) => state.employee);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
