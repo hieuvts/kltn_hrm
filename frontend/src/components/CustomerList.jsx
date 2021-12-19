@@ -30,6 +30,7 @@ import CreateDummyEmployees from "../utilities/createDummyEmployees";
 //Redux
 import { useSelector } from "react-redux";
 import { getEmployeeAsync } from "../stores/employeeSlice";
+import { useGetEmployeeQuery } from "../stores/employeeSlice_RTK";
 // var rows = CreateDummyEmployees(20);
 
 function descendingComparator(a, b, orderBy) {
@@ -216,10 +217,12 @@ export default function EnhancedTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   // Redux: get employee list from server
-  var rows = useSelector((state) => state.employee);
+  // var rows = useSelector((state) => state.employee);
   // useEffect(() => {
   //   dispatch(getEmployeeAsync());
   // }, []);
+  const { data, error, isLoading, isSuccess, isError } = useGetEmployeeQuery();
+  const row = data;
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
