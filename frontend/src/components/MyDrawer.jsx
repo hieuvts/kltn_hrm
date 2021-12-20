@@ -7,8 +7,6 @@ import Employee from "../pages/Employee";
 import Others from "../pages/Others";
 import AboutUs from "../pages/AboutUs";
 import NotFound from "../pages/404NotFound";
-import WorkPlace from "../pages/Workplace";
-
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
@@ -40,7 +38,6 @@ import Error from "@mui/icons-material/Error";
 import SearchIcon from "@mui/icons-material/Search";
 import { VscProject } from "react-icons/vsc";
 import { FcAssistant } from "react-icons/fc";
-
 import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
 
 import { styled, alpha, useTheme } from "@mui/material/styles";
@@ -154,12 +151,14 @@ const MyDrawer = styled(MuiDrawer, {
 const pageList = [
   {
     title: "Dashboard",
+    key: "dashboard",
     path: "/dashboard",
     icon: <DashboardIcon />,
     className: "nav-text",
   },
   {
     title: "Employee",
+    key: "employee",
     path: "/employee",
     icon: <Engineering />,
     className: "nav-text",
@@ -167,24 +166,28 @@ const pageList = [
   {
     title: "Department",
     path: "/department",
+    key: "department",
     icon: <Apartment />,
     className: "nav-text",
   },
   {
     title: "Project",
-    path: "/workplace",
+    path: "/project",
+    key: "project",
     icon: <VscProject />,
     className: "nav-text",
   },
   {
     title: "Others",
     path: "/others",
+    key: "others",
     icon: <Mode />,
     className: "nav-text",
   },
   {
     title: "404",
     path: "/404",
+    key: "404",
     icon: <Error />,
     className: "nav-text",
   },
@@ -280,14 +283,14 @@ export default function AppBarComponent() {
         >
           <List>
             {pageList.map((page, index) => (
-              <>
+              <div key = {page.key}>
                 <Link
-                  key={index}
                   style={{ textDecoration: "none", color: "white" }}
                   to={page.path}
                 >
                   <ListItem
                     button
+                    key={index}
                     sx={{
                       ":hover": {
                         backgroundColor: "#3b8edf",
@@ -310,7 +313,7 @@ export default function AppBarComponent() {
                   component="li"
                   sx={{ background: "white" }}
                 />
-              </>
+              </div>
             ))}
           </List>
         </div>
@@ -323,8 +326,7 @@ export default function AppBarComponent() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="department" element={<Department />} />
           <Route path="employee" element={<Employee />} />
-          <Route path="workplace" element={<WorkPlace />} />
-          <Route path="others" element={<Others />} />
+          <Route path="others" element={<WorkPlace />} />
           <Route path="about" element={<AboutUs />} />
           <Route path="*" element={<Navigate to="404" />} />
         </Routes>
