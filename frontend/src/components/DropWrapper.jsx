@@ -2,8 +2,9 @@ import React from "react";
 import { useDrop } from "react-dnd";
 import ITEM_TYPE from "../data/types";
 import { statuses } from "../data/index";
+import PropTypes from "prop-types";
 
-const dropWrapper = ({ onDrop, children, status }) => {
+const DropWrapper = ({ onDrop, children, status }) => {
     const [{ isOver }, drop] = useDrop({
         accept: ITEM_TYPE,
         canDrop: (item, monitor) => {
@@ -24,4 +25,9 @@ const dropWrapper = ({ onDrop, children, status }) => {
         </div>
     );
 }
-export default dropWrapper;
+DropWrapper.propTypes = {
+    onDrop: PropTypes.func,
+    children: PropTypes.any,
+    status: PropTypes.any,
+}
+export default DropWrapper;
