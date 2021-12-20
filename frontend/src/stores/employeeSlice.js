@@ -15,7 +15,7 @@ const initialState = [
 ];
 
 export const getEmployeeAsync = createAsyncThunk(
-  "employee/getAll",
+  "employee/getAllEmployee",
   async () => {
     const res = await fetch("http://localhost:8000/api/employee/getAll");
     if (res.ok) {
@@ -30,15 +30,48 @@ export const getEmployeeAsync = createAsyncThunk(
 
 export const addEmployeeAsync = createAsyncThunk(
   "employee/addEmployee",
-  async () => {
-    const res = await fetch("http://localhost:8000/api/employee/delete", {
+  async (payload) => {
+    const res = await fetch("http://localhost:8000/api/employee/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ _id: payload._id }),
+      body: JSON.stringify({
+        name: payload.name,
+        gender: payload.gender,
+        dateOfBirth: "2010-01-29",
+        phoneNumber: payload.phoneNumber,
+        email: payload.email,
+        address: payload.address,
+        role: "Admin",
+        isDeleted: false,
+      }),
     });
 
+    if (res.ok) {
+      const employee = await res.json();
+      console.log("added: ", res);
+      return { employee };
+    } else {
+      console.log("[addEmployeeAsync] not successful", res);
+    }
+  }
+);
+export const updateEmployeeAsync = createAsyncThunk(
+  "employee/updateEmployee",
+  async (payload) => {
+    const res = await fetch(
+      `http://localhost:8000/api/employee/${payload.employeeid}/put`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: "put method",
+        }),
+      }
+    );
     if (res.ok) {
       const employee = await res.json();
       return { employee };
@@ -55,18 +88,47 @@ export const employeeSlice = createSlice({
     },
   },
   extraReducers: {
-    [getEmployeeAsync.pending]: (state, actions) => {
-      console.log("[Pending] getEmployeeAsync state= ", state);
-    },
-    [getEmployeeAsync.rejected]: (state, actions) => {
-      console.log("[Rejected] getEmployeeAsync actions= ", actions);
-    },
+    // Get Employee from server
+    // [getEmployeeAsync.pending]: (state, actions) => {
+    //   console.log("[Pending] getEmployeeAsync state= ", state);
+    // },
+    // [getEmployeeAsync.rejected]: (state, actions) => {
+    //   console.log("[Rejected] getEmployeeAsync actions= ", actions);
+    // },
     [getEmployeeAsync.fulfilled]: (state, actions) => {
       console.log(
         "[Fulfilled] getEmployeeAsync actions.payload.employees= ",
-        actions.payload.employee
+        actions.payload
       );
       return actions.payload.employee;
+    },
+    // Add Employee to server
+    // [addEmployeeAsync.pending]: (state, actions) => {
+    //   console.log("[Pending] addEmployeeAsync state= ", state);
+    // },
+    // [addEmployeeAsync.rejected]: (state, actions) => {
+    //   console.log("[Rejected] addEmployeeAsync actions= ", actions);
+    // },
+    [addEmployeeAsync.fulfilled]: (state, actions) => {
+      console.log(
+        "[Fulfilled] addEmployeeAsync actions.payload.employees= ",
+        actions.payload
+      );
+      state.push(actions.payload.employee);
+    },
+    // Add Employee to server
+    // [updateEmployeeAsync.pending]: (state, actions) => {
+    //   console.log("[Pending] updateEmployeeAsync state= ", state);
+    // },
+    // [updateEmployeeAsync.rejected]: (state, actions) => {
+    //   console.log("[Rejected] updateEmployeeAsync actions= ", actions);
+    // },
+    [updateEmployeeAsync.fulfilled]: (state, actions) => {
+      console.log(
+        "[Fulfilled] updateEmployeeAsync actions.payload.employees= ",
+        actions.payload
+      );
+      state.push(actions.payload.employee);
     },
   },
 });
