@@ -5,8 +5,10 @@ import Dashboard from "../pages/Dashboard";
 import Department from "../pages/Department";
 import Employee from "../pages/Employee";
 import Others from "../pages/Others";
-import AboutUs from "../pages/aboutUs";
+import AboutUs from "../pages/AboutUs";
 import NotFound from "../pages/404NotFound";
+import WorkPlace from "../pages/Workplace";
+
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
@@ -170,7 +172,7 @@ const pageList = [
   },
   {
     title: "Project",
-    path: "/department",
+    path: "/workplace",
     icon: <VscProject />,
     className: "nav-text",
   },
@@ -321,6 +323,7 @@ export default function AppBarComponent() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="department" element={<Department />} />
           <Route path="employee" element={<Employee />} />
+          <Route path="workplace" element={<WorkPlace />} />
           <Route path="others" element={<Others />} />
           <Route path="about" element={<AboutUs />} />
           <Route path="*" element={<Navigate to="404" />} />
