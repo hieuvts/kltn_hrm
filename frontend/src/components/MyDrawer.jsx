@@ -38,7 +38,6 @@ import Error from "@mui/icons-material/Error";
 import SearchIcon from "@mui/icons-material/Search";
 import { VscProject } from "react-icons/vsc";
 import { FcAssistant } from "react-icons/fc";
-
 import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
 
 import { styled, alpha, useTheme } from "@mui/material/styles";
@@ -327,7 +326,7 @@ export default function AppBarComponent() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="department" element={<Department />} />
           <Route path="employee" element={<Employee />} />
-          <Route path="others" element={<Others />} />
+          <Route path="others" element={<WorkPlace />} />
           <Route path="about" element={<AboutUs />} />
           <Route path="*" element={<Navigate to="404" />} />
         </Routes>
