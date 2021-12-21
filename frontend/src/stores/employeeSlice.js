@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import DMYFormatter from "../utilities/JSDateToDDMMYYYY";
 
 const initialState = [
   {
@@ -30,51 +31,59 @@ export const getEmployeeAsync = createAsyncThunk(
 
 export const addEmployeeAsync = createAsyncThunk(
   "employee/addEmployee",
-  async (payload) => {
-    const res = await fetch("http://localhost:8000/api/employee/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: payload.name,
-        gender: payload.gender,
-        dateOfBirth: "2010-01-29",
-        phoneNumber: payload.phoneNumber,
-        email: payload.email,
-        address: payload.address,
-        role: "Admin",
-        isDeleted: false,
-      }),
-    });
-
-    if (res.ok) {
-      const employee = await res.json();
-      console.log("added: ", res);
-      return { employee };
-    } else {
-      console.log("[addEmployeeAsync] not successful", res);
+  async (payload, { rejectWithValue }) => {
+    try {
+      const res = await fetch("http://localhost:8000/api/employee/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: payload.name,
+          gender: payload.gender,
+          dateOfBirth: DMYFormatter(payload.dateOfBirth),
+          phoneNumber: payload.phoneNumber,
+          email: payload.email,
+          address: payload.address,
+          role: "Admin",
+          isDeleted: false,
+        }),
+      });
+      if (res.ok) {
+        const employee = await res.json();
+        return { employee };
+      } else return rejectWithValue("Add employee not successful");
+    } catch (error) {
+      return rejectWithValue("Add employee not successful");
     }
   }
 );
 export const updateEmployeeAsync = createAsyncThunk(
   "employee/updateEmployee",
-  async (payload) => {
-    const res = await fetch(
-      `http://localhost:8000/api/employee/${payload.employeeid}/put`,
-      {
+  async (payload, { rejectWithValue }) => {
+    try {
+      const res = await fetch("http://localhost:8000/api/employee/put", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: "put method",
+          name: payload.name,
+          gender: payload.gender,
+          dateOfBirth: DMYFormatter(payload.dateOfBirth),
+          phoneNumber: payload.phoneNumber,
+          email: payload.email,
+          address: payload.address,
+          role: "Admin",
+          isDeleted: false,
         }),
-      }
-    );
-    if (res.ok) {
-      const employee = await res.json();
-      return { employee };
+      });
+      if (res.ok) {
+        const employee = await res.json();
+        return { employee };
+      } else return rejectWithValue("Update employee not successful");
+    } catch (error) {
+      return rejectWithValue("Update employee not successful");
     }
   }
 );
@@ -89,12 +98,12 @@ export const employeeSlice = createSlice({
   },
   extraReducers: {
     // Get Employee from server
-    // [getEmployeeAsync.pending]: (state, actions) => {
-    //   console.log("[Pending] getEmployeeAsync state= ", state);
-    // },
-    // [getEmployeeAsync.rejected]: (state, actions) => {
-    //   console.log("[Rejected] getEmployeeAsync actions= ", actions);
-    // },
+    [getEmployeeAsync.pending]: (state, actions) => {
+      console.log("[Pending] getEmployeeAsync state= ", state);
+    },
+    [getEmployeeAsync.rejected]: (state, actions) => {
+      console.log("[Rejected] getEmployeeAsync actions= ", actions.payload);
+    },
     [getEmployeeAsync.fulfilled]: (state, actions) => {
       console.log(
         "[Fulfilled] getEmployeeAsync actions.payload.employees= ",
@@ -103,12 +112,12 @@ export const employeeSlice = createSlice({
       return actions.payload.employee;
     },
     // Add Employee to server
-    // [addEmployeeAsync.pending]: (state, actions) => {
-    //   console.log("[Pending] addEmployeeAsync state= ", state);
-    // },
-    // [addEmployeeAsync.rejected]: (state, actions) => {
-    //   console.log("[Rejected] addEmployeeAsync actions= ", actions);
-    // },
+    [addEmployeeAsync.pending]: (state, actions) => {
+      console.log("[Pending] addEmployeeAsync state= ", state);
+    },
+    [addEmployeeAsync.rejected]: (state, actions) => {
+      console.log("[Rejected] addEmployeeAsync errorMsg= ", actions.payload);
+    },
     [addEmployeeAsync.fulfilled]: (state, actions) => {
       console.log(
         "[Fulfilled] addEmployeeAsync actions.payload.employees= ",

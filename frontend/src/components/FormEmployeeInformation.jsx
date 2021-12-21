@@ -87,7 +87,7 @@ export default function FormEmployeeInformation({
       initialValues: {
         name: "",
         gender: "Male",
-        dateOfBirth: "",
+        dateOfBirth: new Date(),
         phoneNumber: "",
         email: "",
         address: "",
@@ -141,6 +141,8 @@ export default function FormEmployeeInformation({
               label="Date of birth"
               inputFormat="dd/MM/yyyy"
               value={formik.values.dateOfBirth}
+              minDate={new Date("1900-01-01")}
+              maxDate={new Date()}
               onChange={(value) => {
                 formik.setFieldValue("dateOfBirth", value);
               }}
