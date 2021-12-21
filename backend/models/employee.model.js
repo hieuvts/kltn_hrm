@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 mongoose.pluralize(null); // Prevent pluralize collection name ('data' -> 'datas')
 const Schema = mongoose.Schema;
 const validator = require("validator");
+const moment = require("moment");
 
 // https://mongoosejs.com/docs/schematypes.html
 // https://docs.mongodb.com/manual/reference/operator/aggregation/strLenCP/
@@ -26,9 +27,9 @@ const employeeSchema = new Schema({
     type: Date,
     required: true,
     min: "1900-01-01",
-    max: "2020-01-01",
+    max: moment(Date.now()).format("YYYY-MM-DD"),
   },
-  phoneNumber: { type: String, required: true },
+  phoneNumber: { type: String, required: true, min: 8, max: 15 },
   email: {
     type: String,
     required: true,
@@ -47,12 +48,12 @@ const employeeSchema = new Schema({
     max: 10,
     default: "roleID",
   },
-  departmentID:{
+  departmentID: {
     type: String,
     max: 10,
     default: "departmentID",
   },
-  projectID:{
+  projectID: {
     type: String,
     max: 10,
     default: "projectID",
