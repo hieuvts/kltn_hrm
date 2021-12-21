@@ -39,7 +39,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { VscProject } from "react-icons/vsc";
 import { FcAssistant } from "react-icons/fc";
 import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
-
+import WorkPlace from "../pages/Workplace";
 import { styled, alpha, useTheme } from "@mui/material/styles";
 
 const Search = styled("div")(({ theme }) => ({
@@ -172,7 +172,7 @@ const pageList = [
   },
   {
     title: "Project",
-    path: "/project",
+    path: "/workplace",
     key: "project",
     icon: <VscProject />,
     className: "nav-text",
@@ -326,7 +326,7 @@ export default function AppBarComponent() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="department" element={<Department />} />
           <Route path="employee" element={<Employee />} />
-          <Route path="others" element={<WorkPlace />} />
+          <Route path="workplace" element={<WorkPlace />} />
           <Route path="about" element={<AboutUs />} />
           <Route path="*" element={<Navigate to="404" />} />
         </Routes>

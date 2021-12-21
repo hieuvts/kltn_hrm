@@ -318,8 +318,8 @@ DepartmentTableHead.propTypes = {
                         <TableCell align="center">{row.manager}</TableCell>
                         <TableCell align="center">
                           <Box>
-                            <IconButton onClick= {editOnClick(row)}> <EditIcon/> </IconButton>
-                            <IconButton onClick ={deleteOnClick(row)}> <DeleteIcon/> </IconButton>
+                            <IconButton onClick= {editOnClick(row)}> <EditIcon color = "primary"/> </IconButton>
+                            <IconButton onClick ={deleteOnClick(row)}> <DeleteIcon color = "primary"/> </IconButton>
                           </Box>
                         </TableCell>
                       </TableRow>
