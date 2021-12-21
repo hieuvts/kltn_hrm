@@ -12,6 +12,7 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
@@ -20,16 +21,16 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import ModeIcon from "@mui/icons-material/Mode";
 import Avatar from "@mui/material/Avatar";
 import { visuallyHidden } from "@mui/utils";
 import avatarMale from "../assets/icons/avatarMale.png";
 import avatarFemale from "../assets/icons/avatarFemale.png";
 
-import CreateDummyEmployees from "../utilities/createDummyEmployees";
 import { useSelector } from "react-redux";
-//Redux
-
-// var rows = CreateDummyEmployees(20);
+import moment from "moment";
+import DialogDeleteEmployee from "./DialogDeleteEmployee";
+import DialogUpdateEmployee from "./DialogUpdateEmployee";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -61,6 +62,12 @@ const headCells = [
     label: "GENDER",
   },
   {
+    id: "dateOfBirth",
+    numeric: false,
+    disablePadding: false,
+    label: "Birthday",
+  },
+  {
     id: "email",
     numeric: false,
     disablePadding: false,
@@ -79,10 +86,10 @@ const headCells = [
     label: "PHONE",
   },
   {
-    id: "registrationDate",
+    id: "actions",
     numeric: false,
     disablePadding: false,
-    label: "REGISTRATION DATE",
+    label: "Actions",
   },
 ];
 
@@ -109,7 +116,7 @@ function EnhancedTableHead(props) {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{
-              "aria-label": "select all desserts",
+              "aria-label": "select all employees",
             }}
           />
         </TableCell>
@@ -214,6 +221,10 @@ export default function EmployeeTable() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [isDialogDeleteEmployeeOpen, setDialogDeleteEmployeeOpen] =
+    React.useState(false);
+  const [isDialogUpdateEmployeeOpen, setDialogUpdateEmployeeOpen] =
+    React.useState(false);
   // Redux: get employee list from server
   // var rows = useSelector((state) => state.employee);
   // useEffect(() => {
@@ -230,19 +241,19 @@ export default function EmployeeTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = rows.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -266,116 +277,159 @@ export default function EmployeeTable() {
     setPage(0);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (id) => selected.indexOf(id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
+  const handleCloseDialogDeleteEmployee = () => {
+    setDialogDeleteEmployeeOpen(false);
+  };
+  const handleCloseDialogUpdateEmployee = () => {
+    setDialogUpdateEmployeeOpen(false);
+  };
+  const RowActions = () => {
+    return (
+      <Box sx={{}}>
+        <Button
+          variant="link"
+          onClick={() => setDialogUpdateEmployeeOpen(true)}
+        >
+          <ModeIcon color="primary" />
+        </Button>
+        <Button
+          variant="link"
+          onClick={() => setDialogDeleteEmployeeOpen(true)}
+        >
+          <DeleteIcon color="primary" />
+        </Button>
+      </Box>
+    );
+  };
   return (
-    <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size="medium"
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {rows
-                .slice()
-                .sort(getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+    <>
+      <DialogDeleteEmployee
+        isDialogOpen={isDialogDeleteEmployeeOpen}
+        handleCloseDialog={handleCloseDialogDeleteEmployee}
+      />
+      <DialogUpdateEmployee
+        isDialogOpen={isDialogUpdateEmployeeOpen}
+        handleCloseDialog={handleCloseDialogUpdateEmployee}
+      />
+      <Box sx={{ width: "100%" }}>
+        <Paper sx={{ width: "100%", mb: 2 }}>
+          <EnhancedTableToolbar numSelected={selected.length} />
+          <TableContainer>
+            <Table
+              sx={{ minWidth: 750 }}
+              aria-labelledby="tableTitle"
+              size="medium"
+            >
+              <EnhancedTableHead
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
+              />
+              <TableBody>
+                {rows
+                  .slice()
+                  .sort(getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row._id);
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.name)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={index}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                        align="right"
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={index}
+                        selected={isItemSelected}
                       >
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Avatar
-                            alt={row.name}
-                            src={
-                              row.gender === "Male" ? avatarMale : avatarFemale
-                            }
-                            sx={{
-                              alignSelf: "center",
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            color="primary"
+                            checked={isItemSelected}
+                            onClick={(event) => {
+                              handleClick(event, row._id);
+                              console.log("Clicked checkbox");
+                            }}
+                            inputProps={{
+                              "aria-labelledby": labelId,
                             }}
                           />
-                          {row.name}
-                        </Box>
-                      </TableCell>
-                      <TableCell align="right">{row.gender}</TableCell>
-                      <TableCell align="right">{row.email}</TableCell>
-                      <TableCell align="right">{row.address}</TableCell>
-                      <TableCell align="right">{row.phoneNumber}</TableCell>
-                      <TableCell align="right">
-                        {row.registrationDate}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 53 * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-    </Box>
+                        </TableCell>
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                          align="right"
+                        >
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Avatar
+                              alt={row.name}
+                              src={
+                                row.gender === "Male"
+                                  ? avatarMale
+                                  : avatarFemale
+                              }
+                              sx={{
+                                alignSelf: "center",
+                              }}
+                            />
+                            {row.name}
+                          </Box>
+                        </TableCell>
+                        <TableCell align="right">{row.gender}</TableCell>
+                        <TableCell align="right">
+                          {moment(row.dateOfBirth).format("DD-MM-YYY")}
+                        </TableCell>
+                        <TableCell align="right">{row.email}</TableCell>
+                        <TableCell align="right">{row.address}</TableCell>
+                        <TableCell align="right">{row.phoneNumber}</TableCell>
+
+                        <TableCell align="right">
+                          <RowActions />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: 53 * emptyRows,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+      </Box>
+    </>
   );
 }

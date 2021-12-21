@@ -283,7 +283,7 @@ export default function AppBarComponent() {
         >
           <List>
             {pageList.map((page, index) => (
-              <div key = {page.key}>
+              <div key={index}>
                 <Link
                   style={{ textDecoration: "none", color: "white" }}
                   to={page.path}

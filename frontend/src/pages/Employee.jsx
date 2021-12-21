@@ -16,7 +16,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { Snackbar } from "@mui/material";
 import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
 import MySearchBox from "../components/StyledSearchBox";
-import EmployeeTable from "../components/CustomerList";
+import EmployeeTable from "../components/EmployeeList";
 import DialogAddEmployee from "../components/DialogAddEmployee";
 //Redux
 import { useDispatch } from "react-redux";
