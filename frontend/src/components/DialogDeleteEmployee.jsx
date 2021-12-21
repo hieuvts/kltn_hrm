@@ -9,16 +9,13 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import PropTypes from "prop-types";
 
-import FormEmployeeInformation from "./FormEmployeeInformation";
-export default function DialogAddEmployee({
+export default function DialogDeleteEmployee({
   isDialogOpen,
   handleCloseDialog,
-  handleSnackbarOpen,
 }) {
-  DialogAddEmployee.propTypes = {
+  DialogDeleteEmployee.propTypes = {
     isDialogOpen: PropTypes.bool,
     handleCloseDialog: PropTypes.func,
-    handleSnackbarOpen: PropTypes.func,
   };
 
   return (
@@ -26,18 +23,30 @@ export default function DialogAddEmployee({
       <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <h5>Fill the employee personal information</h5>
+            <h5>Are you sure you want to delete this employee?</h5>
             <Button onClick={handleCloseDialog}>
               <h3>X</h3>
             </Button>
           </Box>
         </DialogTitle>
         <DialogContent>
-          <FormEmployeeInformation
+          {/* <FormEmployeeInformation
             handleSnackbarOpen={handleSnackbarOpen}
             handleCloseDialog={handleCloseDialog}
-          />
+          /> */}
         </DialogContent>
+        <DialogActions sx={{ mr: 3, p: 2 }}>
+          <Button
+            variant="contained"
+            onClick={handleCloseDialog}
+            sx={{ mr: 2 }}
+          >
+            Yes
+          </Button>
+          <Button variant="contained" onClick={handleCloseDialog}>
+            No
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   );

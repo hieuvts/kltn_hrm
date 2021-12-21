@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import DMYFormatter from "../utilities/JSDateToDDMMYYYY";
+import moment from "moment";
 
 const initialState = [
   {
@@ -41,7 +41,7 @@ export const addEmployeeAsync = createAsyncThunk(
         body: JSON.stringify({
           name: payload.name,
           gender: payload.gender,
-          dateOfBirth: DMYFormatter(payload.dateOfBirth),
+          dateOfBirth: moment(payload.dateOfBirth).format("YYYY-MM-DD"),
           phoneNumber: payload.phoneNumber,
           email: payload.email,
           address: payload.address,
@@ -70,7 +70,7 @@ export const updateEmployeeAsync = createAsyncThunk(
         body: JSON.stringify({
           name: payload.name,
           gender: payload.gender,
-          dateOfBirth: DMYFormatter(payload.dateOfBirth),
+          dateOfBirth: moment(payload.dateOfBirth).format("YYYY-MM-DD"),
           phoneNumber: payload.phoneNumber,
           email: payload.email,
           address: payload.address,
