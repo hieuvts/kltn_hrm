@@ -24,8 +24,8 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import ModeIcon from "@mui/icons-material/Mode";
 import Avatar from "@mui/material/Avatar";
 import { visuallyHidden } from "@mui/utils";
-import avatarMale from "../assets/icons/avatarMale.png";
-import avatarFemale from "../assets/icons/avatarFemale.png";
+import avatarMale from "../../assets/icons/avatarMale.png";
+import avatarFemale from "../../assets/icons/avatarFemale.png";
 
 import { useSelector } from "react-redux";
 import moment from "moment";

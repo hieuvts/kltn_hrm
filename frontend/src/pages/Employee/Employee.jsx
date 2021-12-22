@@ -14,13 +14,13 @@ import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import { Snackbar } from "@mui/material";
-import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
-import MySearchBox from "../components/StyledSearchBox";
-import EmployeeTable from "../components/EmployeeList";
-import DialogAddEmployee from "../components/DialogAddEmployee";
+import CapitalizeFirstLetter from "../../utilities/captitalizeFirstLetter";
+import MySearchBox from "../../components/StyledSearchBox";
+import EmployeeTable from "../../components/Employee/EmployeeList";
+import DialogAddEmployee from "../../components/Employee/DialogAddEmployee";
 //Redux
 import { useDispatch } from "react-redux";
-import { getEmployeeAsync } from "../stores/employeeSlice";
+import { getEmployeeAsync } from "../../stores/employeeSlice";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;

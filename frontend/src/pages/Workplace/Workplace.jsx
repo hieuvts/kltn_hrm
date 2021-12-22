@@ -9,7 +9,7 @@ import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import Paper from "@mui/material/Paper";
-import MySearchBox from "../components/StyledSearchBox";
+import MySearchBox from "../../components/StyledSearchBox";
 
 const itemsFromBackend = [
     { id: uuidv4(), content: "First task" },
@@ -19,7 +19,7 @@ const itemsFromBackend = [
     { id: uuidv4(), content: "Fifth task" }
 ];
 const pathnames = location.pathname.split("/").filter((x) => x);
-import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
+import CapitalizeFirstLetter from "../../utilities/captitalizeFirstLetter";
 
 const columnsFromBackend = {
     [uuidv4()]: {

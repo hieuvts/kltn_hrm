@@ -58,6 +58,7 @@ export const addEmployeeAsync = createAsyncThunk(
     }
   }
 );
+
 export const updateEmployeeAsync = createAsyncThunk(
   "employee/updateEmployee",
   async (payload, { rejectWithValue }) => {
@@ -82,11 +83,33 @@ export const updateEmployeeAsync = createAsyncThunk(
         const employee = await res.json();
         return { employee };
       } else return rejectWithValue("Update employee not successful");
-    } catch (error) {
+    } catch {
       return rejectWithValue("Update employee not successful");
     }
   }
 );
+
+export const deleteEmployeeAsync = createAsyncThunk(
+  "employee/delete",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const res = await fetch(
+        `http://localhost:8000/api/employee/${payload._id}/delete`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ _id: payload._id }),
+        }
+      );
+      if (!res.ok) rejectWithValue("Delete employee not successful");
+    } catch {
+      return rejectWithValue("Delete employee not successful");
+    }
+  }
+);
+
 export const employeeSlice = createSlice({
   name: "employee",
   initialState,

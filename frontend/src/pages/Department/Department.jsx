@@ -8,15 +8,14 @@ import Grid from "@mui/material/Grid";
 import { Typography, Button, InputBase } from "@mui/material";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
-import { styled, alpha, useTheme } from "@mui/material/styles";
 
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 
-import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
-import MySearchBox from "../components/StyledSearchBox";
-import EnhancedTable from "../components/DepartmentList";
+import CapitalizeFirstLetter from "../../utilities/captitalizeFirstLetter";
+import MySearchBox from "../../components/StyledSearchBox";
+import EnhancedTable from "../../components/Department/DepartmentList";
 
 export default function Department() {
   const pathnames = location.pathname.split("/").filter((x) => x);

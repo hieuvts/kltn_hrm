@@ -2,11 +2,12 @@ import React from "react";
 
 import { useState } from "react";
 import Dashboard from "../pages/Dashboard";
-import Department from "../pages/Department";
-import Employee from "../pages/Employee";
+import Department from "../pages/Department/Department";
+import Employee from "../pages/Employee/Employee";
 import Others from "../pages/Others";
-import AboutUs from "../pages/AboutUs";
-import NotFound from "../pages/404NotFound";
+import AboutUs from "../pages/AboutUs/AboutUs";
+import WorkPlace from "../pages/Workplace/Workplace";
+import NotFound from "../pages/404NotFound/404NotFound";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
@@ -39,7 +40,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import { VscProject } from "react-icons/vsc";
 import { FcAssistant } from "react-icons/fc";
 import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
-import WorkPlace from "../pages/Workplace";
 import { styled, alpha, useTheme } from "@mui/material/styles";
 
 const Search = styled("div")(({ theme }) => ({

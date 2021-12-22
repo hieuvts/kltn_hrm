@@ -19,8 +19,8 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { addEmployeeAsync } from "../stores/employeeSlice";
-import { validationSchema } from "../utilities/employeeInfoValidationSchema";
+import { addEmployeeAsync } from "../../stores/employeeSlice";
+import { validationSchema } from "../../utilities/employeeInfoValidationSchema";
 
 
 export default function FormEmployeeInformation({
