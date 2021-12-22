@@ -27,8 +27,11 @@ export default function DialogDeleteEmployee({
     (state) => state.employee.selectedEmployeeId
   );
   const handleDeleteEmployee = () => {
-    dispatch(deleteEmployeeAsync({ selectedEmployeeId: selectedEmployeeId }));
-    dispatch(getEmployeeAsync());
+    dispatch(
+      deleteEmployeeAsync({ selectedEmployeeId: selectedEmployeeId })
+    ).then(() => {
+      dispatch(getEmployeeAsync());
+    });
     handleCloseDialog();
   };
   return (

@@ -50,11 +50,10 @@ export default function Employee() {
     setSnackbarOpen(false);
   };
   useEffect(() => {
+    console.log("invoked useEffect employee.jsx");
     dispatch(getEmployeeAsync());
-  }, []);
-  const renderEmployeeCallback = () => {
-    forceUpdate();
-  };
+  });
+
   return (
     <>
       <Snackbar

@@ -22,10 +22,12 @@ const initialState = {
 export const getEmployeeAsync = createAsyncThunk(
   "employee/getAllEmployee",
   async () => {
+    console.log("Chay ham get all");
     const res = await fetch("http://localhost:8000/api/employee/getAll");
     if (res.ok) {
       const resFromServer = await res.json();
       const employee = resFromServer.employees;
+      console.log("Get all employee successful");
       return { employeeList: employee };
     } else {
       console.log("[FAILED] getEmployeeAsync: ", res.status);
@@ -96,6 +98,7 @@ export const updateEmployeeAsync = createAsyncThunk(
 export const deleteEmployeeAsync = createAsyncThunk(
   "employee/delete",
   async (payload, { rejectWithValue }) => {
+    console.log("Chay ham delte");
     try {
       const res = await fetch(
         `http://localhost:8000/api/employee/${payload.selectedEmployeeId}/delete`,
@@ -107,9 +110,13 @@ export const deleteEmployeeAsync = createAsyncThunk(
           body: JSON.stringify({ _id: payload._id }),
         }
       );
-      if (!res.ok) rejectWithValue("Delete employee not successful");
+      if (!res.ok) {
+        rejectWithValue();
+      } else {
+        console.log("[deleteEmployeeAsync] success");
+      }
     } catch {
-      return rejectWithValue("Delete employee not successful");
+      return rejectWithValue();
     }
   }
 );
@@ -171,6 +178,13 @@ export const employeeSlice = createSlice({
         actions.payload
       );
       state.push(actions.payload.employee);
+    },
+    [deleteEmployeeAsync.fulfilled]: (state, actions) => {
+      console.log(
+        "[Fulfilled] deleteEmployeeAsync actions.payload.employees= ",
+        actions.payload
+      );
+      return;
     },
   },
 });
