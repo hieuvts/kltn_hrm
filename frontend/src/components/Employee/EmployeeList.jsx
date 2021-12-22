@@ -31,7 +31,8 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import DialogDeleteEmployee from "./DialogDeleteEmployee";
 import DialogUpdateEmployee from "./DialogUpdateEmployee";
-
+import { setSelectedEmployeeId } from "../../stores/employeeSlice";
+import { useDispatch } from "react-redux";
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -227,11 +228,11 @@ export default function EmployeeTable() {
     React.useState(false);
   // Redux: get employee list from server
   // var rows = useSelector((state) => state.employee);
-  // useEffect(() => {
-  //   dispatch(getEmployeeAsync());
-  // }, []);
-
-  var rows = useSelector((state) => state.employee);
+  const dispatch = useDispatch();
+  var rows = useSelector((state) => state.employee.employeeList);
+  var selectedEmployee = useSelector(
+    (state) => state.employee.selectedEmployeeId
+  );
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -289,7 +290,7 @@ export default function EmployeeTable() {
   const handleCloseDialogUpdateEmployee = () => {
     setDialogUpdateEmployeeOpen(false);
   };
-  const RowActions = () => {
+  const RowActions = (selectedEmployeeId) => {
     return (
       <Box sx={{}}>
         <Button
@@ -300,7 +301,10 @@ export default function EmployeeTable() {
         </Button>
         <Button
           variant="link"
-          onClick={() => setDialogDeleteEmployeeOpen(true)}
+          onClick={() => {
+            dispatch(setSelectedEmployeeId(selectedEmployeeId));
+            setDialogDeleteEmployeeOpen(true);
+          }}
         >
           <DeleteIcon color="primary" />
         </Button>
@@ -402,7 +406,7 @@ export default function EmployeeTable() {
                         <TableCell align="right">{row.phoneNumber}</TableCell>
 
                         <TableCell align="right">
-                          <RowActions />
+                          <RowActions selectedEmployeeId={row._id} />
                         </TableCell>
                       </TableRow>
                     );

@@ -1,19 +1,23 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import moment from "moment";
 
-const initialState = [
-  {
-    name: "Initial Data",
-    gender: "Initial Data",
-    dateOfBirth: "2020-01-31T17:00:00.000Z",
-    phoneNumber: "0359545405",
-    address: "Initial Data",
-    roleID: "1",
-    departmentID: "4243",
-    projectID: "1",
-    isDeleted: false,
-  },
-];
+const initialState = {
+  employeeList: [
+    {
+      _id: null,
+      name: "Initial Data",
+      gender: "Initial Data",
+      dateOfBirth: "2020-01-31T17:00:00.000Z",
+      phoneNumber: "0359545405",
+      address: "Initial Data",
+      roleID: "1",
+      departmentID: "4243",
+      projectID: "1",
+      isDeleted: false,
+    },
+  ],
+  selectedEmployeeId: null,
+};
 
 export const getEmployeeAsync = createAsyncThunk(
   "employee/getAllEmployee",
@@ -22,7 +26,7 @@ export const getEmployeeAsync = createAsyncThunk(
     if (res.ok) {
       const resFromServer = await res.json();
       const employee = resFromServer.employees;
-      return { employee };
+      return { employeeList: employee };
     } else {
       console.log("[FAILED] getEmployeeAsync: ", res.status);
     }
@@ -94,9 +98,9 @@ export const deleteEmployeeAsync = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const res = await fetch(
-        `http://localhost:8000/api/employee/${payload._id}/delete`,
+        `http://localhost:8000/api/employee/${payload.selectedEmployeeId}/delete`,
         {
-          method: "PUT",
+          method: "DELETE",
           headers: {
             "Content-Type": "application/json",
           },
@@ -118,6 +122,12 @@ export const employeeSlice = createSlice({
       console.log("[employeeSlice.js] action.payload=", action.payload);
       state.name = action.payload.name;
     },
+    setSelectedEmployeeId: (state, action) => {
+      return {
+        ...state,
+        selectedEmployeeId: action.payload.selectedEmployeeId,
+      };
+    },
   },
   extraReducers: {
     // Get Employee from server
@@ -132,7 +142,7 @@ export const employeeSlice = createSlice({
         "[Fulfilled] getEmployeeAsync actions.payload.employees= ",
         actions.payload
       );
-      return actions.payload.employee;
+      return { ...state, employeeList: actions.payload.employeeList };
     },
     // Add Employee to server
     [addEmployeeAsync.pending]: (state, actions) => {
@@ -146,7 +156,7 @@ export const employeeSlice = createSlice({
         "[Fulfilled] addEmployeeAsync actions.payload.employees= ",
         actions.payload
       );
-      state.push(actions.payload.employee);
+      // state.push(actions.payload.employee);
     },
     // Add Employee to server
     // [updateEmployeeAsync.pending]: (state, actions) => {
@@ -164,6 +174,6 @@ export const employeeSlice = createSlice({
     },
   },
 });
-export const { getEmployeeInfo } = employeeSlice.actions;
+export const { getEmployeeInfo, setSelectedEmployeeId } = employeeSlice.actions;
 
 export default employeeSlice.reducer;

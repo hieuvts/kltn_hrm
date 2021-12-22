@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -50,6 +49,12 @@ export default function Employee() {
     }
     setSnackbarOpen(false);
   };
+  useEffect(() => {
+    dispatch(getEmployeeAsync());
+  }, []);
+  const renderEmployeeCallback = () => {
+    forceUpdate();
+  };
   return (
     <>
       <Snackbar
@@ -65,7 +70,7 @@ export default function Employee() {
           severity="success"
           sx={{ width: "100%" }}
         >
-          Form has been submitted!
+          Created new employee!
         </Alert>
       </Snackbar>
 
@@ -75,13 +80,13 @@ export default function Employee() {
         handleCloseDialog={handleDialogClose}
         handleSnackbarOpen={handleSnackbarOpen}
       />
-      <Button
+      {/* <Button
         variant="outlined"
         sx={{ mb: 5 }}
         onClick={() => dispatch(getEmployeeAsync())}
       >
         fetch Employee List from server
-      </Button>
+      </Button> */}
       <Breadcrumbs aria-label="breadcrumb">
         <Link underline="hover" color="inherit" href="/">
           Home

@@ -8,6 +8,11 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import PropTypes from "prop-types";
+import {
+  deleteEmployeeAsync,
+  getEmployeeAsync,
+} from "../../stores/employeeSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function DialogDeleteEmployee({
   isDialogOpen,
@@ -17,7 +22,15 @@ export default function DialogDeleteEmployee({
     isDialogOpen: PropTypes.bool,
     handleCloseDialog: PropTypes.func,
   };
-
+  const dispatch = useDispatch();
+  const selectedEmployeeId = useSelector(
+    (state) => state.employee.selectedEmployeeId
+  );
+  const handleDeleteEmployee = () => {
+    dispatch(deleteEmployeeAsync({ selectedEmployeeId: selectedEmployeeId }));
+    dispatch(getEmployeeAsync());
+    handleCloseDialog();
+  };
   return (
     <div>
       <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
@@ -38,13 +51,17 @@ export default function DialogDeleteEmployee({
         <DialogActions sx={{ mr: 3, p: 2 }}>
           <Button
             variant="contained"
-            onClick={handleCloseDialog}
             sx={{ mr: 2 }}
+            onClick={handleCloseDialog}
+          >
+            No
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => handleDeleteEmployee()}
           >
             Yes
-          </Button>
-          <Button variant="contained" onClick={handleCloseDialog}>
-            No
           </Button>
         </DialogActions>
       </Dialog>
