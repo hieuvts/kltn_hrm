@@ -57,7 +57,7 @@ const createEmployee = async (req, res) => {
         message: "Can't create new employee",
         errMsg: error.message,
       });
-      console.log(moment().format("hh:mm:ss"), "[ERROR] createEmployee");
+      console.log(moment().format("hh:mm:ss"), "[ERROR] createEmployee", error);
     } else {
       res.status(200).json({
         message: "Create employee successfully!",
