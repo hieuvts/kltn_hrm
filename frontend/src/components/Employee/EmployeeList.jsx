@@ -31,7 +31,7 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import DialogDeleteEmployee from "./DialogDeleteEmployee";
 import DialogUpdateEmployee from "./DialogUpdateEmployee";
-import { setSelectedEmployeeId } from "../../stores/employeeSlice";
+import { setCurrentSelectedEmployee } from "../../stores/employeeSlice";
 import { useDispatch } from "react-redux";
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -230,9 +230,9 @@ export default function EmployeeTable() {
   // var rows = useSelector((state) => state.employee);
   const dispatch = useDispatch();
   var rows = useSelector((state) => state.employee.employeeList);
-  var selectedEmployee = useSelector(
-    (state) => state.employee.selectedEmployeeId
-  );
+  // var selectedEmployee = useSelector(
+  //   (state) => state.employee.selectedEmployeeId
+  // );
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -290,19 +290,22 @@ export default function EmployeeTable() {
   const handleCloseDialogUpdateEmployee = () => {
     setDialogUpdateEmployeeOpen(false);
   };
-  const RowActions = (selectedEmployeeId) => {
+  const RowActions = (currentSelectedEmployee) => {
     return (
       <Box sx={{}}>
         <Button
           variant="link"
-          onClick={() => setDialogUpdateEmployeeOpen(true)}
+          onClick={() => {
+            dispatch(setCurrentSelectedEmployee(currentSelectedEmployee));
+            setDialogUpdateEmployeeOpen(true);
+          }}
         >
           <ModeIcon color="primary" />
         </Button>
         <Button
           variant="link"
           onClick={() => {
-            dispatch(setSelectedEmployeeId(selectedEmployeeId));
+            dispatch(setCurrentSelectedEmployee(currentSelectedEmployee));
             setDialogDeleteEmployeeOpen(true);
           }}
         >
@@ -406,7 +409,7 @@ export default function EmployeeTable() {
                         <TableCell align="right">{row.phoneNumber}</TableCell>
 
                         <TableCell align="right">
-                          <RowActions selectedEmployeeId={row._id} />
+                          <RowActions currentSelectedEmployee={row} />
                         </TableCell>
                       </TableRow>
                     );

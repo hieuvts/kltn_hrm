@@ -10,7 +10,10 @@ import DatePicker from "@mui/lab/DatePicker";
 import { useFormik } from "formik";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { addEmployeeAsync } from "../../stores/employeeSlice";
+import {
+  updateEmployeeAsync,
+  getEmployeeAsync,
+} from "../../stores/employeeSlice";
 import { validationSchema } from "../../utilities/employeeInfoValidationSchema";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
@@ -18,10 +21,8 @@ import Snackbar from "@mui/material/Snackbar";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-export default function FormEmployeeInformation({
+export default function FormUpdateEmployeeInformation({
   handleCloseDialog,
-  handleSnackbarOpen,
-  submitButtonText,
   initialValues,
 }) {
   const dispatch = useDispatch();
@@ -29,10 +30,11 @@ export default function FormEmployeeInformation({
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
-      validationSchema: validationSchema,
+      // validationSchema: validationSchema,
       onSubmit: (values) => {
-        dispatch(addEmployeeAsync(values));
-        handleSnackbarOpen();
+        dispatch(updateEmployeeAsync(values)).then(() => {
+          dispatch(getEmployeeAsync());
+        });
         handleCloseDialog();
       },
     });
@@ -142,7 +144,7 @@ export default function FormEmployeeInformation({
           />
 
           <Button variant="contained" color="primary" fullWidth type="submit">
-            {submitButtonText}
+            UPDATE
           </Button>
         </form>
       </div>
@@ -156,13 +158,11 @@ export default function FormEmployeeInformation({
   );
 }
 
-FormEmployeeInformation.propTypes = {
-  handleSnackbarOpen: PropTypes.func,
+FormUpdateEmployeeInformation.propTypes = {
   handleCloseDialog: PropTypes.func,
-  submitButtonText: PropTypes.string,
   initialValues: PropTypes.object,
 };
-FormEmployeeInformation.defaultProps = {
+FormUpdateEmployeeInformation.defaultProps = {
   initialValues: {
     name: "",
     gender: "Male",
@@ -175,5 +175,4 @@ FormEmployeeInformation.defaultProps = {
     projectID: "1",
     isDeleted: false,
   },
-  submitButtonText: "SUBMIT",
 };

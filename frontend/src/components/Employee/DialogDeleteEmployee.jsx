@@ -24,7 +24,7 @@ export default function DialogDeleteEmployee({
   };
   const dispatch = useDispatch();
   const selectedEmployeeId = useSelector(
-    (state) => state.employee.selectedEmployeeId
+    (state) => state.employee.currentSelectedEmployee._id
   );
   const handleDeleteEmployee = () => {
     dispatch(

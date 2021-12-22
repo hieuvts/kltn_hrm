@@ -15,18 +15,12 @@ export default function DialogAddEmployee({
   handleCloseDialog,
   handleSnackbarOpen,
 }) {
-  DialogAddEmployee.propTypes = {
-    isDialogOpen: PropTypes.bool,
-    handleCloseDialog: PropTypes.func,
-    handleSnackbarOpen: PropTypes.func,
-  };
-
   return (
     <div>
       <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <h5>Fill the employee personal information</h5>
+            <h3>Create new employee</h3>
             <Button onClick={handleCloseDialog}>
               <h3>X</h3>
             </Button>
@@ -42,3 +36,8 @@ export default function DialogAddEmployee({
     </div>
   );
 }
+DialogAddEmployee.propTypes = {
+  isDialogOpen: PropTypes.bool,
+  handleCloseDialog: PropTypes.func,
+  handleSnackbarOpen: PropTypes.func,
+};
