@@ -30,7 +30,7 @@ export default function FormUpdateEmployeeInformation({
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
-      // validationSchema: validationSchema,
+      validationSchema: validationSchema,
       onSubmit: (values) => {
         dispatch(updateEmployeeAsync(values)).then(() => {
           dispatch(getEmployeeAsync());

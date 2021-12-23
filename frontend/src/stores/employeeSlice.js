@@ -19,6 +19,7 @@ const initialState = {
   currentSelectedEmployee: {
     _id: "0",
   },
+  selectedEmployeeList: [],
 };
 
 export const getEmployeeAsync = createAsyncThunk(
@@ -124,6 +125,31 @@ export const deleteEmployeeAsync = createAsyncThunk(
   }
 );
 
+// export const deleteMultipleEmployeeAsync = createAsyncThunk(
+//   "employee/deleteMulti",
+//   async (payload, { rejectWithValue }) => {
+//     try {
+//       const res = await fetch(
+//         `http://localhost:8000/api/employee/deleteMulti`,
+//         {
+//           method: "DELETE",
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//           body: JSON.stringify({ _id: payload._id }),
+//         }
+//       );
+//       if (!res.ok) {
+//         rejectWithValue();
+//       } else {
+//         console.log("[deleteMultipleEmployeeAsync] success");
+//       }
+//     } catch {
+//       return rejectWithValue();
+//     }
+//   }
+// );
+
 export const employeeSlice = createSlice({
   name: "employee",
   initialState,
@@ -137,6 +163,17 @@ export const employeeSlice = createSlice({
         ...state,
         currentSelectedEmployee: action.payload.currentSelectedEmployee,
       };
+    },
+    getSelectedEmployeeList: (state, action) => {
+      console.log("[employeeSlice.js] action.payload=", action.payload);
+      state.name = action.payload.name;
+    },
+    setSelectedEmployeeList: (state, action) => {
+      // return {
+      //   // ...state,
+      //   selectedEmployeeList: action.payload.selectedEmployee,
+      // };
+      state.selectedEmployeeList.push(action.payload.selectedEmployee);
     },
   },
   extraReducers: {
@@ -192,7 +229,11 @@ export const employeeSlice = createSlice({
     },
   },
 });
-export const { getEmployeeInfo, setCurrentSelectedEmployee } =
-  employeeSlice.actions;
+export const {
+  getEmployeeInfo,
+  setCurrentSelectedEmployee,
+  getSelectedEmployeeList,
+  setSelectedEmployeeList,
+} = employeeSlice.actions;
 
 export default employeeSlice.reducer;

@@ -31,7 +31,13 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import DialogDeleteEmployee from "./DialogDeleteEmployee";
 import DialogUpdateEmployee from "./DialogUpdateEmployee";
-import { setCurrentSelectedEmployee } from "../../stores/employeeSlice";
+import {
+  setCurrentSelectedEmployee,
+  getSelectedEmployeeList,
+  setSelectedEmployeeList,
+  deleteEmployeeAsync,
+  getEmployeeAsync,
+} from "../../stores/employeeSlice";
 import { useDispatch } from "react-redux";
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -157,9 +163,22 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
-  const handleDelete = () => {
-    console.log("Click delete button");
+  const { numSelected, setSelected } = props;
+  const dispatch = useDispatch();
+  const selectedEmployeeList = useSelector(
+    (state) => state.employee.selectedEmployeeList
+  );
+  console.log("Type of selectedEmployeeList ", typeof selectedEmployeeList);
+  const handleDeleteMultipleEmployee = () => {
+    selectedEmployeeList.forEach((employee, index) => {
+      dispatch(deleteEmployeeAsync({ selectedEmployeeId: employee._id })).then(
+        () => {
+          setSelected([]);
+          dispatch(getEmployeeAsync());
+          console.log("Delete employee: ", employee._id, "index= ", index);
+        }
+      );
+    });
   };
   return (
     <Toolbar
@@ -187,7 +206,7 @@ const EnhancedTableToolbar = (props) => {
       ) : (
         <Typography
           sx={{ flex: "1 1 100%" }}
-          variant="h6"
+          variant="h5"
           id="tableTitle"
           component="div"
         >
@@ -196,8 +215,8 @@ const EnhancedTableToolbar = (props) => {
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton onClick={() => handleDelete()}>
+        <Tooltip title="Delete multiple">
+          <IconButton onClick={() => handleDeleteMultipleEmployee()}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -214,6 +233,7 @@ const EnhancedTableToolbar = (props) => {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  setSelected: PropTypes.func.isRequired,
 };
 
 export default function EmployeeTable() {
@@ -230,9 +250,6 @@ export default function EmployeeTable() {
   // var rows = useSelector((state) => state.employee);
   const dispatch = useDispatch();
   var rows = useSelector((state) => state.employee.employeeList);
-  // var selectedEmployee = useSelector(
-  //   (state) => state.employee.selectedEmployeeId
-  // );
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -249,17 +266,23 @@ export default function EmployeeTable() {
     setSelected([]);
   };
 
-  const handleClick = (event, id) => {
+  const handleClick = (event, employee) => {
+    const id = employee._id;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
+      // If employee is not in selectedList -> add to it
       newSelected = newSelected.concat(selected, id);
+      dispatch(setSelectedEmployeeList({ selectedEmployee: employee }));
     } else if (selectedIndex === 0) {
+      // If undo checkbox at first selected row
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
+      // If undo checkbox at last selected row
       newSelected = newSelected.concat(selected.slice(0, -1));
     } else if (selectedIndex > 0) {
+      // If undo checkbox at another selected row
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
         selected.slice(selectedIndex + 1)
@@ -326,7 +349,10 @@ export default function EmployeeTable() {
       />
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2 }}>
-          <EnhancedTableToolbar numSelected={selected.length} />
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            setSelected={setSelected}
+          />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
@@ -364,7 +390,7 @@ export default function EmployeeTable() {
                             color="primary"
                             checked={isItemSelected}
                             onClick={(event) => {
-                              handleClick(event, row._id);
+                              handleClick(event, row);
                               console.log("Clicked checkbox");
                             }}
                             inputProps={{
@@ -405,7 +431,7 @@ export default function EmployeeTable() {
                           {moment(row.dateOfBirth).format("DD-MM-YYY")}
                         </TableCell>
                         <TableCell align="right">{row.email}</TableCell>
-                        <TableCell align="right">{row.address}</TableCell>
+                        <TableCell align="right">{row._id}</TableCell>
                         <TableCell align="right">{row.phoneNumber}</TableCell>
 
                         <TableCell align="right">
