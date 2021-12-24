@@ -21,6 +21,7 @@ import DialogAddEmployee from "../../components/Employee/DialogAddEmployee";
 //Redux
 import { useDispatch } from "react-redux";
 import { getEmployeeAsync } from "../../stores/employeeSlice";
+import DialogExportToExcel from "../../components/Employee/DialogExportToExcel";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -30,13 +31,19 @@ export default function Employee() {
   const dispatch = useDispatch();
   const pathnames = location.pathname.split("/").filter((x) => x);
 
-  // Working with Dialog
+  // Add Employee Dialog
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const [isDialogExportEmployeeOpen, setDialogExportEmployeeOpen] =
+    useState(false);
   // Working with Snackbar
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleDialogOpen = () => {
     setDialogOpen(true);
+  };
+
+  const setDialogExportEmployeeClose = () => {
+    setDialogExportEmployeeOpen(false);
   };
   const handleDialogClose = () => {
     setDialogOpen(false);
@@ -52,10 +59,14 @@ export default function Employee() {
   };
   useEffect(() => {
     dispatch(getEmployeeAsync());
-  },[]);
+  }, []);
 
   return (
     <>
+      <DialogExportToExcel
+        isDialogOpen={isDialogExportEmployeeOpen}
+        handleCloseDialog={setDialogExportEmployeeClose}
+      />
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         open={isSnackbarOpen}
@@ -79,13 +90,6 @@ export default function Employee() {
         handleCloseDialog={handleDialogClose}
         handleSnackbarOpen={handleSnackbarOpen}
       />
-      {/* <Button
-        variant="outlined"
-        sx={{ mb: 5 }}
-        onClick={() => dispatch(getEmployeeAsync())}
-      >
-        fetch Employee List from server
-      </Button> */}
       <Breadcrumbs aria-label="breadcrumb">
         <Link underline="hover" color="inherit" href="/">
           Home
@@ -111,14 +115,21 @@ export default function Employee() {
       >
         <Grid item xs={4} md={2}>
           <Button variant="link">
-            <FileUploadOutlinedIcon fontSize="medium" />
-            <Typography variant="h6">Import</Typography>
+            <FileDownloadOutlinedIcon fontSize="medium" />
+            <Typography variant="h6" sx={{ pl: 1 }}>
+              Import
+            </Typography>
           </Button>
         </Grid>
         <Grid item xs={4} md={2}>
-          <Button variant="link">
-            <FileDownloadOutlinedIcon fontSize="medium" />
-            <Typography variant="h6">Export</Typography>
+          <Button
+            variant="link"
+            onClick={() => setDialogExportEmployeeOpen(true)}
+          >
+            <FileUploadOutlinedIcon fontSize="medium" />
+            <Typography variant="h6" sx={{ pl: 1 }}>
+              Export
+            </Typography>
           </Button>
         </Grid>
         <Grid item xs={12} md={2} paddingTop={{ sm: 2, md: 0 }}>
