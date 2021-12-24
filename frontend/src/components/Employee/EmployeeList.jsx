@@ -121,7 +121,7 @@ function EnhancedTableHead(props) {
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
+            onChange={() => onSelectAllClick(event, { isDeleteAll: true })}
             inputProps={{
               "aria-label": "select all employees",
             }}
@@ -257,9 +257,12 @@ export default function EmployeeTable() {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
+  const handleSelectAllClick = (event, isDeleteAll) => {
     if (event.target.checked) {
       const newSelecteds = rows.map((n) => n._id);
+      rows.map((employee) => {
+        dispatch(setSelectedEmployeeList({ selectedEmployee: employee }));
+      });
       setSelected(newSelecteds);
       return;
     }
