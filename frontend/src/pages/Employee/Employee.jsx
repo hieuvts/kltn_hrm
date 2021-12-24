@@ -4,10 +4,9 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 
-import { Typography, Button, InputBase } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
-import { styled, alpha, useTheme } from "@mui/material/styles";
 
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
@@ -18,6 +17,7 @@ import CapitalizeFirstLetter from "../../utilities/captitalizeFirstLetter";
 import MySearchBox from "../../components/StyledSearchBox";
 import EmployeeTable from "../../components/Employee/EmployeeList";
 import DialogAddEmployee from "../../components/Employee/DialogAddEmployee";
+
 //Redux
 import { useDispatch } from "react-redux";
 import { getEmployeeAsync } from "../../stores/employeeSlice";
@@ -51,9 +51,8 @@ export default function Employee() {
     setSnackbarOpen(false);
   };
   useEffect(() => {
-    console.log("invoked useEffect employee.jsx");
     dispatch(getEmployeeAsync());
-  });
+  },[]);
 
   return (
     <>
@@ -133,6 +132,11 @@ export default function Employee() {
         <MySearchBox placeholder="Search for customer..." />
       </Paper>
       <div>
+        {/* {employeeList.length >= 1 ? (
+          <EmployeeTable />
+        ) : (
+          <Typography>Employee list is empty</Typography>
+        )} */}
         <EmployeeTable />
       </div>
     </>

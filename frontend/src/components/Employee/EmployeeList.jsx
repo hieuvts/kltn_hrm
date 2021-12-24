@@ -17,8 +17,6 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import ModeIcon from "@mui/icons-material/Mode";
@@ -30,11 +28,13 @@ import avatarFemale from "../../assets/icons/avatarFemale.png";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import DialogDeleteEmployee from "./DialogDeleteEmployee";
+import DialogDeleteMultipleEmployee from "./DialogDeleteMultipleEmployee";
 import DialogUpdateEmployee from "./DialogUpdateEmployee";
 import {
   setCurrentSelectedEmployee,
-  getSelectedEmployeeList,
-  setSelectedEmployeeList,
+  addToSelectedEmployeeList,
+  removeFromSelectedEmployeeList,
+  setMultiSelectedEmployeeList,
   deleteEmployeeAsync,
   getEmployeeAsync,
 } from "../../stores/employeeSlice";
@@ -121,7 +121,7 @@ function EnhancedTableHead(props) {
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
-            onChange={() => onSelectAllClick(event, { isDeleteAll: true })}
+            onChange={() => onSelectAllClick()}
             inputProps={{
               "aria-label": "select all employees",
             }}
@@ -163,22 +163,15 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected, setSelected } = props;
+  const { numSelected, setSelected, setDialogDeleteMultipleEmployeeOpen } =
+    props;
   const dispatch = useDispatch();
+  // Get selectedEmployeeList to delete multiple, delete all
   const selectedEmployeeList = useSelector(
     (state) => state.employee.selectedEmployeeList
   );
-  console.log("Type of selectedEmployeeList ", typeof selectedEmployeeList);
   const handleDeleteMultipleEmployee = () => {
-    selectedEmployeeList.forEach((employee, index) => {
-      dispatch(deleteEmployeeAsync({ selectedEmployeeId: employee._id })).then(
-        () => {
-          setSelected([]);
-          dispatch(getEmployeeAsync());
-          console.log("Delete employee: ", employee._id, "index= ", index);
-        }
-      );
-    });
+    setDialogDeleteMultipleEmployeeOpen(true);
   };
   return (
     <Toolbar
@@ -234,6 +227,7 @@ const EnhancedTableToolbar = (props) => {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   setSelected: PropTypes.func.isRequired,
+  setDialogDeleteMultipleEmployeeOpen: PropTypes.func.isRequired,
 };
 
 export default function EmployeeTable() {
@@ -244,10 +238,13 @@ export default function EmployeeTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [isDialogDeleteEmployeeOpen, setDialogDeleteEmployeeOpen] =
     React.useState(false);
+  const [
+    isDialogDeleteMultipleEmployeeOpen,
+    setDialogDeleteMultipleEmployeeOpen,
+  ] = React.useState(false);
   const [isDialogUpdateEmployeeOpen, setDialogUpdateEmployeeOpen] =
     React.useState(false);
-  // Redux: get employee list from server
-  // var rows = useSelector((state) => state.employee);
+
   const dispatch = useDispatch();
   var rows = useSelector((state) => state.employee.employeeList);
 
@@ -257,12 +254,11 @@ export default function EmployeeTable() {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event, isDeleteAll) => {
+  const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = rows.map((n) => n._id);
-      rows.map((employee) => {
-        dispatch(setSelectedEmployeeList({ selectedEmployee: employee }));
-      });
+      // Select all -> add all employee (equals to 'rows') to the selectedEmployeeList
+      dispatch(setMultiSelectedEmployeeList(rows));
       setSelected(newSelecteds);
       return;
     }
@@ -277,21 +273,23 @@ export default function EmployeeTable() {
     if (selectedIndex === -1) {
       // If employee is not in selectedList -> add to it
       newSelected = newSelected.concat(selected, id);
-      dispatch(setSelectedEmployeeList({ selectedEmployee: employee }));
+      dispatch(addToSelectedEmployeeList({ selectedEmployee: employee }));
     } else if (selectedIndex === 0) {
       // If undo checkbox at first selected row
       newSelected = newSelected.concat(selected.slice(1));
+      dispatch(removeFromSelectedEmployeeList({ selectedEmployee: employee }));
     } else if (selectedIndex === selected.length - 1) {
       // If undo checkbox at last selected row
       newSelected = newSelected.concat(selected.slice(0, -1));
+      dispatch(removeFromSelectedEmployeeList({ selectedEmployee: employee }));
     } else if (selectedIndex > 0) {
       // If undo checkbox at another selected row
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
         selected.slice(selectedIndex + 1)
       );
+      dispatch(removeFromSelectedEmployeeList({ selectedEmployee: employee }));
     }
-
     setSelected(newSelected);
   };
 
@@ -312,6 +310,9 @@ export default function EmployeeTable() {
 
   const handleCloseDialogDeleteEmployee = () => {
     setDialogDeleteEmployeeOpen(false);
+  };
+  const handleCloseDialogDeleteMultipleEmployee = () => {
+    setDialogDeleteMultipleEmployeeOpen(false);
   };
   const handleCloseDialogUpdateEmployee = () => {
     setDialogUpdateEmployeeOpen(false);
@@ -346,6 +347,11 @@ export default function EmployeeTable() {
         isDialogOpen={isDialogDeleteEmployeeOpen}
         handleCloseDialog={handleCloseDialogDeleteEmployee}
       />
+      <DialogDeleteMultipleEmployee
+        setSelected={setSelected}
+        isDialogOpen={isDialogDeleteMultipleEmployeeOpen}
+        handleCloseDialog={handleCloseDialogDeleteMultipleEmployee}
+      />
       <DialogUpdateEmployee
         isDialogOpen={isDialogUpdateEmployeeOpen}
         handleCloseDialog={handleCloseDialogUpdateEmployee}
@@ -355,6 +361,9 @@ export default function EmployeeTable() {
           <EnhancedTableToolbar
             numSelected={selected.length}
             setSelected={setSelected}
+            setDialogDeleteMultipleEmployeeOpen={
+              setDialogDeleteMultipleEmployeeOpen
+            }
           />
           <TableContainer>
             <Table
@@ -366,7 +375,7 @@ export default function EmployeeTable() {
                 numSelected={selected.length}
                 order={order}
                 orderBy={orderBy}
-                onSelectAllClick={handleSelectAllClick}
+                onSelectAllClick={() => handleSelectAllClick(event)}
                 onRequestSort={handleRequestSort}
                 rowCount={rows.length}
               />
@@ -392,10 +401,7 @@ export default function EmployeeTable() {
                           <Checkbox
                             color="primary"
                             checked={isItemSelected}
-                            onClick={(event) => {
-                              handleClick(event, row);
-                              console.log("Clicked checkbox");
-                            }}
+                            onClick={(event) => handleClick(event, row)}
                             inputProps={{
                               "aria-labelledby": labelId,
                             }}
@@ -431,10 +437,10 @@ export default function EmployeeTable() {
                         </TableCell>
                         <TableCell align="right">{row.gender}</TableCell>
                         <TableCell align="right">
-                          {moment(row.dateOfBirth).format("DD-MM-YYY")}
+                          {moment(row.dateOfBirth).format("DD-MM-YYYY")}
                         </TableCell>
                         <TableCell align="right">{row.email}</TableCell>
-                        <TableCell align="right">{row._id}</TableCell>
+                        <TableCell align="right">{row.address}</TableCell>
                         <TableCell align="right">{row.phoneNumber}</TableCell>
 
                         <TableCell align="right">

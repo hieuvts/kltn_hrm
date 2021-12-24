@@ -3,18 +3,18 @@ import moment from "moment";
 
 const initialState = {
   employeeList: [
-    {
-      _id: null,
-      name: "Initial Data",
-      gender: "Initial Data",
-      dateOfBirth: "2020-01-31T17:00:00.000Z",
-      phoneNumber: "0359545405",
-      address: "Initial Data",
-      roleID: "1",
-      departmentID: "4243",
-      projectID: "1",
-      isDeleted: false,
-    },
+    // {
+    //   _id: null,
+    //   name: "Initial Data",
+    //   gender: "Initial Data",
+    //   dateOfBirth: "2020-01-31T17:00:00.000Z",
+    //   phoneNumber: "0359545405",
+    //   address: "Initial Data",
+    //   roleID: "1",
+    //   departmentID: "4243",
+    //   projectID: "1",
+    //   isDeleted: false,
+    // },
   ],
   currentSelectedEmployee: {
     _id: "0",
@@ -125,31 +125,6 @@ export const deleteEmployeeAsync = createAsyncThunk(
   }
 );
 
-// export const deleteMultipleEmployeeAsync = createAsyncThunk(
-//   "employee/deleteMulti",
-//   async (payload, { rejectWithValue }) => {
-//     try {
-//       const res = await fetch(
-//         `http://localhost:8000/api/employee/deleteMulti`,
-//         {
-//           method: "DELETE",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify({ _id: payload._id }),
-//         }
-//       );
-//       if (!res.ok) {
-//         rejectWithValue();
-//       } else {
-//         console.log("[deleteMultipleEmployeeAsync] success");
-//       }
-//     } catch {
-//       return rejectWithValue();
-//     }
-//   }
-// );
-
 export const employeeSlice = createSlice({
   name: "employee",
   initialState,
@@ -164,16 +139,19 @@ export const employeeSlice = createSlice({
         currentSelectedEmployee: action.payload.currentSelectedEmployee,
       };
     },
-    getSelectedEmployeeList: (state, action) => {
-      console.log("[employeeSlice.js] action.payload=", action.payload);
-      state.name = action.payload.name;
-    },
-    setSelectedEmployeeList: (state, action) => {
-      // return {
-      //   // ...state,
-      //   selectedEmployeeList: action.payload.selectedEmployee,
-      // };
+    addToSelectedEmployeeList: (state, action) => {
       state.selectedEmployeeList.push(action.payload.selectedEmployee);
+    },
+    removeFromSelectedEmployeeList: (state, action) => {
+      state.selectedEmployeeList = state.selectedEmployeeList.filter(
+        (employee) => employee._id !== action.payload.selectedEmployee._id
+      );
+    },
+    setMultiSelectedEmployeeList: (state, action) => {
+      const selectedEmployeeList = action.payload;
+      selectedEmployeeList.forEach((employee) =>
+        state.selectedEmployeeList.push(employee)
+      );
     },
   },
   extraReducers: {
@@ -232,8 +210,9 @@ export const employeeSlice = createSlice({
 export const {
   getEmployeeInfo,
   setCurrentSelectedEmployee,
-  getSelectedEmployeeList,
-  setSelectedEmployeeList,
+  addToSelectedEmployeeList,
+  removeFromSelectedEmployeeList,
+  setMultiSelectedEmployeeList,
 } = employeeSlice.actions;
 
 export default employeeSlice.reducer;
