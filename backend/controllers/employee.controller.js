@@ -38,8 +38,8 @@ const getAllEmployee = async (req, res) => {
   // Search by name, email, phoneNumber
   let query = req.query.search;
   let employees = {};
-  let isProvideSearchQuery = typeof query === "undefined" || query.length === 0;
-  if (!isProvideSearchQuery) {
+
+  if (typeof query === "undefined" || query.length === 0) {
     console.log("Return all employeed");
     employees = await Employee.find();
   } else {
@@ -55,13 +55,7 @@ const getAllEmployee = async (req, res) => {
     res.status(200).json({
       employees,
     });
-    console.log(
-      moment().format("hh:mm:ss"),
-      "[SUCCESS] ",
-      isProvideSearchQuery
-        ? "get ALL employees"
-        : `get employees by query=${query}`
-    );
+    console.log(moment().format("hh:mm:ss"), "[SUCCESS] getAllEmployee");
   } else {
     res.status(400).json({
       message: "[ERROR] [getAll] Something went wrong",
