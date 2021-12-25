@@ -40,7 +40,7 @@ const getAllEmployee = async (req, res) => {
   let employees = {};
 
   if (typeof query === "undefined" || query.length === 0) {
-    console.log("Return all employeed");
+    console.log("Return all employees");
     employees = await Employee.find();
   } else {
     console.log("Return employees with search= ", query);
@@ -51,6 +51,7 @@ const getAllEmployee = async (req, res) => {
       },
     });
   }
+  
   if (employees) {
     res.status(200).json({
       employees,

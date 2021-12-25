@@ -34,4 +34,6 @@ const taskScheema = new Schema({
         type: Boolean
     }
 });
+
+taskScheema.index({ name: "text"});
 module.exports = mongoose.model("task", taskScheema);
