@@ -34,8 +34,22 @@ const getOneproject = async (req, res) => {
 };
 
 const getAllproject = async (req, res) => {
-  console.log("Trigger getAllproject");
-  const projects = await Project.find();
+  let query = req.query.search;
+  let projects = {};
+
+  if (typeof query === "undefined" || query.length === 0) {
+    console.log("Return all projects");
+    projects = await Project.find();
+  } else {
+    console.log("Return projects with search= ", query);
+    projects = await Project.find({
+      $text: {
+        $search: `"${query}"`,
+        // $search: `.*(\b${query}\b).*`,
+      },
+    });
+  }
+  
   if (projects) {
     res.status(200).json({
       message: "Get all project successfully!",
@@ -76,7 +90,8 @@ const putproject = async (req, res) => {
     (project.employeeID = req.body.employeeID);
   typeof req.body.difficulty !== "undefined" &&
     (project.difficulty = req.body.difficulty);
-  typeof req.body.projectID !== "undefined" && (project.projectID = req.body.projectID);
+  typeof req.body.projectID !== "undefined" &&
+    (project.projectID = req.body.projectID);
   typeof req.body.role !== "undefined" && (project.role = req.body.role);
   typeof req.body.isDeleted !== "undefined" &&
     (project.isDeleted = req.body.isDeleted);
@@ -103,7 +118,7 @@ const putproject = async (req, res) => {
 // findOneAndDelete() should be able to delete on _id.
 
 const deleteproject = async (req, res) => {
-   console.log("Invoked deleteproject");
+  console.log("Invoked deleteproject");
   // Take req.project value from previous function "getprojectById"
   const project = req.project;
   // project.remove((error, result) => {

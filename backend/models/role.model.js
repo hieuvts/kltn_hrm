@@ -20,4 +20,6 @@ const roleScheema = new Schema({
         type: Boolean
     }
 });
+
+roleScheema.index({ name: "text"});
 module.exports = mongoose.model("role", roleScheema);

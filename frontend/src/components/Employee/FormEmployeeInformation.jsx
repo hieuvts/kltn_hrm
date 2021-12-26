@@ -1,104 +1,36 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Snackbar from "@mui/material/Snackbar";
-import CloseIcon from "@mui/icons-material/Close";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
-import * as yup from "yup";
 import { useFormik } from "formik";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { addEmployeeAsync } from "../stores/employeeSlice";
+import { addEmployeeAsync } from "../../stores/employeeSlice";
+import { validationSchema } from "../../utilities/employeeInfoValidationSchema";
+import MuiAlert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 
-const phoneNumberRegex =
-  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
-const validationSchema = yup.object().shape({
-  name: yup
-    .string("Enter your name")
-    .min(2, "Name should be of minimum 2 characters length")
-    .max(150, "Name should be of maximum 150 characters length")
-    .required("Name is required!"),
-  gender: yup
-    .mixed()
-    .oneOf(["Male", "Female", "Other"])
-    .required("Gender is required!"),
-  dateOfBirth: yup
-    .date("Select your birthday")
-    .required("Birthday is required!"),
-  phoneNumber: yup
-    .string("Enter your phone number")
-    .matches(phoneNumberRegex, "Phone number is not valid")
-    .min(8, "Phone number should be of minimum 8 characters length")
-    .max(15, "Phone number should be of maximum 15 characters length")
-    .required("Phone number is required!"),
-  email: yup
-    .string("Enter your email")
-    .email("Enter a valid email")
-    .required("Email is required!"),
-  address: yup
-    .string("Enter your address")
-    .max(150, "Address should be of maximum 150 characters length")
-    .required("Address is required!"),
-  roleID: yup
-    .string()
-    .max(10, "RoleID should be of maximum 10 characters lenght")
-    .default("roleID"),
-  departmentID: yup
-    .string()
-    .max(10, "DepartmentID should be of maximum 10 characters lenght")
-    .default("departmentID"),
-  projectID: yup
-    .string()
-    .max(10, "ProjectID should be of maximum 10 characters lenght")
-    .default("projectID"),
-  isDeleted: yup.bool().default(false),
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 export default function FormEmployeeInformation({
   handleCloseDialog,
   handleSnackbarOpen,
+  submitButtonText,
+  initialValues,
 }) {
-  FormEmployeeInformation.propTypes = {
-    handleSnackbarOpen: PropTypes.func,
-    handleCloseDialog: PropTypes.func,
-  };
-  const [datePickerValue, setDatePickerValue] = useState(
-    new Date("2021-01-01T00:00:))")
-  );
-
-  const handleDatePicker = (dateValue) => {
-    setDatePickerValue(dateValue);
-  };
   const dispatch = useDispatch();
 
   const FormikWithMUI = () => {
     const formik = useFormik({
-      initialValues: {
-        name: "",
-        gender: "Male",
-        dateOfBirth: "",
-        phoneNumber: "",
-        email: "",
-        address: "",
-        roleID: "1",
-        departmentID: "1",
-        projectID: "1",
-        isDeleted: false,
-      },
+      initialValues: initialValues,
       validationSchema: validationSchema,
       onSubmit: (values) => {
-        // alert(JSON.stringify(values, null, 2));
         dispatch(addEmployeeAsync(values));
         handleSnackbarOpen();
         handleCloseDialog();
@@ -106,6 +38,17 @@ export default function FormEmployeeInformation({
     });
     return (
       <div style={{ marginTop: "30px" }}>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          open={true}
+          autoHideDuration={2500}
+          key={"top" + "right"}
+          sx={{ mt: "0" }}
+        >
+          <Alert severity="success" sx={{ width: "100%" }}>
+            Placeholder
+          </Alert>
+        </Snackbar>
         <form onSubmit={formik.handleSubmit}>
           <TextField
             fullWidth
@@ -141,6 +84,8 @@ export default function FormEmployeeInformation({
               label="Date of birth"
               inputFormat="dd/MM/yyyy"
               value={formik.values.dateOfBirth}
+              minDate={new Date("1900-01-01")}
+              maxDate={new Date()}
               onChange={(value) => {
                 formik.setFieldValue("dateOfBirth", value);
               }}
@@ -197,7 +142,7 @@ export default function FormEmployeeInformation({
           />
 
           <Button variant="contained" color="primary" fullWidth type="submit">
-            SUBMIT
+            {submitButtonText}
           </Button>
         </form>
       </div>
@@ -210,3 +155,25 @@ export default function FormEmployeeInformation({
     </div>
   );
 }
+
+FormEmployeeInformation.propTypes = {
+  handleSnackbarOpen: PropTypes.func,
+  handleCloseDialog: PropTypes.func,
+  submitButtonText: PropTypes.string,
+  initialValues: PropTypes.object,
+};
+FormEmployeeInformation.defaultProps = {
+  initialValues: {
+    name: "",
+    gender: "Male",
+    dateOfBirth: new Date(),
+    phoneNumber: "",
+    email: "",
+    address: "",
+    roleID: "1",
+    departmentID: "1",
+    projectID: "1",
+    isDeleted: false,
+  },
+  submitButtonText: "SUBMIT",
+};

@@ -1,18 +1,26 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import moment from "moment";
 
-const initialState = [
-  {
-    name: "Initial Data",
-    gender: "Initial Data",
-    dateOfBirth: "2020-01-31T17:00:00.000Z",
-    phoneNumber: "0359545405",
-    address: "Initial Data",
-    roleID: "1",
-    departmentID: "4243",
-    projectID: "1",
-    isDeleted: false,
+const initialState = {
+  employeeList: [
+    // {
+    //   _id: null,
+    //   name: "Initial Data",
+    //   gender: "Initial Data",
+    //   dateOfBirth: "2020-01-31T17:00:00.000Z",
+    //   phoneNumber: "0359545405",
+    //   address: "Initial Data",
+    //   roleID: "1",
+    //   departmentID: "4243",
+    //   projectID: "1",
+    //   isDeleted: false,
+    // },
+  ],
+  currentSelectedEmployee: {
+    _id: "0",
   },
-];
+  selectedEmployeeList: [],
+};
 
 export const getEmployeeAsync = createAsyncThunk(
   "employee/getAllEmployee",
@@ -21,7 +29,8 @@ export const getEmployeeAsync = createAsyncThunk(
     if (res.ok) {
       const resFromServer = await res.json();
       const employee = resFromServer.employees;
-      return { employee };
+      console.log("Get all employee successful");
+      return { employeeList: employee };
     } else {
       console.log("[FAILED] getEmployeeAsync: ", res.status);
     }
@@ -30,54 +39,92 @@ export const getEmployeeAsync = createAsyncThunk(
 
 export const addEmployeeAsync = createAsyncThunk(
   "employee/addEmployee",
-  async (payload) => {
-    const res = await fetch("http://localhost:8000/api/employee/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: payload.name,
-        gender: payload.gender,
-        dateOfBirth: "2010-01-29",
-        phoneNumber: payload.phoneNumber,
-        email: payload.email,
-        address: payload.address,
-        role: "Admin",
-        isDeleted: false,
-      }),
-    });
-
-    if (res.ok) {
-      const employee = await res.json();
-      console.log("added: ", res);
-      return { employee };
-    } else {
-      console.log("[addEmployeeAsync] not successful", res);
-    }
-  }
-);
-export const updateEmployeeAsync = createAsyncThunk(
-  "employee/updateEmployee",
-  async (payload) => {
-    const res = await fetch(
-      `http://localhost:8000/api/employee/${payload.employeeid}/put`,
-      {
-        method: "PUT",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const res = await fetch("http://localhost:8000/api/employee/create", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: "put method",
+          name: payload.name,
+          gender: payload.gender,
+          dateOfBirth: moment(payload.dateOfBirth).format("YYYY-MM-DD"),
+          phoneNumber: payload.phoneNumber,
+          email: payload.email,
+          address: payload.address,
+          role: "Admin",
+          isDeleted: false,
         }),
-      }
-    );
-    if (res.ok) {
-      const employee = await res.json();
-      return { employee };
+      });
+      if (res.ok) {
+        const employee = await res.json();
+        return { employee };
+      } else return rejectWithValue("Add employee not successful");
+    } catch (error) {
+      return rejectWithValue("Add employee not successful");
     }
   }
 );
+
+export const updateEmployeeAsync = createAsyncThunk(
+  "employee/updateEmployee",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const res = await fetch(
+        `http://localhost:8000/api/employee/${payload._id}/put`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: payload.name,
+            gender: payload.gender,
+            dateOfBirth: moment(payload.dateOfBirth).format("YYYY-MM-DD"),
+            phoneNumber: payload.phoneNumber,
+            email: payload.email,
+            address: payload.address,
+            role: "Admin",
+            isDeleted: false,
+          }),
+        }
+      );
+      if (res.ok) {
+        const employee = await res.json();
+        return { employee };
+      } else return rejectWithValue("Update employee not successful");
+    } catch {
+      return rejectWithValue("Update employee not successful");
+    }
+  }
+);
+
+export const deleteEmployeeAsync = createAsyncThunk(
+  "employee/delete",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const res = await fetch(
+        `http://localhost:8000/api/employee/${payload.selectedEmployeeId}/delete`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ _id: payload._id }),
+        }
+      );
+      if (!res.ok) {
+        rejectWithValue();
+      } else {
+        console.log("[deleteEmployeeAsync] success");
+      }
+    } catch {
+      return rejectWithValue();
+    }
+  }
+);
+
 export const employeeSlice = createSlice({
   name: "employee",
   initialState,
@@ -86,6 +133,26 @@ export const employeeSlice = createSlice({
       console.log("[employeeSlice.js] action.payload=", action.payload);
       state.name = action.payload.name;
     },
+    setCurrentSelectedEmployee: (state, action) => {
+      return {
+        ...state,
+        currentSelectedEmployee: action.payload.currentSelectedEmployee,
+      };
+    },
+    addToSelectedEmployeeList: (state, action) => {
+      state.selectedEmployeeList.push(action.payload.selectedEmployee);
+    },
+    removeFromSelectedEmployeeList: (state, action) => {
+      state.selectedEmployeeList = state.selectedEmployeeList.filter(
+        (employee) => employee._id !== action.payload.selectedEmployee._id
+      );
+    },
+    setMultiSelectedEmployeeList: (state, action) => {
+      const selectedEmployeeList = action.payload;
+      selectedEmployeeList.forEach((employee) =>
+        state.selectedEmployeeList.push(employee)
+      );
+    },
   },
   extraReducers: {
     // Get Employee from server
@@ -93,28 +160,28 @@ export const employeeSlice = createSlice({
     //   console.log("[Pending] getEmployeeAsync state= ", state);
     // },
     // [getEmployeeAsync.rejected]: (state, actions) => {
-    //   console.log("[Rejected] getEmployeeAsync actions= ", actions);
+    //   console.log("[Rejected] getEmployeeAsync actions= ", actions.payload);
     // },
     [getEmployeeAsync.fulfilled]: (state, actions) => {
       console.log(
         "[Fulfilled] getEmployeeAsync actions.payload.employees= ",
         actions.payload
       );
-      return actions.payload.employee;
+      return { ...state, employeeList: actions.payload.employeeList };
     },
     // Add Employee to server
     // [addEmployeeAsync.pending]: (state, actions) => {
     //   console.log("[Pending] addEmployeeAsync state= ", state);
     // },
     // [addEmployeeAsync.rejected]: (state, actions) => {
-    //   console.log("[Rejected] addEmployeeAsync actions= ", actions);
+    //   console.log("[Rejected] addEmployeeAsync errorMsg= ", actions.payload);
     // },
     [addEmployeeAsync.fulfilled]: (state, actions) => {
       console.log(
         "[Fulfilled] addEmployeeAsync actions.payload.employees= ",
         actions.payload
       );
-      state.push(actions.payload.employee);
+      // state.push(actions.payload.employee);
     },
     // Add Employee to server
     // [updateEmployeeAsync.pending]: (state, actions) => {
@@ -128,10 +195,24 @@ export const employeeSlice = createSlice({
         "[Fulfilled] updateEmployeeAsync actions.payload.employees= ",
         actions.payload
       );
-      state.push(actions.payload.employee);
+      // state.push(actions.payload.employee);
+      return;
+    },
+    [deleteEmployeeAsync.fulfilled]: (state, actions) => {
+      console.log(
+        "[Fulfilled] deleteEmployeeAsync actions.payload.employees= ",
+        actions.payload
+      );
+      return;
     },
   },
 });
-export const { getEmployeeInfo } = employeeSlice.actions;
+export const {
+  getEmployeeInfo,
+  setCurrentSelectedEmployee,
+  addToSelectedEmployeeList,
+  removeFromSelectedEmployeeList,
+  setMultiSelectedEmployeeList,
+} = employeeSlice.actions;
 
 export default employeeSlice.reducer;

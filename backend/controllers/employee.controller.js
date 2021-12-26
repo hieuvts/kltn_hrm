@@ -1,18 +1,18 @@
 const Employee = require("../models/employee.model");
-
+const moment = require("moment");
 const getEmployeeById = async (req, res, next, employeeId) => {
   // Get employee details from Employee model and
   // attach to request object
   // https://expressjs.com/en/4x/api.html#router.param
-  console.log("Trigger getEmployeeByID");
   Employee.findById(employeeId).exec((error, result) => {
     if (error || !result) {
+      console.log(`Employee ${employeeId} is not found`);
       res.status(404).json({
         message: "[ERROR] [Controller] Employee not found!",
       });
       return;
     } else {
-      console.log("Employee found!");
+      console.log(moment().format("hh:mm:ss"), `Employee ${employeeId} found!`);
     }
     req.employee = result;
     next();
@@ -20,52 +20,70 @@ const getEmployeeById = async (req, res, next, employeeId) => {
 };
 
 const getOneEmployee = async (req, res) => {
-  console.log("Trigger getOneEmployee");
   // Take req.employee value from previous function "getEmployeeById"
   if (!req.employee) {
     res.status(400).json({
       message: "[ERROR] Employee not found!",
     });
+    console.log(moment().format("hh:mm:ss"), "[SUCCESS] getOneEmployee");
   } else {
     res.status(200).json({
       employee: req.employee,
     });
+    console.log(moment().format("hh:mm:ss"), "[ERROR] getOneEmployee");
   }
 };
 
 const getAllEmployee = async (req, res) => {
-  console.log("Trigger getAllEmployee");
-  const employees = await Employee.find();
+  // Search by name, email, phoneNumber
+  let query = req.query.search;
+  let employees = {};
+
+  if (typeof query === "undefined" || query.length === 0) {
+    console.log("Return all employees");
+    employees = await Employee.find();
+  } else {
+    console.log("Return employees with search= ", query);
+    employees = await Employee.find({
+      $text: {
+        $search: `"${query}"`,
+        // $search: `.*(\b${query}\b).*`,
+      },
+    });
+  }
+  
   if (employees) {
     res.status(200).json({
-      message: "Get all employee successfully!",
-      employees: employees,
+      employees,
     });
+    console.log(moment().format("hh:mm:ss"), "[SUCCESS] getAllEmployee");
   } else {
     res.status(400).json({
       message: "[ERROR] [getAll] Something went wrong",
     });
+    console.log(moment().format("hh:mm:ss"), "[ERROR] getAllEmployee");
   }
 };
 
 const createEmployee = async (req, res) => {
-  console.log("Invoked createEmployee");
   const employee = new Employee(req.body);
   employee.save((error, result) => {
     if (error || !result) {
       res.status(400).json({
-        message: "[ERROR] [create]",
+        message: "Can't create new employee",
         errMsg: error.message,
       });
+      console.log(moment().format("hh:mm:ss"), "[ERROR] createEmployee", error);
     } else {
       res.status(200).json({
         message: "Create employee successfully!",
       });
+      console.log(moment().format("hh:mm:ss"), "[SUCCESS] createEmployee");
     }
   });
 };
 
-const putEmployee = async (req, res) => {
+const updateEmployee = async (req, res) => {
   const employee = req.employee;
   // typeof req.body.name === "undefined"
   //   ? (employee.name = employee.name)
@@ -85,15 +103,17 @@ const putEmployee = async (req, res) => {
 
   employee.save((error, result) => {
     if (error || !result) {
+      console.log(moment().format("hh:mm:ss"), "[ERROR] updateEmployee");
       return res.status(400).json({
-        message: "[UPDATE] Something went wrong",
+        message: "Update user not successfully",
         error: error,
       });
+    } else {
+      res.status(200).json({
+        employee,
+      });
+      console.log(moment().format("hh:mm:ss"), "[SUCCESS] updateEmployee");
     }
-    res.json({
-      message: "Update user successfully",
-      employee: employee,
-    });
   });
 };
 
@@ -105,62 +125,55 @@ const putEmployee = async (req, res) => {
 // findOneAndDelete() should be able to delete on _id.
 
 const deleteEmployee = async (req, res) => {
-  //console.log("Invoked deleteEmployee");
   // Take req.employee value from previous function "getEmployeeById"
   const employee = req.employee;
-  // employee.remove((error, result) => {
-  //   if (error || !result) {
-  //     res
-  //       .status(400)
-  //       .json({ message: "[ERROR] [delete] Something went wrong" });
-  //   } else {
-  //     res.status(200).json({
-  //       message: "Delete employee successfully!",
-  //       deletedEmployee: employee,
-  //     });
-  //   }
-  // });
 
   // result= `1` if MongoDB deleted a doc,
   // `0` if no docs matched the filter `{ name: ... }`
   Employee.deleteOne({ _id: employee._id }, (error, result) => {
     if (error || !result) {
       res.status(400).json({
-        message: "Can't delete!!!",
+        message: "Delete employee not successful",
         error: error,
       });
+      console.log(moment().format("hh:mm:ss"), "[ERROR] deleteEmployee");
     } else {
       res.status(200).json({
-        message: "Delete successfully!",
+        message: "Delete employee successfully!",
         result: result,
       });
+      console.log(moment().format("hh:mm:ss"), "[SUCCESS] deleteEmployee");
     }
   });
 };
 
 const deleteAllEmployee = async (req, res) => {
-  console.log("Invoked deleteAllEmployee");
   // const count = req.body.count;
   // Removes all documents that match the filter from a collection.
   // To delete all documents in a collection,
   // pass in an empty document ({ }).
   Employee.deleteMany((error, result) => {
     if (error || !result) {
+      console.log(moment().format("hh:mm:ss"), "[ERROR] deleteAllEmployee");
       return res.status(400).json({
-        message: "[ERROR] [deleteAll] Something went wrong",
+        message: "Delete all employee not successful",
+        error: error,
       });
+    } else {
+      res.status(200).json({
+        message: "Delete all employee successfully!",
+      });
+      console.log(moment().format("hh:mm:ss"), "[SUCCESS] deleteAllEmployee");
     }
-    res.json({
-      message: "Delete all employee successfully!",
-    });
   });
 };
 
 module.exports = {
-  getEmployeeById,
   getAllEmployee,
+  getEmployeeById,
+  getOneEmployee,
   createEmployee,
   deleteEmployee,
   deleteAllEmployee,
-  putEmployee,
+  updateEmployee,
 };

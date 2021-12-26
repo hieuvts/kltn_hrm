@@ -21,7 +21,22 @@ const getDepartmentById = async (req, res, next, departmentId) => {
 
 // GET ALL
 const getAllDepartment = async (req, res) => {
-  const departments = await Department.find();
+  let query = req.query.search;
+  let departments = {};
+
+  if (typeof query === "undefined" || query.length === 0) {
+    console.log("Return all departments");
+    departments = await Department.find();
+  } else {
+    console.log("Return departments with search= ", query);
+    departments = await Department.find({
+      $text: {
+        $search: `"${query}"`,
+        // $search: `.*(\b${query}\b).*`,
+      },
+    });
+  }
+
   if (departments) {
     res.status(200).json({
       message: "Get all Department successfully!",
@@ -59,7 +74,8 @@ const putDepartment = async (req, res) => {
   //   ? (Department.name = Department.name)
   //   : (Department.name = req.body.name);
   typeof req.body.name !== "undefined" && (Department.name = req.body.name);
-  typeof req.body.headOfDepartment !== "undefined" && (Department.headOfDepartment = req.body.headOfDepartment);
+  typeof req.body.headOfDepartment !== "undefined" &&
+    (Department.headOfDepartment = req.body.headOfDepartment);
   typeof req.body.dateOfBirth !== "undefined" &&
     (Department.dateOfBirth = req.body.dateOfBirth);
   typeof req.body.isDeleted !== "undefined" &&
@@ -80,7 +96,7 @@ const putDepartment = async (req, res) => {
 };
 
 // Delete one Department
-const deleteDepartment = async (req, res ) => {
+const deleteDepartment = async (req, res) => {
   const department = req.department;
   department.deleteOne({ _id: department._id }, (error, result) => {
     if (error || !result) {
@@ -95,10 +111,9 @@ const deleteDepartment = async (req, res ) => {
       });
     }
   });
-}
+};
 
-
-// Delete all Department 
+// Delete all Department
 const deleteAllDepartment = async (req, res) => {
   console.log("Invoked deleteAllDepartment");
   // const count = req.body.count;
@@ -123,5 +138,5 @@ module.exports = {
   createDepartment,
   putDepartment,
   deleteAllDepartment,
-  deleteDepartment
+  deleteDepartment,
 };
