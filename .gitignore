@@ -160,3 +160,4 @@ dist
 
 # dotenv
 .env
+/frontend/src/config
