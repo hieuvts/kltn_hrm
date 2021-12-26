@@ -21,11 +21,26 @@ const getRoleById = async (req, res, next, RoleId) => {
 
 // GET ALL
 const getAllRole = async (req, res) => {
-  const Roles = await Role.find();
-  if (Roles) {
+  let query = req.query.search;
+  let roles = {};
+
+  if (typeof query === "undefined" || query.length === 0) {
+    console.log("Return all roles");
+    roles = await Role.find();
+  } else {
+    console.log("Return roles with search= ", query);
+    roles = await Role.find({
+      $text: {
+        $search: `"${query}"`,
+        // $search: `.*(\b${query}\b).*`,
+      },
+    });
+  }
+
+  if (roles) {
     res.status(200).json({
       message: "Get all Role successfully!",
-      Roles: Roles,
+      roles: roles,
     });
   } else {
     res.status(400).json({
@@ -59,7 +74,8 @@ const putRole = async (req, res) => {
   //   ? (Role.name = Role.name)
   //   : (Role.name = req.body.name);
   typeof req.body.name !== "undefined" && (Role.name = req.body.name);
-  typeof req.body.roleLevel !== "undefined" && (Role.headOfRole = req.body.roleLevel);
+  typeof req.body.roleLevel !== "undefined" &&
+    (Role.headOfRole = req.body.roleLevel);
   typeof req.body.isDeleted !== "undefined" &&
     (Role.isDeleted = req.body.isDeleted);
 
@@ -78,7 +94,7 @@ const putRole = async (req, res) => {
 };
 
 // Delete one Role
-const deleteRole = async (req, res ) => {
+const deleteRole = async (req, res) => {
   const Role = req.Role;
 
   Role.deleteOne({ _id: Role._id }, (error, result) => {
@@ -94,10 +110,9 @@ const deleteRole = async (req, res ) => {
       });
     }
   });
-}
+};
 
-
-// Delete all Role 
+// Delete all Role
 const deleteAllRole = async (req, res) => {
   console.log("Invoked deleteAllRole");
   // const count = req.body.count;
@@ -122,5 +137,5 @@ module.exports = {
   createRole,
   putRole,
   deleteAllRole,
-  deleteRole
+  deleteRole,
 };

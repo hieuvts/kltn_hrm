@@ -34,8 +34,22 @@ const getOneuser = async (req, res) => {
 };
 
 const getAlluser = async (req, res) => {
-  console.log("Trigger getAlluser");
-  const users = await user.find();
+  let query = req.query.search;
+  let users = {};
+
+  if (typeof query === "undefined" || query.length === 0) {
+    console.log("Return all users");
+    users = await user.find();
+  } else {
+    console.log("Return users with search= ", query);
+    users = await user.find({
+      $text: {
+        $search: `"${query}"`,
+        // $search: `.*(\b${query}\b).*`,
+      },
+    });
+  }
+
   if (users) {
     res.status(200).json({
       message: "Get all user successfully!",
@@ -70,8 +84,10 @@ const putuser = async (req, res) => {
   // typeof req.body.name === "undefined"
   //   ? (user.name = user.name)
   //   : (user.name = req.body.name);
-  typeof req.body.username !== "undefined" && (user.username = req.body.username);
-  typeof req.body.password !== "undefined" && (user.password = req.body.password);
+  typeof req.body.username !== "undefined" &&
+    (user.username = req.body.username);
+  typeof req.body.password !== "undefined" &&
+    (user.password = req.body.password);
   typeof req.body.employeeID !== "undefined" &&
     (user.employeeID = req.body.employeeID);
   typeof req.body.levelAccses !== "undefined" &&
