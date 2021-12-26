@@ -5,11 +5,12 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const employeeRoute = require("./routes/employee.route");
 const departmentRoute = require("./routes/department.route");
-const feedbackfromemployeeRoute = require("./routes/feedbackfromemployee.route");
+const feedbackFromEmployeeRoute = require("./routes/feedbackFromEmployee.route");
 const projectRoute = require("./routes/project.route");
 const taskRoute = require("./routes/task.route");
 const userRoute = require("./routes/user.route");
 const roleRoute = require("./routes/role.route");
+
 const app = express();
 app.use(cors());
 // Parses incoming requests with JSON payloads and is based on body-parser
@@ -42,7 +43,7 @@ app.use((err, req, res, next) => {
 
 app.use("/api/department",departmentRoute)
 app.use("/api/employee", employeeRoute);
-app.use("/api/feedbackfromemployee",feedbackfromemployeeRoute)
+app.use("/api/feedbackfromemployee",feedbackFromEmployeeRoute)
 app.use("/api/task", taskRoute);
 app.use("/api/role",roleRoute)
 app.use("/api/project", projectRoute);

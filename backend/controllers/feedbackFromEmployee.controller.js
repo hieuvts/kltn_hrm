@@ -1,4 +1,4 @@
-const FeedbackFromEmployee = require("../models/feedbackfromemployee.model");
+const FeedbackFromEmployee = require("../models/feedbackFromEmployee.model");
 
 // GET BY ID
 const getFeedbackFromEmployeeById = async (

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const feedbackFromEmployeeControllers = require("../controllers/FeedbackFromEmployee.controller");
+const feedbackFromEmployeeControllers = require("../controllers/feedbackFromEmployee.controller");
 
 // Router-level middleware
 router.param("FeedbackFromEmployeeId",feedbackFromEmployeeControllers.getFeedbackFromEmployeeById);
