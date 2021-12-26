@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 
 import { Typography, Button } from "@mui/material";
@@ -10,7 +8,6 @@ import Link from "@mui/material/Link";
 
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
-import SearchIcon from "@mui/icons-material/Search";
 import MuiAlert from "@mui/material/Alert";
 import { Snackbar } from "@mui/material";
 import CapitalizeFirstLetter from "../../utilities/captitalizeFirstLetter";
@@ -18,6 +15,7 @@ import MySearchBox from "../../components/StyledSearchBox";
 import EmployeeTable from "../../components/Employee/EmployeeList";
 import DialogAddEmployee from "../../components/Employee/DialogAddEmployee";
 
+import debounce from "lodash.debounce";
 //Redux
 import { useDispatch } from "react-redux";
 import { getEmployeeAsync } from "../../stores/employeeSlice";
@@ -60,10 +58,16 @@ export default function Employee() {
   };
   const handleSearchQueryChange = (e) => {
     setSearchQuery(e.target.value);
-    console.log("curren searchQuery = ", e.target.value);
+    console.log("current searchQuery --> ", e.target.value);
   };
+  const debounceFetchAPI = useCallback(
+    debounce((searchQuery) => {
+      dispatch(getEmployeeAsync({ searchQuery: searchQuery }));
+    }, 350),
+    []
+  );
   useEffect(() => {
-    dispatch(getEmployeeAsync({ searchQuery: searchQuery }));
+    debounceFetchAPI(searchQuery);
   }, [handleSearchQueryChange]);
 
   return (
