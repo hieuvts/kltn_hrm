@@ -27,7 +27,9 @@ export const getEmployeeAsync = createAsyncThunk(
   "employee/getAllEmployee",
   async (payload, { rejectWithValue }) => {
     try {
-      const res = await fetch(`${apiBaseUrl}/employee/getAll`);
+      const res = await fetch(
+        `${apiBaseUrl}/employee/getAll?search=${payload.searchQuery}`
+      );
       if (res.ok) {
         const resFromServer = await res.json();
         const employee = resFromServer.employees;

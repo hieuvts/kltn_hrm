@@ -37,7 +37,8 @@ export default function Employee() {
     useState(false);
   // Working with Snackbar
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
-
+  // Working with search func
+  const [searchQuery, setSearchQuery] = useState("");
   const handleDialogOpen = () => {
     setDialogOpen(true);
   };
@@ -57,9 +58,13 @@ export default function Employee() {
     }
     setSnackbarOpen(false);
   };
+  const handleSearchQueryChange = (e) => {
+    setSearchQuery(e.target.value);
+    console.log("curren searchQuery = ", e.target.value);
+  };
   useEffect(() => {
-    dispatch(getEmployeeAsync());
-  }, []);
+    dispatch(getEmployeeAsync({ searchQuery: searchQuery }));
+  }, [handleSearchQueryChange]);
 
   return (
     <>
@@ -138,10 +143,14 @@ export default function Employee() {
           </Button>
         </Grid>
       </Grid>
-      {/* Search box */}
+
       <Paper elevation={1} sx={{ my: 3, p: 3 }}>
-        <MySearchBox placeholder="Search for customer..." />
+        <MySearchBox
+          placeholder="Search for customer by name, email, phone number..."
+          handleSearchQueryChange={handleSearchQueryChange}
+        />
       </Paper>
+
       <div>
         {/* {employeeList.length >= 1 ? (
           <EmployeeTable />
