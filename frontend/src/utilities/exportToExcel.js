@@ -1,7 +1,6 @@
 import XLSX from "xlsx";
 import * as FileSaver from "file-saver";
 
-const fileExt = ".xlsx";
 const fileType =
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
 var Header = [

@@ -2,24 +2,23 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import moment from "moment";
 import { apiBaseUrl } from "../config/apiBaseUrl";
 
+// employeeList: [
+//   {
+//     _id: null,
+//     name: "Initial Data",
+//     gender: "Initial Data",
+//     dateOfBirth: "2020-01-31T17:00:00.000Z",
+//     phoneNumber: "0359545405",
+//     address: "Initial Data",
+//     roleID: "1",
+//     departmentID: "4243",
+//     projectID: "1",
+//     isDeleted: false,
+//   },
+// ],
 const initialState = {
-  employeeList: [
-    // {
-    //   _id: null,
-    //   name: "Initial Data",
-    //   gender: "Initial Data",
-    //   dateOfBirth: "2020-01-31T17:00:00.000Z",
-    //   phoneNumber: "0359545405",
-    //   address: "Initial Data",
-    //   roleID: "1",
-    //   departmentID: "4243",
-    //   projectID: "1",
-    //   isDeleted: false,
-    // },
-  ],
-  currentSelectedEmployee: {
-    _id: "0",
-  },
+  employeeList: [],
+  currentSelectedEmployee: {},
   selectedEmployeeList: [],
 };
 

@@ -30,13 +30,12 @@ import moment from "moment";
 import DialogDeleteEmployee from "./DialogDeleteEmployee";
 import DialogDeleteMultipleEmployee from "./DialogDeleteMultipleEmployee";
 import DialogUpdateEmployee from "./DialogUpdateEmployee";
+import DialogEmployeeDetails from "./DialogEmployeeDetails";
 import {
   setCurrentSelectedEmployee,
   addToSelectedEmployeeList,
   removeFromSelectedEmployeeList,
   setMultiSelectedEmployeeList,
-  deleteEmployeeAsync,
-  getEmployeeAsync,
 } from "../../stores/employeeSlice";
 import { useDispatch } from "react-redux";
 function descendingComparator(a, b, orderBy) {
@@ -244,7 +243,8 @@ export default function EmployeeTable() {
   ] = React.useState(false);
   const [isDialogUpdateEmployeeOpen, setDialogUpdateEmployeeOpen] =
     React.useState(false);
-
+  const [isDialogEmployeeDetailsOpen, setDialogEmployeeDetailsOpen] =
+    React.useState(false);
   const dispatch = useDispatch();
   var rows = useSelector((state) => state.employee.employeeList);
 
@@ -317,9 +317,12 @@ export default function EmployeeTable() {
   const handleCloseDialogUpdateEmployee = () => {
     setDialogUpdateEmployeeOpen(false);
   };
+  const handleCloseDialogEmployeeDetails = () => {
+    setDialogEmployeeDetailsOpen(false);
+  };
   const RowActions = (currentSelectedEmployee) => {
     return (
-      <Box sx={{}}>
+      <Box>
         <Button
           variant="link"
           onClick={() => {
@@ -355,6 +358,10 @@ export default function EmployeeTable() {
       <DialogUpdateEmployee
         isDialogOpen={isDialogUpdateEmployeeOpen}
         handleCloseDialog={handleCloseDialogUpdateEmployee}
+      />
+      <DialogEmployeeDetails
+        isDialogOpen={isDialogEmployeeDetailsOpen}
+        handleCloseDialog={handleCloseDialogEmployeeDetails}
       />
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2 }}>
@@ -413,6 +420,15 @@ export default function EmployeeTable() {
                           scope="row"
                           padding="none"
                           align="right"
+                          onClick={() => {
+                            console.log("current row: ", row);
+                            dispatch(
+                              setCurrentSelectedEmployee({
+                                currentSelectedEmployee: row,
+                              })
+                            );
+                            setDialogEmployeeDetailsOpen(true);
+                          }}
                         >
                           <Box
                             sx={{
