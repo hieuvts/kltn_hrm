@@ -458,12 +458,12 @@ export default function EmployeeTable() {
                         <TableCell align="right">{row.email}</TableCell>
                         <TableCell align="right">{row.phoneNumber}</TableCell>
                         <TableCell align="right">
-                          {row.roleID.map((role, index) => (
+                          {row.role.map((role, index) => (
                             <p key={index}>{role.name}</p>
                           ))}
                         </TableCell>
                         <TableCell align="right">
-                          {row.departmentID.map((department, index) => (
+                          {row.department.map((department, index) => (
                             <p key={index}>{department.name}</p>
                           ))}
                         </TableCell>
@@ -486,6 +486,7 @@ export default function EmployeeTable() {
             </Table>
           </TableContainer>
           <TablePagination
+            labelRowsPerPage="Employees per page"
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
             count={rows.length}
