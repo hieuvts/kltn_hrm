@@ -3,7 +3,7 @@ mongoose.pluralize(null);
 const Schema = mongoose.Schema;
 const validator = require("validator");
 
-const projectScheema = new Schema({
+const projectSchema = new Schema({
   name: {
     type: String,
     require: true,
@@ -30,5 +30,5 @@ const projectScheema = new Schema({
   },
 });
 
-projectScheema.index({ name: "text", customer: "text" });
-module.exports = mongoose.model("project", projectScheema);
+projectSchema.index({ name: "text", customer: "text" });
+module.exports = mongoose.model("project", projectSchema);

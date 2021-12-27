@@ -3,7 +3,7 @@ mongoose.pluralize(null);
 const Schema = mongoose.Schema;
 const validator = require("validator");
 
-const taskScheema = new Schema({
+const taskSchema = new Schema({
   name: {
     type: String,
     require: true,
@@ -34,5 +34,5 @@ const taskScheema = new Schema({
   },
 });
 
-taskScheema.index({ name: "text" });
-module.exports = mongoose.model("task", taskScheema);
+taskSchema.index({ name: "text" });
+module.exports = mongoose.model("task", taskSchema);

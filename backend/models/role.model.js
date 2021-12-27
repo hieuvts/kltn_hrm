@@ -3,7 +3,7 @@ mongoose.pluralize(null);
 const Schema = mongoose.Schema;
 const validator = require("validator");
 
-const roleScheema = new Schema({
+const roleSchema = new Schema({
   name: {
     type: String,
     require: true,
@@ -23,5 +23,5 @@ const roleScheema = new Schema({
   },
 });
 
-roleScheema.index({ name: "text" });
-module.exports = mongoose.model("role", roleScheema);
+roleSchema.index({ name: "text" });
+module.exports = mongoose.model("role", roleSchema);

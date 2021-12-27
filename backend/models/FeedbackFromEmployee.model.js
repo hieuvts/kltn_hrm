@@ -3,7 +3,7 @@ mongoose.pluralize(null);
 const Schema = mongoose.Schema;
 const validator = require("validator");
 
-const feedbackFromEmployeeScheema = new Schema({
+const feedbackFromEmployeeSchema = new Schema({
   title: {
     type: String,
     require: true,
@@ -25,11 +25,12 @@ const feedbackFromEmployeeScheema = new Schema({
   },
   isDeleted: {
     type: Boolean,
+    default: false,
   },
 });
 
-feedbackFromEmployeeScheema.index({ title: "text" });
+feedbackFromEmployeeSchema.index({ title: "text" });
 module.exports = mongoose.model(
   "feedbackfromemployee",
-  feedbackFromEmployeeScheema
+  feedbackFromEmployeeSchema
 );

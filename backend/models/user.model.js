@@ -3,7 +3,7 @@ mongoose.pluralize(null);
 const Schema = mongoose.Schema;
 const validator = require("validator");
 
-const userScheema = new Schema({
+const userSchema = new Schema({
   username: {
     type: String,
     require: true,
@@ -30,5 +30,5 @@ const userScheema = new Schema({
   },
 });
 
-userScheema.index({ username: "text" });
-module.exports = mongoose.model("user", userScheema);
+userSchema.index({ username: "text" });
+module.exports = mongoose.model("user", userSchema);
