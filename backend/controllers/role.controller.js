@@ -52,6 +52,7 @@ const getAllRole = async (req, res) => {
 // Create Role
 const createRole = async (req, res) => {
   console.log("createRole res.body= ", req.body);
+  const role = new Role(req.body);
   role.save((error, result) => {
     if (error || !result) {
       res.status(400).json({
@@ -78,7 +79,7 @@ const putRole = async (req, res) => {
   typeof req.body.isDeleted !== "undefined" &&
     (role.isDeleted = req.body.isDeleted);
 
-    role.save((error, result) => {
+  role.save((error, result) => {
     if (error || !result) {
       return res.status(400).json({
         message: "[UPDATE] Something went wrong",
@@ -94,9 +95,9 @@ const putRole = async (req, res) => {
 
 // Delete one Role
 const deleteRole = async (req, res) => {
-  const Role = req.Role;
+  const role = req.Role;
 
-  Role.deleteOne({ _id: Role._id }, (error, result) => {
+  role.deleteOne({ _id: role._id }, (error, result) => {
     if (error || !result) {
       res.status(400).json({
         message: "Can't delete!!!",
