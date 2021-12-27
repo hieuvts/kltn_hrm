@@ -19,9 +19,10 @@ const departmentSchema = new Schema({
     minlength: 2,
     maxlength: 50,
   },
-  employeeID: [{ type: Schema.Types.ObjectId, ref: "employee" }],
+  employee: [{ type: Schema.Types.ObjectId, ref: "employee" }],
   isDeleted: {
     type: Boolean,
+    default: false,
   },
 });
 

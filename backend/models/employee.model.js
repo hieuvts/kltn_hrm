@@ -43,17 +43,9 @@ const employeeSchema = new Schema({
     required: true,
     max: 150,
   },
-  roleID: {
-    type: String,
-    max: 10,
-    default: "roleID",
-  },
-  departmentID: [{ type: Schema.Types.ObjectId, ref: "department" }],
-  projectID: {
-    type: String,
-    max: 10,
-    default: "projectID",
-  },
+  role: [{ type: Schema.Types.ObjectId, ref: "role" }],
+  department: [{ type: Schema.Types.ObjectId, ref: "department" }],
+  project: [{ type: Schema.Types.ObjectId, ref: "project" }],
   isDeleted: {
     type: Boolean,
     default: false,
