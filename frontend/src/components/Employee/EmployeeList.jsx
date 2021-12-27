@@ -59,13 +59,7 @@ const headCells = [
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "NAME",
-  },
-  {
-    id: "gender",
-    numeric: false,
-    disablePadding: true,
-    label: "GENDER",
+    label: "Name",
   },
   {
     id: "dateOfBirth",
@@ -77,19 +71,25 @@ const headCells = [
     id: "email",
     numeric: false,
     disablePadding: false,
-    label: "EMAIL",
-  },
-  {
-    id: "address",
-    numeric: false,
-    disablePadding: false,
-    label: "ADDRESS",
+    label: "Email",
   },
   {
     id: "phoneNumber",
     numeric: false,
     disablePadding: false,
-    label: "PHONE",
+    label: "Phone number",
+  },
+  {
+    id: "role",
+    numeric: false,
+    disablePadding: false,
+    label: "Role",
+  },
+  {
+    id: "department",
+    numeric: false,
+    disablePadding: false,
+    label: "Department",
   },
   {
     id: "actions",
@@ -446,19 +446,27 @@ export default function EmployeeTable() {
                               }
                               sx={{
                                 alignSelf: "center",
+                                mx: 1,
                               }}
                             />
-                            {row.name}
+                            <p style={{ paddingLeft: "15px" }}>{row.name}</p>
                           </Box>
                         </TableCell>
-                        <TableCell align="right">{row.gender}</TableCell>
                         <TableCell align="right">
                           {moment(row.dateOfBirth).format("DD-MM-YYYY")}
                         </TableCell>
                         <TableCell align="right">{row.email}</TableCell>
-                        <TableCell align="right">{row.address}</TableCell>
                         <TableCell align="right">{row.phoneNumber}</TableCell>
-
+                        <TableCell align="right">
+                          {row.roleID.map((role, index) => (
+                            <p key={index}>{role.name}</p>
+                          ))}
+                        </TableCell>
+                        <TableCell align="right">
+                          {row.departmentID.map((department, index) => (
+                            <p key={index}>{department.name}</p>
+                          ))}
+                        </TableCell>
                         <TableCell align="right">
                           <RowActions currentSelectedEmployee={row} />
                         </TableCell>
