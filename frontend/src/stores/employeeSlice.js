@@ -25,9 +25,16 @@ const initialState = {
 export const getEmployeeAsync = createAsyncThunk(
   "employee/getAllEmployee",
   async (payload, { rejectWithValue }) => {
+    let searchQuery = "";
+    if (typeof payload === "undefined") {
+      console.log("payload is undefined");
+    } else {
+      console.log("typeof payload.Searchquery", typeof payload.searchQuery);
+      searchQuery = payload.searchQuery;
+    }
     try {
       const res = await fetch(
-        `${apiBaseUrl}/employee/getAll?search=${payload.searchQuery}`
+        `${apiBaseUrl}/employee/getAll?search=${searchQuery}`
       );
       if (res.ok) {
         const resFromServer = await res.json();
@@ -164,7 +171,7 @@ export const employeeSlice = createSlice({
     //   console.log("[Pending] getEmployeeAsync state= ", state);
     // },
     [getEmployeeAsync.rejected]: (state, actions) => {
-      console.log("[Rejected] getEmployeeAsync errorMsg= ", actions.payload);
+      console.log("[Rejected] getEmployeeAsync errorMsg= ", actions);
     },
     [getEmployeeAsync.fulfilled]: (state, actions) => {
       console.log(

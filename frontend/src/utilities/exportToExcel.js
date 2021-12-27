@@ -5,7 +5,6 @@ const fileType =
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
 var Header = [
   [
-    "ID",
     "Name",
     "Gender",
     "Birthday",
@@ -19,9 +18,36 @@ var Header = [
   ],
 ];
 export default function ExportToExcel(employeeList, fileName = "EmployeeList") {
+  // let valueToExport = { name, gender };
+  const employeeListToExport = employeeList.map(
+    ({
+      name,
+      gender,
+      dateOfBirth,
+      phoneNumber,
+      email,
+      address,
+      roleID,
+      departmentID,
+      projectID,
+      isDeleted,
+    }) => ({
+      name,
+      gender,
+      dateOfBirth,
+      phoneNumber,
+      email,
+      address,
+      roleID,
+      departmentID,
+      projectID,
+      isDeleted,
+    })
+  );
+
   const worksheet = XLSX.utils.book_new();
   XLSX.utils.sheet_add_aoa(worksheet, Header);
-  XLSX.utils.sheet_add_json(worksheet, employeeList, {
+  XLSX.utils.sheet_add_json(worksheet, employeeListToExport, {
     origin: "A2",
     skipHeader: true,
   });

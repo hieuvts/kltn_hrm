@@ -5,12 +5,12 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import Checkbox from "@mui/material/Checkbox";
 import PropTypes from "prop-types";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { useSelector } from "react-redux";
 import ExportToExcel from "../../utilities/exportToExcel";
-
 
 const fileType =
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
@@ -52,7 +52,7 @@ export default function DialogExportToExcel({
           sx={{ my: 3 }}
         />
         <Button variant="contained" color="primary" fullWidth type="submit">
-          Export
+          Export to Excel
         </Button>
       </form>
     );
@@ -62,13 +62,31 @@ export default function DialogExportToExcel({
       <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <h5>Export all employee</h5>
+            <h3>Export all employee</h3>
             <Button onClick={handleCloseDialog}>
               <h3>X</h3>
             </Button>
           </Box>
         </DialogTitle>
         <DialogContent>
+          {/* <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "start",
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
+              <Checkbox defaultChecked sx={{ pr: 3 }} />
+              <h2>Name</h2>
+            </Box>
+          </Box> */}
           <FormikWithMUI />
         </DialogContent>
       </Dialog>

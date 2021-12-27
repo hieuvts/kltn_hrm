@@ -13,7 +13,9 @@ import { useDispatch } from "react-redux";
 import {
   updateEmployeeAsync,
   getEmployeeAsync,
+  setCurrentSelectedEmployee,
 } from "../../stores/employeeSlice";
+
 import { validationSchema } from "../../utilities/employeeInfoValidationSchema";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
@@ -33,6 +35,9 @@ export default function FormUpdateEmployeeInformation({
       validationSchema: validationSchema,
       onSubmit: (values) => {
         dispatch(updateEmployeeAsync(values)).then(() => {
+          dispatch(
+            setCurrentSelectedEmployee({ currentSelectedEmployee: values })
+          );
           dispatch(getEmployeeAsync());
         });
         handleCloseDialog();
