@@ -26,6 +26,7 @@ const projectScheema = new Schema({
   },
   isDeleted: {
     type: Boolean,
+    default: false,
   },
 });
 

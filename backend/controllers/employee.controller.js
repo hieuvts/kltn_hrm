@@ -41,7 +41,7 @@ const getAllEmployee = async (req, res) => {
 
   if (typeof query === "undefined" || query.length === 0) {
     console.log("Return all employees");
-    employees = await Employee.find().populate("departmentID");
+    employees = await Employee.find().populate("department");
   } else {
     console.log("Return employees with search= ", query);
     employees = await Employee.find({

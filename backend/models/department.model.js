@@ -22,6 +22,7 @@ const departmentSchema = new Schema({
   employee: [{ type: Schema.Types.ObjectId, ref: "employee" }],
   isDeleted: {
     type: Boolean,
+    default: false,
   },
 });
 

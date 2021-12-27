@@ -26,6 +26,7 @@ const userScheema = new Schema({
   },
   isDeleted: {
     type: Boolean,
+    default: false,
   },
 });
 
