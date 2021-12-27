@@ -48,11 +48,7 @@ const employeeSchema = new Schema({
     max: 10,
     default: "roleID",
   },
-  departmentID: {
-    type: String,
-    max: 10,
-    default: "departmentID",
-  },
+  departmentID: [{ type: Schema.Types.ObjectId, ref: "department" }],
   projectID: {
     type: String,
     max: 10,
