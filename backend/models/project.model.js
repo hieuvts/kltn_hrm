@@ -11,6 +11,7 @@ const projectScheema = new Schema({
     minlength: 2,
     maxlength: 50,
   },
+  employee: [{ type: Schema.Types.ObjectId, ref: "employee" }],
   customer: {
     type: String,
     require: true,

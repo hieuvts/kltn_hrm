@@ -18,11 +18,7 @@ const userScheema = new Schema({
     minlength: 2,
     maxlength: 50,
   },
-  employeeID: {
-    type: String,
-    default: "",
-    required: true,
-  },
+  employee: [{ type: Schema.Types.ObjectId, ref: "employee" }],
   levelAccses: {
     type: Number,
     default: 1,
