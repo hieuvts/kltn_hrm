@@ -51,9 +51,8 @@ const getAllRole = async (req, res) => {
 
 // Create Role
 const createRole = async (req, res) => {
-  console.log("Invoked create Role");
-  const Role = new Role(req.body);
-  Role.save((error, result) => {
+  console.log("createRole res.body= ", req.body);
+  role.save((error, result) => {
     if (error || !result) {
       res.status(400).json({
         message: "[ERROR] [post] ",
@@ -61,7 +60,7 @@ const createRole = async (req, res) => {
       });
     } else {
       res.json({
-        message: "Create Role successfully!",
+        message: "Create role successfully!",
       });
     }
   });
@@ -69,17 +68,17 @@ const createRole = async (req, res) => {
 
 // Update Role
 const putRole = async (req, res) => {
-  const Role = req.Role;
+  const role = req.Role;
   // typeof req.body.name === "undefined"
   //   ? (Role.name = Role.name)
   //   : (Role.name = req.body.name);
-  typeof req.body.name !== "undefined" && (Role.name = req.body.name);
+  typeof req.body.name !== "undefined" && (role.name = req.body.name);
   typeof req.body.roleLevel !== "undefined" &&
-    (Role.headOfRole = req.body.roleLevel);
+    (role.headOfRole = req.body.roleLevel);
   typeof req.body.isDeleted !== "undefined" &&
-    (Role.isDeleted = req.body.isDeleted);
+    (role.isDeleted = req.body.isDeleted);
 
-  Role.save((error, result) => {
+    role.save((error, result) => {
     if (error || !result) {
       return res.status(400).json({
         message: "[UPDATE] Something went wrong",
