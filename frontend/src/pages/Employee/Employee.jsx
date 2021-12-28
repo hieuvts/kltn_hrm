@@ -122,8 +122,9 @@ export default function Employee() {
         justifyContent="flex-end"
         textAlign={{ sm: "right", md: "center" }}
         padding={{ sm: 5, md: 0 }}
+        sx={{ alignItems: "center" }}
       >
-        <Grid item xs={4} md={2}>
+        <Grid item paddingTop={{ xs: 2, sm: 0 }} xs={12} sm={3} md={2}>
           <Button variant="link">
             <FileDownloadOutlinedIcon fontSize="medium" />
             <Typography variant="h6" sx={{ pl: 1 }}>
@@ -131,7 +132,7 @@ export default function Employee() {
             </Typography>
           </Button>
         </Grid>
-        <Grid item xs={4} md={2}>
+        <Grid item xs={12} sm={3} md={2}>
           <Button
             variant="link"
             onClick={() => setDialogExportEmployeeOpen(true)}
@@ -142,7 +143,7 @@ export default function Employee() {
             </Typography>
           </Button>
         </Grid>
-        <Grid item xs={12} md={2} paddingTop={{ sm: 2, md: 0 }}>
+        <Grid item xs={12} sm={6} md={2} paddingTop={{ xs: 2, sm: 0, md: 0 }}>
           <Button variant="contained" onClick={() => handleDialogOpen()}>
             <Typography variant="h6">Add Employee</Typography>
           </Button>
