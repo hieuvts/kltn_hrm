@@ -10,6 +10,5 @@ router.post("/create", employeeControllers.createEmployee);
 router.delete("/:employeeId/delete", employeeControllers.deleteEmployee);
 router.delete("/deleteall", employeeControllers.deleteAllEmployee);
 router.put("/:employeeId/put", employeeControllers.updateEmployee);
-// router.post("/employee/createmultipleemployee", employeeControllers.createMultipleEmployee);
 
 module.exports = router;

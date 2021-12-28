@@ -11,7 +11,7 @@ import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
-
+import moment from "moment";
 import "./EmploymentHistory.css";
 import gauge from "../../../assets/icons/gauge.png";
 
@@ -47,7 +47,7 @@ export default function EmploymentHistory() {
   const testData = [
     {
       role: "Staff",
-      date: "01/01/2019",
+      date: "20/12/2021",
       describe:
         "lorem ipsum dolor sit amet, consectertur adisplaing elit, spduedo a euismod tepor",
     },
@@ -70,6 +70,14 @@ export default function EmploymentHistory() {
         "lorem ipsum dolor sit amet, consectertur adisplaing elit, spduedo a euismod tepor",
     },
   ];
+  let joinedDate = moment(testData[0].date, "DD-MM-YYYY");
+  let currentDate = moment(new Date());
+  console.log("joinedDate ", joinedDate);
+  console.log("currentDate ", currentDate);
+  console.log(
+    "duration: ",
+    Math.ceil(moment.duration(currentDate.diff(joinedDate)).asDays())
+  );
   return (
     <Paper elevation={3} sx={({ ...rowDirection }, { p: 3 })}>
       <Typography variant="h6" sx={{ alignSelf: "center" }}>

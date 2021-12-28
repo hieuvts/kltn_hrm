@@ -90,7 +90,8 @@ const updateEmployee = async (req, res) => {
   // typeof req.body.name === "undefined"
   //   ? (employee.name = employee.name)
   //   : (employee.name = req.body.name);
-  typeof req.body.name !== "undefined" && (employee.name = req.body.name);
+  typeof req.body.fname !== "undefined" && (employee.fname = req.body.fname);
+  typeof req.body.lname !== "undefined" && (employee.lname = req.body.lname);
   typeof req.body.gender !== "undefined" && (employee.gender = req.body.gender);
   typeof req.body.dateOfBirth !== "undefined" &&
     (employee.dateOfBirth = req.body.dateOfBirth);

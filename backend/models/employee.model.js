@@ -7,12 +7,19 @@ const moment = require("moment");
 // https://mongoosejs.com/docs/schematypes.html
 // https://docs.mongodb.com/manual/reference/operator/aggregation/strLenCP/
 const employeeSchema = new Schema({
-  name: {
+  fname: {
     type: String,
     required: true,
-    default: "Employee",
-    minlength: 2,
-    maxlength: 150,
+    default: "First name",
+    minlength: 1,
+    maxlength: 35,
+  },
+  lname: {
+    type: String,
+    required: true,
+    default: "Last name",
+    minlength: 1,
+    maxlength: 35,
   },
   gender: {
     type: String,
