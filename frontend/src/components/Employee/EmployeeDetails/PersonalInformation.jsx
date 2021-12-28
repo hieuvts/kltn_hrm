@@ -60,7 +60,9 @@ export default function PersonalInformation() {
         <Box sx={colDirection}>
           <Box sx={rowDirection}>
             <Typography variant="h6">Name: </Typography>
-            <Typography variant="h6">{employee.name}</Typography>
+            <Typography variant="h6">
+              {employee.fname} {employee.lname}
+            </Typography>
           </Box>
           <Box sx={rowDirection}>
             <Typography variant="h6">Gender: </Typography>
@@ -76,7 +78,11 @@ export default function PersonalInformation() {
           </Box>
           <Box sx={rowDirection}>
             <Typography variant="h6">Department: </Typography>
-            <Typography variant="h6">{employee.departmentID}</Typography>
+            <Typography variant="h6">
+              {employee.department.map((department, index) => {
+                return <p key={index}>{department.name}</p>;
+              })}
+            </Typography>
           </Box>
         </Box>
       </Paper>
