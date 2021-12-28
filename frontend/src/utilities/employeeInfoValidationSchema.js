@@ -8,20 +8,12 @@ export const validationSchema = yup.object().shape({
     .string("Enter first name")
     .min(1, "First name should be of minimum 2 characters length")
     .max(150, "Name should be of maximum 150 characters length")
-    .required("Name is required!")
-    .matches(
-      `^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$`,
-      "Contains invalid charaters"
-    ),
+    .required("Name is required!"),
   lname: yup
     .string("Enter last name")
     .min(1, "Last name should be of minimum 2 characters length")
     .max(150, "Name should be of maximum 150 characters length")
-    .required("Name is required!")
-    .matches(
-      `^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$`,
-      "Contains invalid charaters"
-    ),
+    .required("Name is required!"),
   gender: yup
     .mixed()
     .oneOf(["Male", "Female", "Other"])
