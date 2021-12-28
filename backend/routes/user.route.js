@@ -5,7 +5,7 @@ const user = require("../controllers/user.controller");
 // Router-level middleware
 router.get("/getAll",user.getAlluser);
 router.param("userId",user.getuserById);
-router.get("/user/:user",user.getOneuser);
+// router.get("/user/:user",user.getOneuser);
 router.post("/create",user.createuser);
 router.delete("/:userId/delete",user.deleteuser);
 router.delete("/deleteall",user.deleteAlluser);
