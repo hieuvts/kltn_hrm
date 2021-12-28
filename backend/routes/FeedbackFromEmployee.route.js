@@ -5,7 +5,7 @@ const feedbackFromEmployeeControllers = require("../controllers/feedbackFromEmpl
 // Router-level middleware
 router.get("/getAll",feedbackFromEmployeeControllers.getAllFeedbackFromEmployee);
 router.param("FeedbackFromEmployeeId",feedbackFromEmployeeControllers.getFeedbackFromEmployeeById);
-router.get("/FeedbackFromEmployee/:FeedbackFromEmployeeId",feedbackFromEmployeeControllers.getOneFeedbackFromEmployee);
+// router.get("/FeedbackFromEmployee/:FeedbackFromEmployeeId",feedbackFromEmployeeControllers.getOneFeedbackFromEmployee);
 router.post("/create",feedbackFromEmployeeControllers.createFeedbackFromEmployee);
 router.delete("/:FeedbackFromEmployeeId/delete",feedbackFromEmployeeControllers.deleteFeedbackFromEmployee);
 router.delete("/deleteall",feedbackFromEmployeeControllers.deleteAllFeedbackFromEmployee);
