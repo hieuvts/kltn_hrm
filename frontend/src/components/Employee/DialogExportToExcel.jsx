@@ -6,9 +6,12 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Checkbox from "@mui/material/Checkbox";
+import CloseIcon from "@mui/icons-material/Close";
 import PropTypes from "prop-types";
+
 import * as yup from "yup";
 import { useFormik } from "formik";
+
 import { useSelector } from "react-redux";
 import ExportToExcel from "../../utilities/exportToExcel";
 
@@ -64,7 +67,7 @@ export default function DialogExportToExcel({
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <h3>Export all employee</h3>
             <Button onClick={handleCloseDialog}>
-              <h3>X</h3>
+              <CloseIcon fontSize="large" />
             </Button>
           </Box>
         </DialogTitle>

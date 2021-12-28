@@ -45,8 +45,14 @@ export default function PersonalInformation() {
       />
       <Paper elevation={3} sx={{ p: 3 }}>
         <Box sx={rowDirection}>
-          <Typography variant="h5">Contact</Typography>
-          <Button variant="link" onClick={() => setDialogUpdateEmployee(true)}>
+          <Typography variant="h6" sx={{ alignSelf: "center" }}>
+            Contact
+          </Typography>
+          <Button
+            variant="outlined"
+            color="info"
+            onClick={() => setDialogUpdateEmployee(true)}
+          >
             Edit
           </Button>
         </Box>

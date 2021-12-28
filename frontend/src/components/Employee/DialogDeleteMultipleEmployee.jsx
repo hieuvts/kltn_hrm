@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
+import CloseIcon from "@mui/icons-material/Close";
 import PropTypes from "prop-types";
 import {
   deleteEmployeeAsync,
@@ -40,7 +41,7 @@ export default function DialogDeleteMultipleEmployee({
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <h3>Are you sure you want to delete multiple employee?</h3>
             <Button onClick={handleCloseDialog}>
-              <h3>X</h3>
+              <CloseIcon fontSize="large" />
             </Button>
           </Box>
         </DialogTitle>

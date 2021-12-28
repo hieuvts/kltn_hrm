@@ -5,6 +5,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import CloseIcon from "@mui/icons-material/Close";
 import PropTypes from "prop-types";
 import {
   deleteEmployeeAsync,
@@ -39,7 +40,7 @@ export default function DialogDeleteEmployee({
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <h5>Are you sure you want to delete this employee?</h5>
             <Button onClick={handleCloseDialog}>
-              <h3>X</h3>
+              <CloseIcon fontSize="large" />
             </Button>
           </Box>
         </DialogTitle>

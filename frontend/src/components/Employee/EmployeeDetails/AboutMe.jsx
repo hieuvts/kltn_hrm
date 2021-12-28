@@ -34,7 +34,7 @@ export default function AboutMe() {
   return (
     <Paper elevation={3} sx={{ p: 3 }}>
       <Box sx={rowDirection}>
-        <Typography variant="h5">About me</Typography>
+        <Typography variant="h6">About me</Typography>
       </Box>
       <Divider />
       <Box

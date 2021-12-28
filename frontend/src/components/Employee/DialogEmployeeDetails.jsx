@@ -9,17 +9,18 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import Paper from "@mui/material/Paper";
+import CloseIcon from "@mui/icons-material/Close";
 import Grid from "@mui/material/Grid";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-
 import PersonalInformation from "./EmployeeDetails/PersonalInformation";
 import AboutMe from "./EmployeeDetails/AboutMe";
 import EmployeeAvatar from "./EmployeeDetails/EmployeeAvatar";
 import EffecientLevel from "./EmployeeDetails/EffecientLevel";
+import EmploymentHistory from "./EmployeeDetails/EmploymentHistory";
 
 function LinkTab(props) {
   return (
@@ -45,21 +46,23 @@ export default function DialogEmployeeDetails({
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
-  
+
   return (
     <>
-      <Dialog open={isDialogOpen} onClose={handleCloseDialog} maxWidth>
+      <Dialog maxWidth={"xl"} open={isDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <h3>{employee.name}</h3>
+            <Typography variant="h4" sx={{ pl: 3 }}>
+              {employee.name}
+            </Typography>
             <Button onClick={handleCloseDialog}>
-              <h3>X</h3>
+              <CloseIcon fontSize="large" />
             </Button>
           </Box>
         </DialogTitle>
         <DialogContent>
           <Grid container>
-            <Grid item md={12} sx={{ px: 4 }}>
+            <Grid item sm={12} sx={{ px: 4 }}>
               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <Tabs value={tabValue} onChange={handleTabChange}>
                   <LinkTab label="General" href="/all" />
@@ -67,15 +70,18 @@ export default function DialogEmployeeDetails({
                 </Tabs>
               </Box>
             </Grid>
-            <Grid item md={6} sx={{ px: 4 }}>
+            <Grid item sm={12} lg={6}>
               <Box sx={{ m: 3 }}>
                 <EmployeeAvatar />
               </Box>
               <Box sx={{ m: 3 }}>
                 <EffecientLevel />
               </Box>
+              <Box sx={{ m: 3 }}>
+                <EmploymentHistory />
+              </Box>
             </Grid>
-            <Grid item md={6} sx={{ px: 4 }}>
+            <Grid item sm={12} lg={6}>
               <Box sx={{ m: 3 }}>
                 <PersonalInformation />
               </Box>
