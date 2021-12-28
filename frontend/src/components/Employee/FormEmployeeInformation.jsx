@@ -175,7 +175,8 @@ FormEmployeeInformation.propTypes = {
 };
 FormEmployeeInformation.defaultProps = {
   initialValues: {
-    name: "",
+    fname: "",
+    lname: "",
     gender: "Male",
     dateOfBirth: new Date(),
     phoneNumber: "",

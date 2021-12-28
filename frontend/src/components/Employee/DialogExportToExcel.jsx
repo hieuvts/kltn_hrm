@@ -21,7 +21,7 @@ const fileType =
 export const validationSchema = yup.object().shape({
   fileName: yup
     .string("Enter file name")
-    .required("File name is required!")
+    .required("Please speficy a file name!")
     .matches(/^[^\\/:\*\?"<>\|]+$/, `Should not contains \ / : * ? " < > |`),
 });
 export default function DialogExportToExcel({

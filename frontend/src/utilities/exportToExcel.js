@@ -5,7 +5,8 @@ const fileType =
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
 var Header = [
   [
-    "Name",
+    "First name",
+    "Last name",
     "Gender",
     "Birthday",
     "Phone number",
@@ -21,7 +22,8 @@ export default function ExportToExcel(employeeList, fileName = "EmployeeList") {
   // let valueToExport = { name, gender };
   const employeeListToExport = employeeList.map(
     ({
-      name,
+      fname,
+      lname,
       gender,
       dateOfBirth,
       phoneNumber,
@@ -32,7 +34,8 @@ export default function ExportToExcel(employeeList, fileName = "EmployeeList") {
       projectID,
       isDeleted,
     }) => ({
-      name,
+      fname,
+      lname,
       gender,
       dateOfBirth,
       phoneNumber,

@@ -59,16 +59,26 @@ export default function FormUpdateEmployeeInformation({
         <form onSubmit={formik.handleSubmit}>
           <TextField
             fullWidth
-            id="name"
-            name="name"
-            label="Name"
-            value={formik.values.name}
+            id="fname"
+            name="fname"
+            label="First name"
+            value={formik.values.fname}
             onChange={formik.handleChange}
-            error={formik.touched.name && Boolean(formik.errors.name)}
-            helperText={formik.touched.name && formik.errors.name}
+            error={formik.touched.fname && Boolean(formik.errors.fname)}
+            helperText={formik.touched.fname && formik.errors.fname}
             sx={{ mb: 3 }}
           />
-          <InputLabel id="gender">Gender</InputLabel>
+          <TextField
+            fullWidth
+            id="lname"
+            name="lname"
+            label="Last name"
+            value={formik.values.lname}
+            onChange={formik.handleChange}
+            error={formik.touched.lname && Boolean(formik.errors.lname)}
+            helperText={formik.touched.lname && formik.errors.lname}
+            sx={{ mb: 3 }}
+          />
           <Select
             labelId="gender"
             id="gender"

@@ -27,7 +27,7 @@ export const getEmployeeAsync = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     let searchQuery = "";
     if (typeof payload === "undefined") {
-      console.log("payload is undefined");
+      console.log("search is undefined");
     } else {
       console.log("typeof payload.Searchquery", typeof payload.searchQuery);
       searchQuery = payload.searchQuery;
@@ -61,13 +61,15 @@ export const addEmployeeAsync = createAsyncThunk(
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: payload.name,
+          fname: payload.fname,
+          lname: payload.lname,
           gender: payload.gender,
           dateOfBirth: moment(payload.dateOfBirth).format("YYYY-MM-DD"),
           phoneNumber: payload.phoneNumber,
           email: payload.email,
           address: payload.address,
-          role: "Admin",
+          department: [],
+          role: [],
           isDeleted: false,
         }),
       });
@@ -97,7 +99,8 @@ export const updateEmployeeAsync = createAsyncThunk(
           phoneNumber: payload.phoneNumber,
           email: payload.email,
           address: payload.address,
-          role: "Admin",
+          department: [],
+          role: [],
           isDeleted: false,
         }),
       });
