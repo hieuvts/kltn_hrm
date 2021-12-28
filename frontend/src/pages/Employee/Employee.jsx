@@ -67,8 +67,8 @@ export default function Employee() {
     []
   );
   useEffect(() => {
-    // debounceFetchAPI(searchQuery);
-    dispatch(getEmployeeAsync());
+    debounceFetchAPI(searchQuery);
+    // dispatch(getEmployeeAsync());
   }, [handleSearchQueryChange]);
 
   return (

@@ -27,7 +27,7 @@ export const getEmployeeAsync = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     let searchQuery = "";
     if (typeof payload === "undefined") {
-      console.log("payload is undefined");
+      console.log("search is undefined");
     } else {
       console.log("typeof payload.Searchquery", typeof payload.searchQuery);
       searchQuery = payload.searchQuery;

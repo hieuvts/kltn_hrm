@@ -1,5 +1,6 @@
 const Employee = require("../models/employee.model");
 const moment = require("moment");
+
 const getEmployeeById = async (req, res, next, employeeId) => {
   // Get employee details from Employee model and
   // attach to request object
@@ -49,7 +50,9 @@ const getAllEmployee = async (req, res) => {
         $search: `"${query}"`,
         // $search: `.*(\b${query}\b).*`,
       },
-    });
+    })
+      .populate("department")
+      .populate("role");
   }
 
   if (employees) {
