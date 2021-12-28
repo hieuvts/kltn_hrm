@@ -438,7 +438,7 @@ export default function EmployeeTable() {
                             }}
                           >
                             <Avatar
-                              alt={row.name}
+                              alt={row.fname}
                               src={
                                 row.gender === "Male"
                                   ? avatarMale
@@ -449,7 +449,9 @@ export default function EmployeeTable() {
                                 mx: 1,
                               }}
                             />
-                            <p style={{ paddingLeft: "15px" }}>{row.name}</p>
+                            <p style={{ paddingLeft: "15px" }}>
+                              {row.fname} {row.lname}
+                            </p>
                           </Box>
                         </TableCell>
                         <TableCell align="right">

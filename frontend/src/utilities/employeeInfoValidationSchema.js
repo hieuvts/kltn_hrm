@@ -4,11 +4,24 @@ const phoneNumberRegex =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 export const validationSchema = yup.object().shape({
-  name: yup
-    .string("Enter your name")
-    .min(2, "Name should be of minimum 2 characters length")
+  fname: yup
+    .string("Enter first name")
+    .min(1, "First name should be of minimum 2 characters length")
     .max(150, "Name should be of maximum 150 characters length")
-    .required("Name is required!"),
+    .required("Name is required!")
+    .matches(
+      `^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$`,
+      "Contains invalid charaters"
+    ),
+  lname: yup
+    .string("Enter last name")
+    .min(1, "Last name should be of minimum 2 characters length")
+    .max(150, "Name should be of maximum 150 characters length")
+    .required("Name is required!")
+    .matches(
+      `^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$`,
+      "Contains invalid charaters"
+    ),
   gender: yup
     .mixed()
     .oneOf(["Male", "Female", "Other"])
