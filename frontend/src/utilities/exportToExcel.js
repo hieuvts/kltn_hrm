@@ -18,7 +18,12 @@ var Header = [
     "isDeleted",
   ],
 ];
-export default function ExportToExcel(employeeList, fileName = "EmployeeList") {
+export default function ExportToExcel(
+  employeeList,
+  setSbSuccessOpen,
+  setSbFailedOpen,
+  fileName = "EmployeeList"
+) {
   // let valueToExport = { name, gender };
   const employeeListToExport = employeeList.map(
     ({
@@ -61,5 +66,10 @@ export default function ExportToExcel(employeeList, fileName = "EmployeeList") {
   });
   const outputData = new Blob([excelBuffer], { type: fileType });
 
-  FileSaver.saveAs(outputData, fileName);
+  try {
+    FileSaver.saveAs(outputData, fileName);
+    setSbSuccessOpen(true);
+  } catch (error) {
+    setSbFailedOpen(true);
+  }
 }

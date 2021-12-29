@@ -8,14 +8,13 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import PropTypes from "prop-types";
 import MuiAlert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
+import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
+import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
 import { useDispatch } from "react-redux";
 import { addEmployeeAsync } from "../../stores/employeeSlice";
 import { employeeInfoValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
-import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
-import SnackbarFailed from "../Snackbar/SnackbarFailed";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -45,7 +44,7 @@ export default function FormAddEmployeeInformation({
             setSbSuccessOpen(true);
             setTimeout(() => {
               handleCloseDialog();
-            }, 1500);
+            }, 800);
           })
           .catch((rejectedValueOrSerializedError) => {
             setSbFailedOpen(true);
@@ -175,7 +174,7 @@ export default function FormAddEmployeeInformation({
       <SnackbarFailed
         isOpen={isSbFailedOpen}
         handleClose={handleSbFailedClose}
-        text={"Add employee failed"}
+        text={"Add employee failed!"}
       />
       <FormikWithMUI />
     </div>

@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import Checkbox from "@mui/material/Checkbox";
 import CloseIcon from "@mui/icons-material/Close";
+import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
+import SnackbarFailed from "../Snackbar/SnackbarFailed";
+
 import PropTypes from "prop-types";
 import { fileNameValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
@@ -21,6 +23,14 @@ export default function DialogExportToExcel({
   isDialogOpen,
   handleCloseDialog,
 }) {
+  const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
+  const [isSbFailedOpen, setSbFailedOpen] = useState(false);
+  const handleSbSuccessClose = () => {
+    setSbSuccessOpen(false);
+  };
+  const handleSbFailedClose = () => {
+    setSbFailedOpen(false);
+  };
   const employeeList = useSelector((state) => state.employee.employeeList);
 
   const FormikWithMUI = () => {
@@ -30,7 +40,12 @@ export default function DialogExportToExcel({
       },
       validationSchema: fileNameValidationSchema,
       onSubmit: (values) => {
-        ExportToExcel(employeeList, values.fileName);
+        ExportToExcel(
+          employeeList,
+          setSbSuccessOpen,
+          setSbFailedOpen,
+          values.fileName
+        );
       },
     });
     return (
@@ -55,6 +70,16 @@ export default function DialogExportToExcel({
   };
   return (
     <div>
+      <SnackbarSuccess
+        isOpen={isSbSuccessOpen}
+        handleClose={handleSbSuccessClose}
+        text={"Exported to Excel worksheet"}
+      />
+      <SnackbarFailed
+        isOpen={isSbFailedOpen}
+        handleClose={handleSbFailedClose}
+        text={"Export failed!"}
+      />
       <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>

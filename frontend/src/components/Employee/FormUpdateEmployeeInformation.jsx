@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
@@ -7,7 +7,9 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import MuiAlert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
+import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
+import SnackbarFailed from "../Snackbar/SnackbarFailed";
+
 import PropTypes from "prop-types";
 import { employeeInfoValidationSchema } from "../../utilities/validationSchema";
 import {
@@ -18,43 +20,44 @@ import {
 
 import { useDispatch } from "react-redux";
 import { useFormik } from "formik";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 export default function FormUpdateEmployeeInformation({
   handleCloseDialog,
   initialValues,
 }) {
   const dispatch = useDispatch();
+  const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
+  const [isSbFailedOpen, setSbFailedOpen] = useState(false);
+  const handleSbSuccessClose = () => {
+    setSbSuccessOpen(false);
+  };
+  const handleSbFailedClose = () => {
+    setSbFailedOpen(false);
+  };
 
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
       validationSchema: employeeInfoValidationSchema,
       onSubmit: (values) => {
-        dispatch(updateEmployeeAsync(values)).then(() => {
-          dispatch(
-            setCurrentSelectedEmployee({ currentSelectedEmployee: values })
-          );
-          dispatch(getEmployeeAsync());
-        });
-        handleCloseDialog();
+        dispatch(updateEmployeeAsync(values))
+          .unwrap()
+          .then(() => {
+            dispatch(
+              setCurrentSelectedEmployee({ currentSelectedEmployee: values })
+            );
+            dispatch(getEmployeeAsync());
+            setSbSuccessOpen(true);
+            setTimeout(() => {
+              handleCloseDialog();
+            }, 800);
+          })
+          .catch((rejectedValueOrSerializedError) => {
+            setSbFailedOpen(true);
+          });
       },
     });
     return (
       <div style={{ marginTop: "30px" }}>
-        <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          open={true}
-          autoHideDuration={2500}
-          key={"top" + "right"}
-          sx={{ mt: "0" }}
-        >
-          <Alert severity="success" sx={{ width: "100%" }}>
-            Placeholder
-          </Alert>
-        </Snackbar>
         <form onSubmit={formik.handleSubmit}>
           <TextField
             fullWidth
@@ -167,6 +170,16 @@ export default function FormUpdateEmployeeInformation({
 
   return (
     <div>
+      <SnackbarSuccess
+        isOpen={isSbSuccessOpen}
+        handleClose={handleSbSuccessClose}
+        text={"Updated employee information"}
+      />
+      <SnackbarFailed
+        isOpen={isSbFailedOpen}
+        handleClose={handleSbFailedClose}
+        text={"Update failed!"}
+      />
       <FormikWithMUI />
     </div>
   );
