@@ -44,12 +44,7 @@ export default function DialogDeleteEmployee({
             </Button>
           </Box>
         </DialogTitle>
-        <DialogContent>
-          {/* <FormEmployeeInformation
-            handleSnackbarOpen={handleSnackbarOpen}
-            handleCloseDialog={handleCloseDialog}
-          /> */}
-        </DialogContent>
+        <DialogContent></DialogContent>
         <DialogActions sx={{ mr: 3, p: 2 }}>
           <Button
             variant="contained"

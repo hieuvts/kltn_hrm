@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import PropTypes from "prop-types";
 import CloseIcon from "@mui/icons-material/Close";
-import FormEmployeeInformation from "./FormEmployeeInformation";
+import FormAddEmployeeInformation from "./FormAddEmployeeInformation";
 export default function DialogAddEmployee({
   isDialogOpen,
   handleCloseDialog,
@@ -23,7 +23,7 @@ export default function DialogAddEmployee({
           </Box>
         </DialogTitle>
         <DialogContent>
-          <FormEmployeeInformation
+          <FormAddEmployeeInformation
             handleCloseDialog={handleCloseDialog}
           />
         </DialogContent>

@@ -14,12 +14,12 @@ import { useDispatch } from "react-redux";
 import { addEmployeeAsync } from "../../stores/employeeSlice";
 import { employeeInfoValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
-import SnackbarSuccess from "../SnackbarSuccess";
-import SnackbarFailed from "../SnackbarFailed";
+import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
+import SnackbarFailed from "../Snackbar/SnackbarFailed";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-export default function FormEmployeeInformation({
+export default function FormAddEmployeeInformation({
   handleCloseDialog,
   submitButtonText,
   initialValues,
@@ -182,12 +182,12 @@ export default function FormEmployeeInformation({
   );
 }
 
-FormEmployeeInformation.propTypes = {
+FormAddEmployeeInformation.propTypes = {
   handleCloseDialog: PropTypes.func,
   submitButtonText: PropTypes.string,
   initialValues: PropTypes.object,
 };
-FormEmployeeInformation.defaultProps = {
+FormAddEmployeeInformation.defaultProps = {
   initialValues: {
     fname: "",
     lname: "",
