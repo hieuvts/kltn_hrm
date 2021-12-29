@@ -16,7 +16,6 @@ const roleSchema = new Schema({
     default: 1,
     required: true,
   },
-  employee: [{ type: Schema.Types.ObjectId, ref: "employee" }],
   isDeleted: {
     type: Boolean,
     default: false,
