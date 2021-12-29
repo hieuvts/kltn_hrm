@@ -21,11 +21,7 @@ const userSchema = new Schema({
     required: true,
   },
   employee: [{ type: Schema.Types.ObjectId, ref: "employee" }],
-  levelAccses: {
-    type: Number,
-    default: 1,
-    required: true,
-  },
+  role: [{ type: Schema.Types.ObjectId, ref: "role" }],
   isDeleted: {
     type: Boolean,
     default: false,

@@ -13,7 +13,7 @@ const roleSchema = new Schema({
   },
   roleLevel: {
     type: Number,
-    default: 0,
+    default: 1,
     required: true,
   },
   employee: [{ type: Schema.Types.ObjectId, ref: "employee" }],
