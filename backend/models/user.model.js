@@ -4,12 +4,13 @@ const Schema = mongoose.Schema;
 const validator = require("validator");
 
 const userSchema = new Schema({
-  username: {
+  email: {
     type: String,
     require: true,
-    default: "user",
+    default: "email@example.com",
     minlength: 2,
     maxlength: 50,
+    required: true,
   },
   password: {
     type: String,
@@ -17,6 +18,7 @@ const userSchema = new Schema({
     default: "password",
     minlength: 2,
     maxlength: 50,
+    required: true,
   },
   employee: [{ type: Schema.Types.ObjectId, ref: "employee" }],
   levelAccses: {

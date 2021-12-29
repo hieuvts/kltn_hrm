@@ -15,13 +15,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 const initialValues = {
-  fname: "",
-  lname: "",
-  gender: "Male",
-  dateOfBirth: new Date(),
-  phoneNumber: "",
   email: "",
-  username: "",
   password: "",
   verifyPassword: "",
 };
@@ -46,53 +40,6 @@ export default function SignUp({ handleChange }) {
     return (
       <form onSubmit={formik.handleSubmit}>
         <Grid container>
-          <Grid
-            item
-            direction="row"
-            sm={12}
-            md={6}
-            sx={{ paddingRight: { md: 3 } }}
-          >
-            <TextField
-              fullWidth
-              id="fname"
-              name="fname"
-              label="First name"
-              value={formik.values.fname}
-              onChange={formik.handleChange}
-              error={formik.touched.fname && Boolean(formik.errors.fname)}
-              helperText={formik.touched.fname && formik.errors.fname}
-              sx={{ mb: 3 }}
-            />
-          </Grid>
-          <Grid item direction="row" sm={12} md={6}>
-            <TextField
-              fullWidth
-              id="lname"
-              name="lname"
-              label="Last name"
-              value={formik.values.lname}
-              onChange={formik.handleChange}
-              error={formik.touched.lname && Boolean(formik.errors.lname)}
-              helperText={formik.touched.lname && formik.errors.lname}
-              sx={{ mb: 3 }}
-            />
-          </Grid>
-
-          <TextField
-            fullWidth
-            id="phoneNumber"
-            name="phoneNumber"
-            label="Phone number"
-            value={formik.values.phoneNumber}
-            onChange={formik.handleChange}
-            error={
-              formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)
-            }
-            helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
-            sx={{ mb: 3 }}
-          />
-
           <TextField
             fullWidth
             id="email"
@@ -102,18 +49,6 @@ export default function SignUp({ handleChange }) {
             onChange={formik.handleChange}
             error={formik.touched.email && Boolean(formik.errors.email)}
             helperText={formik.touched.email && formik.errors.email}
-            sx={{ mb: 3 }}
-          />
-
-          <TextField
-            fullWidth
-            id="username"
-            name="username"
-            label="Username"
-            value={formik.values.username}
-            onChange={formik.handleChange}
-            error={formik.touched.username && Boolean(formik.errors.username)}
-            helperText={formik.touched.username && formik.errors.username}
             sx={{ mb: 3 }}
           />
 
