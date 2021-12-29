@@ -3,33 +3,30 @@ mongoose.pluralize(null);
 const Schema = mongoose.Schema;
 const validator = require("validator");
 
-const userScheema = new Schema({
-    username:{
-        type: String,
-        require: true,
-        default: "user",
-        minlength: 2,
-        maxlength: 50
-    },
-    password:{
-        type: String,
-        require: true,
-        default: "password",
-        minlength: 2,
-        maxlength: 50
-    },
-    employeeID: {
-        type: String,
-        default: "",
-        required: true
-    },
-    levelAccses: {
-        type: Number,
-        default: 1,
-        required: true
-    },
-    isDeleted: {
-        type: Boolean
-    }
+const userSchema = new Schema({
+  email: {
+    type: String,
+    require: true,
+    default: "email@example.com",
+    minlength: 2,
+    maxlength: 50,
+    required: true,
+  },
+  password: {
+    type: String,
+    require: true,
+    default: "password",
+    minlength: 2,
+    maxlength: 50,
+    required: true,
+  },
+  employee: [{ type: Schema.Types.ObjectId, ref: "employee" }],
+  role: [{ type: Schema.Types.ObjectId, ref: "role" }],
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
-module.exports = mongoose.model("user", userScheema);
+
+userSchema.index({ username: "text" });
+module.exports = mongoose.model("user", userSchema);

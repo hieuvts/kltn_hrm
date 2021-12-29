@@ -34,8 +34,22 @@ const getOnetask = async (req, res) => {
 };
 
 const getAlltask = async (req, res) => {
-  console.log("Trigger getAlltask");
-  const tasks = await Task.find();
+  let query = req.query.search;
+  let tasks = {};
+
+  if (typeof query === "undefined" || query.length === 0) {
+    console.log("Return all tasks");
+    tasks = await Task.find();
+  } else {
+    console.log("Return tasks with search= ", query);
+    tasks = await Task.find({
+      $text: {
+        $search: `"${query}"`,
+        // $search: `.*(\b${query}\b).*`,
+      },
+    });
+  }
+  
   if (tasks) {
     res.status(200).json({
       message: "Get all task successfully!",
@@ -76,7 +90,8 @@ const puttask = async (req, res) => {
     (task.employeeID = req.body.employeeID);
   typeof req.body.difficulty !== "undefined" &&
     (task.difficulty = req.body.difficulty);
-  typeof req.body.projectID !== "undefined" && (task.projectID = req.body.projectID);
+  typeof req.body.projectID !== "undefined" &&
+    (task.projectID = req.body.projectID);
   typeof req.body.role !== "undefined" && (task.role = req.body.role);
   typeof req.body.isDeleted !== "undefined" &&
     (task.isDeleted = req.body.isDeleted);
@@ -103,7 +118,7 @@ const puttask = async (req, res) => {
 // findOneAndDelete() should be able to delete on _id.
 
 const deletetask = async (req, res) => {
-   console.log("Invoked deletetask");
+  console.log("Invoked deletetask");
   // Take req.task value from previous function "gettaskById"
   const task = req.Task;
   // task.remove((error, result) => {

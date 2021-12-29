@@ -1,27 +1,48 @@
-const FeedbackFromEmployee = require("../models/feedbackfromemployee.model");
+const FeedbackFromEmployee = require("../models/feedbackFromEmployee.model");
 
 // GET BY ID
-const getFeedbackFromEmployeeById = async (req, res, next, FeedbackFromEmployeeId) => {
+const getFeedbackFromEmployeeById = async (
+  req,
+  res,
+  next,
+  FeedbackFromEmployeeId
+) => {
   // Get FeedbackFromEmployee details from FeedbackFromEmployee model and
   // attach to request object
   // https://expressjs.com/en/4x/api.html#router.param
   console.log("Trigger getFeedbackFromEmployeeByID");
-  FeedbackFromEmployee.findById(FeedbackFromEmployeeId).exec((error, result) => {
-    if (error || !result) {
-      res.status(404).json({
-        message: "[ERROR] [Controller] FeedbackFromEmployee not found!",
-      });
-    } else {
-      console.log("[ERROR] [get] Failed!");
+  FeedbackFromEmployee.findById(FeedbackFromEmployeeId).exec(
+    (error, result) => {
+      if (error || !result) {
+        res.status(404).json({
+          message: "[ERROR] [Controller] FeedbackFromEmployee not found!",
+        });
+      } else {
+        console.log("[ERROR] [get] Failed!");
+      }
+      req.FeedbackFromEmployee = result;
+      next();
     }
-    req.FeedbackFromEmployee = result;
-    next();
-  });
+  );
 };
 
 // GET ALL
 const getAllFeedbackFromEmployee = async (req, res) => {
-  const feedbackFromEmployees = await FeedbackFromEmployee.find();
+  let query = req.query.search;
+  let feedbackFromEmployees = {};
+
+  if (typeof query === "undefined" || query.length === 0) {
+    console.log("Return all feedbackFromEmployees");
+    feedbackFromEmployees = await FeedbackFromEmployee.find();
+  } else {
+    console.log("Return feedbackFromEmployees with search= ", query);
+    feedbackFromEmployees = await FeedbackFromEmployee.find({
+      $text: {
+        $search: `"${query}"`,
+        // $search: `.*(\b${query}\b).*`,
+      },
+    });
+  }
   if (feedbackFromEmployees) {
     res.status(200).json({
       message: "Get all FeedbackFromEmployee successfully!",
@@ -58,14 +79,16 @@ const putFeedbackFromEmployee = async (req, res) => {
   // typeof req.body.name === "undefined"
   //   ? (FeedbackFromEmployee.name = FeedbackFromEmployee.name)
   //   : (FeedbackFromEmployee.name = req.body.name);
-  typeof req.body.title !== "undefined" && (feedbackFromEmployee.name = req.body.title);
-  typeof req.body.content !== "undefined" && (feedbackFromEmployee.content = req.body.content);
+  typeof req.body.title !== "undefined" &&
+    (feedbackFromEmployee.name = req.body.title);
+  typeof req.body.content !== "undefined" &&
+    (feedbackFromEmployee.content = req.body.content);
   typeof req.body.employeeID !== "undefined" &&
     (feedbackFromEmployee.employeeID = req.body.employeeID);
   typeof req.body.isDeleted !== "undefined" &&
     (feedbackFromEmployee.isDeleted = req.body.isDeleted);
 
-    feedbackFromEmployee.save((error, result) => {
+  feedbackFromEmployee.save((error, result) => {
     if (error || !result) {
       return res.status(400).json({
         message: "[UPDATE] Something went wrong",
@@ -80,26 +103,28 @@ const putFeedbackFromEmployee = async (req, res) => {
 };
 
 // Delete one FeedbackFromEmployee
-const deleteFeedbackFromEmployee = async (req, res ) => {
+const deleteFeedbackFromEmployee = async (req, res) => {
   const feedbackFromEmployee = req.FeedbackFromEmployee;
 
-  feedbackFromEmployee.deleteOne({ _id: FeedbackFromEmployee._id }, (error, result) => {
-    if (error || !result) {
-      res.status(400).json({
-        message: "Can't delete!!!",
-        error: error,
-      });
-    } else {
-      res.status(200).json({
-        message: "Delete successfully!",
-        result: result,
-      });
+  feedbackFromEmployee.deleteOne(
+    { _id: FeedbackFromEmployee._id },
+    (error, result) => {
+      if (error || !result) {
+        res.status(400).json({
+          message: "Can't delete!!!",
+          error: error,
+        });
+      } else {
+        res.status(200).json({
+          message: "Delete successfully!",
+          result: result,
+        });
+      }
     }
-  });
-}
+  );
+};
 
-
-// Delete all FeedbackFromEmployee 
+// Delete all FeedbackFromEmployee
 const deleteAllFeedbackFromEmployee = async (req, res) => {
   console.log("Invoked deleteAllFeedbackFromEmployee");
   // const count = req.body.count;
@@ -124,5 +149,5 @@ module.exports = {
   createFeedbackFromEmployee,
   putFeedbackFromEmployee,
   deleteAllFeedbackFromEmployee,
-  deleteFeedbackFromEmployee
+  deleteFeedbackFromEmployee,
 };

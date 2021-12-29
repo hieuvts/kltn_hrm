@@ -2,16 +2,24 @@ const mongoose = require("mongoose");
 mongoose.pluralize(null); // Prevent pluralize collection name ('data' -> 'datas')
 const Schema = mongoose.Schema;
 const validator = require("validator");
+const moment = require("moment");
 
 // https://mongoosejs.com/docs/schematypes.html
 // https://docs.mongodb.com/manual/reference/operator/aggregation/strLenCP/
 const employeeSchema = new Schema({
-  name: {
+  fname: {
     type: String,
     required: true,
-    default: "Employee",
-    minlength: 2,
-    maxlength: 150,
+    default: "First name",
+    minlength: 1,
+    maxlength: 35,
+  },
+  lname: {
+    type: String,
+    required: true,
+    default: "Last name",
+    minlength: 1,
+    maxlength: 35,
   },
   gender: {
     type: String,
@@ -26,9 +34,9 @@ const employeeSchema = new Schema({
     type: Date,
     required: true,
     min: "1900-01-01",
-    max: "2020-01-01",
+    max: moment(Date.now()).format("YYYY-MM-DD"),
   },
-  phoneNumber: { type: String, required: true },
+  phoneNumber: { type: String, required: true, min: 8, max: 15 },
   email: {
     type: String,
     required: true,
@@ -42,26 +50,20 @@ const employeeSchema = new Schema({
     required: true,
     max: 150,
   },
-  roleID: {
-    type: String,
-    max: 10,
-    default: "roleID",
-  },
-  departmentID:{
-    type: String,
-    max: 10,
-    default: "departmentID",
-  },
-  projectID:{
-    type: String,
-    max: 10,
-    default: "projectID",
-  },
+  role: [{ type: Schema.Types.ObjectId, ref: "role" }],
+  department: [{ type: Schema.Types.ObjectId, ref: "department" }],
+  project: [{ type: Schema.Types.ObjectId, ref: "project" }],
   isDeleted: {
     type: Boolean,
     default: false,
   },
 });
 
+employeeSchema.index({
+  fname: "text",
+  lname: "text",
+  email: "text",
+  phoneNumber: "text",
+});
 // Collection name that will appear in MongoDB
 module.exports = mongoose.model("employee", employeeSchema);

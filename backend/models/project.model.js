@@ -3,28 +3,32 @@ mongoose.pluralize(null);
 const Schema = mongoose.Schema;
 const validator = require("validator");
 
-const projectScheema = new Schema({
-    name:{
-        type: String,
-        require: true,
-        default: "project",
-        minlength: 2,
-        maxlength: 50
-    },
-    customer:{
-        type: String,
-        require: true,
-        default: "customer",
-        minlength: 2,
-        maxlength: 50
-    },
-    startDate: {
-        type: String,
-        default: "",
-        required: true
-    },
-    isDeleted: {
-        type: Boolean
-    }
+const projectSchema = new Schema({
+  name: {
+    type: String,
+    require: true,
+    default: "project",
+    minlength: 2,
+    maxlength: 50,
+  },
+  employee: [{ type: Schema.Types.ObjectId, ref: "employee" }],
+  customer: {
+    type: String,
+    require: true,
+    default: "customer",
+    minlength: 2,
+    maxlength: 50,
+  },
+  startDate: {
+    type: String,
+    default: "",
+    required: true,
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
-module.exports = mongoose.model("project", projectScheema);
+
+projectSchema.index({ name: "text", customer: "text" });
+module.exports = mongoose.model("project", projectSchema);

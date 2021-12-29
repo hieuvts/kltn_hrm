@@ -1,4 +1,4 @@
-const Role = require("../models/Role.model");
+const Role = require("../models/role.model");
 
 // GET BY ID
 const getRoleById = async (req, res, next, RoleId) => {
@@ -21,11 +21,26 @@ const getRoleById = async (req, res, next, RoleId) => {
 
 // GET ALL
 const getAllRole = async (req, res) => {
-  const Roles = await Role.find();
-  if (Roles) {
+  let query = req.query.search;
+  let roles = {};
+
+  if (typeof query === "undefined" || query.length === 0) {
+    console.log("Return all roles");
+    roles = await Role.find();
+  } else {
+    console.log("Return roles with search= ", query);
+    roles = await Role.find({
+      $text: {
+        $search: `"${query}"`,
+        // $search: `.*(\b${query}\b).*`,
+      },
+    });
+  }
+
+  if (roles) {
     res.status(200).json({
       message: "Get all Role successfully!",
-      Roles: Roles,
+      roles: roles,
     });
   } else {
     res.status(400).json({
@@ -36,9 +51,9 @@ const getAllRole = async (req, res) => {
 
 // Create Role
 const createRole = async (req, res) => {
-  console.log("Invoked create Role");
-  const Role = new Role(req.body);
-  Role.save((error, result) => {
+  console.log("createRole res.body= ", req.body);
+  const role = new Role(req.body);
+  role.save((error, result) => {
     if (error || !result) {
       res.status(400).json({
         message: "[ERROR] [post] ",
@@ -46,7 +61,7 @@ const createRole = async (req, res) => {
       });
     } else {
       res.json({
-        message: "Create Role successfully!",
+        message: "Create role successfully!",
       });
     }
   });
@@ -54,16 +69,17 @@ const createRole = async (req, res) => {
 
 // Update Role
 const putRole = async (req, res) => {
-  const Role = req.Role;
+  const role = req.Role;
   // typeof req.body.name === "undefined"
   //   ? (Role.name = Role.name)
   //   : (Role.name = req.body.name);
-  typeof req.body.name !== "undefined" && (Role.name = req.body.name);
-  typeof req.body.roleLevel !== "undefined" && (Role.headOfRole = req.body.roleLevel);
+  typeof req.body.name !== "undefined" && (role.name = req.body.name);
+  typeof req.body.roleLevel !== "undefined" &&
+    (role.headOfRole = req.body.roleLevel);
   typeof req.body.isDeleted !== "undefined" &&
-    (Role.isDeleted = req.body.isDeleted);
+    (role.isDeleted = req.body.isDeleted);
 
-  Role.save((error, result) => {
+  role.save((error, result) => {
     if (error || !result) {
       return res.status(400).json({
         message: "[UPDATE] Something went wrong",
@@ -78,10 +94,10 @@ const putRole = async (req, res) => {
 };
 
 // Delete one Role
-const deleteRole = async (req, res ) => {
-  const Role = req.Role;
+const deleteRole = async (req, res) => {
+  const role = req.Role;
 
-  Role.deleteOne({ _id: Role._id }, (error, result) => {
+  role.deleteOne({ _id: role._id }, (error, result) => {
     if (error || !result) {
       res.status(400).json({
         message: "Can't delete!!!",
@@ -94,10 +110,9 @@ const deleteRole = async (req, res ) => {
       });
     }
   });
-}
+};
 
-
-// Delete all Role 
+// Delete all Role
 const deleteAllRole = async (req, res) => {
   console.log("Invoked deleteAllRole");
   // const count = req.body.count;
@@ -122,5 +137,5 @@ module.exports = {
   createRole,
   putRole,
   deleteAllRole,
-  deleteRole
+  deleteRole,
 };

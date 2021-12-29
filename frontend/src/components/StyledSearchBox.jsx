@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { styled, alpha } from "@mui/material/styles";
 import { InputBase } from "@mui/material";
 
@@ -49,14 +49,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function MySearchBox(props) {
+export default function MySearchBox({
+  placeholder,
+  handleSearchQueryChange,
+}) {
   return (
     <Search>
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
       <StyledInputBase
-        placeholder={props.placeholder}
+        placeholder={placeholder}
+        onChange={handleSearchQueryChange}
         inputProps={{ "aria-label": "search" }}
         fullWidth
       />
@@ -65,4 +69,5 @@ export default function MySearchBox(props) {
 }
 MySearchBox.propTypes = {
   placeholder: PropTypes.string,
+  handleSearchQueryChange: PropTypes.func,
 };
