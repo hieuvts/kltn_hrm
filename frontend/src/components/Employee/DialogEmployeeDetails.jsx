@@ -15,12 +15,12 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
 import PersonalInformation from "./EmployeeDetails/PersonalInformation";
 import AboutMe from "./EmployeeDetails/AboutMe";
 import EmployeeAvatar from "./EmployeeDetails/EmployeeAvatar";
 import EffecientLevel from "./EmployeeDetails/EffecientLevel";
 import EmploymentHistory from "./EmployeeDetails/EmploymentHistory";
+import { useSelector } from "react-redux";
 
 function LinkTab(props) {
   return (

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Tabs, Tab, Paper } from "@mui/material";
-import Typography from "@mui/material/Typography";
+import { Tabs, Tab } from "@mui/material";
 import Box from "@mui/material/Box";
 import PropTypes from "prop-types";
 
@@ -12,7 +11,7 @@ export default function Authentication() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const paperStyle = { width: "75%", margin: "20px auto" };
+
   const tabStyle = {
     width: "100%",
     textAlign: "center",
@@ -29,11 +28,7 @@ export default function Authentication() {
         aria-labelledby={`simple-tab-${index}`}
         {...other}
       >
-        {value === index && (
-          <Box>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
+        {value === index && <Box>{children}</Box>}
       </div>
     );
   }
@@ -45,25 +40,28 @@ export default function Authentication() {
   };
 
   return (
-    <div>
-      <Paper elevation={20} style={paperStyle}>
-        <Tabs
-          value={value}
-          indicatorColor="primary"
-          textColor="primary"
-          onChange={handleChange}
-          aria-label="disabled tabs example"
-        >
-          <Tab label="Login" style={tabStyle} />
-          <Tab label="Signup" style={tabStyle} />
-        </Tabs>
-        <TabPanel value={value} index={0}>
-          <Login />
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <SignUp />
-        </TabPanel>
-      </Paper>
-    </div>
+    <Box sx={{ marginX: { sm: 15, md: 30 } }}>
+      <Tabs
+        value={value}
+        indicatorColor="primary"
+        textColor="primary"
+        onChange={handleChange}
+        aria-label="disabled tabs example"
+        centered
+      >
+        <Tab label="Login" style={tabStyle} />
+        <Tab label="Signup" style={tabStyle} />
+      </Tabs>
+      <TabPanel value={value} index={0}>
+        <Login handleChange={handleChange} />
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <SignUp handleChange={handleChange} />
+      </TabPanel>
+      {/* <Routes>
+        <Route path="/login/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+      </Routes> */}
+    </Box>
   );
 }

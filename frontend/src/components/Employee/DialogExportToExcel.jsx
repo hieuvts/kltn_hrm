@@ -8,8 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Checkbox from "@mui/material/Checkbox";
 import CloseIcon from "@mui/icons-material/Close";
 import PropTypes from "prop-types";
-
-import * as yup from "yup";
+import { fileNameValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
 
 import { useSelector } from "react-redux";
@@ -18,12 +17,6 @@ import ExportToExcel from "../../utilities/exportToExcel";
 const fileType =
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
 
-export const validationSchema = yup.object().shape({
-  fileName: yup
-    .string("Enter file name")
-    .required("Please speficy a file name!")
-    .matches(/^[^\\/:\*\?"<>\|]+$/, `Should not contains \ / : * ? " < > |`),
-});
 export default function DialogExportToExcel({
   isDialogOpen,
   handleCloseDialog,
@@ -35,7 +28,7 @@ export default function DialogExportToExcel({
       initialValues: {
         fileName: "",
       },
-      validationSchema: validationSchema,
+      validationSchema: fileNameValidationSchema,
       onSubmit: (values) => {
         ExportToExcel(employeeList, values.fileName);
       },

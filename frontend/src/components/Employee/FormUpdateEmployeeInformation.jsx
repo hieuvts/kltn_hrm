@@ -2,23 +2,22 @@ import React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
-import { useFormik } from "formik";
+import MuiAlert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
+import { employeeInfoValidationSchema } from "../../utilities/validationSchema";
 import {
   updateEmployeeAsync,
   getEmployeeAsync,
   setCurrentSelectedEmployee,
 } from "../../stores/employeeSlice";
 
-import { validationSchema } from "../../utilities/employeeInfoValidationSchema";
-import MuiAlert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
+import { useDispatch } from "react-redux";
+import { useFormik } from "formik";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -32,7 +31,7 @@ export default function FormUpdateEmployeeInformation({
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
-      validationSchema: validationSchema,
+      validationSchema: employeeInfoValidationSchema,
       onSubmit: (values) => {
         dispatch(updateEmployeeAsync(values)).then(() => {
           dispatch(

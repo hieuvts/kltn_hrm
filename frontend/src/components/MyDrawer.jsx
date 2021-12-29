@@ -240,7 +240,14 @@ export default function AppBarComponent() {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          <Button variant="contained">LOGIN</Button>
+          <Button variant="contained">
+            <Link
+              to="/login"
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              LOGIN
+            </Link>
+          </Button>
         </Toolbar>
       </AppBar>
       <MyDrawer variant="permanent" open={isDrawerOpen}>

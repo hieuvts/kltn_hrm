@@ -1,17 +1,15 @@
-import React from "react";
-import {
-  Avatar,
-  Grid,
-  Paper,
-  TextField,
-  Typography,
-  Button,
-} from "@mui/material";
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import React, { useState } from "react";
+import { Grid, Box, TextField, Typography, Button } from "@mui/material";
+
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 import MuiAlert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
+import { PropTypes } from "prop-types";
+import Link from "@mui/material/Link";
 import { useFormik } from "formik";
-import { accountValidationSchema } from "../../utilities/accountValidationSchema";
+import { accountSignUpValidationSchema } from "../../utilities/validationSchema";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -23,22 +21,22 @@ const initialValues = {
   dateOfBirth: new Date(),
   phoneNumber: "",
   email: "",
-  address: "",
-  roleID: "1",
-  departmentID: "1",
-  projectID: "1",
-  isDeleted: false,
+  username: "",
+  password: "",
+  verifyPassword: "",
 };
 
-export default function SignUp() {
+export default function SignUp({ handleChange }) {
   const paperStyle = { padding: 20, width: 310, margin: "0 auto" };
   const avatarStyle = { backgroundColor: "#5048E4" };
   const headerStyle = { margin: "8px" };
   const inputStyle = { marginTop: "8px" };
+
+  const [isChecked, setChecked] = useState(false);
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
-      validationSchema: accountValidationSchema,
+      validationSchema: accountSignUpValidationSchema,
       onSubmit: (values) => {
         dispatch(addEmployeeAsync(values));
         handleSnackbarOpen();
@@ -46,30 +44,40 @@ export default function SignUp() {
       },
     });
     return (
-     
-        <form onSubmit={formik.handleSubmit}>
-          <TextField
-            fullWidth
-            id="fname"
-            name="fname"
-            label="First name"
-            value={formik.values.fname}
-            onChange={formik.handleChange}
-            error={formik.touched.fname && Boolean(formik.errors.fname)}
-            helperText={formik.touched.fname && formik.errors.fname}
-            sx={{ mb: 3 }}
-          />
-          <TextField
-            fullWidth
-            id="lname"
-            name="lname"
-            label="Last name"
-            value={formik.values.lname}
-            onChange={formik.handleChange}
-            error={formik.touched.lname && Boolean(formik.errors.lname)}
-            helperText={formik.touched.lname && formik.errors.lname}
-            sx={{ mb: 3 }}
-          />
+      <form onSubmit={formik.handleSubmit}>
+        <Grid container>
+          <Grid
+            item
+            direction="row"
+            sm={12}
+            md={6}
+            sx={{ paddingRight: { md: 3 } }}
+          >
+            <TextField
+              fullWidth
+              id="fname"
+              name="fname"
+              label="First name"
+              value={formik.values.fname}
+              onChange={formik.handleChange}
+              error={formik.touched.fname && Boolean(formik.errors.fname)}
+              helperText={formik.touched.fname && formik.errors.fname}
+              sx={{ mb: 3 }}
+            />
+          </Grid>
+          <Grid item direction="row" sm={12} md={6}>
+            <TextField
+              fullWidth
+              id="lname"
+              name="lname"
+              label="Last name"
+              value={formik.values.lname}
+              onChange={formik.handleChange}
+              error={formik.touched.lname && Boolean(formik.errors.lname)}
+              helperText={formik.touched.lname && formik.errors.lname}
+              sx={{ mb: 3 }}
+            />
+          </Grid>
 
           <TextField
             fullWidth
@@ -84,6 +92,7 @@ export default function SignUp() {
             helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
             sx={{ mb: 3 }}
           />
+
           <TextField
             fullWidth
             id="email"
@@ -95,6 +104,7 @@ export default function SignUp() {
             helperText={formik.touched.email && formik.errors.email}
             sx={{ mb: 3 }}
           />
+
           <TextField
             fullWidth
             id="username"
@@ -106,22 +116,26 @@ export default function SignUp() {
             helperText={formik.touched.username && formik.errors.username}
             sx={{ mb: 3 }}
           />
+
           <TextField
             fullWidth
             id="password"
             name="password"
             label="Password"
+            type="password"
             value={formik.values.password}
             onChange={formik.handleChange}
             error={formik.touched.password && Boolean(formik.errors.password)}
             helperText={formik.touched.password && formik.errors.password}
             sx={{ mb: 3 }}
           />
+
           <TextField
             fullWidth
             id="verifyPassword"
             name="verifyPassword"
             label="Verify password"
+            type="password"
             value={formik.values.verifyPassword}
             onChange={formik.handleChange}
             error={
@@ -133,17 +147,33 @@ export default function SignUp() {
             }
             sx={{ mb: 3 }}
           />
-
-          <Button variant="contained" color="primary" fullWidth type="submit">
-            SignUp
-          </Button>
-        </form>
-      
+        </Grid>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isChecked}
+              onChange={() => setChecked(!isChecked)}
+              inputProps={{ "aria-label": "controlled" }}
+            />
+          }
+          label="Agree with terms of services and policy"
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          type="submit"
+          sx={{ mt: 3 }}
+          disabled={!isChecked}
+        >
+          Signup
+        </Button>
+      </form>
     );
   };
   return (
-    <Grid>
-      <Snackbar
+    <Box>
+      {/* <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         open={true}
         autoHideDuration={2500}
@@ -153,17 +183,24 @@ export default function SignUp() {
         <Alert severity="success" sx={{ width: "100%" }}>
           Placeholder
         </Alert>
-      </Snackbar>
-      <Paper elevation={10} style={paperStyle}>
-        <Grid align={"center"}>
-          <h2 style={headerStyle}>Sign up</h2>
-          <Avatar style={avatarStyle}>
-            <AddCircleOutlineOutlinedIcon />
-          </Avatar>
-          <Typography variant="caption">Fill account information</Typography>
-        </Grid>
-        <FormikWithMUI />
-      </Paper>
-    </Grid>
+      </Snackbar> */}
+      <Box sx={{ textAlign: "center" }}>
+        <Box sx={{ mt: 3, mb: 5 }}>
+          <LockOutlinedIcon />
+          <Typography variant="h4"> Sign up</Typography>
+        </Box>
+      </Box>
+
+      <FormikWithMUI />
+      <Box sx={{ textAlign: "right", mt: 3 }}>
+        <Button onClick={(e) => handleChange(e, 0)}>
+          Already have an account? Login
+        </Button>
+      </Box>
+    </Box>
   );
 }
+
+SignUp.propTypes = {
+  handleChange: PropTypes.func,
+};

@@ -25,12 +25,13 @@ import { visuallyHidden } from "@mui/utils";
 import avatarMale from "../../assets/icons/avatarMale.png";
 import avatarFemale from "../../assets/icons/avatarFemale.png";
 
-import { useSelector } from "react-redux";
-import moment from "moment";
 import DialogDeleteEmployee from "./DialogDeleteEmployee";
 import DialogDeleteMultipleEmployee from "./DialogDeleteMultipleEmployee";
 import DialogUpdateEmployee from "./DialogUpdateEmployee";
 import DialogEmployeeDetails from "./DialogEmployeeDetails";
+
+import moment from "moment";
+
 import {
   setCurrentSelectedEmployee,
   addToSelectedEmployeeList,
@@ -38,6 +39,8 @@ import {
   setMultiSelectedEmployeeList,
 } from "../../stores/employeeSlice";
 import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;

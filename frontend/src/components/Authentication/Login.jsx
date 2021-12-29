@@ -1,46 +1,33 @@
-import React from "react";
-import {
-  Avatar,
-  Grid,
-  Paper,
-  TextField,
-  FormControl,
-  Typography,
-  Button,
-} from "@mui/material";
+import React, { useState } from "react";
+import { Box, TextField, Typography, Button, Paper } from "@mui/material";
 
-import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
 import MuiAlert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
 import { useFormik } from "formik";
-import { accountValidationSchema } from "../../utilities/accountValidationSchema";
-
+import { accountLoginValidationSchema } from "../../utilities/validationSchema";
+import DialogForgotPassword from "./DialogForgotPassword";
+import { PropTypes } from "prop-types";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 const initialValues = {
-  fname: "",
-  lname: "",
-  gender: "Male",
-  dateOfBirth: new Date(),
-  phoneNumber: "",
-  email: "",
-  address: "",
-  roleID: "1",
-  departmentID: "1",
-  projectID: "1",
-  isDeleted: false,
+  username: "",
+  password: "",
 };
 
-export default function Login() {
-  const paperStyle = { padding: 20, width: 310, margin: "0 auto" };
-  const avatarStyle = { backgroundColor: "#5048E4" };
-  const headerStyle = { margin: "8px" };
-  const inputStyle = { marginTop: "8px" };
+export default function Login({ handleChange }) {
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
+
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
-      validationSchema: accountValidationSchema,
+      validationSchema: accountLoginValidationSchema,
       onSubmit: (values) => {
         dispatch(addEmployeeAsync(values));
         handleSnackbarOpen();
@@ -49,53 +36,6 @@ export default function Login() {
     });
     return (
       <form onSubmit={formik.handleSubmit}>
-        <TextField
-          fullWidth
-          id="fname"
-          name="fname"
-          label="First name"
-          value={formik.values.fname}
-          onChange={formik.handleChange}
-          error={formik.touched.fname && Boolean(formik.errors.fname)}
-          helperText={formik.touched.fname && formik.errors.fname}
-          sx={{ mb: 3 }}
-        />
-        <TextField
-          fullWidth
-          id="lname"
-          name="lname"
-          label="Last name"
-          value={formik.values.lname}
-          onChange={formik.handleChange}
-          error={formik.touched.lname && Boolean(formik.errors.lname)}
-          helperText={formik.touched.lname && formik.errors.lname}
-          sx={{ mb: 3 }}
-        />
-
-        <TextField
-          fullWidth
-          id="phoneNumber"
-          name="phoneNumber"
-          label="Phone number"
-          value={formik.values.phoneNumber}
-          onChange={formik.handleChange}
-          error={
-            formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)
-          }
-          helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
-          sx={{ mb: 3 }}
-        />
-        <TextField
-          fullWidth
-          id="email"
-          name="email"
-          label="Email"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
-          sx={{ mb: 3 }}
-        />
         <TextField
           fullWidth
           id="username"
@@ -112,58 +52,59 @@ export default function Login() {
           id="password"
           name="password"
           label="Password"
+          type="password"
           value={formik.values.password}
           onChange={formik.handleChange}
           error={formik.touched.password && Boolean(formik.errors.password)}
           helperText={formik.touched.password && formik.errors.password}
           sx={{ mb: 3 }}
         />
-        <TextField
-          fullWidth
-          id="verifyPassword"
-          name="verifyPassword"
-          label="Verify password"
-          value={formik.values.verifyPassword}
-          onChange={formik.handleChange}
-          error={
-            formik.touched.verifyPassword &&
-            Boolean(formik.errors.verifyPassword)
-          }
-          helperText={
-            formik.touched.verifyPassword && formik.errors.verifyPassword
-          }
-          sx={{ mb: 3 }}
-        />
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <FormControlLabel control={<Checkbox />} label="Remember password" />
+          <Button
+            variant="link"
+            onClick={() => setDialogOpen(true)}
+            sx={{ textTransform: "none", color: "#194591", fontSize: "medium" }}
+          >
+            Forgot password?
+          </Button>
+        </Box>
 
-        <Button variant="contained" color="primary" fullWidth type="submit">
-          Signup
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          type="submit"
+          sx={{ mt: 3 }}
+        >
+          Login
         </Button>
       </form>
     );
   };
   return (
-    <Grid>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        open={true}
-        autoHideDuration={2500}
-        key={"top" + "right"}
-        sx={{ mt: "0" }}
-      >
-        <Alert severity="success" sx={{ width: "100%" }}>
-          Placeholder
-        </Alert>
-      </Snackbar>
-      <Paper elevation={10} style={paperStyle}>
-        <Grid align={"center"}>
-          <h2 style={headerStyle}>Login</h2>
-          <Avatar style={avatarStyle}>
-            <AddCircleOutlineOutlinedIcon />
-          </Avatar>
-          <Typography variant="caption">Fill account information</Typography>
-        </Grid>
-        <FormikWithMUI />
-      </Paper>
-    </Grid>
+    <>
+      <DialogForgotPassword
+        isDialogOpen={isDialogOpen}
+        handleCloseDialog={handleCloseDialog}
+      />
+      <Box sx={{ textAlign: "center" }}>
+        <Box sx={{ mt: 3, mb: 5 }}>
+          <LockOutlinedIcon />
+          <Typography variant="h4">Login</Typography>
+        </Box>
+      </Box>
+
+      <FormikWithMUI />
+      <Box sx={{ textAlign: "right", mt: 3 }}>
+        <Button onClick={(e) => handleChange(e, 1)}>
+          Don&#39;t have an account? Sign up!
+        </Button>
+      </Box>
+    </>
   );
 }
+
+Login.propTypes = {
+  handleChange: PropTypes.func,
+};
