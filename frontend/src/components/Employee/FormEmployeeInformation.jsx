@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
@@ -14,16 +14,24 @@ import { useDispatch } from "react-redux";
 import { addEmployeeAsync } from "../../stores/employeeSlice";
 import { employeeInfoValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
-
+import SnackbarSuccess from "../SnackbarSuccess";
+import SnackbarFailed from "../SnackbarFailed";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 export default function FormEmployeeInformation({
   handleCloseDialog,
-  handleSnackbarOpen,
   submitButtonText,
   initialValues,
 }) {
+  const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
+  const [isSbFailedOpen, setSbFailedOpen] = useState(false);
+  const handleSbSuccessClose = () => {
+    setSbSuccessOpen(false);
+  };
+  const handleSbFailedClose = () => {
+    setSbFailedOpen(false);
+  };
   const dispatch = useDispatch();
 
   const FormikWithMUI = () => {
@@ -31,24 +39,21 @@ export default function FormEmployeeInformation({
       initialValues: initialValues,
       validationSchema: employeeInfoValidationSchema,
       onSubmit: (values) => {
-        dispatch(addEmployeeAsync(values));
-        handleSnackbarOpen();
-        handleCloseDialog();
+        dispatch(addEmployeeAsync(values))
+          .unwrap()
+          .then((originalPromiseResult) => {
+            setSbSuccessOpen(true);
+            setTimeout(() => {
+              handleCloseDialog();
+            }, 1500);
+          })
+          .catch((rejectedValueOrSerializedError) => {
+            setSbFailedOpen(true);
+          });
       },
     });
     return (
       <div style={{ marginTop: "30px" }}>
-        <Snackbar
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          open={true}
-          autoHideDuration={2500}
-          key={"top" + "right"}
-          sx={{ mt: "0" }}
-        >
-          <Alert severity="success" sx={{ width: "100%" }}>
-            Placeholder
-          </Alert>
-        </Snackbar>
         <form onSubmit={formik.handleSubmit}>
           <TextField
             fullWidth
@@ -162,13 +167,22 @@ export default function FormEmployeeInformation({
 
   return (
     <div>
+      <SnackbarSuccess
+        isOpen={isSbSuccessOpen}
+        handleClose={handleSbSuccessClose}
+        text={"Added new employee"}
+      />
+      <SnackbarFailed
+        isOpen={isSbFailedOpen}
+        handleClose={handleSbFailedClose}
+        text={"Add employee failed"}
+      />
       <FormikWithMUI />
     </div>
   );
 }
 
 FormEmployeeInformation.propTypes = {
-  handleSnackbarOpen: PropTypes.func,
   handleCloseDialog: PropTypes.func,
   submitButtonText: PropTypes.string,
   initialValues: PropTypes.object,

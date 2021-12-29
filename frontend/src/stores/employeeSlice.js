@@ -76,7 +76,7 @@ export const addEmployeeAsync = createAsyncThunk(
       if (res.ok) {
         const employee = await res.json();
         return { employee };
-      } else return rejectWithValue("Add employee not successful");
+      } else return rejectWithValue("Add employee not successful 1");
     } catch (error) {
       return rejectWithValue("Add employee not successful");
     }
@@ -170,9 +170,9 @@ export const employeeSlice = createSlice({
   },
   extraReducers: {
     // Get Employee from server
-    // [getEmployeeAsync.pending]: (state, actions) => {
-    //   console.log("[Pending] getEmployeeAsync state= ", state);
-    // },
+    [getEmployeeAsync.pending]: (state, actions) => {
+      console.log("[Pending] getEmployeeAsync state= ", state);
+    },
     [getEmployeeAsync.rejected]: (state, actions) => {
       console.log("[Rejected] getEmployeeAsync errorMsg= ", actions);
     },

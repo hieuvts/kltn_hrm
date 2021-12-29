@@ -10,7 +10,6 @@ import FormEmployeeInformation from "./FormEmployeeInformation";
 export default function DialogAddEmployee({
   isDialogOpen,
   handleCloseDialog,
-  handleSnackbarOpen,
 }) {
   return (
     <div>
@@ -25,7 +24,6 @@ export default function DialogAddEmployee({
         </DialogTitle>
         <DialogContent>
           <FormEmployeeInformation
-            handleSnackbarOpen={handleSnackbarOpen}
             handleCloseDialog={handleCloseDialog}
           />
         </DialogContent>
