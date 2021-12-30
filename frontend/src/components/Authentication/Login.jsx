@@ -9,27 +9,33 @@ import { useFormik } from "formik";
 import { accountLoginValidationSchema } from "../../utilities/validationSchema";
 import DialogForgotPassword from "./DialogForgotPassword";
 import { PropTypes } from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../stores/authSlice";
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 const initialValues = {
-  username: "",
+  email: "",
   password: "",
 };
 
 export default function Login({ handleChange }) {
   const [isDialogOpen, setDialogOpen] = useState(false);
-
+  const user = useSelector((state) => state.auth.identification);
+  const dispatch = useDispatch();
   const handleCloseDialog = () => {
     setDialogOpen(false);
   };
-
+  const handleLogin = (email, password) => {
+    dispatch(login({ email, password }));
+  };
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
       validationSchema: accountLoginValidationSchema,
       onSubmit: (values) => {
-        dispatch(addEmployeeAsync(values));
+        handleLogin(values.email, values.password);
         handleSnackbarOpen();
         handleCloseDialog();
       },
@@ -38,13 +44,14 @@ export default function Login({ handleChange }) {
       <form onSubmit={formik.handleSubmit}>
         <TextField
           fullWidth
-          id="username"
-          name="username"
-          label="Username"
-          value={formik.values.username}
+          id="email"
+          name="email"
+          label="Email"
+          type="email"
+          value={formik.values.email}
           onChange={formik.handleChange}
-          error={formik.touched.username && Boolean(formik.errors.username)}
-          helperText={formik.touched.username && formik.errors.username}
+          error={formik.touched.email && Boolean(formik.errors.email)}
+          helperText={formik.touched.email && formik.errors.email}
           sx={{ mb: 3 }}
         />
         <TextField
@@ -94,13 +101,13 @@ export default function Login({ handleChange }) {
           <Typography variant="h4">Login</Typography>
         </Box>
       </Box>
-
       <FormikWithMUI />
       <Box sx={{ textAlign: "right", mt: 3 }}>
         <Button onClick={(e) => handleChange(e, 1)}>
           Don&#39;t have an account? Sign up!
         </Button>
       </Box>
+      <Typography>Test account: {user.accessToken} </Typography>;
     </>
   );
 }

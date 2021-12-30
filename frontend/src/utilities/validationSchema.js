@@ -36,9 +36,9 @@ export const accountSignUpValidationSchema = yup.object().shape({
 });
 
 export const accountLoginValidationSchema = yup.object().shape({
-  username: yup
+  email: yup
     .string("Enter your username")
-    .email("Enter a valid username")
+    .email("Please enter a valid email!")
     .required("Username is required!"),
   password: yup.string("Enter your password").required("Password is required!"),
 });

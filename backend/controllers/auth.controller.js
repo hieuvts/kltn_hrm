@@ -7,6 +7,7 @@ var bcrypt = require("bcryptjs");
 const jwtSecret = process.env.JWT_SECRET;
 
 const signUp = (req, res) => {
+  console.log("Invoked signup");
   const user = new User({
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
@@ -62,6 +63,9 @@ const signUp = (req, res) => {
 };
 
 const login = (req, res) => {
+  console.log("Invoked login");
+  console.log("login.req=", req.body.email);
+  console.log("login.req=", req.body.password);
   User.findOne({
     email: req.body.email,
   })
