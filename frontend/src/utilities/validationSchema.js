@@ -10,8 +10,11 @@ export const accountSignUpValidationSchema = yup.object().shape({
     .required("Email is required!"),
   password: yup.string("Enter your password").required("Password is required!"),
   verifyPassword: yup
-    .string("Enter your password")
-    .required("Verify your password!"),
+    .string()
+    .oneOf(
+      [yup.ref("password"), null],
+      "Password and confirmation password must match!"
+    ),
 });
 
 export const accountLoginValidationSchema = yup.object().shape({
