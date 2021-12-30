@@ -5,6 +5,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import MuiAlert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
+import LinearProgress from "@mui/material/LinearProgress";
 import { useFormik } from "formik";
 import { accountLoginValidationSchema } from "../../utilities/validationSchema";
 import DialogForgotPassword from "./DialogForgotPassword";
@@ -28,7 +30,9 @@ export default function Login({ handleChange }) {
     setDialogOpen(false);
   };
   const handleLogin = (email, password) => {
-    dispatch(login({ email, password }));
+    dispatch(login({ email, password }))
+      .then(console.log("hoan tat"))
+      .catch((error) => console.log(error));
   };
   const FormikWithMUI = () => {
     const formik = useFormik({
@@ -101,13 +105,17 @@ export default function Login({ handleChange }) {
           <Typography variant="h4">Login</Typography>
         </Box>
       </Box>
+      {/* {typeof user.accessToken === "undefined" ? (
+        <LinearProgress sx={{ width: "100%", my: 3 }} />
+      ) : (
+        <Typography>Test account: {user.accessToken} </Typography>
+      )} */}
       <FormikWithMUI />
       <Box sx={{ textAlign: "right", mt: 3 }}>
         <Button onClick={(e) => handleChange(e, 1)}>
           Don&#39;t have an account? Sign up!
         </Button>
       </Box>
-      <Typography>Test account: {user.accessToken} </Typography>;
     </>
   );
 }

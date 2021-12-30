@@ -1,66 +1,80 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import moment from "moment";
+import { setMessage } from "./messageSlice";
 import { apiBaseUrl } from "../config/apiBaseUrl";
 import axios from "axios";
 import authService from "../services/auth.service";
 
-const initialState = {
-  identification: [],
-};
+const user = JSON.parse(localStorage.getItem("user"));
 
-export const login = createAsyncThunk(
-  "auth/login",
-  async (payload, { rejectWithValue }) => {
+const initialState = user
+  ? { isLoggedIn: true, user }
+  : { isLoggedIn: false, user: null };
+
+export const signup = createAsyncThunk(
+  "auth/signup",
+  async (payload, thunkAPI) => {
     try {
-      const res = await fetch(`${apiBaseUrl}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: payload.email,
-          password: payload.password,
-        }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        return { data };
-      } else return rejectWithValue("Login not successful 1");
+      const res = await authService.signup(payload.email, payload.password);
+      thunkAPI.dispatch(setMessage(res.data.message));
+      return res.data;
     } catch (error) {
-      return rejectWithValue("Login not successful");
+      thunkAPI.dispatch(setMessage(error));
+      return thunkAPI.rejectWithValue();
     }
   }
 );
 
-export const signup = createAsyncThunk(
-  "auth/signup",
-  async (payload, { rejectWithValue }) => {}
+export const login = createAsyncThunk(
+  "auth/login",
+  async (payload, thunkAPI) => {
+    try {
+      const data = await authService.login(payload.email, payload.password);
+      return { user: data };
+    } catch (error) {
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue();
+    }
+  }
 );
+
+export const logout = createAsyncThunk("auth/logout", async () => {
+  await authService.logout();
+});
 
 export const authSlice = createSlice({
   name: "auth",
   initialState,
   extraReducers: {
-    // Get Employee from server
+    [signup.pending]: (state, actions) => {
+      console.log("[Rejected] signup actions= ", actions);
+    },
+    [signup.rejected]: (state, actions) => {
+      state.isLoggedIn = false;
+      console.log("[Pending] signup actions= ", actions);
+    },
+    [signup.fulfilled]: (state, actions) => {
+      state.isLoggedIn = false;
+      console.log("[Fulfilled] signup actions= ", actions);
+    },
+
     [login.pending]: (state, actions) => {
       console.log("[Pending] login state= ", state);
     },
     [login.rejected]: (state, actions) => {
+      state.isLoggedIn = false;
+      state.user = null;
       console.log("[Rejected] login errorMsg= ", actions);
     },
     [login.fulfilled]: (state, actions) => {
-      console.log("[Fulfilled] token ", actions.payload.data);
-      return { ...state, identification: actions.payload.data };
+      state.isLoggedIn = true;
+      state.user = actions.payload.user;
+      console.log("[Fulfilled] Login with  ", actions.payload.user);
     },
 
-    [signup.pending]: (state, actions) => {
-      console.log("[Rejected] signup errorMsg= ", actions);
-    },
-    [signup.pending]: (state, actions) => {
-      console.log("[Pending] signup state= ", state);
-    },
-    [signup.fulfilled]: (state, actions) => {
-      console.log("[Fulfilled] signup errorMsg= ", actions);
+    [logout.fulfilled]: (state, actions) => {
+      state.isLoggedIn = false;
+      state.user = null;
+      console.log("[Fulfilled] logout success");
     },
   },
 });
