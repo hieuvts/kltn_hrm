@@ -1,7 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setMessage } from "./messageSlice";
-import { apiBaseUrl } from "../config/apiBaseUrl";
-import axios from "axios";
 import authService from "../services/auth.service";
 
 const user = JSON.parse(localStorage.getItem("user"));
@@ -10,16 +8,22 @@ const initialState = user
   ? { isLoggedIn: true, user }
   : { isLoggedIn: false, user: null };
 
-export const signup = createAsyncThunk(
+export const signUp = createAsyncThunk(
   "auth/signup",
   async (payload, thunkAPI) => {
     try {
-      const res = await authService.signup(payload.email, payload.password);
+      const res = await authService.signUp(payload.email, payload.password);
       thunkAPI.dispatch(setMessage(res.data.message));
       return res.data;
     } catch (error) {
-      thunkAPI.dispatch(setMessage(error));
-      return thunkAPI.rejectWithValue();
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -31,8 +35,14 @@ export const login = createAsyncThunk(
       const data = await authService.login(payload.email, payload.password);
       return { user: data };
     } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
       thunkAPI.dispatch(setMessage(message));
-      return thunkAPI.rejectWithValue();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -45,14 +55,14 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   extraReducers: {
-    [signup.pending]: (state, actions) => {
+    [signUp.pending]: (state, actions) => {
       console.log("[Rejected] signup actions= ", actions);
     },
-    [signup.rejected]: (state, actions) => {
+    [signUp.rejected]: (state, actions) => {
       state.isLoggedIn = false;
       console.log("[Pending] signup actions= ", actions);
     },
-    [signup.fulfilled]: (state, actions) => {
+    [signUp.fulfilled]: (state, actions) => {
       state.isLoggedIn = false;
       console.log("[Fulfilled] signup actions= ", actions);
     },
@@ -63,12 +73,12 @@ export const authSlice = createSlice({
     [login.rejected]: (state, actions) => {
       state.isLoggedIn = false;
       state.user = null;
-      console.log("[Rejected] login errorMsg= ", actions);
+      console.log("[Rejected] login error: ", actions.payload);
     },
     [login.fulfilled]: (state, actions) => {
       state.isLoggedIn = true;
       state.user = actions.payload.user;
-      console.log("[Fulfilled] Login with  ", actions.payload.user);
+      console.log("[Fulfilled] Login with  ");
     },
 
     [logout.fulfilled]: (state, actions) => {

@@ -2,6 +2,7 @@ const Role = require("../models/role.model");
 const User = require("../models/user.model");
 
 const defaultRoles = ["user", "admin", "moderator"];
+
 const checkExistedEmail = (req, res, next) => {
   User.findOne({ email: req.body.email }).exec((error, user) => {
     if (error) {
@@ -10,7 +11,7 @@ const checkExistedEmail = (req, res, next) => {
     }
     if (user) {
       res.status(400).send({
-        message: `The user with email ${res.body.email} has already been registered!`,
+        message: `The user with email ${req.body.email} has already been registered!`,
       });
       return;
     }

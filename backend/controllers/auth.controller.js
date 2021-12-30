@@ -7,7 +7,9 @@ var bcrypt = require("bcryptjs");
 const jwtSecret = process.env.JWT_SECRET;
 
 const signUp = (req, res) => {
-  console.log("Invoked signup");
+  console.log("Invoked signUp");
+  console.log("login email=", req.body.email);
+  console.log("login pwd=", req.body.password);
   const user = new User({
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
@@ -37,7 +39,7 @@ const signUp = (req, res) => {
               return;
             }
 
-            res.send({ message: "User was registered successfully!" });
+            res.send({ message: "Account was registered successfully!" });
           });
         }
       );
@@ -55,7 +57,7 @@ const signUp = (req, res) => {
             return;
           }
 
-          res.send({ message: "User was registered successfully!" });
+          res.send({ message: "Account was registered successfully!" });
         });
       });
     }
@@ -72,12 +74,14 @@ const login = (req, res) => {
     .populate("roles", "-__v")
     .exec((err, user) => {
       if (err) {
+        // Internal server error
         res.status(500).send({ message: err });
         return;
       }
 
       if (!user) {
-        return res.status(404).send({ message: "User Not found." });
+        // Not found
+        return res.status(404).send({ message: "Account not found!" });
       }
 
       var passwordIsValid = bcrypt.compareSync(
@@ -86,9 +90,10 @@ const login = (req, res) => {
       );
 
       if (!passwordIsValid) {
+        // Unauthorized
         return res.status(401).send({
           accessToken: null,
-          message: "Invalid Password!",
+          message: "Invalid password!",
         });
       }
 
@@ -101,6 +106,7 @@ const login = (req, res) => {
       for (let i = 0; i < user.roles.length; i++) {
         authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
       }
+      // OK - Success
       res.status(200).send({
         id: user._id,
         email: user.email,
