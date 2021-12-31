@@ -8,10 +8,13 @@ const userSchema = new Schema({
     type: String,
     require: true,
     default: "email@example.com",
-    minlength: 2,
-    maxlength: 50,
+    validate: {
+      validator: validator.isEmail,
+      message: "{VALUE} is not a valid email",
+    },
     required: true,
   },
+
   password: {
     type: String,
     require: true,
