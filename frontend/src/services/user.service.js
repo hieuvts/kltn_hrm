@@ -1,7 +1,8 @@
 import axios from "axios";
-import authHeader from "./auth-header";
+import authHeader from "./authHeader";
+import { apiBaseUrl } from "../config/apiBaseUrl";
 
-const API_URL = "http://localhost:8080/api/test/";
+const API_URL = `${apiBaseUrl}/user/test/`;
 
 const getPublicContent = () => {
   return axios.get(API_URL + "all");
@@ -21,8 +22,8 @@ const getAdminContent = () => {
 
 const userService = {
   getPublicContent,
-  getUserBoard,
-  getModeratorBoard,
-  getAdminBoard,
+  getUserContent,
+  getModeratorContent,
+  getAdminContent,
 };
 export default userService;

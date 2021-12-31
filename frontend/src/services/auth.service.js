@@ -12,10 +12,10 @@ const signUp = (email, password) => {
 const login = (email, password) => {
   return axios.post(API_URL + "login", { email, password }).then((res) => {
     if (res.data.accessToken) {
-      localStorage.setItem("user", JSON.stringify(res.data.accessToken));
+      localStorage.setItem("user", JSON.stringify(res.data));
     }
     console.log("check res.data", res);
-    return res;
+    return res.data;
   });
 };
 
