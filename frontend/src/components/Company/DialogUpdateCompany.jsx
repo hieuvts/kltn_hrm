@@ -7,32 +7,31 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import PropTypes from "prop-types";
 import CloseIcon from "@mui/icons-material/Close";
-import FormAddEmployeeInformation from "./FormAddEmployeeInformation";
-export default function DialogAddEmployee({
+import FormUpdateCompany from "./FormUpdateCompany";
+
+export default function DialogUpdateCompany({
   isDialogOpen,
   handleCloseDialog,
 }) {
   return (
     <div>
-      <Dialog open={isDialogOpen} onClose={handleCloseDialog}  maxWidth="md">
+      <Dialog  open={isDialogOpen} onClose={handleCloseDialog} maxWidth="md">
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h4">Create new employee</Typography>
+            <Typography variant="h5">Update your company information</Typography>
             <Button onClick={handleCloseDialog}>
               <CloseIcon fontSize="large" />
             </Button>
           </Box>
         </DialogTitle>
         <DialogContent>
-          <FormAddEmployeeInformation
-            handleCloseDialog={handleCloseDialog}
-          />
+          <FormUpdateCompany handleCloseDialog={handleCloseDialog} />
         </DialogContent>
       </Dialog>
     </div>
   );
 }
-DialogAddEmployee.propTypes = {
+DialogUpdateCompany.propTypes = {
   isDialogOpen: PropTypes.bool,
   handleCloseDialog: PropTypes.func,
   handleSnackbarOpen: PropTypes.func,

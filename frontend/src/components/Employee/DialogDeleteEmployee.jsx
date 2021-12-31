@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -59,10 +60,10 @@ export default function DialogDeleteEmployee({
         handleClose={handleSbFailedClose}
         text={"Delete employee failed!"}
       />
-      <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+      <Dialog open={isDialogOpen} onClose={handleCloseDialog} maxWidth="md">
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <h5>Are you sure you want to delete this employee?</h5>
+            <Typography variant="h4">Are you sure you want to delete this employee?</Typography>
             <Button onClick={handleCloseDialog}>
               <CloseIcon fontSize="large" />
             </Button>

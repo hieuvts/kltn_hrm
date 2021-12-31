@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -23,7 +24,7 @@ export default function DialogUpdateEmployee({
       <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <h3>Update employee</h3>
+            <Typography variant="h4">Update employee</Typography>
             <Button onClick={handleCloseDialog}>
               <CloseIcon fontSize="large" />
             </Button>

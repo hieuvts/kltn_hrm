@@ -29,12 +29,12 @@ export const accountLoginValidationSchema = yup.object().shape({
 export const employeeInfoValidationSchema = yup.object().shape({
   fname: yup
     .string("Enter first name")
-    .min(1, "First name should be of minimum 2 characters length")
+    .min(1, "First name should be of minimum 1 characters length")
     .max(150, "Name should be of maximum 150 characters length")
     .required("Name is required!"),
   lname: yup
     .string("Enter last name")
-    .min(1, "Last name should be of minimum 2 characters length")
+    .min(1, "Last name should be of minimum 1 characters length")
     .max(150, "Name should be of maximum 150 characters length")
     .required("Name is required!"),
   gender: yup
@@ -86,4 +86,42 @@ export const fileNameValidationSchema = yup.object().shape({
     .string("Enter file name")
     .required("Please speficy a file name!")
     .matches(/^[^\\/:\*\?"<>\|]+$/, `Should not contains \ / : * ? " < > |`),
+});
+
+export const companyInfoValidationSchema = yup.object().shape({
+  name: yup
+    .string("Enter company name")
+    .min(1, "Company nameshould be of minimum 1 characters length")
+    .max(150, "Company name should be of maximum 150 characters length")
+    .required("Company name is required!"),
+  typeOfCompany: yup
+    .string("Enter type of company")
+    .min(1, "Should be of minimum 1 characters length")
+    .max(50, "Should be of maximum 50 characters length")
+    .required("Type of comapny is required!"),
+  mainBusinessLines: yup
+    .string("Enter main business lines")
+    .min(1, "Should be of minimum 1 characters length")
+    .max(50, "Should be of maximum 50 characters length")
+    .required("Main business is required!"),
+  address: yup
+    .string("Enter address")
+    .min(1, "Address should be of minimum 1 characters length")
+    .max(150, "Address should be of maximum 150 characters length")
+    .required("Address is required!"),
+  phoneNumber: yup
+    .string("Enter phone number")
+    .matches(phoneNumberRegex, "Phone number is not valid")
+    .min(8, "Phone number should be of minimum 8 characters length")
+    .max(15, "Phone number should be of maximum 15 characters length")
+    .required("Phone number is required!"),
+  email: yup
+    .string("Enter email")
+    .email("Enter a valid email")
+    .required("Email is required!"),
+  taxCode: yup
+    .string("Enter tax code")
+    .min(8, "Tax code should be of minimum 8 characters length")
+    .max(15, "Tax code should be of maximum 15 characters length")
+    .required("Tax code is required!"),
 });
