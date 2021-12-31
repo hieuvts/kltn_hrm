@@ -21,7 +21,7 @@ export default function DialogUpdateEmployee({
   );
   return (
     <div>
-      <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+      <Dialog open={isDialogOpen} onClose={handleCloseDialog} maxWidth="md">
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h4">Update employee</Typography>

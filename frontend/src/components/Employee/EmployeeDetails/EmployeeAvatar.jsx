@@ -11,30 +11,19 @@ import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
+import { rowDirection, colDirection } from "../../../utilities/flexBoxStyle";
 
 import maleAvatar from "../../../assets/icons/avatarMale.png";
 
-const rowDirection = {
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "space-between",
-  py: 1,
-};
-const colDirection = {
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  pl: 5,
-  py: 1,
-};
 export default function EmployeeAvatar() {
   const employee = useSelector(
     (state) => state.employee.currentSelectedEmployee
   );
+  const { user: currentUser } = useSelector((state) => state.auth);
   return (
     <Paper elevation={3} sx={{ p: 3 }}>
       <Typography variant="h6" sx={{ mb: 3 }}>
-        Role: Admin
+        Role: {currentUser.roles.map((role, index) => role)}
       </Typography>
       <Box sx={{ width: "100%", textAlign: "center" }}>
         <img

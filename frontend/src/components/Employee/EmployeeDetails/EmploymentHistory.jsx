@@ -14,20 +14,8 @@ import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
 import "./EmploymentHistory.css";
 import gauge from "../../../assets/icons/gauge.png";
+import { rowDirection, colDirection } from "../../../utilities/flexBoxStyle";
 
-const rowDirection = {
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "space-between",
-  py: 1,
-};
-const colDirection = {
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  pl: 5,
-  py: 1,
-};
 export default function EmploymentHistory() {
   const dispatch = useDispatch();
   const [isDialogUpdateEmployeeOpen, setDialogUpdateEmployee] = useState(false);

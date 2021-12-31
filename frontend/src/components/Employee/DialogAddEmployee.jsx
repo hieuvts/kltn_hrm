@@ -8,13 +8,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import PropTypes from "prop-types";
 import CloseIcon from "@mui/icons-material/Close";
 import FormAddEmployeeInformation from "./FormAddEmployeeInformation";
-export default function DialogAddEmployee({
-  isDialogOpen,
-  handleCloseDialog,
-}) {
+export default function DialogAddEmployee({ isDialogOpen, handleCloseDialog }) {
   return (
     <div>
-      <Dialog open={isDialogOpen} onClose={handleCloseDialog}  maxWidth="md">
+      <Dialog open={isDialogOpen} onClose={handleCloseDialog} maxWidth="md">
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h4">Create new employee</Typography>
@@ -24,9 +21,7 @@ export default function DialogAddEmployee({
           </Box>
         </DialogTitle>
         <DialogContent>
-          <FormAddEmployeeInformation
-            handleCloseDialog={handleCloseDialog}
-          />
+          <FormAddEmployeeInformation handleCloseDialog={handleCloseDialog} />
         </DialogContent>
       </Dialog>
     </div>
