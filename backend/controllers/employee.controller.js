@@ -85,6 +85,7 @@ const createEmployee = async (req, res) => {
 };
 
 const updateEmployee = async (req, res) => {
+  console.log("invoked be updateEmployee");
   const employee = req.employee;
   // typeof req.body.name === "undefined"
   //   ? (employee.name = employee.name)
