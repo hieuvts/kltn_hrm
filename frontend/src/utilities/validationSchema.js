@@ -4,41 +4,24 @@ const phoneNumberRegex =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 export const accountSignUpValidationSchema = yup.object().shape({
-  fname: yup
-    .string("Enter first name")
-    .min(1, "First name should be of minimum 2 characters length")
-    .max(150, "Name should be of maximum 150 characters length")
-    .required("Name is required!"),
-  lname: yup
-    .string("Enter last name")
-    .min(1, "Last name should be of minimum 2 characters length")
-    .max(150, "Name should be of maximum 150 characters length")
-    .required("Name is required!"),
-  gender: yup
-    .mixed()
-    .oneOf(["Male", "Female", "Other"])
-    .required("Gender is required!"),
-  phoneNumber: yup
-    .string("Enter your phone number")
-    .matches(phoneNumberRegex, "Phone number is not valid")
-    .min(8, "Phone number should be of minimum 8 characters length")
-    .max(15, "Phone number should be of maximum 15 characters length")
-    .required("Phone number is required!"),
   email: yup
     .string("Enter your email")
     .email("Enter a valid email")
     .required("Email is required!"),
-  username: yup.string("Enter your username").required("Username is required!"),
   password: yup.string("Enter your password").required("Password is required!"),
   verifyPassword: yup
-    .string("Enter your password")
-    .required("Verify your password!"),
+    .string()
+    .required("Confirmation password is required!")
+    .oneOf(
+      [yup.ref("password"), null],
+      "Password and confirmation password must match!"
+    ),
 });
 
 export const accountLoginValidationSchema = yup.object().shape({
-  username: yup
+  email: yup
     .string("Enter your username")
-    .email("Enter a valid username")
+    .email("Please enter a valid email!")
     .required("Username is required!"),
   password: yup.string("Enter your password").required("Password is required!"),
 });

@@ -17,11 +17,10 @@ const userSchema = new Schema({
     require: true,
     default: "password",
     minlength: 2,
-    maxlength: 50,
     required: true,
   },
   employee: [{ type: Schema.Types.ObjectId, ref: "employee" }],
-  role: [{ type: Schema.Types.ObjectId, ref: "role" }],
+  roles: [{ type: Schema.Types.ObjectId, ref: "role" }],
   isDeleted: {
     type: Boolean,
     default: false,

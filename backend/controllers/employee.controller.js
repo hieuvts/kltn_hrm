@@ -57,11 +57,7 @@ const getAllEmployee = async (req, res) => {
 
   if (employees) {
     res.status(200).json({ employees });
-    console.log(
-      moment().format("hh:mm:ss"),
-      "[SUCCESS] getAllEmployee",
-      employees
-    );
+    console.log(moment().format("hh:mm:ss"), "[SUCCESS] getAllEmployee");
   } else {
     res.status(400).json({
       message: "[ERROR] [getAll] Something went wrong",

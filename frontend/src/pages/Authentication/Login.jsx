@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Box, TextField, Typography, Button, Paper } from "@mui/material";
-import { Navigate } from "react-router-dom";
+import { Box, TextField, Typography, Button, Link } from "@mui/material";
+import { Navigate, useNavigate } from "react-router-dom";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -11,12 +11,12 @@ import CircularProgress from "@mui/material/CircularProgress";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useFormik } from "formik";
 import { accountLoginValidationSchema } from "../../utilities/validationSchema";
-import DialogForgotPassword from "./DialogForgotPassword";
+import DialogForgotPassword from "../../components/Authentication/DialogForgotPassword";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../stores/authSlice";
 import { clearMessage } from "../../stores/messageSlice";
-import SnackbarFailed from "../Snackbar/SnackbarFailed";
+import SnackbarFailed from "../../components/Snackbar/SnackbarFailed";
 
 export default function Login({ handleChange, history }) {
   const [isDialogForgotPwdOpen, setDialogForgotPwdOpen] = useState(false);
@@ -27,7 +27,7 @@ export default function Login({ handleChange, history }) {
   const { message } = useSelector((state) => state.message);
 
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(clearMessage());
   }, [dispatch]);
@@ -98,7 +98,7 @@ export default function Login({ handleChange, history }) {
           <FormControlLabel control={<Checkbox />} label="Remember password" />
           <Button
             variant="link"
-            onClick={() => setDialogOpen(true)}
+            onClick={() => setDialogForgotPwdOpen(true)}
             sx={{ textTransform: "none", color: "#194591", fontSize: "medium" }}
           >
             Forgot password?
@@ -120,7 +120,7 @@ export default function Login({ handleChange, history }) {
     );
   };
   return (
-    <>
+    <Box sx={{ marginX: { xs: 10, lg: 50 }, marginTop: { xs: 5, lg: 20 } }}>
       {message && (
         <SnackbarFailed
           isOpen={isSbFailedOpen}
@@ -140,11 +140,11 @@ export default function Login({ handleChange, history }) {
       </Box>
       <FormikWithMUI />
       <Box sx={{ textAlign: "right", mt: 3 }}>
-        <Button onClick={(e) => handleChange(e, 1)}>
+        <Button onClick={() => navigate("/signup")}>
           Don&#39;t have an account? Sign up!
         </Button>
       </Box>
-    </>
+    </Box>
   );
 }
 

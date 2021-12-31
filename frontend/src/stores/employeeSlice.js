@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import moment from "moment";
 import { apiBaseUrl } from "../config/apiBaseUrl";
+import axios from "axios";
+import EmployeeDataService from "../services/employee.service";
 
 // employeeList: [
 //   {
@@ -32,22 +34,25 @@ export const getEmployeeAsync = createAsyncThunk(
       console.log("typeof payload.Searchquery", typeof payload.searchQuery);
       searchQuery = payload.searchQuery;
     }
-    try {
-      const res = await fetch(
-        `${apiBaseUrl}/employee/getAll?search=${searchQuery}`
-      );
-      if (res.ok) {
-        const resFromServer = await res.json();
-        const employee = resFromServer.employees;
-        console.log("Get all employee successful");
-        return { employeeList: employee };
-      } else {
-        console.log("[FAILED] getEmployeeAsync: ", res.status);
-        return rejectWithValue("Get employee not successful");
-      }
-    } catch (error) {
-      return rejectWithValue("Get employee not successful");
-    }
+    const res = await EmployeeDataService.getAll(searchQuery);
+
+    return res.data.employees;
+    // try {
+    //   const res = await fetch(
+    //     `${apiBaseUrl}/employee/getAll?search=${searchQuery}`
+    //   );
+    //   if (res.ok) {
+    //     const resFromServer = await res.json();
+    //     const employee = resFromServer.employees;
+    //     console.log("Get all employee successful");
+    //     return { employeeList: employee };
+    //   } else {
+    //     console.log("[FAILED] getEmployeeAsync: ", res.status);
+    //     return rejectWithValue("Get employee not successful");
+    //   }
+    // } catch (error) {
+    //   return rejectWithValue("Get employee not successful");
+    // }
   }
 );
 
@@ -177,11 +182,8 @@ export const employeeSlice = createSlice({
       console.log("[Rejected] getEmployeeAsync errorMsg= ", actions);
     },
     [getEmployeeAsync.fulfilled]: (state, actions) => {
-      console.log(
-        "[Fulfilled] getEmployeeAsync actions.payload.employees= ",
-        actions.payload
-      );
-      return { ...state, employeeList: actions.payload.employeeList };
+      console.log("[Fulfilled] getEmployeeAsync ");
+      return { ...state, employeeList: actions.payload };
     },
 
     // Add Employee to server
