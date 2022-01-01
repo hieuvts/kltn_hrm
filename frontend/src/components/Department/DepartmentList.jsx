@@ -12,64 +12,75 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
+import EditIcon from "@mui/icons-material/Edit"
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { FcNumericalSorting21 } from "react-icons/fc";
+import ModeIcon from "@mui/icons-material/Mode";
 import { visuallyHidden } from "@mui/utils";
+import DialogDeleteDepartment from "./DialogDeleteDepartment";
+import DialogDeleteMultipleDepartment from "./DialogDeleteMultipleDepartment";
+import DialogUpdateDepartment from "./DialogUpdateDepartment";
+// import DialogEmployeeDetails from "./DialogEmployeeDetails";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import moment from "moment";
 
-import CreateDummyDepartment from "../../utilities/createDummyDepartment";
+import {
+  setCurrentSelectedDepartment,
+  addToSelectedDepartmentList,
+  removeFromSelectedDepartmentList,
+  setMultiSelectedDepartmentList
+} from "../../stores/departmentSlice";
+
 function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
   }
-  
-  const rows = CreateDummyDepartment(20);
-  function getComparator(order, orderBy) {
-    return order === "desc"
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
   }
+  return 0;
+}
 
-  const titleCells = [
-    {
-        id: "name",
-        numeric: false,
-        disablePadding: true,
-        label: "DEPARTMENT NAME",
-      },
-      {
-        id: "amount",
-        numeric: false,
-        disablePadding: true,
-        label: "AMOUNT OF EMPLOYEE",
-      },
-      {
-        id: "manager",
-        numeric: false,
-        disablePadding: false,
-        label: "MANAGER",
-      },
-      {
-        id: "actions",
-        numeric: false, 
-        disablePadding: true, 
-        label: "Actions"
-      }
-  ];
+function getComparator(order, orderBy) {
+  return order === "desc"
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
 
-  function DepartmentTableHead(props) {
+const titleCells = [
+  {
+    id: "name",
+    numeric: false,
+    disablePadding: true,
+    label: "DEPARTMENT NAME",
+  },
+  {
+    id: "amount",
+    numeric: false,
+    disablePadding: true,
+    label: "AMOUNT OF EMPLOYEE",
+  },
+  {
+    id: "manager",
+    numeric: false,
+    disablePadding: false,
+    label: "MANAGER",
+  },
+  {
+    id: "actions",
+    numeric: false,
+    disablePadding: true,
+    label: "Actions"
+  }
+];
+
+function DepartmentTableHead(props) {
   const {
     onSelectAllClick,
     order,
@@ -91,7 +102,7 @@ function descendingComparator(a, b, orderBy) {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{
-              "aria-label": "select all desserts",
+              "aria-label": "select all department",
             }}
           />
         </TableCell>
@@ -122,145 +133,211 @@ function descendingComparator(a, b, orderBy) {
 }
 
 DepartmentTableHead.propTypes = {
-    numSelected: PropTypes.number.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-    orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
+  numSelected: PropTypes.number.isRequired,
+  onRequestSort: PropTypes.func.isRequired,
+  onSelectAllClick: PropTypes.func.isRequired,
+  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+  orderBy: PropTypes.string.isRequired,
+  rowCount: PropTypes.number.isRequired,
+};
+
+const EnhancedTableToolbar = (props) => {
+  const { numSelected, setSelected, setDialogDeleteMultipleDepartmentOpen } = props;
+  const dispatch = useDispatch();
+
+  // Get selectedDepartmentList to delete multiple, delete all
+  const selectedDepartmentList = useSelector(
+    (state) => state.department.selectedDepartmentList
+  );
+  const handleDeleteMultipleDepartment = () => {
+    setDialogDeleteMultipleDepartmentOpen(true);
   };
 
-  const EnhancedTableToolbar = (props) => {
-    const { numSelected } = props;
-  
+  return (
+    <Toolbar
+      sx={{
+        pl: { sm: 2 },
+        pr: { xs: 1, sm: 1 },
+        ...(numSelected > 0 && {
+          bgcolor: (theme) =>
+            alpha(
+              theme.palette.primary.main,
+              theme.palette.action.activatedOpacity
+            ),
+        }),
+      }}
+    >
+      {numSelected > 0 ? (
+        <Typography
+          sx={{ flex: "1 1 100%" }}
+          color="inherit"
+          variant="subtitle1"
+          component="div"
+        >
+          {numSelected} selected
+        </Typography>
+      ) : (
+        <Typography
+          sx={{ flex: "1 1 100%" }}
+          variant="h6"
+          id="tableTitle"
+          component="div"
+        >
+          Department List
+        </Typography>
+      )}
+
+      {numSelected > 0 ? (
+        <Tooltip title="Delete multiple">
+          <IconButton onClick={() => handleDeleteMultipleDepartment()}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <Tooltip title="Filter list">
+          <IconButton>
+            <FilterListIcon />
+          </IconButton>
+        </Tooltip>
+      )}
+    </Toolbar>
+  );
+};
+
+EnhancedTableToolbar.propTypes = {
+  numSelected: PropTypes.number.isRequired,
+  setSelected: PropTypes.func.isRequired,
+  setDialogDeleteMultipleDepartmentOpen: PropTypes.func.isRequired
+};
+
+export default function DepartmentTable() {
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("name");
+  const [selected, setSelected] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [isDialogDeleteDepartmentOpen, setDialogDeleteDepartmentOpen] =
+    React.useState(false);
+  const [
+    isDialogDeleteMultipleDepartmentOpen,
+    setDialogDeleteMultipleDepartmentOpen,
+  ] = React.useState(false);
+  const [isDialogUpdateDepartmentOpen, setDialogUpdateDepartmentOpen] =
+    React.useState(false);
+  // const [isDialogEmployeeDetailsOpen, setDialogEmployeeDetailsOpen] =
+  //   React.useState(false);
+  const dispatch = useDispatch();
+  var rows = useSelector((state) => state.department.departmentList);
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelecteds = rows.map((n) => n._id);
+      setSelected(newSelecteds);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleClick = (event, department) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+      dispatch(addToSelectedDepartmentList({ selectedDepartment: department }));
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+      dispatch(removeFromSelectedDepartmentList({ selectedDepartment: department }));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+      dispatch(removeFromSelectedDepartmentList({ selectedDepartment: department }));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+      ispatch(removeFromSelectedDepartmentList({ selectedDepartment: department }));
+    }
+
+    setSelected(newSelected);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const isSelected = (id) => selected.indexOf(id) !== -1;
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  const handleCloseDialogDeleteDepartment = () => {
+    setDialogDeleteDepartmentOpen(false);
+  };
+  const handleCloseDialogDeleteMultipleDepartment = () => {
+    setDialogDeleteMultipleDepartmentOpen(false);
+  };
+  const handleCloseDialogUpdateDepartment = () => {
+    setDialogUpdateDepartmentOpen(false);
+  };
+
+  const RowActions = (currentSelectedDepartment) => {
     return (
-      <Toolbar
-        sx={{
-          pl: { sm: 2 },
-          pr: { xs: 1, sm: 1 },
-          ...(numSelected > 0 && {
-            bgcolor: (theme) =>
-              alpha(
-                theme.palette.primary.main,
-                theme.palette.action.activatedOpacity
-              ),
-          }),
-        }}
-      >
-        {numSelected > 0 ? (
-          <Typography
-            sx={{ flex: "1 1 100%" }}
-            color="inherit"
-            variant="subtitle1"
-            component="div"
-          >
-            {numSelected} selected
-          </Typography>
-        ) : (
-          <Typography
-            sx={{ flex: "1 1 100%" }}
-            variant="h6"
-            id="tableTitle"
-            component="div"
-          >
-            Department List
-          </Typography>
-        )}
-  
-        {numSelected > 0 ? (
-          <Tooltip title="Delete">
-            <IconButton>
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        ) : (
-          <Tooltip title="Filter list">
-            <IconButton>
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip>
-        )}
-      </Toolbar>
+      <Box>
+        <Button
+          variant="link"
+          onClick={() => {
+            dispatch(setCurrentSelectedDepartment(currentSelectedDepartment));
+            setDialogUpdateDepartmentOpen(true);
+          }}
+        >
+          <ModeIcon color="primary" />
+        </Button>
+        <Button
+          variant="link"
+          onClick={() => {
+            dispatch(setCurrentSelectedDepartment(currentSelectedDepartment));
+            setDialogDeleteDepartmentOpen(true);
+          }}
+        >
+          <DeleteIcon color="primary" />
+        </Button>
+      </Box>
     );
   };
 
-  EnhancedTableToolbar.propTypes = {
-    numSelected: PropTypes.number.isRequired,
-  };
-
-  export default function EnhancedTable() {
-    const [order, setOrder] = React.useState("asc");
-    const [orderBy, setOrderBy] = React.useState("calories");
-    const [selected, setSelected] = React.useState([]);
-    const [page, setPage] = React.useState(0);
-    const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  
-    const handleRequestSort = (event, property) => {
-      const isAsc = orderBy === property && order === "asc";
-      setOrder(isAsc ? "desc" : "asc");
-      setOrderBy(property);
-    };
-  
-    const handleSelectAllClick = (event) => {
-      if (event.target.checked) {
-        const newSelecteds = rows.map((n) => n.name);
-        setSelected(newSelecteds);
-        return;
-      }
-      setSelected([]);
-    };
-  
-    const handleClick = (event, name) => {
-      const selectedIndex = selected.indexOf(name);
-      let newSelected = [];
-  
-      if (selectedIndex === -1) {
-        newSelected = newSelected.concat(selected, name);
-      } else if (selectedIndex === 0) {
-        newSelected = newSelected.concat(selected.slice(1));
-      } else if (selectedIndex === selected.length - 1) {
-        newSelected = newSelected.concat(selected.slice(0, -1));
-      } else if (selectedIndex > 0) {
-        newSelected = newSelected.concat(
-          selected.slice(0, selectedIndex),
-          selected.slice(selectedIndex + 1)
-        );
-      }
-  
-      setSelected(newSelected);
-    };
-  
-    const handleChangePage = (event, newPage) => {
-      setPage(newPage);
-    };
-  
-    const handleChangeRowsPerPage = (event) => {
-      setRowsPerPage(parseInt(event.target.value, 10));
-      setPage(0);
-    };
-  
-    const handleChangeDense = (event) => {
-      setDense(event.target.checked);
-    };
-  
-    const isSelected = (name) => selected.indexOf(name) !== -1;
-    const editOnClick = (data) => {
-      console.log(data.name + " edit clicked");
-    }
-
-    const deleteOnClick = (data) => {
-      console.log(data.name + " delete clicked");
-    }
-
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows =
-      page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-  
-    return (
+  return (
+    <>
+      <DialogDeleteDepartment
+        isDialogOpen={isDialogDeleteDepartmentOpen}
+        handleCloseDialog={handleCloseDialogDeleteDepartment}
+      />
+      <DialogDeleteMultipleDepartment
+        setSelected={setSelected}
+        isDialogOpen={isDialogDeleteMultipleDepartmentOpen}
+        handleCloseDialog={handleCloseDialogDeleteMultipleDepartment}
+      />
+      <DialogUpdateDepartment
+        isDialogOpen={isDialogUpdateDepartmentOpen}
+        handleCloseDialog={handleCloseDialogUpdateDepartment}
+      />
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2 }}>
-          <EnhancedTableToolbar numSelected={selected.length} />
+          <EnhancedTableToolbar numSelected={selected.length}
+            setSelected={setSelected}
+            setDialogDeleteMultipleDepartmentOpen={setDialogDeleteDepartmentOpen} />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
@@ -285,7 +362,7 @@ DepartmentTableHead.propTypes = {
                   .map((row, index) => {
                     const isItemSelected = isSelected(row.name);
                     const labelId = `enhanced-table-checkbox-${index}`;
-  
+
                     return (
                       <TableRow
                         hover
@@ -318,9 +395,12 @@ DepartmentTableHead.propTypes = {
                         <TableCell align="center">{row.manager}</TableCell>
                         <TableCell align="center">
                           <Box>
-                            <IconButton onClick= {editOnClick(row)}> <EditIcon color = "primary"/> </IconButton>
-                            <IconButton onClick ={deleteOnClick(row)}> <DeleteIcon color = "primary"/> </IconButton>
+                            <IconButton onClick={editOnClick(row)}> <EditIcon color="primary" /> </IconButton>
+                            <IconButton onClick={deleteOnClick(row)}> <DeleteIcon color="primary" /> </IconButton>
                           </Box>
+                        </TableCell>
+                        <TableCell align="right">
+                          <RowActions currentSelectedDepartment={row} />
                         </TableCell>
                       </TableRow>
                     );
@@ -347,10 +427,8 @@ DepartmentTableHead.propTypes = {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Paper>
-        <FormControlLabel
-          control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label="Dense padding"
-        />
       </Box>
-    );
-  }
+      );
+    </>
+  );
+}

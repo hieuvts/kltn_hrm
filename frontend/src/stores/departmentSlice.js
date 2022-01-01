@@ -50,7 +50,7 @@ export const addDepartmentASync = createAsyncThunk(
                     manager: payload.manager,
                     isDeleted: false,
                 }),
-            }),
+            });
             if (res.ok) {
                 const department = await res.json();
                 return { department };
@@ -203,3 +203,12 @@ export const departmentSlice = createSlice({
       },
     },
   });
+  export const {
+    getdepartmentInfo,
+    setCurrentSelectedDepartment,
+    addToSelectedDepartmentList,
+    removeFromSelectedDepartmentList,
+    setMultiSelectedDepartmentList,
+  } = departmentSlice.actions;
+  
+  export default departmentSlice.reducer;
