@@ -11,12 +11,13 @@ import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 
 import FormUpdateDepartment from "../Department/FormUpdateDepartment";
+
 export default function DialogUpdateEmployee({
   isDialogOpen,
   handleCloseDialog,
 }) {
-  const currentSelectedEmployee = useSelector(
-    (state) => state.employee.currentSelectedEmployee
+  const currentSelectedDepartment = useSelector(
+    (state) => state.department.currentSelectedDepartment
   );
   return (
     <div>
@@ -32,7 +33,7 @@ export default function DialogUpdateEmployee({
         <DialogContent>
           <FormUpdateDepartment
             handleCloseDialog={handleCloseDialog}
-            initialValues={currentSelectedEmployee}
+            initialValues={currentSelectedDepartment}
           />
         </DialogContent>
       </Dialog>

@@ -19,7 +19,7 @@ export default function DialogDeleteMultipleDeparment({
 }) {
   const dispatch = useDispatch();
   const selectedDepartmentList = useSelector(
-    (state) => state.department.selectedDepartment
+    (state) => state.department.selectedDepartmentList
   );
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);

@@ -105,7 +105,7 @@ export const fileNameValidationSchema = yup.object().shape({
     .matches(/^[^\\/:\*\?"<>\|]+$/, `Should not contains \ / : * ? " < > |`),
 });
 
-export const departmentInformationValidationSchema = yup.object.shape({
+export const departmentInformationValidationSchema = yup.object().shape({
   name: yup
     .string("Enter department name")
     .required("Name of department is required"),

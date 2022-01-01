@@ -246,6 +246,7 @@ export default function DepartmentTable() {
   };
 
   const handleClick = (event, department) => {
+    const id = department._id;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
@@ -394,10 +395,10 @@ export default function DepartmentTable() {
                         <TableCell align="center">{row.amount}</TableCell>
                         <TableCell align="center">{row.manager}</TableCell>
                         <TableCell align="center">
-                          <Box>
+                          {/* <Box>
                             <IconButton onClick={editOnClick(row)}> <EditIcon color="primary" /> </IconButton>
                             <IconButton onClick={deleteOnClick(row)}> <DeleteIcon color="primary" /> </IconButton>
-                          </Box>
+                          </Box> */}
                         </TableCell>
                         <TableCell align="right">
                           <RowActions currentSelectedDepartment={row} />
@@ -428,7 +429,6 @@ export default function DepartmentTable() {
           />
         </Paper>
       </Box>
-      );
     </>
   );
 }

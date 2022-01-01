@@ -7,7 +7,6 @@ const initialState = {
     currentSelectedDepartment: {},
     selectedDepartmentList: [],
 }
-
 export const getDepartmentASync = createAsyncThunk("department/getAllDepartment", async (payload, { rejectWithValue }) => {
     let searchQuery = "";
     if (typeof [payload === "undefined"]) {
