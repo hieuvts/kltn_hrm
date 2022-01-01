@@ -6,7 +6,8 @@ var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const jwtSecret = process.env.JWT_SECRET;
 
-const signUp = (req, res) => {
+const signUp = (req, res, next) => {
+  console.log("invoke signUp");
   const user = new User({
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
@@ -35,8 +36,8 @@ const signUp = (req, res) => {
               res.status(500).send({ message: err });
               return;
             }
-
-            res.send({ message: "Account was registered successfully!" });
+            next();
+            // res.send({ message: "Account was registered successfully!" });
           });
         }
       );
@@ -54,8 +55,8 @@ const signUp = (req, res) => {
             res.status(500).send({ message: err });
             return;
           }
-
-          res.send({ message: "Admin account was registered successfully!" });
+          next();
+          // res.send({ message: "Admin account was registered successfully!" });
         });
       });
     }

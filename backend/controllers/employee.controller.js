@@ -1,4 +1,6 @@
 const Employee = require("../models/employee.model");
+const Role = require("../models/role.model");
+const User = require("../models/user.model");
 const moment = require("moment");
 
 const getEmployeeById = async (req, res, next, employeeId) => {
@@ -67,21 +69,59 @@ const getAllEmployee = async (req, res) => {
 };
 
 const createEmployee = async (req, res) => {
+  console.log("invoke createEmployee");
   const employee = new Employee(req.body);
-  employee.save((error, result) => {
-    if (error || !result) {
-      res.status(400).json({
-        message: "Can't create new employee",
-        errMsg: error.message,
+  // employee.save((error, result) => {
+  //   if (error || !result) {
+  //     res.status(500).send(error);
+  //     return;
+  //   }
+  // If user provide a custom role (not Admin, Moderator, User)
+  if (req.body.roles) {
+    Role.find(
+      {
+        name: { $in: req.body.roles },
+      },
+      (error, roles) => {
+        if (error) {
+          res.status(500).send({ message: error });
+          return;
+        }
+
+        employee.roles = roles.map((role) => role._id);
+        employee.save((error) => {
+          if (error) {
+            res.status(500).send({ message: error });
+            return;
+          }
+
+          res.send({
+            message: `Create employee with role=${req.body.roles} successfully!`,
+          });
+        });
+      }
+    );
+  } else {
+    // If user not provide any role -> Assign them to "admin" role
+    Role.findOne({ name: "user" }, (error, role) => {
+      if (error) {
+        res.status(500).send({ message: error });
+        return;
+      }
+
+      employee.roles = [role._id];
+      employee.save((error) => {
+        if (error) {
+          res.status(500).send({ message: error });
+          return;
+        }
+
+        res.send({ message: "Create employee with role=user successfully!" });
       });
-      console.log(moment().format("hh:mm:ss"), "[ERROR] createEmployee", error);
-    } else {
-      res.status(200).json({
-        message: "Create employee successfully!",
-      });
-      console.log(moment().format("hh:mm:ss"), "[SUCCESS] createEmployee");
-    }
-  });
+    });
+  }
+
+  // });
 };
 
 const updateEmployee = async (req, res) => {
@@ -100,22 +140,55 @@ const updateEmployee = async (req, res) => {
   typeof req.body.email !== "undefined" && (employee.email = req.body.email);
   typeof req.body.address !== "undefined" &&
     (employee.address = req.body.address);
-  typeof req.body.roleID !== "undefined" && (employee.roleID = req.body.roleID);
+  typeof req.body.role !== "undefined" && (employee.role = req.body.role);
   typeof req.body.isDeleted !== "undefined" &&
     (employee.isDeleted = req.body.isDeleted);
 
   employee.save((error, result) => {
     if (error || !result) {
-      console.log(moment().format("hh:mm:ss"), "[ERROR] updateEmployee");
-      return res.status(400).json({
-        message: "Update user not successfully",
-        error: error,
-      });
+      res.status(500).send(err);
+      return;
+    }
+    if (req.body.roles) {
+      Role.find(
+        {
+          name: { $in: req.body.roles },
+        },
+        (error, roles) => {
+          if (error) {
+            res.status(500).send({ message: error });
+            return;
+          }
+
+          employee.roles = roles.map((role) => role._id);
+          employee.save((error) => {
+            if (error) {
+              res.status(500).send({ message: error });
+              return;
+            }
+
+            res.send({ message: "Update employee successfully!" });
+          });
+        }
+      );
     } else {
-      res.status(200).json({
-        employee,
+      // If user not provide any role -> Assign them to "admin" role
+      Role.findOne({ name: "user" }, (error, role) => {
+        if (error) {
+          res.status(500).send({ message: error });
+          return;
+        }
+
+        employee.roles = [role._id];
+        employee.save((error) => {
+          if (error) {
+            res.status(500).send({ message: error });
+            return;
+          }
+
+          res.send({ message: "Create employee successfully!" });
+        });
       });
-      console.log(moment().format("hh:mm:ss"), "[SUCCESS] updateEmployee");
     }
   });
 };

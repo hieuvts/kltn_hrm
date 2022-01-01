@@ -18,4 +18,6 @@ router.get(
   [authJwt.verifyToken, authJwt.isAdmin],
   userControllers.adminRole
 );
+
+router.put("/update", [authJwt.verifyToken, authJwt.isAdmin])
 module.exports = router;
