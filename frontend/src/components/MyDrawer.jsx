@@ -218,7 +218,7 @@ export default function AppBarComponent() {
                   </MenuItem>
                 </Link>
                 <Link
-                  to="/logout"
+                  to="/login"
                   style={{ textDecoration: "none", color: "black" }}
                 >
                   <MenuItem
