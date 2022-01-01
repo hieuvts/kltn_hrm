@@ -34,7 +34,7 @@ const employeeSchema = new Schema({
     type: Date,
     required: true,
     min: "1900-01-01",
-    max: moment(Date.now()).format("YYYY-MM-DD"),
+    max: Date.now(),
   },
   phoneNumber: { type: String, required: true, min: 8, max: 15 },
   email: {
