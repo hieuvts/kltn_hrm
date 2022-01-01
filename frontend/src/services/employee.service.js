@@ -16,7 +16,7 @@ const addEmployee = (employee) => {
 };
 
 const updateEmployee = (employeeId, employee) => {
-  return axios.patch(API_URL + employeeId + "/update", employee, {
+  return axios.put(API_URL + employeeId + "/update", employee, {
     headers: authHeader(),
   });
 };
