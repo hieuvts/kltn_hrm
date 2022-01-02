@@ -45,12 +45,22 @@ export default function FormUpdateEmployeeInformation({
   // => Extract only department name, pass it as an array, not JS object
   // Start - Handling departments value
   var formikInitialValues = { ...initialValues };
+  
   const initDepartmentValue = formikInitialValues["departments"].map(
     ({ name }) => ({ name })
   );
+  const initRoleValue = formikInitialValues["roles"].map(
+    ({ name }) => ({ name })
+  );
+
   const departmentNameArr = initDepartmentValue.map((x) => x.name);
+  const roleNameArr = initRoleValue.map((x) => x.name);
+
   delete formikInitialValues.departments;
+  delete formikInitialValues.roles;
+  
   formikInitialValues["departments"] = departmentNameArr;
+  formikInitialValues["roles"] = roleNameArr;
   // End - Handling departments value
 
   const FormikWithMUI = () => {

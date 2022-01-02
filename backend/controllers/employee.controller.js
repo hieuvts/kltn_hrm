@@ -70,7 +70,7 @@ const getAllEmployee = async (req, res) => {
 };
 const saveEmployeeHelper = (req, res, employee) => {
   console.log("helper: ", employee);
-  if (req.body.roles) {
+  if (req.body.roles && req.body.roles.length !== 0) {
     Role.find(
       {
         name: { $in: req.body.roles },
@@ -87,7 +87,7 @@ const saveEmployeeHelper = (req, res, employee) => {
             return;
           }
           res.send({
-            message: `Create employee with role=${employee.roles} successfully!`,
+            message: `Create employee with role=${req.body.roles} successfully!`,
           });
         });
       }
@@ -106,7 +106,7 @@ const saveEmployeeHelper = (req, res, employee) => {
           return;
         }
         res.send({
-          message: `Create employee with role=${employee.roles} successfully!`,
+          message: `Create employee with role=user successfully!`,
         });
       });
     });
@@ -117,7 +117,7 @@ const createEmployee = async (req, res) => {
   const employee = new Employee(req.body);
 
   // If user provide a custom role (not Admin, Moderator, User)
-  if (!req.body.departments) {
+  if (!req.body.departments || req.body.departments.length === 0) {
     console.log("not provide departments");
     saveEmployeeHelper(req, res, employee);
   } else if (req.body.departments) {
@@ -127,12 +127,14 @@ const createEmployee = async (req, res) => {
         name: { $in: req.body.departments },
       },
       (error, departments) => {
-        if (error || !departments || departments.length === 0) {
+        if (error || !departments) {
+          // save without add departments
           saveEmployeeHelper(req, res, employee);
         } else {
           employee.departments = departments.map(
             (department) => department._id
           );
+          // save with departments id found from DB
           saveEmployeeHelper(req, res, employee);
         }
       }
@@ -160,7 +162,7 @@ const updateEmployee = async (req, res) => {
   typeof req.body.isDeleted !== "undefined" &&
     (employee.isDeleted = req.body.isDeleted);
 
-  if (!req.body.departments) {
+  if (!req.body.departments || req.body.departments.length === 0) {
     console.log("not provide departments");
     saveEmployeeHelper(req, res, employee);
   } else if (req.body.departments) {
@@ -170,12 +172,14 @@ const updateEmployee = async (req, res) => {
         name: { $in: req.body.departments },
       },
       (error, departments) => {
-        if (error || !departments || departments.length === 0) {
+        if (error || !departments) {
+          // save without add departments
           saveEmployeeHelper(req, res, employee);
         } else {
           employee.departments = departments.map(
             (department) => department._id
           );
+          // save with departments id found from DB
           saveEmployeeHelper(req, res, employee);
         }
       }
