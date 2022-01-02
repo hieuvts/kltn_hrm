@@ -92,7 +92,7 @@ export const departmentInformationValidationSchema = yup.object().shape({
   name: yup
     .string("Enter department name")
     .required("Name of department is required"),
-  amout: yup
+  amount: yup
     .number("Enter amount of department"),
   manager: yup
     .string("Enter name of manager")

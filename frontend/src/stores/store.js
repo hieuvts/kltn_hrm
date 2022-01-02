@@ -3,7 +3,6 @@ import employeeReducer from "./employeeSlice";
 import departmentReducer from "./departmentSlice";
 import authReducer from "./authSlice";
 import messageReducer from "./messageSlice";
-import departmentReducer from "./departmentSlice";
 
 const reducers = {
   auth: authReducer,
@@ -12,7 +11,6 @@ const reducers = {
   department: departmentReducer,
 };
 const store = configureStore({
-    department: departmentReducer
   reducer: reducers,
   devTools: true,
 });

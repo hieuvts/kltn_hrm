@@ -58,8 +58,8 @@ export default function FormAddDepartmentInformation({
         <form onSubmit={formik.handleSubmit}>
           <TextField
             fullWidth
-            id="departmentName"
-            name="departmentName"
+            id="name"
+            name="name"
             label="Name of Department"
             value={formik.values.departmentName}
             onChange={formik.handleChange}
@@ -92,7 +92,7 @@ export default function FormAddDepartmentInformation({
           />
 
           <Button variant="contained" color="primary" fullWidth type="submit">
-            {submitButtonText}
+            SUBMIT
           </Button>
         </form>
       </div>

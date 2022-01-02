@@ -69,19 +69,19 @@ const createDepartment = async (req, res) => {
 
 // Update Department
 const putDepartment = async (req, res) => {
-  const Department = req.Department;
+  const department = req.department;
   // typeof req.body.name === "undefined"
   //   ? (Department.name = Department.name)
   //   : (Department.name = req.body.name);
-  typeof req.body.name !== "undefined" && (Department.name = req.body.name);
-  typeof req.body.headOfDepartment !== "undefined" &&
-    (Department.headOfDepartment = req.body.headOfDepartment);
-  typeof req.body.dateOfBirth !== "undefined" &&
-    (Department.dateOfBirth = req.body.dateOfBirth);
+  typeof req.body.name !== "undefined" && (department.name = req.body.name);
+  typeof req.body.manager !== "undefined" &&
+    (department.manager = req.body.manager);
+  typeof req.body.amount !== "undefined" &&
+    (department.amount = req.body.amount);
   typeof req.body.isDeleted !== "undefined" &&
-    (Department.isDeleted = req.body.isDeleted);
+    (department.isDeleted = req.body.isDeleted);
 
-  Department.save((error, result) => {
+    department.save((error, result) => {
     if (error || !result) {
       return res.status(400).json({
         message: "[UPDATE] Something went wrong",
@@ -90,7 +90,7 @@ const putDepartment = async (req, res) => {
     }
     res.json({
       message: "Update department successfully",
-      Department: Department,
+      Department: department,
     });
   });
 };

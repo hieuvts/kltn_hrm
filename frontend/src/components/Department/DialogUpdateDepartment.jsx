@@ -24,7 +24,7 @@ export default function DialogUpdateEmployee({
       <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <h3>Update employee</h3>
+            <h3>Update Department</h3>
             <Button onClick={handleCloseDialog}>
               <CloseIcon fontSize="large" />
             </Button>

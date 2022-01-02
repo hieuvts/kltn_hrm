@@ -34,7 +34,7 @@ export default function DialogDeleteDepartment({
     dispatch(deleteDepartmentAsync({ selectedDepartmentID: selectedDepartmentID }))
       .unwrap()
       .then(() => {
-        dispatch(getDepartmentASync());
+        dispatch(getDepartmentAsync());
         setSbSuccessOpen(true);
         setTimeout(() => {
           handleCloseDialog();
