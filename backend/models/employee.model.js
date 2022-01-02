@@ -57,7 +57,6 @@ employeeSchema.index({
   fname: "text",
   lname: "text",
   email: "text",
-  phoneNumber: "text",
 });
 // Collection name that will appear in MongoDB
 module.exports = mongoose.model("employee", employeeSchema);

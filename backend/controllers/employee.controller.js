@@ -54,8 +54,8 @@ const getAllEmployee = async (req, res) => {
         // $search: `.*(\b${query}\b).*`,
       },
     })
-      .populate("department")
-      .populate("role");
+      .populate("departments")
+      .populate("roles");
   }
 
   if (employees) {
