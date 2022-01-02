@@ -40,15 +40,7 @@ export default function FormAddEmployeeInformation({
   const handleSbFailedClose = () => {
     setSbFailedOpen(false);
   };
-  const handleSelectDepartment = (e) => {
-    const {
-      target: { value },
-    } = e;
-    setSelectedDepartments(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
-  };
+
   const dispatch = useDispatch();
 
   const FormikWithMUI = () => {
@@ -56,9 +48,7 @@ export default function FormAddEmployeeInformation({
       initialValues: initialValues,
       validationSchema: employeeInfoValidationSchema,
       onSubmit: (values) => {
-        let data = values;
-        data["departments"] = selectedDepartments;
-        dispatch(addEmployeeAsync(data))
+        dispatch(addEmployeeAsync(values))
           .unwrap()
           .then((originalPromiseResult) => {
             setSbSuccessOpen(true);
@@ -101,7 +91,7 @@ export default function FormAddEmployeeInformation({
               {/* <InputLabel id="gender">Gender</InputLabel> */}
 
               <FormControl fullWidth>
-              <InputLabel id="gender-label">Gender</InputLabel>
+                <InputLabel id="gender-label">Gender</InputLabel>
                 <Select
                   labelId="gender-label"
                   id="gender"
@@ -146,16 +136,19 @@ export default function FormAddEmployeeInformation({
                 />
               </LocalizationProvider>
             </Grid>
+
             <Grid item sm={12} md={6}>
               <FormControl fullWidth>
                 <InputLabel id="departments-label">Departments</InputLabel>
                 <Select
                   labelId="departments-label"
-                  id="departments-select"
+                  id="departments"
                   fullWidth
                   multiple
-                  value={selectedDepartments}
-                  onChange={handleSelectDepartment}
+                  value={formik.values.departments}
+                  onChange={(e) => {
+                    formik.setFieldValue("departments", e.target.value);
+                  }}
                   input={<OutlinedInput id="departments" label="Departments" />}
                   renderValue={(selected) => (
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
@@ -173,6 +166,7 @@ export default function FormAddEmployeeInformation({
                   ))}
                 </Select>
               </FormControl>
+
               <TextField
                 fullWidth
                 id="phoneNumber"
@@ -246,11 +240,11 @@ FormAddEmployeeInformation.propTypes = {
 };
 FormAddEmployeeInformation.defaultProps = {
   initialValues: {
-    fname: "",
+    fname: "hieu",
     lname: "",
     gender: "Male",
     dateOfBirth: new Date(),
-    departments: "",
+    departments: [],
     phoneNumber: "",
     email: "",
     address: "",
