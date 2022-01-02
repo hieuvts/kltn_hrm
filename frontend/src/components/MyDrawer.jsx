@@ -1,23 +1,15 @@
-import React from "react";
-
-import { useState } from "react";
-import Dashboard from "../pages/Dashboard";
+import React, { useState, useEffect, useCallback } from "react";
+import Dashboard from "../pages/Dashboard/Dashboard";
 import Department from "../pages/Department/Department";
 import Employee from "../pages/Employee/Employee";
 import Others from "../pages/Others";
 import AboutUs from "../pages/AboutUs/AboutUs";
 import WorkPlace from "../pages/Workplace/Workplace";
-import NotFound from "../pages/404NotFound/404NotFound";
+import Company from "../pages/Company/Company";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-
-import {
-  Toolbar,
-  IconButton,
-  Typography,
-  Button,
-  InputBase,
-} from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { Toolbar, IconButton, Typography, Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar from "@mui/material/AppBar";
@@ -30,57 +22,16 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
 
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import Apartment from "@mui/icons-material/Apartment";
-import Engineering from "@mui/icons-material/Engineering";
-import Mode from "@mui/icons-material/Mode";
-import Error from "@mui/icons-material/Error";
-import SearchIcon from "@mui/icons-material/Search";
-import { VscProject } from "react-icons/vsc";
 import { FcAssistant } from "react-icons/fc";
 import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
 import { styled, alpha, useTheme } from "@mui/material/styles";
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
+import { logout } from "../stores/authSlice";
+import StyledSearchBox from "./StyledSearchBox";
+import clockTimer from "../utilities/clockTimer";
+import { pageList } from "../utilities/appPageList";
 // Mini variant drawer
 const drawerWidth = 240;
 const openedMixin = (theme) => ({
@@ -148,55 +99,12 @@ const MyDrawer = styled(MuiDrawer, {
   }),
 }));
 
-const pageList = [
-  {
-    title: "Dashboard",
-    key: "dashboard",
-    path: "/dashboard",
-    icon: <DashboardIcon />,
-    className: "nav-text",
-  },
-  {
-    title: "Employee",
-    key: "employee",
-    path: "/employee",
-    icon: <Engineering />,
-    className: "nav-text",
-  },
-  {
-    title: "Department",
-    path: "/department",
-    key: "department",
-    icon: <Apartment />,
-    className: "nav-text",
-  },
-  {
-    title: "Project",
-    path: "/workplace",
-    key: "project",
-    icon: <VscProject />,
-    className: "nav-text",
-  },
-  {
-    title: "Others",
-    path: "/others",
-    key: "others",
-    icon: <Mode />,
-    className: "nav-text",
-  },
-  {
-    title: "404",
-    path: "/404",
-    key: "404",
-    icon: <Error />,
-    className: "nav-text",
-  },
-];
-
 export default function AppBarComponent() {
   const theme = useTheme();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedTabTitle, setSelectedTabTitle] = useState("Dashboard");
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const { user: currentUser } = useSelector((state) => state.auth);
 
   const handleDrawerOpen = () => {
     setIsDrawerOpen(true);
@@ -210,9 +118,33 @@ export default function AppBarComponent() {
 
   const pathnames = location.pathname.split("/").filter((x) => x);
   const currentPathname = pathnames.slice(-1)[0];
+
+  const dispatch = useDispatch();
+
+  // const logOut = useCallback(() => {
+  //   dispatch(logout());
+  // }, [dispatch]);
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     console.log("MyDrawer.jsx ", currentUser);
+  //   } else {
+  //     console.log("MyDrawer.jsx not authorized");
+  //   }
+  // }, [currentUser, logOut]);
+  if (!currentUser) {
+    return <Navigate to="/login" />;
+  }
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
+
       <AppBar position="fixed" open={isDrawerOpen}>
         <Toolbar>
           <IconButton
@@ -221,33 +153,86 @@ export default function AppBarComponent() {
             onClick={handleDrawerOpen}
             edge="start"
             sx={{
-              marginRight: "36px",
               ...(isDrawerOpen && { display: "none" }),
             }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
-            {CapitalizeFirstLetter(currentPathname)}
-          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <StyledSearchBox placeholder="Search…" />
 
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
-          <Button variant="contained">
-            <Link
-              to="/login"
-              style={{ textDecoration: "none", color: "white" }}
-            >
-              LOGIN
-            </Link>
-          </Button>
+            <div>
+              <Button
+                variant="contained"
+                sx={{ borderRadius: 3 }}
+                onClick={handleMenu}
+              >
+                <Typography sx={{ alignSelf: "center", color: "white" }}>
+                  {currentUser.email}
+                </Typography>
+              </Button>
+
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+              >
+                <Link
+                  to="/profile"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      handleClose();
+                    }}
+                  >
+                    Profile
+                  </MenuItem>
+                </Link>
+                <Link
+                  to="/setting"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      handleClose();
+                    }}
+                  >
+                    Company settings
+                  </MenuItem>
+                </Link>
+                <Link
+                  to="/login"
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      dispatch(logout());
+                      handleClose();
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
+                </Link>
+              </Menu>
+            </div>
+          </Box>
         </Toolbar>
       </AppBar>
       <MyDrawer variant="permanent" open={isDrawerOpen}>
@@ -335,6 +320,7 @@ export default function AppBarComponent() {
           <Route path="employee" element={<Employee />} />
           <Route path="workplace" element={<WorkPlace />} />
           <Route path="others" element={<Others />} />
+          <Route path="setting" element={<Company />} />
           <Route path="about" element={<AboutUs />} />
           <Route path="*" element={<Navigate to="404" />} />
         </Routes>

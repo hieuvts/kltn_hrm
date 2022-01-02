@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -14,12 +14,12 @@ import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
 import { useDispatch } from "react-redux";
 import { addEmployeeAsync } from "../../stores/employeeSlice";
-import { employeeInfoValidationSchema } from "../../utilities/validationSchema";
+import { companyInfoValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-export default function FormAddEmployeeInformation({
+export default function FormUpdateCompany({
   handleCloseDialog,
   submitButtonText,
   initialValues,
@@ -37,7 +37,7 @@ export default function FormAddEmployeeInformation({
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
-      validationSchema: employeeInfoValidationSchema,
+      validationSchema: companyInfoValidationSchema,
       onSubmit: (values) => {
         dispatch(addEmployeeAsync(values))
           .unwrap()
@@ -59,63 +59,70 @@ export default function FormAddEmployeeInformation({
             <Grid item sm={12} md={6}>
               <TextField
                 fullWidth
-                id="fname"
-                name="fname"
+                id="name"
+                name="name"
                 label="First name"
-                value={formik.values.fname}
+                value={formik.values.name}
                 onChange={formik.handleChange}
-                error={formik.touched.fname && Boolean(formik.errors.fname)}
-                helperText={formik.touched.fname && formik.errors.fname}
+                error={formik.touched.name && Boolean(formik.errors.name)}
+                helperText={formik.touched.name && formik.errors.name}
                 sx={{ mb: 3 }}
               />
               <TextField
                 fullWidth
-                id="lname"
-                name="lname"
-                label="Last name"
-                value={formik.values.lname}
+                id="typeOfCompany"
+                name="typeOfCompany"
+                label="Type of companny"
+                value={formik.values.typeOfCompany}
                 onChange={formik.handleChange}
-                error={formik.touched.lname && Boolean(formik.errors.lname)}
-                helperText={formik.touched.lname && formik.errors.lname}
+                error={
+                  formik.touched.typeOfCompany &&
+                  Boolean(formik.errors.typeOfCompany)
+                }
+                helperText={
+                  formik.touched.typeOfCompany && formik.errors.typeOfCompany
+                }
                 sx={{ mb: 3 }}
               />
-              {/* <InputLabel id="gender">Gender</InputLabel> */}
-              <Select
-                labelId="gender"
-                id="gender"
-                name="gender"
-                label="Gender"
-                value={formik.values.gender}
-                onChange={formik.handleChange}
+              <TextField
                 fullWidth
+                id="mainBusinessLines"
+                name="mainBusinessLines"
+                label="Main business lines"
+                value={formik.values.mainBusinessLines}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.mainBusinessLines &&
+                  Boolean(formik.errors.mainBusinessLines)
+                }
+                helperText={
+                  formik.touched.mainBusinessLines &&
+                  formik.errors.mainBusinessLines
+                }
                 sx={{ mb: 3 }}
-              >
-                <MenuItem value={"Male"}>Male</MenuItem>
-                <MenuItem value={"Female"}>Female</MenuItem>
-                <MenuItem value={"Other"}>Other</MenuItem>
-              </Select>
-
+              />
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
-                  id="dateOfBirth"
-                  name="dateOfBirth"
-                  label="Date of birth"
+                  id="establishedDate"
+                  name="establishedDate"
+                  label="Established date"
                   inputFormat="dd/MM/yyyy"
-                  value={formik.values.dateOfBirth}
+                  value={formik.values.establishedDate}
                   minDate={new Date("1900-01-01")}
                   maxDate={new Date()}
                   onChange={(value) => {
-                    formik.setFieldValue("dateOfBirth", value);
+                    formik.setFieldValue("establishedDate", value);
                   }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       error={
-                        formik.touched.dateOfBirth &&
-                        Boolean(formik.errors.dateOfBirth)
+                        formik.touched.establishedDate &&
+                        Boolean(formik.errors.establishedDate)
                       }
                       helperText={
-                        formik.touched.dateOfBirth && formik.errors.dateOfBirth
+                        formik.touched.establishedDate &&
+                        formik.errors.establishedDate
                       }
                       fullWidth
                       sx={{ mb: 3 }}
@@ -125,6 +132,30 @@ export default function FormAddEmployeeInformation({
               </LocalizationProvider>
             </Grid>
             <Grid item sm={12} md={6}>
+              <TextField
+                fullWidth
+                id="address"
+                name="address"
+                label="Address"
+                value={formik.values.address}
+                onChange={formik.handleChange}
+                error={formik.touched.address && Boolean(formik.errors.address)}
+                helperText={formik.touched.address && formik.errors.address}
+                sx={{ mb: 3 }}
+              />
+              <TextField
+                fullWidth
+                id="address2"
+                name="address2"
+                label="Address 2"
+                value={formik.values.address2}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.address2 && Boolean(formik.errors.address2)
+                }
+                helperText={formik.touched.address2 && formik.errors.address2}
+                sx={{ mb: 3 }}
+              />
               <TextField
                 fullWidth
                 id="phoneNumber"
@@ -143,6 +174,19 @@ export default function FormAddEmployeeInformation({
               />
               <TextField
                 fullWidth
+                id="faxNumber"
+                name="faxNumber"
+                label="Fax number"
+                value={formik.values.faxNumber}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.faxNumber && Boolean(formik.errors.faxNumber)
+                }
+                helperText={formik.touched.faxNumber && formik.errors.faxNumber}
+                sx={{ mb: 3 }}
+              />
+              <TextField
+                fullWidth
                 id="email"
                 name="email"
                 label="Email"
@@ -154,13 +198,24 @@ export default function FormAddEmployeeInformation({
               />
               <TextField
                 fullWidth
-                id="address"
-                name="address"
-                label="Address"
-                value={formik.values.address}
+                id="website"
+                name="website"
+                label="Website"
+                value={formik.values.website}
                 onChange={formik.handleChange}
-                error={formik.touched.address && Boolean(formik.errors.address)}
-                helperText={formik.touched.address && formik.errors.address}
+                error={formik.touched.website && Boolean(formik.errors.website)}
+                helperText={formik.touched.website && formik.errors.website}
+                sx={{ mb: 3 }}
+              />
+              <TextField
+                fullWidth
+                id="taxCode"
+                name="taxCode"
+                label="Tax code"
+                value={formik.values.taxCode}
+                onChange={formik.handleChange}
+                error={formik.touched.taxCode && Boolean(formik.errors.taxCode)}
+                helperText={formik.touched.taxCode && formik.errors.taxCode}
                 sx={{ mb: 3 }}
               />
             </Grid>
@@ -191,24 +246,24 @@ export default function FormAddEmployeeInformation({
   );
 }
 
-FormAddEmployeeInformation.propTypes = {
+FormUpdateCompany.propTypes = {
   handleCloseDialog: PropTypes.func,
   submitButtonText: PropTypes.string,
   initialValues: PropTypes.object,
 };
-FormAddEmployeeInformation.defaultProps = {
+FormUpdateCompany.defaultProps = {
   initialValues: {
-    fname: "",
-    lname: "",
-    gender: "Male",
-    dateOfBirth: new Date(),
-    phoneNumber: "",
-    email: "",
+    name: "",
+    establishedDate: new Date(),
+    typeOfCompany: "",
+    mainBusinessLines: "",
     address: "",
-    roleID: "1",
-    departmentID: "1",
-    projectID: "1",
-    isDeleted: false,
+    address2: "",
+    phoneNumber: "",
+    faxNumber: "",
+    email: "",
+    website: "",
+    taxCode: "",
   },
   submitButtonText: "SUBMIT",
 };

@@ -44,7 +44,6 @@ app.use((err, req, res, next) => {
     message: "[ERROR] No such route exists!",
   });
 });
-console.log();
 function initial() {
   Role.estimatedDocumentCount((err, count) => {
     if (!err && count === 0) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Box, TextField, Typography, Button } from "@mui/material";
-
+import { useNavigate } from "react-router-dom";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -9,7 +9,7 @@ import Link from "@mui/material/Link";
 import { useFormik } from "formik";
 import { accountSignUpValidationSchema } from "../../utilities/validationSchema";
 
-import SnackbarInfo from "../Snackbar/SnackbarInfo";
+import SnackbarInfo from "../../components/Snackbar/SnackbarInfo";
 import { useDispatch, useSelector } from "react-redux";
 import { signUp } from "../../stores/authSlice";
 import { clearMessage } from "../../stores/messageSlice";
@@ -34,7 +34,7 @@ export default function SignUp({ handleChange }) {
   const handleSbInfoClose = () => {
     setSbInfoOpen(false);
   };
-
+  const navigate = useNavigate();
   const handleRegister = (values) => {
     const { email, password } = values;
     setRegSuccessful(false);
@@ -124,7 +124,7 @@ export default function SignUp({ handleChange }) {
     );
   };
   return (
-    <Box>
+    <Box sx={{ marginX: { xs: 10, lg: 50 }, marginTop: { xs: 5, lg: 20 } }}>
       {message && (
         <SnackbarInfo
           isOpen={isSbInfoOpen}
@@ -141,7 +141,7 @@ export default function SignUp({ handleChange }) {
 
       <FormikWithMUI />
       <Box sx={{ textAlign: "right", mt: 3 }}>
-        <Button onClick={(e) => handleChange(e, 0)}>
+        <Button onClick={() => navigate("/login")}>
           Already have an account? Login
         </Button>
       </Box>

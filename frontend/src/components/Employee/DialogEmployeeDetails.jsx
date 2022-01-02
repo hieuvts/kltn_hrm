@@ -49,7 +49,7 @@ export default function DialogEmployeeDetails({
 
   return (
     <>
-      <Dialog maxWidth={"xl"} open={isDialogOpen} onClose={handleCloseDialog}>
+      <Dialog maxWidth="lg" open={isDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h4" sx={{ pl: 3 }}>

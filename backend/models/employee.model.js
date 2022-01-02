@@ -9,21 +9,18 @@ const moment = require("moment");
 const employeeSchema = new Schema({
   fname: {
     type: String,
-    required: true,
     default: "First name",
     minlength: 1,
     maxlength: 35,
   },
   lname: {
     type: String,
-    required: true,
     default: "Last name",
     minlength: 1,
     maxlength: 35,
   },
   gender: {
     type: String,
-    required: true,
     default: "Male",
     max: 10,
     // Only accepts these values
@@ -32,11 +29,9 @@ const employeeSchema = new Schema({
   // https://mongoosejs.com/docs/tutorials/dates.html
   dateOfBirth: {
     type: Date,
-    required: true,
     min: "1900-01-01",
-    max: moment(Date.now()).format("YYYY-MM-DD"),
   },
-  phoneNumber: { type: String, required: true, min: 8, max: 15 },
+  phoneNumber: { type: String, min: 8, max: 15 },
   email: {
     type: String,
     required: true,
@@ -47,10 +42,9 @@ const employeeSchema = new Schema({
   },
   address: {
     type: String,
-    required: true,
     max: 150,
   },
-  role: [{ type: Schema.Types.ObjectId, ref: "role" }],
+  roles: [{ type: Schema.Types.ObjectId, ref: "role" }],
   department: [{ type: Schema.Types.ObjectId, ref: "department" }],
   project: [{ type: Schema.Types.ObjectId, ref: "project" }],
   isDeleted: {

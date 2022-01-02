@@ -170,8 +170,9 @@ const EnhancedTableToolbar = (props) => {
   const dispatch = useDispatch();
   // Get selectedEmployeeList to delete multiple, delete all
   const selectedEmployeeList = useSelector(
-    (state) => state.employee.selectedEmployeeList
+    (state) => state.employee
   );
+  const auth = useSelector((state) => state.auth);
   const handleDeleteMultipleEmployee = () => {
     setDialogDeleteMultipleEmployeeOpen(true);
   };

@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { authJwt } = require("../middlewares");
 const project = require("../controllers/project.controller");
 
 // Router-level middleware

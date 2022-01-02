@@ -31,6 +31,7 @@ export default function DialogForgotPassword({
         <TextField
           id="email"
           label="Email"
+          type="email"
           placeholder="Enter your email address"
           variant="outlined"
           fullWidth
