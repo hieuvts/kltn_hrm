@@ -38,8 +38,7 @@ import {
   removeFromSelectedEmployeeList,
   setMultiSelectedEmployeeList,
 } from "../../stores/employeeSlice";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -169,9 +168,8 @@ const EnhancedTableToolbar = (props) => {
     props;
   const dispatch = useDispatch();
   // Get selectedEmployeeList to delete multiple, delete all
-  const selectedEmployeeList = useSelector(
-    (state) => state.employee.selectedEmployeeList
-  );
+  const selectedEmployeeList = useSelector((state) => state.employee);
+  const auth = useSelector((state) => state.auth);
   const handleDeleteMultipleEmployee = () => {
     setDialogDeleteMultipleEmployeeOpen(true);
   };
@@ -463,12 +461,12 @@ export default function EmployeeTable() {
                         <TableCell align="right">{row.email}</TableCell>
                         <TableCell align="right">{row.phoneNumber}</TableCell>
                         <TableCell align="right">
-                          {row.role.map((role, index) => (
+                          {row.roles.map((role, index) => (
                             <p key={index}>{role.name}</p>
                           ))}
                         </TableCell>
                         <TableCell align="right">
-                          {row.department.map((department, index) => (
+                          {row.departments.map((department, index) => (
                             <p key={index}>{department.name}</p>
                           ))}
                         </TableCell>

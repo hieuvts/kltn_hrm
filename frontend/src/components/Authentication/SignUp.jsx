@@ -1,19 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Box, TextField, Typography, Button } from "@mui/material";
 
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import MuiAlert from "@mui/material/Alert";
-import Snackbar from "@mui/material/Snackbar";
 import { PropTypes } from "prop-types";
 import Link from "@mui/material/Link";
 import { useFormik } from "formik";
 import { accountSignUpValidationSchema } from "../../utilities/validationSchema";
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import SnackbarInfo from "../Snackbar/SnackbarInfo";
+import { useDispatch, useSelector } from "react-redux";
+import { signUp } from "../../stores/authSlice";
+import { clearMessage } from "../../stores/messageSlice";
+
 const initialValues = {
   email: "",
   password: "",
@@ -21,21 +21,39 @@ const initialValues = {
 };
 
 export default function SignUp({ handleChange }) {
-  const paperStyle = { padding: 20, width: 310, margin: "0 auto" };
-  const avatarStyle = { backgroundColor: "#5048E4" };
-  const headerStyle = { margin: "8px" };
-  const inputStyle = { marginTop: "8px" };
+  const [isRegSuccessful, setRegSuccessful] = useState(false);
+  const [isSbInfoOpen, setSbInfoOpen] = useState(false);
+  const dispatch = useDispatch();
+  const { message } = useSelector((state) => state.message);
+  // const [isChecked, setChecked] = useState(false);
 
-  const [isChecked, setChecked] = useState(false);
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
+
+  const handleSbInfoClose = () => {
+    setSbInfoOpen(false);
+  };
+
+  const handleRegister = (values) => {
+    const { email, password } = values;
+    setRegSuccessful(false);
+    dispatch(signUp({ email, password }))
+      .unwrap()
+      .then(() => {
+        setRegSuccessful(true);
+        setSbInfoOpen(true);
+      })
+      .catch(() => {
+        setRegSuccessful(false);
+        setSbInfoOpen(true);
+      });
+  };
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
       validationSchema: accountSignUpValidationSchema,
-      onSubmit: (values) => {
-        dispatch(addEmployeeAsync(values));
-        handleSnackbarOpen();
-        handleCloseDialog();
-      },
+      onSubmit: (values) => handleRegister(values),
     });
     return (
       <form onSubmit={formik.handleSubmit}>
@@ -83,7 +101,7 @@ export default function SignUp({ handleChange }) {
             sx={{ mb: 3 }}
           />
         </Grid>
-        <FormControlLabel
+        {/* <FormControlLabel
           control={
             <Checkbox
               checked={isChecked}
@@ -92,14 +110,13 @@ export default function SignUp({ handleChange }) {
             />
           }
           label="Agree with terms of services and policy"
-        />
+        /> */}
         <Button
           variant="contained"
           color="primary"
           fullWidth
           type="submit"
           sx={{ mt: 3 }}
-          disabled={!isChecked}
         >
           Signup
         </Button>
@@ -108,17 +125,13 @@ export default function SignUp({ handleChange }) {
   };
   return (
     <Box>
-      {/* <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        open={true}
-        autoHideDuration={2500}
-        key={"top" + "right"}
-        sx={{ mt: "0" }}
-      >
-        <Alert severity="success" sx={{ width: "100%" }}>
-          Placeholder
-        </Alert>
-      </Snackbar> */}
+      {message && (
+        <SnackbarInfo
+          isOpen={isSbInfoOpen}
+          handleClose={handleSbInfoClose}
+          text={message}
+        />
+      )}
       <Box sx={{ textAlign: "center" }}>
         <Box sx={{ mt: 3, mb: 5 }}>
           <LockOutlinedIcon />

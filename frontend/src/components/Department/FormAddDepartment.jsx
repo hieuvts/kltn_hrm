@@ -12,7 +12,7 @@ import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
 import { useDispatch } from "react-redux";
-import { addDepartmentASync } from "../../stores/departmentSlice";
+import { addDepartmentAsync } from "../../stores/departmentSlice";
 import { departmentInformationValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
 
@@ -40,7 +40,7 @@ export default function FormAddDepartmentInformation({
       initialValues: initialValues,
       validationSchema: departmentInformationValidationSchema,
       onSubmit: (values) => {
-        dispatch(addDepartmentASync(values))
+        dispatch(addDepartmentAsync(values))
           .unwrap()
           .then((originalPromiseResult) => {
             setSbSuccessOpen(true);

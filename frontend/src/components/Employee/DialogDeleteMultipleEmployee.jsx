@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -63,13 +64,13 @@ export default function DialogDeleteMultipleEmployee({
         handleClose={handleSbFailedClose}
         text={"Delete multiple employees failed!"}
       />
-      <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+      <Dialog open={isDialogOpen} onClose={handleCloseDialog} maxWidth="md">
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <h3>
+            <Typography variant="h4">
               Are you sure you want to delete {selectedEmployeeList.length}{" "}
               employee?
-            </h3>
+            </Typography>
             <Button onClick={handleCloseDialog}>
               <CloseIcon fontSize="large" />
             </Button>

@@ -20,9 +20,6 @@ const Search = styled("div")(({ theme }) => ({
     marginLeft: theme.spacing(3),
     width: "auto",
   },
-  border: "solid",
-  borderWidth: "1px",
-  borderColor: "grey",
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -49,10 +46,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function MySearchBox({
-  placeholder,
-  handleSearchQueryChange,
-}) {
+export default function MySearchBox({ placeholder, handleSearchQueryChange }) {
   return (
     <Search>
       <SearchIconWrapper>

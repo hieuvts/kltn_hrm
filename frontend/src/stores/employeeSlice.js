@@ -1,21 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import moment from "moment";
-import { apiBaseUrl } from "../config/apiBaseUrl";
+import employeeService from "../services/employee.service";
 
-// employeeList: [
-//   {
-//     _id: null,
-//     name: "Initial Data",
-//     gender: "Initial Data",
-//     dateOfBirth: "2020-01-31T17:00:00.000Z",
-//     phoneNumber: "0359545405",
-//     address: "Initial Data",
-//     roleID: "1",
-//     departmentID: "4243",
-//     projectID: "1",
-//     isDeleted: false,
-//   },
-// ],
 const initialState = {
   employeeList: [],
   currentSelectedEmployee: {},
@@ -33,19 +18,10 @@ export const getEmployeeAsync = createAsyncThunk(
       searchQuery = payload.searchQuery;
     }
     try {
-      const res = await fetch(
-        `${apiBaseUrl}/employee/getAll?search=${searchQuery}`
-      );
-      if (res.ok) {
-        const resFromServer = await res.json();
-        const employee = resFromServer.employees;
-        console.log("Get all employee successful");
-        return { employeeList: employee };
-      } else {
-        console.log("[FAILED] getEmployeeAsync: ", res.status);
-        return rejectWithValue("Get employee not successful");
-      }
-    } catch (error) {
+      const res = await employeeService.getAllEmployee(searchQuery);
+
+      return res.data.employees;
+    } catch {
       return rejectWithValue("Get employee not successful");
     }
   }
@@ -55,29 +31,10 @@ export const addEmployeeAsync = createAsyncThunk(
   "employee/addEmployee",
   async (payload, { rejectWithValue }) => {
     try {
-      const res = await fetch(`${apiBaseUrl}/employee/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          fname: payload.fname,
-          lname: payload.lname,
-          gender: payload.gender,
-          dateOfBirth: moment(payload.dateOfBirth).format("YYYY-MM-DD"),
-          phoneNumber: payload.phoneNumber,
-          email: payload.email,
-          address: payload.address,
-          department: [],
-          role: [],
-          isDeleted: false,
-        }),
-      });
-      if (res.ok) {
-        const employee = await res.json();
-        return { employee };
-      } else return rejectWithValue("Add employee not successful 1");
-    } catch (error) {
+      const res = await employeeService.addEmployee(payload);
+
+      return res.data.employees;
+    } catch {
       return rejectWithValue("Add employee not successful");
     }
   }
@@ -87,27 +44,9 @@ export const updateEmployeeAsync = createAsyncThunk(
   "employee/updateEmployee",
   async (payload, { rejectWithValue }) => {
     try {
-      const res = await fetch(`${apiBaseUrl}/employee/${payload._id}/put`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: payload.name,
-          gender: payload.gender,
-          dateOfBirth: moment(payload.dateOfBirth).format("YYYY-MM-DD"),
-          phoneNumber: payload.phoneNumber,
-          email: payload.email,
-          address: payload.address,
-          department: [],
-          role: [],
-          isDeleted: false,
-        }),
-      });
-      if (res.ok) {
-        const employee = await res.json();
-        return { employee };
-      } else return rejectWithValue("Update employee not successful");
+      const res = await employeeService.updateEmployee(payload._id, payload);
+
+      return res.data.employees;
     } catch {
       return rejectWithValue("Update employee not successful");
     }
@@ -118,21 +57,11 @@ export const deleteEmployeeAsync = createAsyncThunk(
   "employee/delete",
   async (payload, { rejectWithValue }) => {
     try {
-      const res = await fetch(
-        `${apiBaseUrl}/employee/${payload.selectedEmployeeId}/delete`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ _id: payload._id }),
-        }
+      const res = await employeeService.deleteEmployee(
+        payload.selectedEmployeeId
       );
-      if (!res.ok) {
-        rejectWithValue("Delete employee not successful");
-      } else {
-        console.log("[deleteEmployeeAsync] success");
-      }
+
+      return res.data;
     } catch {
       return rejectWithValue("Delete employee not successful");
     }
@@ -177,11 +106,8 @@ export const employeeSlice = createSlice({
       console.log("[Rejected] getEmployeeAsync errorMsg= ", actions);
     },
     [getEmployeeAsync.fulfilled]: (state, actions) => {
-      console.log(
-        "[Fulfilled] getEmployeeAsync actions.payload.employees= ",
-        actions.payload
-      );
-      return { ...state, employeeList: actions.payload.employeeList };
+      console.log("[Fulfilled] getEmployeeAsync ");
+      return { ...state, employeeList: actions.payload };
     },
 
     // Add Employee to server

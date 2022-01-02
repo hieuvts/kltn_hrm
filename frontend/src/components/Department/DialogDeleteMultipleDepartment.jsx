@@ -9,7 +9,7 @@ import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
 import PropTypes from "prop-types";
-import { deleteDepartmentAsync,getDepartmentASync } from "../../stores/departmentSlice";
+import { deleteDepartmentAsync,getDepartmentAsync } from "../../stores/departmentSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 export default function DialogDeleteMultipleDeparment({
