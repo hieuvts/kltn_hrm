@@ -46,10 +46,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function MySearchBox({
-  placeholder,
-  handleSearchQueryChange,
-}) {
+export default function MySearchBox({ placeholder, handleSearchQueryChange }) {
   return (
     <Search>
       <SearchIconWrapper>

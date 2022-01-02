@@ -19,6 +19,7 @@ import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -145,8 +146,15 @@ export default function AppBarComponent() {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
 
-      <AppBar position="fixed" open={isDrawerOpen}>
-        <Toolbar>
+      <AppBar open={isDrawerOpen}>
+        <Toolbar
+          variant="regular"
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -167,71 +175,83 @@ export default function AppBarComponent() {
           >
             <StyledSearchBox placeholder="Search…" />
 
-            <div>
-              <Button
-                variant="contained"
-                sx={{ borderRadius: 3 }}
-                onClick={handleMenu}
-              >
-                <Typography sx={{ alignSelf: "center", color: "white" }}>
-                  {currentUser.email}
-                </Typography>
-              </Button>
+            {currentUser && (
+              <div>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Button
+                  variant="contained"
+                  sx={{ borderRadius: 3 }}
+                  onClick={handleMenu}
+                >
+                  <Typography sx={{ alignSelf: "center", color: "white" }}>
+                    {currentUser.email}
+                  </Typography>
+                </Button>
 
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <Link
-                  to="/profile"
-                  style={{ textDecoration: "none", color: "black" }}
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
                 >
-                  <MenuItem
-                    onClick={() => {
-                      handleClose();
-                    }}
+                  <Link
+                    to="/profile"
+                    style={{ textDecoration: "none", color: "black" }}
                   >
-                    Profile
-                  </MenuItem>
-                </Link>
-                <Link
-                  to="/setting"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <MenuItem
-                    onClick={() => {
-                      handleClose();
-                    }}
+                    <MenuItem
+                      onClick={() => {
+                        handleClose();
+                      }}
+                    >
+                      Profile
+                    </MenuItem>
+                  </Link>
+                  <Link
+                    to="/setting"
+                    style={{ textDecoration: "none", color: "black" }}
                   >
-                    Company settings
-                  </MenuItem>
-                </Link>
-                <Link
-                  to="/login"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <MenuItem
-                    onClick={() => {
-                      dispatch(logout());
-                      handleClose();
-                    }}
+                    <MenuItem
+                      onClick={() => {
+                        handleClose();
+                      }}
+                    >
+                      Company settings
+                    </MenuItem>
+                  </Link>
+                  <Link
+                    to="/login"
+                    style={{ textDecoration: "none", color: "black" }}
                   >
-                    Logout
-                  </MenuItem>
-                </Link>
-              </Menu>
-            </div>
+                    <MenuItem
+                      onClick={() => {
+                        dispatch(logout());
+                        handleClose();
+                      }}
+                    >
+                      Logout
+                    </MenuItem>
+                  </Link>
+                </Menu>
+              </div>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
