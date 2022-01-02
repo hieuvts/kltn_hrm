@@ -31,7 +31,7 @@ export default function DialogDeleteDepartment({
     (state) => state.department.currentSelectedDepartment._id
   );
   const handleDeleteDepartment = () => {
-    dispatch(deleteDepartmentAsync({ selectDepartmentID: selectedDepartmentID }))
+    dispatch(deleteDepartmentAsync({ selectedDepartmentID: selectedDepartmentID }))
       .unwrap()
       .then(() => {
         dispatch(getDepartmentASync());

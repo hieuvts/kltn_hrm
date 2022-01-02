@@ -9,11 +9,13 @@ const getDepartmentById = async (req, res, next, departmentId) => {
   console.log(Department);
   Department.findById(departmentId).exec((error, result) => {
     if (error || !result) {
+      console.log(`Department ${departmentId} is not found`);
       res.status(404).json({
         message: "[ERROR] [Controller] Department not found!",
       });
+      return;
     } else {
-      console.log("[ERROR] [get] Failed!");
+      console.log(`Department ${departmentId} found!`);
     }
     req.department = result;
     next();
@@ -99,9 +101,8 @@ const putDepartment = async (req, res) => {
 // Delete one Department
 const deleteDepartment = async (req, res) => {
   console.log(req);
-  debugger
   const department = req.department;
-  Department.deleteOne({ _id: Department._id }, (error, result) => {
+  Department.deleteOne({ _id: department._id }, (error, result) => {
     if (error || !result) {
       res.status(400).json({
         message: "Can't delete!!!",

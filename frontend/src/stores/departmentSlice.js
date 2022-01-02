@@ -93,7 +93,7 @@ export const deleteDepartmentAsync = createAsyncThunk(
     async (payload, { rejectWithValue }) => {
         try {
             const res = await fetch(
-                `${apiBaseUrl}/department/${payload.selecteddepartmentId}/delete`,
+                `${apiBaseUrl}/department/${payload.selectedDepartmentID}/delete`,
                 {
                     method: "DELETE",
                     headers: {

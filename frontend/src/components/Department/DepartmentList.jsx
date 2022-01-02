@@ -394,12 +394,6 @@ export default function DepartmentTable() {
                         </TableCell>
                         <TableCell align="center">{row.amount}</TableCell>
                         <TableCell align="center">{row.manager}</TableCell>
-                        <TableCell align="center">
-                          {/* <Box>
-                            <IconButton onClick={editOnClick(row)}> <EditIcon color="primary" /> </IconButton>
-                            <IconButton onClick={deleteOnClick(row)}> <DeleteIcon color="primary" /> </IconButton>
-                          </Box> */}
-                        </TableCell>
                         <TableCell align="right">
                           <RowActions currentSelectedDepartment={row} />
                         </TableCell>
