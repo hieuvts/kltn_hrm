@@ -31,19 +31,7 @@ export const addEmployeeAsync = createAsyncThunk(
   "employee/addEmployee",
   async (payload, { rejectWithValue }) => {
     try {
-      const res = await employeeService.addEmployee({
-        fname: "Test",
-        lname: "Test",
-        gender: "Male",
-        dateOfBirth: "2023-01-01",
-        phoneNumber: "0981231789",
-        email: "23@a.co",
-        address: "323",
-        dsfafasf: "1",
-        projectID: "1",
-        isDeleted: false,
-        role: "admin",
-      });
+      const res = await employeeService.addEmployee(payload);
 
       return res.data.employees;
     } catch {

@@ -107,7 +107,7 @@ export const departmentSlice = createSlice({
     },
     [getDepartmentAsync.fulfilled]: (state, actions) => {
       console.log("[Fulfilled] getDepartmentAsync ");
-      return { ...state, DepartmentList: actions.payload };
+      return { ...state, departmentList: actions.payload };
     },
 
     [addDepartmentAsync.rejected]: (state, actions) => {

@@ -1,5 +1,6 @@
 const Role = require("../models/role.model");
 const User = require("../models/user.model");
+const Department = require("../models/department.model");
 
 const defaultRoles = ["user", "admin", "moderator"];
 
@@ -21,10 +22,11 @@ const checkExistedEmail = (req, res, next) => {
 
 const checkRolesIsExisted = (req, res, next) => {
   if (req.body.roles) {
+    console.log("roles from req ", req.body.roles);
     for (let i = 0; i < req.body.roles.length; i++) {
       if (!defaultRoles.includes(req.body.roles[i])) {
         res.status(400).send({
-          message: `[FAILED] Role ${req.body.roles[i]} does not exist!`,
+          message: `[verifySignUp] [FAILED] Role ${req.body.roles[i]} does not exist!`,
         });
         return;
       }
@@ -34,7 +36,24 @@ const checkRolesIsExisted = (req, res, next) => {
   next();
 };
 
+// const checkDepartmentsIsExisted = (req, res, next) => {
+//   if (req.body.departments) {
+//     console.log("departments from req ", req.body.departments);
+//     for (let i = 0; i < req.body.departments.length; i++) {
+//       if (!defaultdepartments.includes(req.body.departments[i])) {
+//         res.status(400).send({
+//           message: `[verifySignUp] [FAILED] Role ${req.body.departments[i]} does not exist!`,
+//         });
+//         return;
+//       }
+//     }
+//   }
+
+//   next();
+// };
+
 module.exports = {
   checkExistedEmail,
   checkRolesIsExisted,
+  // checkDepartmentsIsExisted
 };
