@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 
 import { useDispatch } from "react-redux";
-import { getDepartmentASync } from "../../stores/departmentSlice";
+import { getDepartmentAsync } from "../../stores/departmentSlice";
 
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -63,7 +63,7 @@ export default function Department() {
 
   const debounceFetchAPI = useCallback(
     debounce((searchQuery) => {
-      dispatch(getDepartmentASync({ searchQuery: searchQuery }));
+      dispatch(getDepartmentAsync({ searchQuery: searchQuery }));
     }, 500),
     []
   );
