@@ -264,7 +264,7 @@ export default function DepartmentTable() {
         selected.slice(0, selectedIndex),
         selected.slice(selectedIndex + 1)
       );
-      ispatch(removeFromSelectedDepartmentList({ selectedDepartment: department }));
+      dispatch(removeFromSelectedDepartmentList({ selectedDepartment: department }));
     }
 
     setSelected(newSelected);
@@ -361,17 +361,17 @@ export default function DepartmentTable() {
                   .sort(getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.name);
+                    const isItemSelected = isSelected(row._id);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row.name)}
+                        onClick={(event) => handleClick(event, row)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.name}
+                        key={row._id}
                         selected={isItemSelected}
                       >
                         <TableCell padding="checkbox">

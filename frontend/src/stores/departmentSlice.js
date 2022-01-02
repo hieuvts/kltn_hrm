@@ -132,7 +132,7 @@ export const departmentSlice = createSlice({
       },
       removeFromSelectedDepartmentList: (state, action) => {
         state.selectedDepartmentList = state.selectedDepartmentList.filter(
-          (department) => department._id !== action.payload.setCurrentSelectedDepartment._id
+          (department) => department._id !== action.payload.selectedDepartment._id
         );
       },
       setMultiSelectedDepartmentList: (state, action) => {

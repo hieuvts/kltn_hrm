@@ -6,6 +6,7 @@ const getDepartmentById = async (req, res, next, departmentId) => {
   // attach to request object
   // https://expressjs.com/en/4x/api.html#router.param
   console.log("Trigger getDepartmentByID");
+  console.log(Department);
   Department.findById(departmentId).exec((error, result) => {
     if (error || !result) {
       res.status(404).json({
@@ -97,8 +98,10 @@ const putDepartment = async (req, res) => {
 
 // Delete one Department
 const deleteDepartment = async (req, res) => {
+  console.log(req);
+  debugger
   const department = req.department;
-  department.deleteOne({ _id: department._id }, (error, result) => {
+  Department.deleteOne({ _id: Department._id }, (error, result) => {
     if (error || !result) {
       res.status(400).json({
         message: "Can't delete!!!",
