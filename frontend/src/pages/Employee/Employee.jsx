@@ -19,6 +19,7 @@ import debounce from "lodash.debounce";
 //Redux
 import { useDispatch } from "react-redux";
 import { getEmployeeAsync } from "../../stores/employeeSlice";
+import { getDepartmentAsync } from "../../stores/departmentSlice";
 import DialogExportToExcel from "../../components/Employee/DialogExportToExcel";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -68,7 +69,7 @@ export default function Employee() {
   );
   useEffect(() => {
     debounceFetchAPI(searchQuery);
-    // dispatch(getEmployeeAsync());
+    dispatch(getDepartmentAsync());
   }, [handleSearchQueryChange]);
 
   return (

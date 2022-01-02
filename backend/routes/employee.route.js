@@ -5,11 +5,7 @@ const verifySignUp = require("../middlewares/verifySignUp");
 const employeeControllers = require("../controllers/employee.controller");
 
 // Router-level middleware
-router.get(
-  "/getAll",
-  [authJwt.verifyToken, authJwt.isAdmin],
-  employeeControllers.getAllEmployee
-);
+router.get("/getAll", employeeControllers.getAllEmployee);
 router.param("employeeId", employeeControllers.getEmployeeById);
 // router.get("/:employeeId", employeeControllers.getOneEmployee);
 router.post(
@@ -17,14 +13,8 @@ router.post(
   [verifySignUp.checkExistedEmail, verifySignUp.checkRolesIsExisted],
   employeeControllers.createEmployee
 );
-router.delete(
-  "/:employeeId/delete",
-  employeeControllers.deleteEmployee
-);
-router.delete(
-  "/deleteall",
-  employeeControllers.deleteAllEmployee
-);
+router.delete("/:employeeId/delete", employeeControllers.deleteEmployee);
+router.delete("/deleteall", employeeControllers.deleteAllEmployee);
 router.put(
   "/:employeeId/update",
   [verifySignUp.checkExistedEmail, verifySignUp.checkRolesIsExisted],

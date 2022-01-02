@@ -45,7 +45,7 @@ const employeeSchema = new Schema({
     max: 150,
   },
   roles: [{ type: Schema.Types.ObjectId, ref: "role" }],
-  department: [{ type: Schema.Types.ObjectId, ref: "department" }],
+  departments: [{ type: Schema.Types.ObjectId, ref: "department" }],
   project: [{ type: Schema.Types.ObjectId, ref: "project" }],
   isDeleted: {
     type: Boolean,

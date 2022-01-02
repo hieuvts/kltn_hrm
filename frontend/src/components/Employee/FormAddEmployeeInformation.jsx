@@ -2,8 +2,13 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import Chip from "@mui/material/Chip";
 import MenuItem from "@mui/material/MenuItem";
+import Box from "@mui/material/Box";
+import OutlinedInput from "@mui/material/OutlinedInput";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
@@ -12,7 +17,7 @@ import MuiAlert from "@mui/material/Alert";
 import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addEmployeeAsync } from "../../stores/employeeSlice";
 import { employeeInfoValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
@@ -26,11 +31,23 @@ export default function FormAddEmployeeInformation({
 }) {
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
+  const [selectedDepartments, setSelectedDepartments] = useState([]);
+  const departments = useSelector((state) => state.department.departmentList);
+
   const handleSbSuccessClose = () => {
     setSbSuccessOpen(false);
   };
   const handleSbFailedClose = () => {
     setSbFailedOpen(false);
+  };
+  const handleSelectDepartment = (e) => {
+    const {
+      target: { value },
+    } = e;
+    setSelectedDepartments(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
   };
   const dispatch = useDispatch();
 
@@ -39,7 +56,9 @@ export default function FormAddEmployeeInformation({
       initialValues: initialValues,
       validationSchema: employeeInfoValidationSchema,
       onSubmit: (values) => {
-        dispatch(addEmployeeAsync(values))
+        let data = values;
+        data["departments"] = selectedDepartments;
+        dispatch(addEmployeeAsync(data))
           .unwrap()
           .then((originalPromiseResult) => {
             setSbSuccessOpen(true);
@@ -125,6 +144,32 @@ export default function FormAddEmployeeInformation({
               </LocalizationProvider>
             </Grid>
             <Grid item sm={12} md={6}>
+              <FormControl fullWidth>
+                <InputLabel id="deparments-label">Departments</InputLabel>
+                <Select
+                  labelId="deparments-label"
+                  id="deparments"
+                  fullWidth
+                  multiple
+                  value={selectedDepartments}
+                  onChange={handleSelectDepartment}
+                  input={<OutlinedInput id="deparments" label="Departments" />}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                  sx={{ mb: 3 }}
+                >
+                  {departments.map((department, index) => (
+                    <MenuItem key={index} value={department.name}>
+                      {department.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <TextField
                 fullWidth
                 id="phoneNumber"
@@ -202,11 +247,11 @@ FormAddEmployeeInformation.defaultProps = {
     lname: "",
     gender: "Male",
     dateOfBirth: new Date(),
+    departments: "",
     phoneNumber: "",
     email: "",
     address: "",
     roleID: "1",
-    departmentID: "1",
     projectID: "1",
     isDeleted: false,
   },

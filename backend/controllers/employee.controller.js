@@ -1,5 +1,6 @@
 const Employee = require("../models/employee.model");
 const Role = require("../models/role.model");
+const Department = require("../models/department.model");
 const User = require("../models/user.model");
 const moment = require("moment");
 
@@ -44,7 +45,7 @@ const getAllEmployee = async (req, res) => {
 
   if (typeof query === "undefined" || query.length === 0) {
     console.log("Return all employees");
-    employees = await Employee.find().populate("department").populate("role");
+    employees = await Employee.find().populate("departments").populate("roles");
   } else {
     console.log("Return employees with search= ", query);
     employees = await Employee.find({
@@ -71,57 +72,115 @@ const getAllEmployee = async (req, res) => {
 const createEmployee = async (req, res) => {
   console.log("invoke createEmployee");
   const employee = new Employee(req.body);
-  // employee.save((error, result) => {
-  //   if (error || !result) {
-  //     res.status(500).send(error);
-  //     return;
-  //   }
+
   // If user provide a custom role (not Admin, Moderator, User)
-  if (req.body.roles) {
-    Role.find(
+  if (req.body.departments) {
+    Department.find(
       {
-        name: { $in: req.body.roles },
+        name: { $in: req.body.departments },
       },
-      (error, roles) => {
+      (error, departments) => {
         if (error) {
-          res.status(500).send({ message: error });
-          return;
-        }
+          console.log("department find failed");
 
-        employee.roles = roles.map((role) => role._id);
-        employee.save((error) => {
-          if (error) {
-            res.status(500).send({ message: error });
-            return;
+          if (req.body.roles) {
+            console.log("attch roles");
+
+            Role.find(
+              {
+                name: { $in: req.body.roles },
+              },
+              (error, roles) => {
+                if (error) {
+                  res.status(500).send({ message: error });
+                  return;
+                }
+                employee.roles = roles.map((role) => role._id);
+                employee.save((error) => {
+                  if (error) {
+                    res.status(500).send({ message: error });
+                    return;
+                  }
+
+                  res.send({
+                    message: `Create employee with role=${employee.roles} successfully!`,
+                  });
+                });
+              }
+            );
+          } else {
+            // If user not provide any role -> Assign them to "user" role
+            Role.findOne({ name: "user" }, (error, role) => {
+              if (error) {
+                res.status(500).send({ message: error });
+                return;
+              }
+              employee.roles = [role._id];
+              employee.save((error) => {
+                if (error) {
+                  res.status(500).send({ message: error });
+                  return;
+                }
+
+                res.send({
+                  message: `Create employee with role=${employee.roles} successfully!`,
+                });
+              });
+            });
           }
+        }
+        employee.departments = departments.map((department) => department._id);
+        if (req.body.roles) {
+          console.log("attch roles");
 
-          res.send({
-            message: `Create employee with role=${req.body.roles} successfully!`,
+          Role.find(
+            {
+              name: { $in: req.body.roles },
+            },
+            (error, roles) => {
+              if (error) {
+                res.status(500).send({ message: error });
+                return;
+              }
+              employee.roles = roles.map((role) => role._id);
+              employee.save((error) => {
+                if (error) {
+                  res.status(500).send({ message: error });
+                  return;
+                }
+
+                res.send({
+                  message: `Create employee with role=${employee.roles} successfully!`,
+                });
+              });
+            }
+          );
+        } else {
+          // If user not provide any role -> Assign them to "user" role
+          Role.findOne({ name: "user" }, (error, role) => {
+            if (error) {
+              res.status(500).send({ message: error });
+              return;
+            }
+            employee.roles = [role._id];
+            employee.save((error) => {
+              if (error) {
+                res.status(500).send({ message: error });
+                return;
+              }
+
+              res.send({
+                message: `Create employee with role=${employee.roles} successfully!`,
+              });
+            });
           });
-        });
+        }
       }
     );
-  } else {
-    // If user not provide any role -> Assign them to "admin" role
-    Role.findOne({ name: "user" }, (error, role) => {
-      if (error) {
-        res.status(500).send({ message: error });
-        return;
-      }
-
-      employee.roles = [role._id];
-      employee.save((error) => {
-        if (error) {
-          res.status(500).send({ message: error });
-          return;
-        }
-
-        res.send({ message: "Create employee with role=user successfully!" });
-      });
-    });
   }
 
-  // });
+  // Finally, save those details to the database
+  console.log("Check before save, ", employee);
 };
 
 const updateEmployee = async (req, res) => {
