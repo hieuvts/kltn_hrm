@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -85,20 +87,23 @@ export default function FormUpdateEmployeeInformation({
                 helperText={formik.touched.lname && formik.errors.lname}
                 sx={{ mb: 3 }}
               />
-              <Select
-                labelId="gender"
-                id="gender"
-                name="gender"
-                value={formik.values.gender}
-                label="Gender"
-                fullWidth
-                onChange={formik.handleChange}
-                sx={{ mb: 3 }}
-              >
-                <MenuItem value={"Male"}>Male</MenuItem>
-                <MenuItem value={"Female"}>Female</MenuItem>
-                <MenuItem value={"Other"}>Other</MenuItem>
-              </Select>
+              <FormControl fullWidth>
+              <InputLabel id="gender-label">Gender</InputLabel>
+                <Select
+                  labelId="gender-label"
+                  id="gender"
+                  name="gender"
+                  value={formik.values.gender}
+                  label="Gender"
+                  fullWidth
+                  onChange={formik.handleChange}
+                  sx={{ mb: 3 }}
+                >
+                  <MenuItem value={"Male"}>Male</MenuItem>
+                  <MenuItem value={"Female"}>Female</MenuItem>
+                  <MenuItem value={"Other"}>Other</MenuItem>
+                </Select>
+              </FormControl>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                   id="dateOfBirth"

@@ -99,21 +99,24 @@ export default function FormAddEmployeeInformation({
                 sx={{ mb: 3 }}
               />
               {/* <InputLabel id="gender">Gender</InputLabel> */}
-              <Select
-                labelId="gender"
-                id="gender"
-                name="gender"
-                label="Gender"
-                value={formik.values.gender}
-                onChange={formik.handleChange}
-                fullWidth
-                sx={{ mb: 3 }}
-              >
-                <MenuItem value={"Male"}>Male</MenuItem>
-                <MenuItem value={"Female"}>Female</MenuItem>
-                <MenuItem value={"Other"}>Other</MenuItem>
-              </Select>
 
+              <FormControl fullWidth>
+              <InputLabel id="gender-label">Gender</InputLabel>
+                <Select
+                  labelId="gender-label"
+                  id="gender"
+                  name="gender"
+                  label="Gender"
+                  value={formik.values.gender}
+                  onChange={formik.handleChange}
+                  fullWidth
+                  sx={{ mb: 3 }}
+                >
+                  <MenuItem value={"Male"}>Male</MenuItem>
+                  <MenuItem value={"Female"}>Female</MenuItem>
+                  <MenuItem value={"Other"}>Other</MenuItem>
+                </Select>
+              </FormControl>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
                   id="dateOfBirth"
@@ -145,15 +148,15 @@ export default function FormAddEmployeeInformation({
             </Grid>
             <Grid item sm={12} md={6}>
               <FormControl fullWidth>
-                <InputLabel id="deparments-label">Departments</InputLabel>
+                <InputLabel id="departments-label">Departments</InputLabel>
                 <Select
-                  labelId="deparments-label"
-                  id="deparments"
+                  labelId="departments-label"
+                  id="departments-select"
                   fullWidth
                   multiple
                   value={selectedDepartments}
                   onChange={handleSelectDepartment}
-                  input={<OutlinedInput id="deparments" label="Departments" />}
+                  input={<OutlinedInput id="departments" label="Departments" />}
                   renderValue={(selected) => (
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                       {selected.map((value) => (
