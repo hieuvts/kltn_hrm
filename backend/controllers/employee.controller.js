@@ -68,7 +68,53 @@ const getAllEmployee = async (req, res) => {
     console.log(moment().format("hh:mm:ss"), "[ERROR] getAllEmployee");
   }
 };
+const saveEmployeeHelper = (req, res, employee) => {
+  if (req.body.roles) {
+    console.log("attch roles");
 
+    Role.find(
+      {
+        name: { $in: req.body.roles },
+      },
+      (error, roles) => {
+        if (error) {
+          res.status(500).send({ message: error });
+          return;
+        }
+        employee.roles = roles.map((role) => role._id);
+        employee.save((error) => {
+          if (error) {
+            res.status(500).send({ message: error });
+            return;
+          }
+
+          res.send({
+            message: `Create employee with role=${employee.roles} successfully!`,
+          });
+        });
+      }
+    );
+  } else {
+    // If user not provide any role -> Assign them to "user" role
+    Role.findOne({ name: "user" }, (error, role) => {
+      if (error) {
+        res.status(500).send({ message: error });
+        return;
+      }
+      employee.roles = [role._id];
+      employee.save((error) => {
+        if (error) {
+          res.status(500).send({ message: error });
+          return;
+        }
+
+        res.send({
+          message: `Create employee with role=${employee.roles} successfully!`,
+        });
+      });
+    });
+  }
+};
 const createEmployee = async (req, res) => {
   console.log("invoke createEmployee");
   const employee = new Employee(req.body);
@@ -82,99 +128,11 @@ const createEmployee = async (req, res) => {
       (error, departments) => {
         if (error) {
           console.log("department find failed");
-
-          if (req.body.roles) {
-            console.log("attch roles");
-
-            Role.find(
-              {
-                name: { $in: req.body.roles },
-              },
-              (error, roles) => {
-                if (error) {
-                  res.status(500).send({ message: error });
-                  return;
-                }
-                employee.roles = roles.map((role) => role._id);
-                employee.save((error) => {
-                  if (error) {
-                    res.status(500).send({ message: error });
-                    return;
-                  }
-
-                  res.send({
-                    message: `Create employee with role=${employee.roles} successfully!`,
-                  });
-                });
-              }
-            );
-          } else {
-            // If user not provide any role -> Assign them to "user" role
-            Role.findOne({ name: "user" }, (error, role) => {
-              if (error) {
-                res.status(500).send({ message: error });
-                return;
-              }
-              employee.roles = [role._id];
-              employee.save((error) => {
-                if (error) {
-                  res.status(500).send({ message: error });
-                  return;
-                }
-
-                res.send({
-                  message: `Create employee with role=${employee.roles} successfully!`,
-                });
-              });
-            });
-          }
+          saveEmployeeHelper(req, res, employee);
         }
+
         employee.departments = departments.map((department) => department._id);
-        if (req.body.roles) {
-          console.log("attch roles");
-
-          Role.find(
-            {
-              name: { $in: req.body.roles },
-            },
-            (error, roles) => {
-              if (error) {
-                res.status(500).send({ message: error });
-                return;
-              }
-              employee.roles = roles.map((role) => role._id);
-              employee.save((error) => {
-                if (error) {
-                  res.status(500).send({ message: error });
-                  return;
-                }
-
-                res.send({
-                  message: `Create employee with role=${employee.roles} successfully!`,
-                });
-              });
-            }
-          );
-        } else {
-          // If user not provide any role -> Assign them to "user" role
-          Role.findOne({ name: "user" }, (error, role) => {
-            if (error) {
-              res.status(500).send({ message: error });
-              return;
-            }
-            employee.roles = [role._id];
-            employee.save((error) => {
-              if (error) {
-                res.status(500).send({ message: error });
-                return;
-              }
-
-              res.send({
-                message: `Create employee with role=${employee.roles} successfully!`,
-              });
-            });
-          });
-        }
+        saveEmployeeHelper(req, res, employee);
       }
     );
   }
