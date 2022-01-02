@@ -17,7 +17,7 @@ export default function Dashboard() {
             error.response.data.message) ||
           error.message ||
           error.toString();
-
+        console.log(error.response.status);
         setContent(_content);
       }
     );

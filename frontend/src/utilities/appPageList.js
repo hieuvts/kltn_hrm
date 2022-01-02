@@ -4,7 +4,7 @@ import Apartment from "@mui/icons-material/Apartment";
 import Engineering from "@mui/icons-material/Engineering";
 import Mode from "@mui/icons-material/Mode";
 import Error from "@mui/icons-material/Error";
-import SearchIcon from "@mui/icons-material/Search";
+
 import { VscProject } from "react-icons/vsc";
 
 export const pageList = [

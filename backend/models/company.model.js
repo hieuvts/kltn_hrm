@@ -11,6 +11,22 @@ const companySchema = new Schema({
     minlength: 1,
     maxlength: 250,
   },
+  typeOfCompany: {
+    type: String,
+    required: true,
+    default: "Sole proprietorships",
+  },
+  mainBusinessLines: {
+    type: String,
+    required: true,
+    default: "Others",
+  },
+  establishedDate: {
+    type: Date,
+    required: true,
+    min: "1900-01-01",
+    default: moment(Date.now()).format("YYYY-MM-DD"),
+  },
   address: {
     type: String,
     require: true,
@@ -18,34 +34,13 @@ const companySchema = new Schema({
     minlength: 1,
     maxlength: 250,
   },
-  address1: {
+  address2: {
     type: String,
     require: false,
     default: "Address 1",
     minlength: 1,
     maxlength: 250,
   },
-  // city: {
-  //   type: String,
-  //   require: true,
-  //   default: "City",
-  //   minlength: 1,
-  //   maxlength: 250,
-  // },
-  // state: {
-  //   type: String,
-  //   require: true,
-  //   default: "State",
-  //   minlength: 1,
-  //   maxlength: 250,
-  // },
-  // country: {
-  //   type: String,
-  //   require: true,
-  //   default: "Country",
-  //   minlength: 1,
-  //   maxlength: 250,
-  // },
   phoneNumber: {
     type: String,
     require: true,
@@ -56,7 +51,6 @@ const companySchema = new Schema({
   fax: {
     type: String,
     require: true,
-    default: "Fax",
     minlength: 8,
     maxlength: 15,
   },
@@ -74,10 +68,9 @@ const companySchema = new Schema({
     minlength: 1,
     maxlength: 250,
   },
-  tax: {
+  taxCode: {
     type: String,
     require: false,
-    default: "Tax",
     minlength: 1,
     maxlength: 250,
   },

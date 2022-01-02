@@ -5,17 +5,11 @@ import Employee from "../pages/Employee/Employee";
 import Others from "../pages/Others";
 import AboutUs from "../pages/AboutUs/AboutUs";
 import WorkPlace from "../pages/Workplace/Workplace";
-import NotFound from "../pages/404NotFound/404NotFound";
+import Company from "../pages/Company/Company";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Toolbar,
-  IconButton,
-  Typography,
-  Button,
-  InputBase,
-} from "@mui/material";
+import { Toolbar, IconButton, Typography, Button } from "@mui/material";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar from "@mui/material/AppBar";
@@ -25,9 +19,12 @@ import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
 
 import { FcAssistant } from "react-icons/fc";
 import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
@@ -107,6 +104,7 @@ export default function AppBarComponent() {
   const theme = useTheme();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedTabTitle, setSelectedTabTitle] = useState("Dashboard");
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const { user: currentUser } = useSelector((state) => state.auth);
 
   const handleDrawerOpen = () => {
@@ -137,11 +135,26 @@ export default function AppBarComponent() {
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={isDrawerOpen}>
-        <Toolbar>
+
+      <AppBar open={isDrawerOpen}>
+        <Toolbar
+          variant="regular"
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -161,18 +174,84 @@ export default function AppBarComponent() {
             }}
           >
             <StyledSearchBox placeholder="Search…" />
-            <Typography sx={{ alignSelf: "center" }}>
-              {currentUser.email}
-            </Typography>
-            <Button variant="contained">
-              <Link
-                to="/login"
-                style={{ textDecoration: "none", color: "white" }}
-                onClick={() => dispatch(logout())}
-              >
-                LOGOUT
-              </Link>
-            </Button>
+
+            {currentUser && (
+              <div>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Button
+                  variant="contained"
+                  sx={{ borderRadius: 3 }}
+                  onClick={handleMenu}
+                >
+                  <Typography sx={{ alignSelf: "center", color: "white" }}>
+                    {currentUser.email}
+                  </Typography>
+                </Button>
+
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <Link
+                    to="/profile"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        handleClose();
+                      }}
+                    >
+                      Profile
+                    </MenuItem>
+                  </Link>
+                  <Link
+                    to="/setting"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        handleClose();
+                      }}
+                    >
+                      Company settings
+                    </MenuItem>
+                  </Link>
+                  <Link
+                    to="/login"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        dispatch(logout());
+                        handleClose();
+                      }}
+                    >
+                      Logout
+                    </MenuItem>
+                  </Link>
+                </Menu>
+              </div>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
@@ -261,6 +340,7 @@ export default function AppBarComponent() {
           <Route path="employee" element={<Employee />} />
           <Route path="workplace" element={<WorkPlace />} />
           <Route path="others" element={<Others />} />
+          <Route path="setting" element={<Company />} />
           <Route path="about" element={<AboutUs />} />
           <Route path="*" element={<Navigate to="404" />} />
         </Routes>

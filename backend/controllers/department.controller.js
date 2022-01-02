@@ -38,10 +38,7 @@ const getAllDepartment = async (req, res) => {
   }
 
   if (departments) {
-    res.status(200).json({
-      message: "Get all Department successfully!",
-      departments: departments,
-    });
+    res.status(200).json({ departments });
   } else {
     res.status(400).json({
       message: "[ERROR] [getAll] Something went wrong",

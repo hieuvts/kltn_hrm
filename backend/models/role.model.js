@@ -10,6 +10,7 @@ const roleSchema = new Schema({
     default: "role",
     minlength: 2,
     maxlength: 50,
+    enum: ["Admin", "Moderator", "User"],
   },
   roleLevel: {
     type: Number,

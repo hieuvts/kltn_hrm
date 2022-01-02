@@ -6,10 +6,8 @@ var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const jwtSecret = process.env.JWT_SECRET;
 
-const signUp = (req, res) => {
-  console.log("Invoked signUp");
-  console.log("login email=", req.body.email);
-  console.log("login pwd=", req.body.password);
+const signUp = (req, res, next) => {
+  console.log("invoke signUp");
   const user = new User({
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
@@ -17,10 +15,10 @@ const signUp = (req, res) => {
 
   user.save((err, user) => {
     if (err) {
-      res.status(500).send({ message: err });
+      res.status(500).send(err);
       return;
     }
-
+    // If user provide a custom role (not Admin, Moderator, User)
     if (req.body.roles) {
       Role.find(
         {
@@ -38,13 +36,14 @@ const signUp = (req, res) => {
               res.status(500).send({ message: err });
               return;
             }
-
-            res.send({ message: "Account was registered successfully!" });
+            next();
+            // res.send({ message: "Account was registered successfully!" });
           });
         }
       );
     } else {
-      Role.findOne({ name: "user" }, (err, role) => {
+      // If user not provide any role -> Assign them to "admin" role
+      Role.findOne({ name: "admin" }, (err, role) => {
         if (err) {
           res.status(500).send({ message: err });
           return;
@@ -56,8 +55,8 @@ const signUp = (req, res) => {
             res.status(500).send({ message: err });
             return;
           }
-
-          res.send({ message: "Account was registered successfully!" });
+          next();
+          // res.send({ message: "Admin account was registered successfully!" });
         });
       });
     }
@@ -65,9 +64,6 @@ const signUp = (req, res) => {
 };
 
 const login = (req, res) => {
-  console.log("Invoked login");
-  console.log("login.req=", req.body.email);
-  console.log("login.req=", req.body.password);
   User.findOne({
     email: req.body.email,
   })

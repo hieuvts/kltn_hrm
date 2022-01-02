@@ -3,11 +3,9 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 
 import MyDrawer from "./components/MyDrawer";
 import NotFound from "./pages/404NotFound/404NotFound";
-import Login from "./pages/Authentication/Login"
-import SignUp from "./pages/Authentication/SignUp"
-
+import Login from "./pages/Authentication/Login";
+import SignUp from "./pages/Authentication/SignUp";
 export default function App() {
-
   return (
     <BrowserRouter>
       <Routes>

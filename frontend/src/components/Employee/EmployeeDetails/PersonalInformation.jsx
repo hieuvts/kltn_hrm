@@ -12,19 +12,8 @@ import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { getEmployeeAsync } from "../../../stores/employeeSlice";
 import DialogUpdateEmploee from "../DialogUpdateEmployee";
+import { rowDirection, colDirection } from "../../../utilities/flexBoxStyle";
 
-const rowDirection = {
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "space-between",
-  py: 1,
-};
-const colDirection = {
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  py: 1,
-};
 export default function PersonalInformation() {
   var employee = (employee = useSelector(
     (state) => state.employee.currentSelectedEmployee
@@ -60,7 +49,9 @@ export default function PersonalInformation() {
         <Box sx={colDirection}>
           <Box sx={rowDirection}>
             <Typography variant="h6">Name: </Typography>
-            <Typography variant="h6">{employee.name}</Typography>
+            <Typography variant="h6">
+              {employee.fname} {employee.lname}
+            </Typography>
           </Box>
           <Box sx={rowDirection}>
             <Typography variant="h6">Gender: </Typography>

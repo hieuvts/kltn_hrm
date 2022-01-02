@@ -11,22 +11,10 @@ import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
+import { rowDirection, colDirection } from "../../../utilities/flexBoxStyle";
 
 import maleAvatar from "../../../assets/icons/avatarMale.png";
 
-const rowDirection = {
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "space-between",
-  py: 1,
-};
-const colDirection = {
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  pl: 5,
-  py: 1,
-};
 export default function AboutMe() {
   const employee = useSelector(
     (state) => state.employee.currentSelectedEmployee
