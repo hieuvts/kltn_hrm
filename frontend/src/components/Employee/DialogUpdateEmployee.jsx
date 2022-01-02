@@ -16,9 +16,10 @@ export default function DialogUpdateEmployee({
   isDialogOpen,
   handleCloseDialog,
 }) {
-  const currentSelectedEmployee = useSelector(
+  var currentSelectedEmployee = useSelector(
     (state) => state.employee.currentSelectedEmployee
   );
+
   return (
     <div>
       <Dialog open={isDialogOpen} onClose={handleCloseDialog} maxWidth="md">

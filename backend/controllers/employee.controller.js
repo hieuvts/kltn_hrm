@@ -69,9 +69,8 @@ const getAllEmployee = async (req, res) => {
   }
 };
 const saveEmployeeHelper = (req, res, employee) => {
+  console.log("helper: ", employee);
   if (req.body.roles) {
-    console.log("attch roles");
-
     Role.find(
       {
         name: { $in: req.body.roles },
@@ -87,7 +86,6 @@ const saveEmployeeHelper = (req, res, employee) => {
             res.status(500).send({ message: error });
             return;
           }
-
           res.send({
             message: `Create employee with role=${employee.roles} successfully!`,
           });
@@ -107,7 +105,6 @@ const saveEmployeeHelper = (req, res, employee) => {
           res.status(500).send({ message: error });
           return;
         }
-
         res.send({
           message: `Create employee with role=${employee.roles} successfully!`,
         });
@@ -120,33 +117,33 @@ const createEmployee = async (req, res) => {
   const employee = new Employee(req.body);
 
   // If user provide a custom role (not Admin, Moderator, User)
-  if (req.body.departments) {
+  if (!req.body.departments) {
+    console.log("not provide departments");
+    saveEmployeeHelper(req, res, employee);
+  } else if (req.body.departments) {
+    console.log("had provided departments");
     Department.find(
       {
         name: { $in: req.body.departments },
       },
       (error, departments) => {
-        if (error) {
-          console.log("department find failed");
+        if (error || !departments || departments.length === 0) {
+          saveEmployeeHelper(req, res, employee);
+        } else {
+          employee.departments = departments.map(
+            (department) => department._id
+          );
           saveEmployeeHelper(req, res, employee);
         }
-
-        employee.departments = departments.map((department) => department._id);
-        saveEmployeeHelper(req, res, employee);
       }
     );
   }
-
-  // Finally, save those details to the database
-  console.log("Check before save, ", employee);
 };
 
 const updateEmployee = async (req, res) => {
   console.log("invoked be updateEmployee");
   const employee = req.employee;
-  // typeof req.body.name === "undefined"
-  //   ? (employee.name = employee.name)
-  //   : (employee.name = req.body.name);
+
   typeof req.body.fname !== "undefined" && (employee.fname = req.body.fname);
   typeof req.body.lname !== "undefined" && (employee.lname = req.body.lname);
   typeof req.body.gender !== "undefined" && (employee.gender = req.body.gender);
@@ -157,57 +154,80 @@ const updateEmployee = async (req, res) => {
   typeof req.body.email !== "undefined" && (employee.email = req.body.email);
   typeof req.body.address !== "undefined" &&
     (employee.address = req.body.address);
-  typeof req.body.role !== "undefined" && (employee.role = req.body.role);
+  typeof req.body.roles !== "undefined" && (employee.roles = req.body.roles);
+  typeof req.body.departments !== "undefined" &&
+    (employee.departments = req.body.departments);
   typeof req.body.isDeleted !== "undefined" &&
     (employee.isDeleted = req.body.isDeleted);
 
-  employee.save((error, result) => {
-    if (error || !result) {
-      res.status(500).send(err);
-      return;
-    }
-    if (req.body.roles) {
-      Role.find(
-        {
-          name: { $in: req.body.roles },
-        },
-        (error, roles) => {
-          if (error) {
-            res.status(500).send({ message: error });
-            return;
-          }
-
-          employee.roles = roles.map((role) => role._id);
-          employee.save((error) => {
-            if (error) {
-              res.status(500).send({ message: error });
-              return;
-            }
-
-            res.send({ message: "Update employee successfully!" });
-          });
+  if (!req.body.departments) {
+    console.log("not provide departments");
+    saveEmployeeHelper(req, res, employee);
+  } else if (req.body.departments) {
+    console.log("had provided departments");
+    Department.find(
+      {
+        name: { $in: req.body.departments },
+      },
+      (error, departments) => {
+        if (error || !departments || departments.length === 0) {
+          saveEmployeeHelper(req, res, employee);
+        } else {
+          employee.departments = departments.map(
+            (department) => department._id
+          );
+          saveEmployeeHelper(req, res, employee);
         }
-      );
-    } else {
-      // If user not provide any role -> Assign them to "admin" role
-      Role.findOne({ name: "user" }, (error, role) => {
-        if (error) {
-          res.status(500).send({ message: error });
-          return;
-        }
+      }
+    );
+  }
+  // employee.save((error, result) => {
+  //   if (error || !result) {
+  //     res.status(500).send(err);
+  //     return;
+  //   }
+  //   if (req.body.roles) {
+  //     Role.find(
+  //       {
+  //         name: { $in: req.body.roles },
+  //       },
+  //       (error, roles) => {
+  //         if (error) {
+  //           res.status(500).send({ message: error });
+  //           return;
+  //         }
 
-        employee.roles = [role._id];
-        employee.save((error) => {
-          if (error) {
-            res.status(500).send({ message: error });
-            return;
-          }
+  //         employee.roles = roles.map((role) => role._id);
+  //         employee.save((error) => {
+  //           if (error) {
+  //             res.status(500).send({ message: error });
+  //             return;
+  //           }
 
-          res.send({ message: "Create employee successfully!" });
-        });
-      });
-    }
-  });
+  //           res.send({ message: "Update employee successfully!" });
+  //         });
+  //       }
+  //     );
+  //   } else {
+  //     // If user not provide any role -> Assign them to "admin" role
+  //     Role.findOne({ name: "user" }, (error, role) => {
+  //       if (error) {
+  //         res.status(500).send({ message: error });
+  //         return;
+  //       }
+
+  //       employee.roles = [role._id];
+  //       employee.save((error) => {
+  //         if (error) {
+  //           res.status(500).send({ message: error });
+  //           return;
+  //         }
+
+  //         res.send({ message: "Create employee successfully!" });
+  //       });
+  //     });
+  //   }
+  // });
 };
 
 // findOneAndDelete() returns the deleted document after having deleted it

@@ -21,10 +21,11 @@ const checkExistedEmail = (req, res, next) => {
 
 const checkRolesIsExisted = (req, res, next) => {
   if (req.body.roles) {
+    console.log("roles from req ", req.body.roles);
     for (let i = 0; i < req.body.roles.length; i++) {
       if (!defaultRoles.includes(req.body.roles[i])) {
         res.status(400).send({
-          message: `[FAILED] Role ${req.body.roles[i]} does not exist!`,
+          message: `[verifySignUp] [FAILED] Role ${req.body.roles[i]} does not exist!`,
         });
         return;
       }

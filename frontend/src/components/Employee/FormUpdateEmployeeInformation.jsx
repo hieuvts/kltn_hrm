@@ -1,35 +1,37 @@
 import React, { useState } from "react";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import DatePicker from "@mui/lab/DatePicker";
-import MuiAlert from "@mui/material/Alert";
+import FormControl from "@mui/material/FormControl";
+import Grid from "@mui/material/Grid";
+import InputLabel from "@mui/material/InputLabel";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import PropTypes from "prop-types";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
 import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
-import PropTypes from "prop-types";
-import { employeeInfoValidationSchema } from "../../utilities/validationSchema";
+import { useDispatch, useSelector } from "react-redux";
 import {
   updateEmployeeAsync,
   getEmployeeAsync,
   setCurrentSelectedEmployee,
 } from "../../stores/employeeSlice";
-
-import { useDispatch } from "react-redux";
+import { employeeInfoValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
 export default function FormUpdateEmployeeInformation({
   handleCloseDialog,
   initialValues,
 }) {
-  const dispatch = useDispatch();
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
+  const departments = useSelector((state) => state.department.departmentList);
+
   const handleSbSuccessClose = () => {
     setSbSuccessOpen(false);
   };
@@ -37,9 +39,23 @@ export default function FormUpdateEmployeeInformation({
     setSbFailedOpen(false);
   };
 
+  const dispatch = useDispatch();
+  // state.currentSelectedEmployee
+  // has key/value departments with full data (id, name, headOfDepartment,...)
+  // => Extract only department name, pass it as an array, not JS object
+  // Start - Handling departments value
+  var formikInitialValues = { ...initialValues };
+  const initDepartmentValue = formikInitialValues["departments"].map(
+    ({ name }) => ({ name })
+  );
+  const departmentNameArr = initDepartmentValue.map((x) => x.name);
+  delete formikInitialValues.departments;
+  formikInitialValues["departments"] = departmentNameArr;
+  // End - Handling departments value
+
   const FormikWithMUI = () => {
     const formik = useFormik({
-      initialValues: initialValues,
+      initialValues: formikInitialValues,
       validationSchema: employeeInfoValidationSchema,
       onSubmit: (values) => {
         dispatch(updateEmployeeAsync(values))
@@ -64,7 +80,6 @@ export default function FormUpdateEmployeeInformation({
         <form onSubmit={formik.handleSubmit}>
           <Grid container rowSpacing={3} columnSpacing={3}>
             <Grid item sm={12} md={6}>
-              {" "}
               <TextField
                 fullWidth
                 id="fname"
@@ -88,7 +103,7 @@ export default function FormUpdateEmployeeInformation({
                 sx={{ mb: 3 }}
               />
               <FormControl fullWidth>
-              <InputLabel id="gender-label">Gender</InputLabel>
+                <InputLabel id="gender-label">Gender</InputLabel>
                 <Select
                   labelId="gender-label"
                   id="gender"
@@ -134,6 +149,34 @@ export default function FormUpdateEmployeeInformation({
               </LocalizationProvider>
             </Grid>
             <Grid item sm={12} md={6}>
+              <FormControl fullWidth>
+                <InputLabel id="departments-label">Departments</InputLabel>
+                <Select
+                  labelId="departments-label"
+                  id="departments"
+                  fullWidth
+                  multiple
+                  value={formik.values.departments}
+                  onChange={(e) => {
+                    formik.setFieldValue("departments", e.target.value);
+                  }}
+                  input={<OutlinedInput id="departments" label="Departments" />}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                  sx={{ mb: 3 }}
+                >
+                  {departments.map((department, index) => (
+                    <MenuItem key={index} value={department.name}>
+                      {department.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <TextField
                 fullWidth
                 id="phoneNumber"
@@ -206,15 +249,16 @@ FormUpdateEmployeeInformation.propTypes = {
 };
 FormUpdateEmployeeInformation.defaultProps = {
   initialValues: {
-    name: "",
+    fname: "",
+    lname: "",
     gender: "Male",
     dateOfBirth: new Date(),
     phoneNumber: "",
     email: "",
     address: "",
-    roleID: "1",
-    departmentID: "1",
-    projectID: "1",
+    departments: [],
+    roles: [],
+    projects: [],
     isDeleted: false,
   },
 };

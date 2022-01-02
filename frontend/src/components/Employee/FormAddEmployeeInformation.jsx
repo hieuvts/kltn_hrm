@@ -1,19 +1,18 @@
 import React, { useState } from "react";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import Chip from "@mui/material/Chip";
-import MenuItem from "@mui/material/MenuItem";
-import Box from "@mui/material/Box";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import DatePicker from "@mui/lab/DatePicker";
+import FormControl from "@mui/material/FormControl";
+import Grid from "@mui/material/Grid";
+import InputLabel from "@mui/material/InputLabel";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
 import PropTypes from "prop-types";
-import MuiAlert from "@mui/material/Alert";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
 import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
@@ -21,17 +20,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { addEmployeeAsync } from "../../stores/employeeSlice";
 import { employeeInfoValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+
 export default function FormAddEmployeeInformation({
   handleCloseDialog,
-  submitButtonText,
   initialValues,
 }) {
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
-  const [selectedDepartments, setSelectedDepartments] = useState([]);
   const departments = useSelector((state) => state.department.departmentList);
 
   const handleSbSuccessClose = () => {
@@ -88,8 +83,6 @@ export default function FormAddEmployeeInformation({
                 helperText={formik.touched.lname && formik.errors.lname}
                 sx={{ mb: 3 }}
               />
-              {/* <InputLabel id="gender">Gender</InputLabel> */}
-
               <FormControl fullWidth>
                 <InputLabel id="gender-label">Gender</InputLabel>
                 <Select
@@ -209,7 +202,7 @@ export default function FormAddEmployeeInformation({
           </Grid>
 
           <Button variant="contained" color="primary" fullWidth type="submit">
-            {submitButtonText}
+            SUBMIT
           </Button>
         </form>
       </div>
@@ -235,7 +228,6 @@ export default function FormAddEmployeeInformation({
 
 FormAddEmployeeInformation.propTypes = {
   handleCloseDialog: PropTypes.func,
-  submitButtonText: PropTypes.string,
   initialValues: PropTypes.object,
 };
 FormAddEmployeeInformation.defaultProps = {
@@ -244,13 +236,12 @@ FormAddEmployeeInformation.defaultProps = {
     lname: "",
     gender: "Male",
     dateOfBirth: new Date(),
-    departments: [],
     phoneNumber: "",
     email: "",
     address: "",
-    roleID: "1",
-    projectID: "1",
+    departments: [],
+    projects: [],
+    roles: [],
     isDeleted: false,
   },
-  submitButtonText: "SUBMIT",
 };
