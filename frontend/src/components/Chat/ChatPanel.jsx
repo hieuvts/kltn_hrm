@@ -23,8 +23,7 @@ import { useFormik } from "formik";
 
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import chatService from "../../services/chatService";
-import "./chatPanel.css";
-
+import "./ChatPanel.css";
 export default function ChatPanel() {
   const roomId = "test"; // Gets roomId from URL
   // Creates a websocket and manages messaging
@@ -42,7 +41,6 @@ export default function ChatPanel() {
         message: "",
       },
       onSubmit: (values) => {
-        console.log("send ", values);
         handleSendMessage(values);
       },
     });
@@ -82,12 +80,13 @@ export default function ChatPanel() {
       </form>
     );
   };
-  console.log("message", messages);
   return (
     <>
       <Box>
         <Typography variant="h5">User1</Typography>
-        <Button variant="contained" onClick={joinRoom}>Test SocketIO broadcast all clients</Button>
+        <Button variant="contained" onClick={joinRoom}>
+          Test SocketIO broadcast all clients
+        </Button>
       </Box>
       <Box sx={{ colDirection }}>
         <ul className="chatBox">

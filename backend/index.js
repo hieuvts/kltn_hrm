@@ -118,7 +118,7 @@ io.on("connection", (socket) => {
     });
     // Listen new message
     socket.on("message", (data) => {
-      // console.log("echo msg");
+      console.log("echo msg");
       io.to(user.room).emit("message", data);
     });
 
