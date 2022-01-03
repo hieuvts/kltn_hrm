@@ -95,8 +95,7 @@ export default function DialogEmployeeDetails({
     </>
   );
 }
-
-DialogEmployeeDetails.propTypes = {
+DialogEmployeeDetails.propTypes= {
   isDialogOpen: PropTypes.bool,
   handleCloseDialog: PropTypes.func,
 };

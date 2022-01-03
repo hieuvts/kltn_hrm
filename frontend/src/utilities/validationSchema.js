@@ -88,6 +88,18 @@ export const fileNameValidationSchema = yup.object().shape({
     .matches(/^[^\\/:\*\?"<>\|]+$/, `Should not contains \ / : * ? " < > |`),
 });
 
+export const departmentInformationValidationSchema = yup.object().shape({
+  name: yup
+    .string("Enter department name")
+    .required("Name of department is required"),
+  amount: yup
+    .number("Enter amount of department"),
+  manager: yup
+    .string("Enter name of manager")
+    .min(1, "Manager name should be of minimum 2 characters length")
+    .max(150, "Manager name should be of maximum 150 characters length")
+    .required("Manager name is required!")
+});
 export const companyInfoValidationSchema = yup.object().shape({
   name: yup
     .string("Enter company name")

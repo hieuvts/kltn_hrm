@@ -10,7 +10,7 @@ router.param("departmentId", departmentControllers.getDepartmentById);
 router.post("/create", departmentControllers.createDepartment);
 router.delete("/:departmentId/delete", departmentControllers.deleteDepartment);
 router.delete("/deleteall", departmentControllers.deleteAllDepartment);
-router.put("/:departmentId/put", departmentControllers.putDepartment);
+router.put("/:departmentId/update",departmentControllers.putDepartment);
 // router.post("/department/createmultipledepartment", departmentControllers.createMultipledepartment);
 
 module.exports = router;
