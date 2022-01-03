@@ -6,6 +6,7 @@ import Others from "../pages/Others";
 import AboutUs from "../pages/AboutUs/AboutUs";
 import WorkPlace from "../pages/Workplace/Workplace";
 import Company from "../pages/Company/Company";
+import Project from "../pages/Project/Project";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -338,6 +339,7 @@ export default function AppBarComponent() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="department" element={<Department />} />
           <Route path="employee" element={<Employee />} />
+          <Route path="project" element={<Project />} />
           <Route path="workplace" element={<WorkPlace />} />
           <Route path="others" element={<Others />} />
           <Route path="setting" element={<Company />} />

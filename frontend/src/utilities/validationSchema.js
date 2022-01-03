@@ -100,6 +100,20 @@ export const departmentInformationValidationSchema = yup.object().shape({
     .max(150, "Manager name should be of maximum 150 characters length")
     .required("Manager name is required!")
 });
+export const projectInformationValidationSchema = yup.object().shape({
+  name: yup
+    .string("Enter project name")
+    .required("Name of project is required"),
+  customer: yup
+    .string("Enter project name")
+    .required("Name of project is required"),
+  startDate: yup
+    .date("Select start date of project")
+    .required("Start date is required!"),
+  endDate: yup
+    .date("Select end date of project")
+    .required("End date is required!"),
+});
 export const companyInfoValidationSchema = yup.object().shape({
   name: yup
     .string("Enter company name")

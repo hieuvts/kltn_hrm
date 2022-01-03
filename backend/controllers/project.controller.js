@@ -1,5 +1,5 @@
 const Project = require("../models/project.model");
-
+const Department = require("../models/department.model");
 const getprojectById = async (req, res, next, projectId) => {
   // Get project details from project model and
   // attach to request object
@@ -63,20 +63,63 @@ const getAllproject = async (req, res) => {
 };
 
 const createproject = async (req, res) => {
-  console.log("Invoked createproject");
   const project = new Project(req.body);
-  project.save((error, result) => {
-    if (error || !result) {
-      res.status(400).json({
-        message: "[ERROR] [create]",
-        errMsg: error.message,
-      });
-    } else {
-      res.status(200).json({
-        message: "Create project successfully!",
-      });
-    }
-  });
+  if(!req.body.departments || req.body.departments.length === 0)
+  {
+    console.log("not provide departments");
+    project.save((error, result) => {
+      if (error || !result) {
+        res.status(400).json({
+          message: "[ERROR] [post] ",
+          errMsg: error.message,
+        });
+      } else {
+        res.json({
+          message: "Create project successfully!",
+        });
+      }
+    });
+  }
+  else
+  {
+    Department.find({
+      name: {$in: req.body.departments}
+    },
+    (error, departments) => {
+        if (error || !departments) {
+          // save without add departments
+          project.save((error, result) => {
+            if (error || !result) {
+              res.status(400).json({
+                message: "[ERROR] [post] ",
+                errMsg: error.message,
+              });
+            } else {
+              res.json({
+                message: "Create project successfully!",
+              });
+            }
+          });
+        } else {
+          project.departments = departments.map(
+            (department) => department._id
+          );
+          project.save((error, result) => {
+            if (error || !result) {
+              res.status(400).json({
+                message: "[ERROR] [post] ",
+                errMsg: error.message,
+              });
+            } else {
+              res.json({
+                message: "Create project successfully!",
+              });
+            }
+          });
+        }
+      }
+    )
+  }
 };
 
 const putproject = async (req, res) => {
