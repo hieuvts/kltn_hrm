@@ -100,7 +100,7 @@ function DepartmentTableHead(props) {
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
+            onChange={() => onSelectAllClick()}
             inputProps={{
               "aria-label": "select all department",
             }}
@@ -239,6 +239,8 @@ export default function DepartmentTable() {
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = rows.map((n) => n._id);
+      // Select all -> add all employee (equals to 'rows') to the selectedEmployeeList
+      dispatch(setMultiSelectedDepartmentList(rows));
       setSelected(newSelecteds);
       return;
     }
@@ -338,7 +340,7 @@ export default function DepartmentTable() {
         <Paper sx={{ width: "100%", mb: 2 }}>
           <EnhancedTableToolbar numSelected={selected.length}
             setSelected={setSelected}
-            setDialogDeleteMultipleDepartmentOpen={setDialogDeleteDepartmentOpen} />
+            setDialogDeleteMultipleDepartmentOpen={setDialogDeleteMultipleDepartmentOpen} />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
@@ -349,7 +351,7 @@ export default function DepartmentTable() {
                 numSelected={selected.length}
                 order={order}
                 orderBy={orderBy}
-                onSelectAllClick={handleSelectAllClick}
+                onSelectAllClick={() => handleSelectAllClick(event)}
                 onRequestSort={handleRequestSort}
                 rowCount={rows.length}
               />

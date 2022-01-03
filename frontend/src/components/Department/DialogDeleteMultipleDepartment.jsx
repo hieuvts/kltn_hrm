@@ -30,14 +30,12 @@ export default function DialogDeleteMultipleDeparment({
     setSbFailedOpen(false);
   };
   const handleDeleteEmployee = () => {
-    // Loop through selectedEmployeeList and call delete func on each one
-    // TODO: implement delete many, by sending list of employee id
     selectedDepartmentList.forEach((department, index) => {
-      dispatch(deleteDepartmentAsync({ selectedDepartmentId: department._id }))
+      dispatch(deleteDepartmentAsync({ selectedDepartmentID: department._id }))
         .unwrap()
         .then(() => {
           setSelected([]);
-          dispatch(getDepartmentASync());
+          dispatch(getDepartmentAsync());
           setSbSuccessOpen(true);
           setTimeout(() => {
             handleCloseDialog();
