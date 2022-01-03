@@ -22,8 +22,20 @@ import { fileNameValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
 
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
+import chatService from "../../services/chatService";
+import "./chatPanel.css";
 
 export default function ChatPanel() {
+  const roomId = "test"; // Gets roomId from URL
+  // Creates a websocket and manages messaging
+  const { messages, joinRoom, sendMessage } = chatService(roomId);
+  // Message to be sent
+  const [newMessage, setNewMessage] = React.useState("");
+
+  const handleSendMessage = (values) => {
+    sendMessage(values.message);
+    setNewMessage("");
+  };
   const FormMessage = () => {
     const formik = useFormik({
       initialValues: {
@@ -31,6 +43,7 @@ export default function ChatPanel() {
       },
       onSubmit: (values) => {
         console.log("send ", values);
+        handleSendMessage(values);
       },
     });
     return (
@@ -69,15 +82,26 @@ export default function ChatPanel() {
       </form>
     );
   };
+  console.log("message", messages);
   return (
     <>
       <Box>
         <Typography variant="h5">User1</Typography>
+        <Button variant="contained" onClick={joinRoom}>Test SocketIO broadcast all clients</Button>
       </Box>
       <Box sx={{ colDirection }}>
-        <Typography sx={{ alignSelf: "start" }}>Msg 1</Typography>
-        <Typography sx={{ textAlign: "right" }}>Msg 2</Typography>
-        <Typography sx={{ alignSelf: "start" }}>Msg 3</Typography>
+        <ul className="chatBox">
+          {messages.map((message, i) => (
+            <li
+              key={i}
+              className={`message-item ${
+                message.ownedByCurrentUser ? "sent-message" : "received-message"
+              } ${message.isBroadcast && "broadcast-message"}`}
+            >
+              {message.body}
+            </li>
+          ))}
+        </ul>
         <Box sx={{ mt: 30 }}>
           <FormMessage />
         </Box>

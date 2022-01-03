@@ -23,20 +23,11 @@ import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import FriendList from "../../components/Chat/FriendList";
 import ChatPanel from "../../components/Chat/ChatPanel";
 
-const ENDPOINT = "http://localhost:8000";
-
 export default function InternalChat() {
   const { user: currentUser } = useSelector((state) => state.auth);
-  const [response, setResponse] = useState("");
-  useEffect(() => {
-    const socket = socketIOClient(ENDPOINT);
-    socket.on("FromAPI", (data) => {
-      setResponse(data);
-    });
-  }, []);
+
   return (
     <Grid container direction="row" columnSpacing={3}>
-      <Typography variant="h5">Time is: {response}</Typography>
       <Grid item xs={4}>
         <Box>
           <Typography variant="h5">Internal Chat</Typography>

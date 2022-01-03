@@ -14,6 +14,12 @@ const roleRoute = require("./routes/role.route");
 const authRoute = require("./routes/auth.route");
 
 const Role = require("./models/role.model");
+const {
+  setUser,
+  getUser,
+  getRoomUsers,
+  userLeft,
+} = require("./utilities/users");
 const app = express();
 app.use(cors({ credentials: true, origin: true }));
 // Parses incoming requests with JSON payloads and is based on body-parser
@@ -21,7 +27,7 @@ app.use(express.json());
 // Parses incoming requests with urlencoded payloads and is based on body-parser
 app.use(express.urlencoded({ extended: false }));
 const http = require("http").Server(app);
-const socketIO = require("socket.io")(http, {
+const io = require("socket.io")(http, {
   cors: {
     origin: "*",
   },
@@ -97,28 +103,38 @@ app.get("/testapi", (req, res) => {
   res.send("Hello World!!!");
 });
 
-// Socketio
-let interval;
-socketIO.on("connection", (socket) => {
-  // When new client connect
-  console.log("New client id= ", socket.id);
-  socket.on("sendDataClient", (data) => {
-    socketIO.emit("sendDataServer", { data });
-  });
-  if (interval) {
-    clearInterval(interval);
-  }
-  interval = setInterval(() => getApiAndEmit(socket), 1000);
-  // When client disconnect
-  socket.on("disconnect", () => {
-    console.log("Client has out!");
+io.on("connection", (socket) => {
+  const { roomId } = socket.handshake.query;
+  console.log(
+    `New client id=${socket.id} joint roomId=${roomId} rooms=${socket.rooms}`
+  );
+  socket.on("joinRoom", ({ username, room }) => {
+    console.log(`User ${username} room ${room}`);
+    const user = setUser(username, room);
+    socket.join(user.room);
+    socket.broadcast.to(user.room).emit("message", {
+      body: `${user.username} has joint!`,
+      isBroadcast: true,
+    });
+    // Listen new message
+    socket.on("message", (data) => {
+      // console.log("echo msg");
+      io.to(user.room).emit("message", data);
+    });
+
+    // Leave room if user disconnect
+    socket.on("disconnect", () => {
+      const user = userLeft(socket.id);
+      if (user) {
+        socket.broadcast.to(user.room).emit("message", {
+          body: `${user.username} has left the chat!`,
+          isBroadcast: true,
+        });
+      }
+    });
   });
 });
-const getApiAndEmit = (socket) => {
-  const response = new Date().toLocaleTimeString();
-  // Emitting a new message. Will be consumed by the client
-  socket.emit("FromAPI", response);
-};
+
 http.listen(port, () => {
   console.log("Listening on localhost:", port);
 });
