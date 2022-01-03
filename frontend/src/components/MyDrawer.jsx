@@ -120,6 +120,15 @@ export default function AppBarComponent() {
     setSelectedTabTitle(title);
   };
 
+  // Profile menu
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const pathnames = location.pathname.split("/").filter((x) => x);
   const currentPathname = pathnames.slice(-1)[0];
 
@@ -138,13 +147,7 @@ export default function AppBarComponent() {
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
