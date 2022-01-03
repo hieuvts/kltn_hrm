@@ -21,6 +21,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -32,7 +33,8 @@ import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
 import { styled, alpha, useTheme } from "@mui/material/styles";
 import { logout } from "../stores/authSlice";
 import StyledSearchBox from "./StyledSearchBox";
-import clockTimer from "../utilities/clockTimer";
+import CurrentClock from "./CurrentClock";
+import NotificationBadget from "./NotificationsBadget";
 import { pageList } from "../utilities/appPageList";
 // Mini variant drawer
 const drawerWidth = 240;
@@ -174,6 +176,7 @@ export default function AppBarComponent() {
               justifyContent: "space-between",
             }}
           >
+            <CurrentClock />
             <StyledSearchBox placeholder="Search…" />
 
             {currentUser && (
@@ -253,6 +256,7 @@ export default function AppBarComponent() {
                 </Menu>
               </div>
             )}
+            <NotificationBadget notificationCount={3} />
           </Box>
         </Toolbar>
       </AppBar>
