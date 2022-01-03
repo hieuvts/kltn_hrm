@@ -6,6 +6,7 @@ import Others from "../pages/Others";
 import AboutUs from "../pages/AboutUs/AboutUs";
 import WorkPlace from "../pages/Workplace/Workplace";
 import Company from "../pages/Company/Company";
+import InternalChat from "../pages/Chat/InternalChat";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -342,6 +343,7 @@ export default function AppBarComponent() {
           <Route path="others" element={<Others />} />
           <Route path="setting" element={<Company />} />
           <Route path="about" element={<AboutUs />} />
+          <Route path="chat" element={<InternalChat />} />
           <Route path="*" element={<Navigate to="404" />} />
         </Routes>
       </Box>
