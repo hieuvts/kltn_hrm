@@ -3,6 +3,7 @@ require("dotenv").config({ path: "./config/.env" });
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+
 const employeeRoute = require("./routes/employee.route");
 const departmentRoute = require("./routes/department.route");
 const feedbackFromEmployeeRoute = require("./routes/feedbackFromEmployee.route");
@@ -13,13 +14,18 @@ const roleRoute = require("./routes/role.route");
 const authRoute = require("./routes/auth.route");
 
 const Role = require("./models/role.model");
-
 const app = express();
-app.use(cors());
+app.use(cors({ credentials: true, origin: true }));
 // Parses incoming requests with JSON payloads and is based on body-parser
 app.use(express.json());
 // Parses incoming requests with urlencoded payloads and is based on body-parser
 app.use(express.urlencoded({ extended: false }));
+const http = require("http").Server(app);
+const socketIO = require("socket.io")(http, {
+  cors: {
+    origin: "*",
+  },
+});
 
 const port = process.env.PORT || 8000;
 const db_uri = process.env.DB_URI;
@@ -91,8 +97,30 @@ app.get("/testapi", (req, res) => {
   res.send("Hello World!!!");
 });
 
-app.listen(port, () => {
+// Socketio
+let interval;
+socketIO.on("connection", (socket) => {
+  // When new client connect
+  console.log("New client id= ", socket.id);
+  socket.on("sendDataClient", (data) => {
+    socketIO.emit("sendDataServer", { data });
+  });
+  if (interval) {
+    clearInterval(interval);
+  }
+  interval = setInterval(() => getApiAndEmit(socket), 1000);
+  // When client disconnect
+  socket.on("disconnect", () => {
+    console.log("Client has out!");
+  });
+});
+const getApiAndEmit = (socket) => {
+  const response = new Date().toLocaleTimeString();
+  // Emitting a new message. Will be consumed by the client
+  socket.emit("FromAPI", response);
+};
+http.listen(port, () => {
   console.log("Listening on localhost:", port);
 });
 
-module.exports = app;
+module.exports = http;

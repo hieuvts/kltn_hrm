@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -17,18 +17,26 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
-
+import socketIOClient from "socket.io-client";
 import { useSelector } from "react-redux";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import FriendList from "../../components/Chat/FriendList";
 import ChatPanel from "../../components/Chat/ChatPanel";
 
-import "./InternalChat.css";
+const ENDPOINT = "http://localhost:8000";
 
 export default function InternalChat() {
   const { user: currentUser } = useSelector((state) => state.auth);
+  const [response, setResponse] = useState("");
+  useEffect(() => {
+    const socket = socketIOClient(ENDPOINT);
+    socket.on("FromAPI", (data) => {
+      setResponse(data);
+    });
+  }, []);
   return (
     <Grid container direction="row" columnSpacing={3}>
+      <Typography variant="h5">Time is: {response}</Typography>
       <Grid item xs={4}>
         <Box>
           <Typography variant="h5">Internal Chat</Typography>
