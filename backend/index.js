@@ -15,7 +15,7 @@ const roleRoute = require("./routes/role.route");
 const authRoute = require("./routes/auth.route");
 const Role = require("./models/role.model");
 const {
-  setUser,
+  addUser,
   getUser,
   getRoomUsers,
   userLeft,
@@ -105,49 +105,42 @@ app.get("/testapi", (req, res) => {
 });
 
 io.use((socket, next) => {
-  if (socket.handshake.query && socket.handshake.query.token) {
-    console.log("Token found");
-    jwt.verify(socket.handshake.query.token, jwtSecret, (err, decoded) => {
+  if (socket.handshake.auth && socket.handshake.auth.token) {
+    jwt.verify(socket.handshake.auth.token, jwtSecret, (err, decoded) => {
       if (err) {
-        console.log("Verify failed", err);
+        console.log("Authentication failed ", err);
         return next(new Error("Unauthorized!"));
       }
-      console.log("Verify success, next()");
+      console.log("Authenticated, next()");
       socket.decoded = decoded;
       next();
     });
   } else {
-    console.log("Not provide token!");
-    next(new Error("Not provide token!"));
+    console.log("No token provided!");
+    next(new Error("Unauthorized!"));
   }
 }).on("connection", (socket) => {
   const { roomId } = socket.handshake.query;
-  console.log(
-    `New client id=${socket.id} 
-    joint roomId=${roomId} rooms=${socket.rooms}`
-  );
+  console.log(`[NewClient]id=${socket.id} joint roomId=${roomId}`);
   socket.on("joinRoom", ({ username, room }) => {
-    console.log(`User ${username} room ${room}`);
-    const user = setUser(username, room);
+    const user = addUser(socket.id, username, room);
+    console.log("userInfo: ", user);
     socket.join(user.room);
     socket.broadcast.to(user.room).emit("message", {
-      body: `${user.username} has joint!`,
+      body: `SYSTEM: ${user.username} has joint!`,
       isBroadcast: true,
     });
     // Listen new message
-    socket.on("message", (data) => {
-      io.to(user.room).emit("message", data);
+    socket.on("message", (msg) => {
+      console.log("message ", msg);
+      io.to(user.room).emit("message", msg);
     });
 
-    // Leave room if user disconnect
     socket.on("disconnect", () => {
-      const user = userLeft(socket.id);
-      if (user) {
-        socket.broadcast.to(user.room).emit("message", {
-          body: `${user.username} has left the chat!`,
-          isBroadcast: true,
-        });
-      }
+      socket.broadcast.to(user.room).emit("message", {
+        body: `SYSTEM: ${user.username} has left the chat!`,
+        isBroadcast: true,
+      });
     });
   });
 });

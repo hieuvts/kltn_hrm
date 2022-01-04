@@ -2,23 +2,26 @@ import { useEffect, useRef, useState } from "react";
 import socketIOClient from "socket.io-client";
 
 import authHeader from "./authHeader";
+const API_ENDPOINT = "http://localhost:8000";
 
-const NEW_CHAT_MESSAGE_EVENT = "message";
-const ENDPOINT = "http://localhost:8000";
+const MESSAGE_EVENT = "message";
+const JOIN_ROOM_EVENT = "joinRoom";
 const authHeaderValue = authHeader();
 const token = authHeaderValue["x-access-token"];
+
 export default function chatService(roomId) {
   const [messages, setMessages] = useState([]); // Sent and received messages
   const socketRef = useRef();
 
   useEffect(() => {
     // Creates a WebSocket connection
-    socketRef.current = socketIOClient(ENDPOINT, {
-      query: { roomId, token },
+    socketRef.current = socketIOClient(API_ENDPOINT, {
+      auth: { token },
+      query: { roomId },
     });
 
     // Listens for incoming messages
-    socketRef.current.on(NEW_CHAT_MESSAGE_EVENT, (message) => {
+    socketRef.current.on(MESSAGE_EVENT, (message) => {
       const incomingMessage = {
         ...message,
         ownedByCurrentUser: message.senderId === socketRef.current.id,
@@ -36,14 +39,14 @@ export default function chatService(roomId) {
     };
   }, [roomId]);
 
-  const joinRoom = (messageBody) => {
-    socketRef.current.emit("joinRoom", { username: "hieu", room: "test" });
+  const joinRoom = () => {
+    socketRef.current.emit(JOIN_ROOM_EVENT, { username: "hieu", room: "test" });
   };
   // Sends a message to the server that
   // forwards it to all users in the same room
-  const sendMessage = (messageBody) => {
-    socketRef.current.emit(NEW_CHAT_MESSAGE_EVENT, {
-      body: messageBody,
+  const sendMessage = (msg) => {
+    socketRef.current.emit(MESSAGE_EVENT, {
+      body: msg,
       senderId: socketRef.current.id,
     });
   };

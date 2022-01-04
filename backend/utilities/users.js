@@ -1,11 +1,12 @@
 const users = [];
-
-function setUser(id, username, room) {
+// Take userID (socketID), username, and room which user want to joint
+//
+function addUser(id, username, room) {
   const user = { id, username, room };
   users.push(user);
   return user;
 }
-
+// Get user instance by id
 function getUser(id) {
   return users.find((user) => user.id === id);
 }
@@ -21,7 +22,7 @@ function getRoomUsers(room) {
   return users.filter((user) => user.room === room);
 }
 module.exports = {
-  setUser,
+  addUser,
   getUser,
   userLeft,
   getRoomUsers,

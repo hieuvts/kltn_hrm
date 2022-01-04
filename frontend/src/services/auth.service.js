@@ -14,7 +14,6 @@ const login = (email, password) => {
     if (res.data.accessToken) {
       localStorage.setItem("user", JSON.stringify(res.data));
     }
-    console.log("check res.data", res);
     return res.data;
   });
 };
