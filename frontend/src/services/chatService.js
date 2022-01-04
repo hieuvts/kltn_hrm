@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import socketIOClient from "socket.io-client";
 
+import authHeader from "./authHeader";
+
 const NEW_CHAT_MESSAGE_EVENT = "message";
 const ENDPOINT = "http://localhost:8000";
-
+const authHeaderValue = authHeader();
+const token = authHeaderValue["x-access-token"];
 export default function chatService(roomId) {
   const [messages, setMessages] = useState([]); // Sent and received messages
   const socketRef = useRef();
@@ -11,7 +14,7 @@ export default function chatService(roomId) {
   useEffect(() => {
     // Creates a WebSocket connection
     socketRef.current = socketIOClient(ENDPOINT, {
-      query: { roomId },
+      query: { roomId, token },
     });
 
     // Listens for incoming messages

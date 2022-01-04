@@ -3,6 +3,7 @@ require("dotenv").config({ path: "./config/.env" });
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 
 const employeeRoute = require("./routes/employee.route");
 const departmentRoute = require("./routes/department.route");
@@ -12,7 +13,6 @@ const taskRoute = require("./routes/task.route");
 const userRoute = require("./routes/user.route");
 const roleRoute = require("./routes/role.route");
 const authRoute = require("./routes/auth.route");
-
 const Role = require("./models/role.model");
 const {
   setUser,
@@ -35,6 +35,7 @@ const io = require("socket.io")(http, {
 
 const port = process.env.PORT || 8000;
 const db_uri = process.env.DB_URI;
+const jwtSecret = process.env.JWT_SECRET;
 
 // Connect to MongooDB (Mongoo Atlas)
 mongoose
@@ -103,10 +104,27 @@ app.get("/testapi", (req, res) => {
   res.send("Hello World!!!");
 });
 
-io.on("connection", (socket) => {
+io.use((socket, next) => {
+  if (socket.handshake.query && socket.handshake.query.token) {
+    console.log("Token found");
+    jwt.verify(socket.handshake.query.token, jwtSecret, (err, decoded) => {
+      if (err) {
+        console.log("Verify failed", err);
+        return next(new Error("Unauthorized!"));
+      }
+      console.log("Verify success, next()");
+      socket.decoded = decoded;
+      next();
+    });
+  } else {
+    console.log("Not provide token!");
+    next(new Error("Not provide token!"));
+  }
+}).on("connection", (socket) => {
   const { roomId } = socket.handshake.query;
   console.log(
-    `New client id=${socket.id} joint roomId=${roomId} rooms=${socket.rooms}`
+    `New client id=${socket.id} 
+    joint roomId=${roomId} rooms=${socket.rooms}`
   );
   socket.on("joinRoom", ({ username, room }) => {
     console.log(`User ${username} room ${room}`);
@@ -118,7 +136,6 @@ io.on("connection", (socket) => {
     });
     // Listen new message
     socket.on("message", (data) => {
-      console.log("echo msg");
       io.to(user.room).emit("message", data);
     });
 
