@@ -43,6 +43,7 @@ export default function SignUp({ handleChange }) {
       .then(() => {
         setRegSuccessful(true);
         setSbInfoOpen(true);
+        navigate("/login");
       })
       .catch(() => {
         setRegSuccessful(false);
