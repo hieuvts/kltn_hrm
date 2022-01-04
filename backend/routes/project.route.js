@@ -10,7 +10,7 @@ router.param("projectId",project.getprojectById);
 router.post("/create",project.createproject);
 router.delete("/:projectId/delete",project.deleteproject);
 router.delete("/deleteall",project.deleteAllproject);
-router.put("/:projectId/put",project.putproject);
+router.put("/:projectId/update",project.putproject);
 // router.post("/project/createmultipleproject",project.createMultipleproject);
 
 module.exports = router;

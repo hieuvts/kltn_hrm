@@ -4,7 +4,7 @@ import Apartment from "@mui/icons-material/Apartment";
 import Engineering from "@mui/icons-material/Engineering";
 import Mode from "@mui/icons-material/Mode";
 import Error from "@mui/icons-material/Error";
-
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import { VscProject } from "react-icons/vsc";
 
 export const pageList = [
@@ -31,9 +31,16 @@ export const pageList = [
   },
   {
     title: "Project",
-    path: "/workplace",
+    path: "/project",
     key: "project",
     icon: <VscProject />,
+    className: "nav-text",
+  },
+  {
+    title: "Task",
+    path: "/task",
+    key: "task",
+    icon: <AssignmentIcon />,
     className: "nav-text",
   },
   {

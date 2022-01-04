@@ -20,10 +20,14 @@ const projectSchema = new Schema({
     maxlength: 50,
   },
   startDate: {
-    type: String,
-    default: "",
-    required: true,
+    type: Date,
+    min: "1900-01-01",
   },
+  endDate: {
+    type: Date,
+    min: "1900-01-01",
+  },
+  departments: [{ type: Schema.Types.ObjectId, ref: "department" }],
   isDeleted: {
     type: Boolean,
     default: false,
