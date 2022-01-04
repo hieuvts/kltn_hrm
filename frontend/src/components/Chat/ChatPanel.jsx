@@ -20,7 +20,7 @@ import SendIcon from "@mui/icons-material/Send";
 
 import { fileNameValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
-
+import moment from "moment";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import chatService from "../../services/chatService";
 import "./ChatPanel.css";
@@ -35,6 +35,7 @@ export default function ChatPanel() {
     sendMessage(values.message);
     setNewMessage("");
   };
+
   const FormMessage = () => {
     const formik = useFormik({
       initialValues: {
@@ -83,23 +84,35 @@ export default function ChatPanel() {
   return (
     <>
       <Box>
-        <Typography variant="h5">User1</Typography>
         <Button variant="contained" onClick={joinRoom}>
           Test SocketIO broadcast all clients
         </Button>
+        <Typography variant="h5">User1</Typography>
       </Box>
       <Box sx={{ colDirection }}>
         <ul className="chatBox">
-          {messages.map((message, i) => (
-            <li
-              key={i}
-              className={`message-item ${
-                message.ownedByCurrentUser ? "sent-message" : "received-message"
-              } ${message.isBroadcast && "broadcast-message"}`}
-            >
-              {message.body}
-            </li>
-          ))}
+          {messages.map((message, index) => {
+            let createdAt = moment(message.createdAt).format("ddd, hA");
+            let messageContent = message.message;
+            return (
+              <li
+                key={index}
+                className={`message ${
+                  message.ownedByCurrentUser
+                    ? "message-sent "
+                    : "message-received"
+                } ${message.isBroadcast && "message-broadcast"}`}
+              >
+                <div className="content">
+                  {!message.ownedByCurrentUser && (
+                    <div className="username">User</div>
+                  )}
+                  <div className="d">{messageContent}</div>
+                  <div className="time"> {createdAt}</div>
+                </div>
+              </li>
+            );
+          })}
         </ul>
         <Box sx={{ mt: 30 }}>
           <FormMessage />

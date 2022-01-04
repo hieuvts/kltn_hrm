@@ -44,9 +44,9 @@ export default function chatService(roomId) {
   };
   // Sends a message to the server that
   // forwards it to all users in the same room
-  const sendMessage = (msg) => {
+  const sendMessage = (message) => {
     socketRef.current.emit(MESSAGE_EVENT, {
-      body: msg,
+      message: message,
       senderId: socketRef.current.id,
     });
   };

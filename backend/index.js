@@ -4,6 +4,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const moment = require("moment");
 
 const employeeRoute = require("./routes/employee.route");
 const departmentRoute = require("./routes/department.route");
@@ -120,25 +121,28 @@ io.use((socket, next) => {
     next(new Error("Unauthorized!"));
   }
 }).on("connection", (socket) => {
-  const { roomId } = socket.handshake.query;
-  console.log(`[NewClient]id=${socket.id} joint roomId=${roomId}`);
+  console.log(`[NewClient]id=${socket.id} joint`);
+
   socket.on("joinRoom", ({ username, room }) => {
     const user = addUser(socket.id, username, room);
     console.log("userInfo: ", user);
     socket.join(user.room);
     socket.broadcast.to(user.room).emit("message", {
-      body: `SYSTEM: ${user.username} has joint!`,
+      message: `SYSTEM: ${user.username} has joint!`,
+      createdAt: new Date(),
       isBroadcast: true,
     });
     // Listen new message
-    socket.on("message", (msg) => {
-      console.log("message ", msg);
-      io.to(user.room).emit("message", msg);
+    socket.on("message", (body) => {
+      body["createdAt"] = new Date();
+      console.log("messageBody ", body);
+      io.to(user.room).emit("message", body);
     });
 
     socket.on("disconnect", () => {
       socket.broadcast.to(user.room).emit("message", {
-        body: `SYSTEM: ${user.username} has left the chat!`,
+        message: `SYSTEM: ${user.username} has left the chat!`,
+        createdAt: new Date(),
         isBroadcast: true,
       });
     });
