@@ -19,7 +19,7 @@ const userSchema = new Schema({
     type: String,
     require: true,
     default: "password",
-    minlength: 2,
+    minLength: 2,
     required: true,
   },
   employee: [{ type: Schema.Types.ObjectId, ref: "employee" }],

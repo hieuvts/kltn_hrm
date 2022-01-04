@@ -68,6 +68,7 @@ const login = (req, res) => {
     email: req.body.email,
   })
     .populate("roles", "-__v")
+    .populate("employee")
     .exec((err, user) => {
       if (err) {
         // Internal server error
@@ -102,6 +103,7 @@ const login = (req, res) => {
       for (let i = 0; i < user.roles.length; i++) {
         authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
       }
+      console.log("check be4 send to client \n", user);
       // OK - Success
       res.status(200).send({
         id: user._id,
