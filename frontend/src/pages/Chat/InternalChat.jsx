@@ -37,11 +37,7 @@ function TabPanel(props) {
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 }
@@ -117,7 +113,9 @@ export default function InternalChat() {
       <Grid item xs={9}>
         {dummyUser.map((user, index) => (
           <TabPanel key={index} value={value} index={index}>
-            <ChatPanel user={user} />
+            <span>
+              <ChatPanel user={user} />
+            </span>
           </TabPanel>
         ))}
       </Grid>

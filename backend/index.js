@@ -140,6 +140,7 @@ io.use((socket, next) => {
     // Listen new message
     socket.on("message", (body) => {
       body["createdAt"] = new Date();
+      body.isBroadcast = false;
       console.log("messageBody ", body);
       io.to(user.room).emit("message", body);
     });
