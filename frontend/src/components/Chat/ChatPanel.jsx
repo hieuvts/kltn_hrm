@@ -121,7 +121,7 @@ export default function ChatPanel() {
                         }}
                         variant="dot"
                       >
-                        <Avatar alt="U" src={avatarFemale} sx={{ mx: 2 }} />
+                        <Avatar alt="U" src={avatarFemale} sx={{ mx: 1 }} />
                       </StyledBadge>
                       <div className="message-bubble">
                         {!isOwned && (
