@@ -13,16 +13,20 @@ import InputBase from "@mui/material/InputBase";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
+import Badge from "@mui/material/Badge";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import ListItemButton from "@mui/material/ListItemButton";
 import SendIcon from "@mui/icons-material/Send";
-
+import { styled } from "@mui/material/styles";
 import { fileNameValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
 import moment from "moment";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import chatService from "../../services/chatService";
+import { StyledBadge } from "../../components/StyledBadget";
+import avatarMale from "../../assets/icons/avatarMale.png";
+import avatarFemale from "../../assets/icons/avatarFemale.png";
 import "./ChatPanel.css";
 export default function ChatPanel() {
   const roomId = "test"; // Gets roomId from URL
@@ -94,23 +98,47 @@ export default function ChatPanel() {
           {messages.map((message, index) => {
             let createdAt = moment(message.createdAt).format("ddd, hA");
             let messageContent = message.message;
+            let isOwned = message.ownedByCurrentUser;
+            let isBroadcast = message.isBroadcast;
             return (
-              <li
-                key={index}
-                className={`message ${
-                  message.ownedByCurrentUser
-                    ? "message-sent "
-                    : "message-received"
-                } ${message.isBroadcast && "message-broadcast"}`}
-              >
-                <div className="content">
-                  {!message.ownedByCurrentUser && (
-                    <div className="username">User</div>
+              <div className="message-chat" key={index}>
+                <li
+                  className={`message ${
+                    isOwned ? "message-sent " : "message-received"
+                  }`}
+                >
+                  {!isBroadcast ? (
+                    <div
+                      className={`message ${
+                        isOwned ? "message-sent " : "message-received"
+                      }`}
+                    >
+                      <StyledBadge
+                        overlap="circular"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                        variant="dot"
+                      >
+                        <Avatar alt="U" src={avatarFemale} sx={{ mx: 2 }} />
+                      </StyledBadge>
+                      <div className="message-bubble">
+                        {!isOwned && (
+                          <div className="message-info">
+                            <div className="message-username">Username</div>
+                            <div className="message-role">admin</div>
+                          </div>
+                        )}
+                        <div className="message-content">{messageContent}</div>
+                        <div className="message-time">{createdAt}</div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="message-broadcast">{messageContent}</div>
                   )}
-                  <div className="d">{messageContent}</div>
-                  <div className="time"> {createdAt}</div>
-                </div>
-              </li>
+                </li>
+              </div>
             );
           })}
         </ul>
