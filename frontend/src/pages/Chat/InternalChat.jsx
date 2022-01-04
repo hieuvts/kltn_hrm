@@ -69,7 +69,7 @@ export default function InternalChat() {
 
   return (
     <Grid container direction="row" columnSpacing={3}>
-      <Grid item xs={4}>
+      <Grid item xs={3}>
         <Box xs={{ colDirection }}>
           {/* <FriendList /> */}
           <Tabs
@@ -87,13 +87,13 @@ export default function InternalChat() {
                   <ListItem alignItems="flex-start">
                     <ListItemAvatar sx={{ alignSelf: "center" }}>
                       <Avatar
-                        alt={user.name}
+                        alt={user.username}
                         src={user.avatar}
                         sx={{ width: 50, height: 50, mr: 3 }}
                       />
                     </ListItemAvatar>
                     <ListItemText
-                      primary={user.name}
+                      primary={user.username}
                       secondary={
                         <React.Fragment>
                           <Typography
@@ -114,11 +114,10 @@ export default function InternalChat() {
           </Tabs>
         </Box>
       </Grid>
-      <Grid item xs={8}>
-        {/* <ChatPanel /> */}
+      <Grid item xs={9}>
         {dummyUser.map((user, index) => (
           <TabPanel key={index} value={value} index={index}>
-            {user.message}
+            <ChatPanel user={user} />
           </TabPanel>
         ))}
       </Grid>

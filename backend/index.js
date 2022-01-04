@@ -127,6 +127,11 @@ io.use((socket, next) => {
     const user = addUser(socket.id, username, room);
     console.log("userInfo: ", user);
     socket.join(user.room);
+    io.to(socket.id).emit("message", {
+      message: `Connected to SocketIO server`,
+      createdAt: new Date(),
+      isBroadcast: true,
+    });
     socket.broadcast.to(user.room).emit("message", {
       message: `SYSTEM: ${user.username} has joint!`,
       createdAt: new Date(),

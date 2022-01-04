@@ -17,18 +17,17 @@ import Badge from "@mui/material/Badge";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import ListItemButton from "@mui/material/ListItemButton";
-import SendIcon from "@mui/icons-material/Send";
-import { styled } from "@mui/material/styles";
-import { fileNameValidationSchema } from "../../utilities/validationSchema";
-import { useFormik } from "formik";
+
 import moment from "moment";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import chatService from "../../services/chatService";
 import { StyledBadge } from "../../components/StyledBadget";
-import avatarMale from "../../assets/icons/avatarMale.png";
+import ChatMessageInput from "./ChatMessageInput";
 import avatarFemale from "../../assets/icons/avatarFemale.png";
+import avatarMale from "../../assets/icons/avatarMale.png";
+
 import "./ChatPanel.css";
-export default function ChatPanel() {
+export default function ChatPanel({ user }) {
   const roomId = "test"; // Gets roomId from URL
   // Creates a websocket and manages messaging
   const { messages, joinRoom, sendMessage } = chatService(roomId);
@@ -40,59 +39,22 @@ export default function ChatPanel() {
     setNewMessage("");
   };
 
-  const FormMessage = () => {
-    const formik = useFormik({
-      initialValues: {
-        message: "",
-      },
-      onSubmit: (values) => {
-        handleSendMessage(values);
-      },
-    });
-    return (
-      <form onSubmit={formik.handleSubmit}>
-        <Grid container>
-          <Grid item xs={9}>
-            <TextField
-              id="message"
-              label="Message"
-              placeholder="Enter message..."
-              variant="standard"
-              fullWidth
-              value={formik.values.message}
-              error={formik.touched.message && Boolean(formik.errors.message)}
-              helperText={formik.touched.message && formik.errors.message}
-              onChange={formik.handleChange}
-            />
-          </Grid>
-          <Grid
-            item
-            xs={3}
-            sx={{
-              alignSelf: "center",
-            }}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              sx={{ ml: 2 }}
-            >
-              <SendIcon />
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-    );
-  };
   return (
     <>
-      <Box>
+      <Box sx={rowDirection}>
+        {/* <Avatar
+          alt={user.username}
+          src={user.avatar}
+          sx={{ width: 50, height: 50, mr: 3 }}
+        /> */}
+        <Typography variant="h5" sx={{ mb: 3 }}>
+          {user.username}
+        </Typography>
         <Button variant="contained" onClick={joinRoom}>
-          Test SocketIO broadcast all clients
+          Connect to chat server
         </Button>
-        <Typography variant="h5">User1</Typography>
       </Box>
+      <Divider variant="fullWidth" sx={{ borderBottomWidth: 4 }} />
       <Box sx={{ colDirection }}>
         <ul className="chatBox">
           {messages.map((message, index) => {
@@ -143,9 +105,15 @@ export default function ChatPanel() {
           })}
         </ul>
         <Box sx={{ mt: 30 }}>
-          <FormMessage />
+          <ChatMessageInput
+            newMessage={newMessage}
+            handleSendMessage={handleSendMessage}
+          />
         </Box>
       </Box>
     </>
   );
 }
+ChatPanel.propTypes = {
+  user: PropTypes.object,
+};

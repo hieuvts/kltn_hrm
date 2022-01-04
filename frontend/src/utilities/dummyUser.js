@@ -3,23 +3,27 @@ import avatarMale from "../assets/icons/avatarMale.png";
 
 export const dummyUser = [
   {
-    name: "Admin",
+    id: 0,
+    username: "Admin",
     avatar: avatarFemale,
     message: "Dolor culpa exercitation eu amet quis ipsum ullamco ipsum dese",
   },
   {
-    name: "Pham HIeu",
+    id: 1,
+    username: "Pham Hieu",
     avatar: avatarMale,
     message:
       "Mollit veniam id cupidatat est proident proident. Duis pariatur mollit minim aliquip do dolor duis id ad nulla dolore minim.",
   },
   {
-    name: "Nguyen A",
+    id: 2,
+    username: "Nguyen A",
     avatar: avatarFemale,
     message: "Do ea proident esse nostrud aliquip cillum duis pariatur velit.",
   },
   {
-    name: "Tran Nhan",
+    id: 3,
+    username: "Tran Nhan",
     avatar: avatarFemale,
     message: `
     Magna non do do mollit sint nostrud elit adipisicing ad duis adipisicing. Reprehenderit excepteur ut enim ea sit.
@@ -34,7 +38,8 @@ anim tempor velit.
  `,
   },
   {
-    name: "Hoang Nam Nguyen Vu",
+    id: 4,
+    username: "Hoang Nam Nguyen Vu",
     avatar: avatarFemale,
     message:
       "Quis anim non occaecat excepteur excepteur quis minim exercitation adipisicing sit officia sit. Exercitation tempor nisi voluptate ipsum laboris ut incididunt nisi consectetur. Dolore amet nostrud et mollit dolore minim enim eu.",
