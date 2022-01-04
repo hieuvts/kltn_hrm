@@ -10,10 +10,10 @@ import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
 import PropTypes from "prop-types";
-import { deleteDepartmentAsync, getDepartmentAsync } from "../../stores/departmentSlice";
+import { deleteProjectAsync, getProjectAsync } from "../../stores/projectSlice";
 import { useSelector, useDispatch } from "react-redux";
 
-export default function DialogDeleteDepartment({
+export default function DialogDeleteProject({
   isDialogOpen,
   handleCloseDialog,
 }) {
@@ -27,14 +27,14 @@ export default function DialogDeleteDepartment({
   };
 
   const dispatch = useDispatch();
-  const selectedDepartmentID = useSelector(
-    (state) => state.department.currentSelectedDepartment._id
+  const selectedProjectID = useSelector(
+    (state) => state.project.currentSelectedProject._id
   );
-  const handleDeleteDepartment = () => {
-    dispatch(deleteDepartmentAsync({ selectedDepartmentID: selectedDepartmentID }))
+  const handleDeleteProject = () => {
+    dispatch(deleteProjectAsync({ selectedProjectID: selectedProjectID }))
       .unwrap()
       .then(() => {
-        dispatch(getDepartmentAsync());
+        dispatch(getProjectAsync());
         setSbSuccessOpen(true);
         setTimeout(() => {
           handleCloseDialog();
@@ -49,17 +49,17 @@ export default function DialogDeleteDepartment({
       <SnackbarSuccess
         isOpen={isSbSuccessOpen}
         handleClose={handleSbSuccessClose}
-        text={"Deleted an department"}
+        text={"Deleted an project"}
       />
       <SnackbarFailed
         isOpen={isSbFailedOpen}
         handleClose={handleSbFailedClose}
-        text={"Delete department failed!"}
+        text={"Delete project failed!"}
       />
       <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <h5>Are you sure you want to delete this department?</h5>
+            <h5>Are you sure you want to delete this project?</h5>
             <Button onClick={handleCloseDialog}>
               <CloseIcon fontSize="large" />
             </Button>
@@ -77,7 +77,7 @@ export default function DialogDeleteDepartment({
           <Button
             variant="outlined"
             color="primary"
-            onClick={() => handleDeleteDepartment()}
+            onClick={() => handleDeleteProject()}
           >
             Yes
           </Button>
@@ -86,7 +86,7 @@ export default function DialogDeleteDepartment({
     </div>
   );
 }
-DialogDeleteDepartment.propTypes = {
+DialogDeleteProject.propTypes = {
   isDialogOpen: PropTypes.bool,
   handleCloseDialog: PropTypes.func,
 };

@@ -39,7 +39,7 @@ const getAllproject = async (req, res) => {
 
   if (typeof query === "undefined" || query.length === 0) {
     console.log("Return all projects");
-    projects = await Project.find();
+    projects = await Project.find().populate("departments");
   } else {
     console.log("Return projects with search= ", query);
     projects = await Project.find({
@@ -47,7 +47,7 @@ const getAllproject = async (req, res) => {
         $search: `"${query}"`,
         // $search: `.*(\b${query}\b).*`,
       },
-    });
+    }).populate("departments");
   }
   
   if (projects) {
@@ -123,34 +123,76 @@ const createproject = async (req, res) => {
 };
 
 const putproject = async (req, res) => {
-  const project = req.Project;
-  // typeof req.body.name === "undefined"
-  //   ? (project.name = project.name)
-  //   : (project.name = req.body.name);
+  const project = req.project;
   typeof req.body.name !== "undefined" && (project.name = req.body.name);
-  typeof req.body.volume !== "undefined" && (project.volume = req.body.volume);
-  typeof req.body.employeeID !== "undefined" &&
-    (project.employeeID = req.body.employeeID);
-  typeof req.body.difficulty !== "undefined" &&
-    (project.difficulty = req.body.difficulty);
-  typeof req.body.projectID !== "undefined" &&
-    (project.projectID = req.body.projectID);
-  typeof req.body.role !== "undefined" && (project.role = req.body.role);
+  typeof req.body.customer !== "undefined" && (project.customer = req.body.customer);
+  typeof req.body.startDate !== "undefined" &&
+    (project.startDate = req.body.startDate);
+  typeof req.body.phoneNumber !== "undefined" &&
+    (project.phoneNumber = req.body.phoneNumber);
+  typeof req.body.endDate !== "undefined" && (project.endDate = req.body.endDate);
+  typeof req.body.address !== "undefined" &&
+    (project.address = req.body.address);
+  typeof req.body.departments !== "undefined" &&
+    (project.departments = req.body.departments);
   typeof req.body.isDeleted !== "undefined" &&
     (project.isDeleted = req.body.isDeleted);
-
-  project.save((error, result) => {
-    if (error || !result) {
-      return res.status(400).json({
-        message: "[UPDATE] Something went wrong",
-        error: error,
-      });
-    }
-    res.json({
-      message: "Update user successfully",
-      project: project,
+  if(!req.body.departments || req.body.departments.length === 0)
+  {
+    console.log("not provide departments");
+    project.save((error, result) => {
+      if (error || !result) {
+        res.status(400).json({
+          message: "[ERROR] [post] ",
+          errMsg: error.message,
+        });
+      } else {
+        res.json({
+          message: "Create project successfully!",
+        });
+      }
     });
-  });
+  }
+  else
+  {
+    Department.find({
+      name: {$in: req.body.departments}
+    },
+    (error, departments) => {
+        if (error || !departments) {
+          // save without add departments
+          project.save((error, result) => {
+            if (error || !result) {
+              res.status(400).json({
+                message: "[ERROR] [post] ",
+                errMsg: error.message,
+              });
+            } else {
+              res.json({
+                message: "Create project successfully!",
+              });
+            }
+          });
+        } else {
+          project.departments = departments.map(
+            (department) => department._id
+          );
+          project.save((error, result) => {
+            if (error || !result) {
+              res.status(400).json({
+                message: "[ERROR] [post] ",
+                errMsg: error.message,
+              });
+            } else {
+              res.json({
+                message: "Create project successfully!",
+              });
+            }
+          });
+        }
+      }
+    )
+  }
 };
 
 // findOneAndDelete() returns the deleted document after having deleted it

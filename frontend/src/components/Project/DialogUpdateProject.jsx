@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 
 import FormUpdateProject from "./FormUpdateProject";
 
-export default function DialogUpdateEmployee({
+export default function DialogUpdateProject({
   isDialogOpen,
   handleCloseDialog,
 }) {
@@ -40,7 +40,7 @@ export default function DialogUpdateEmployee({
     </div>
   );
 }
-DialogUpdateEmployee.propTypes = {
+DialogUpdateProject.propTypes = {
   isDialogOpen: PropTypes.bool,
   handleCloseDialog: PropTypes.func,
 };

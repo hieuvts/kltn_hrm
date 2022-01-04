@@ -14,7 +14,7 @@ import CapitalizeFirstLetter from "../../utilities/captitalizeFirstLetter";
 import MySearchBox from "../../components/StyledSearchBox";
 import ProjectTable from "../../components/Project/ProjectList";
 import DialogAddProject from "../../components/Project/DialogAddProject";
-
+import DialogUpdateProject from "../../components/Project/DialogUpdateProject";
 import debounce from "lodash.debounce";
 //Redux
 import { useDispatch } from "react-redux";

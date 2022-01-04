@@ -32,7 +32,8 @@ export default function FormUpdateProject({
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
   const projects = useSelector((state) => state.project.projectList);
-
+  const departments = useSelector((state) => state.department.departmentList);
+  
   const handleSbSuccessClose = () => {
     setSbSuccessOpen(false);
   };
@@ -63,7 +64,14 @@ export default function FormUpdateProject({
   //   formikInitialValues["projects"] = projectNameArr;
   //   formikInitialValues["roles"] = roleNameArr;
   // End - Handling projects value
-  const departments = useSelector((state) => state.department.departmentList);
+
+  const initDepartmentValue = formikInitialValues["departments"].map(
+    ({ name }) => ({ name })
+  );
+  const departmentNameArr = initDepartmentValue.map((x) => x.name);
+  delete formikInitialValues.departments;
+  formikInitialValues["departments"] = departmentNameArr;
+
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: formikInitialValues,
@@ -154,7 +162,7 @@ export default function FormUpdateProject({
                   id="departments"
                   fullWidth
                   multiple
-                  value={formik.values.departments}
+                  value = {formik.values.departments}
                   onChange={(e) => {
                     formik.setFieldValue("departments", e.target.value);
                   }}
@@ -169,7 +177,7 @@ export default function FormUpdateProject({
                   sx={{ mb: 3 }}
                 >
                   {departments.map((department, index) => (
-                    <MenuItem key={index} value={department.name}>
+                    <MenuItem key={index} value= {department.name} >
                       {department.name}
                     </MenuItem>
                   ))}
@@ -182,7 +190,7 @@ export default function FormUpdateProject({
                   name="endDate"
                   label="End Date"
                   inputFormat="dd/MM/yyyy"
-                  value={formik.values.startDate}
+                  value={formik.values.endDate}
                   minDate={new Date("1900-01-01")}
                   maxDate={new Date()}
                   onChange={(value) => {
@@ -241,9 +249,9 @@ FormUpdateProject.defaultProps = {
     name: "",
     employee: [],
     customer: "",
-    startDate: "",
-    duration: "",
-    endDate: "",
-    department: "",
+    startDate: new Date(),
+    endDate: new Date(),
+    departments: [],
+    isDeleted: false,
   },
 };

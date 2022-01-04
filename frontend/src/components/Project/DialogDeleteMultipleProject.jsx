@@ -9,7 +9,7 @@ import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
 import PropTypes from "prop-types";
-import { deleteDepartmentAsync,getDepartmentAsync } from "../../stores/departmentSlice";
+import { deleteProjectAsync,getProjectAsync } from "../../stores/projectSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 export default function DialogDeleteMultipleDeparment({
@@ -18,8 +18,8 @@ export default function DialogDeleteMultipleDeparment({
   setSelected,
 }) {
   const dispatch = useDispatch();
-  const selectedDepartmentList = useSelector(
-    (state) => state.department.selectedDepartmentList
+  const selectedProjectList = useSelector(
+    (state) => state.project.selectedProjectList
   );
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
@@ -30,12 +30,12 @@ export default function DialogDeleteMultipleDeparment({
     setSbFailedOpen(false);
   };
   const handleDeleteEmployee = () => {
-    selectedDepartmentList.forEach((department, index) => {
-      dispatch(deleteDepartmentAsync({ selectedDepartmentID: department._id }))
+    selectedProjectList.forEach((project, index) => {
+      dispatch(deleteProjectAsync({ selectedProjectID: project._id }))
         .unwrap()
         .then(() => {
           setSelected([]);
-          dispatch(getDepartmentAsync());
+          dispatch(getProjectAsync());
           setSbSuccessOpen(true);
           setTimeout(() => {
             handleCloseDialog();
@@ -56,14 +56,14 @@ export default function DialogDeleteMultipleDeparment({
       <SnackbarFailed
         isOpen={isSbFailedOpen}
         handleClose={handleSbFailedClose}
-        text={"Delete multiple department failed!"}
+        text={"Delete multiple project failed!"}
       />
       <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <h3>
-              Are you sure you want to delete {selectedDepartmentList.length}{" "}
-              department?
+              Are you sure you want to delete {selectedProjectList.length}{" "}
+              project?
             </h3>
             <Button onClick={handleCloseDialog}>
               <CloseIcon fontSize="large" />

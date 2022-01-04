@@ -26,7 +26,6 @@ import { visuallyHidden } from "@mui/utils";
 import DialogDeleteProject from "./DialogDeleteProject";
 import DialogDeleteMultipleProject from "./DialogDeleteMultipleProject";
 import DialogUpdateProject from "./DialogUpdateProject";
-import DialogProjectDetails from "./DialogProjectDetails";
 
 import moment from "moment";
 
@@ -411,7 +410,7 @@ export default function ProjectTable() {
                           id={labelId}
                           scope="row"
                           padding="none"
-                          align="left"
+                          align="center"
                         >
                           {row.name}
                         </TableCell>
@@ -426,7 +425,7 @@ export default function ProjectTable() {
                         </TableCell>
                         <TableCell align="center">
                           {row.departments.map((department, index) => (
-                            <p key={index}>{department}</p>
+                            <p key={index}>{department.name}</p>
                           ))}
                         </TableCell>  
                         <TableCell align="center">
