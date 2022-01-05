@@ -63,9 +63,10 @@ export default function InternalChat() {
     dispatch(getAllChatRoom());
   };
   useEffect(() => {
+    console.log("Get all room message");
     handleGetAllChatRoom();
     dispatch(getUser({ userId: user.id }));
-  }, []);
+  }, [value]);
   return (
     <Grid container direction="row" columnSpacing={3}>
       <Grid item xs={3}>

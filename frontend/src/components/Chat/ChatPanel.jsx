@@ -77,7 +77,6 @@ export default function ChatPanel({ chatRoomId, roomName, roomMessages }) {
           src={user.avatar}
           sx={{ width: 50, height: 50, mr: 3 }}
         /> */}
-        {console.log("currentUser ", currentUser)}
         <Typography variant="h5" sx={{ mb: 3 }}>
           {roomName}
         </Typography>
@@ -148,6 +147,6 @@ export default function ChatPanel({ chatRoomId, roomName, roomMessages }) {
 }
 ChatPanel.propTypes = {
   chatRoomId: PropTypes.string,
-  roomName: PropTypes.array,
+  roomName: PropTypes.string,
   roomMessages: PropTypes.array,
 };
