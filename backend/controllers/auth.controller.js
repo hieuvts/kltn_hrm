@@ -110,6 +110,7 @@ const login = (req, res) => {
         email: user.email,
         roles: authorities,
         accessToken: token,
+        employee: user.employee[0],
       });
     });
 };

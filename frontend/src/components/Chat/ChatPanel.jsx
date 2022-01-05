@@ -19,8 +19,9 @@ import Button from "@mui/material/Button";
 import ListItemButton from "@mui/material/ListItemButton";
 
 import moment from "moment";
+import { useSelector } from "react-redux";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
-import chatService from "../../services/chatService";
+import chatService from "../../services/socketIO.service";
 import { StyledBadge } from "../../components/StyledBadget";
 import ChatMessageInput from "./ChatMessageInput";
 import avatarFemale from "../../assets/icons/avatarFemale.png";
@@ -28,14 +29,20 @@ import avatarMale from "../../assets/icons/avatarMale.png";
 
 import "./ChatPanel.css";
 export default function ChatPanel({ user }) {
+  const { user: currentUser } = useSelector((state) => state.auth);
   const roomId = "test"; // Gets roomId from URL
   // Creates a websocket and manages messaging
   const { messages, joinRoom, sendMessage } = chatService(roomId);
   // Message to be sent
   const [newMessage, setNewMessage] = React.useState("");
-
   const handleSendMessage = (values) => {
-    sendMessage(values.message);
+    let messageBody = {
+      email: currentUser.email,
+      user: currentUser.id,
+      employee: currentUser.employee._id,
+      message: values.message,
+    };
+    sendMessage(messageBody);
     setNewMessage("");
   };
 

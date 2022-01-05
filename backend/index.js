@@ -14,7 +14,9 @@ const taskRoute = require("./routes/task.route");
 const userRoute = require("./routes/user.route");
 const roleRoute = require("./routes/role.route");
 const authRoute = require("./routes/auth.route");
+const chatRoom = require("./routes/chatRoom.route");
 const Role = require("./models/role.model");
+const ChatMessage = require("./models/chatMessage.model");
 const {
   addUser,
   getUser,
@@ -101,6 +103,7 @@ app.use("/api/role", roleRoute);
 app.use("/api/project", projectRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
+app.use("/api/chat", chatRoom);
 app.get("/testapi", (req, res) => {
   res.send("Hello World!!!");
 });
@@ -139,9 +142,19 @@ io.use((socket, next) => {
     });
     // Listen new message
     socket.on("message", (body) => {
+      body["username"] = username;
       body["createdAt"] = new Date();
-      body.isBroadcast = false;
+      body["isBroadcast"] = false;
       console.log("messageBody ", body);
+      let chatMsg = new ChatMessage(body);
+      chatMsg.save((error, result) => {
+        if (error) {
+          // res.status(500).send({ message: error });
+          console.log("saveDB error ", error);
+          return;
+        }
+        console.log("saveDB success result ", result);
+      });
       io.to(user.room).emit("message", body);
     });
 

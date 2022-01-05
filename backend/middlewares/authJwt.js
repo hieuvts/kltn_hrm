@@ -25,12 +25,14 @@ const verifyToken = (req, res, next) => {
 };
 
 const isAdmin = (req, res, next) => {
+  console.log("isAdmin>> ", req.userId);
   User.findById(req.userId).exec((err, user) => {
     if (err) {
+      console.log("error findUser ", err);
       res.status(500).send({ message: err });
       return;
     }
-
+    console.log("Found rose isAdmin ", user);
     Role.find(
       {
         _id: { $in: user.roles },

@@ -62,7 +62,11 @@ export default function InternalChat() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
+  console.log("internalChat", currentUser);
+  console.log(
+    "name",
+    currentUser.employee.fname + " " + currentUser.employee.lname
+  );
   return (
     <Grid container direction="row" columnSpacing={3}>
       <Grid item xs={3}>
