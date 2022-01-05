@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import Divider from "@mui/material/Divider";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -11,19 +10,15 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import Button from "@mui/material/Button";
 
-import SendIcon from "@mui/icons-material/Send";
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
-
-import FemaleIcon from "@mui/icons-material/Female";
-import MaleIcon from "@mui/icons-material/Male";
-import socketIOClient from "socket.io-client";
+import avatarMale from "../../assets/icons/avatarMale.png";
 import { useSelector, useDispatch } from "react-redux";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import FriendList from "../../components/Chat/FriendList";
 import ChatPanel from "../../components/Chat/ChatPanel";
 import { getUser } from "../../stores/userSlice";
+import { getAllChatRoom } from "../../stores/chatRoomSlice";
 import { dummyUser } from "../../utilities/dummyUser";
 
 function TabPanel(props) {
@@ -61,10 +56,17 @@ export default function InternalChat() {
     dispatch(getUser({ userId: user.id }));
   }, []);
   const [value, setValue] = React.useState(0);
+  const chatRoom = useSelector((state) => state.chatRoom);
   const dispatch = useDispatch();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const handleGetAllChatRoom = () => {
+    dispatch(getAllChatRoom());
+  };
+  useEffect(() => {
+    handleGetAllChatRoom();
+  }, []);
   return (
     <Grid container direction="row" columnSpacing={3}>
       <Grid item xs={3}>
@@ -78,20 +80,20 @@ export default function InternalChat() {
             aria-label="Vertical tabs example"
             sx={{ borderRight: 1, borderColor: "divider" }}
           >
-            {dummyUser.map((user, index) => (
+            {chatRoom.map((room, index) => (
               <Tab
                 key={index}
                 label={
                   <ListItem alignItems="flex-start">
                     <ListItemAvatar sx={{ alignSelf: "center" }}>
                       <Avatar
-                        alt={user.username}
-                        src={user.avatar}
+                        alt={room.name}
+                        src={avatarMale}
                         sx={{ width: 50, height: 50, mr: 3 }}
                       />
                     </ListItemAvatar>
                     <ListItemText
-                      primary={user.username}
+                      primary={room.name}
                       secondary={
                         <React.Fragment>
                           <Typography
@@ -99,7 +101,7 @@ export default function InternalChat() {
                             sx={{ textTransform: "none" }}
                           >
                             {"..."}
-                            {user.message.slice(-30)}
+                            {room.messages.slice(-1)[0].message.slice(-30)}
                           </Typography>
                         </React.Fragment>
                       }
@@ -113,10 +115,14 @@ export default function InternalChat() {
         </Box>
       </Grid>
       <Grid item xs={9}>
-        {dummyUser.map((user, index) => (
+        {chatRoom.map((room, index) => (
           <TabPanel key={index} value={value} index={index}>
             <span>
-              <ChatPanel />
+              <ChatPanel
+                chatRoomId={room._id}
+                roomMembers={room.members}
+                roomMessages={room.messages}
+              />
             </span>
           </TabPanel>
         ))}

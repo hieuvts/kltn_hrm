@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 mongoose.pluralize(null);
 const Schema = mongoose.Schema;
-const chatMessageSchema = require("./chatMessage.model");
 
 const chatRoomSchema = new Schema(
   {

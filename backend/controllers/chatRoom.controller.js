@@ -1,5 +1,4 @@
 const ChatRoom = require("../models/chatRoom.model");
-const ChatMessage = require("../models/chatMessage.model");
 const User = require("../models/user.model");
 
 const moment = require("moment");
@@ -78,17 +77,19 @@ const createChatRoom = async (req, res) => {
   });
 };
 const getAllChatRoom = async (req, res) => {
-  ChatRoom.find((error, chatrooms) => {
-    if (chatrooms) {
-      res.status(200).json({ chatrooms });
-      console.log(moment().format("hh:mm:ss"), "[SUCCESS] getAllChatRoom");
-    } else {
-      res.status(400).json({
-        message: "[ERROR] [getAllMessageInRoom] Something went wrong",
-      });
-      console.log(moment().format("hh:mm:ss"), "[ERROR] getAllChatRoom");
-    }
-  });
+  ChatRoom.find()
+    .populate("members")
+    .exec((error, chatrooms) => {
+      if (chatrooms) {
+        res.status(200).json({ chatrooms });
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getAllChatRoom");
+      } else {
+        res.status(400).json({
+          message: "[ERROR] [getAllMessageInRoom] Something went wrong",
+        });
+        console.log(moment().format("hh:mm:ss"), "[ERROR] getAllChatRoom");
+      }
+    });
 };
 
 const getAllMessageInRoom = async (req, res) => {
@@ -99,7 +100,7 @@ const getAllMessageInRoom = async (req, res) => {
 
 const addMessageToRoom = async (req, res) => {
   const message = new ChatMessage();
-
+  // Get the correct chatRoom to push new message
   const chatRoom = req.chatRoom;
   chatRoom.messages.push(req.body);
   const updated = await chatRoom.save();

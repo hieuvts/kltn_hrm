@@ -2,11 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authService from "../services/auth.service";
 import chatService from "../services/chat.service";
 
-const initialState = {
-  members: [],
-  name: "",
-  messages: [],
-};
+const initialState = [];
 
 export const createChatRoom = createAsyncThunk(
   "chat/createChatRoom",
@@ -25,6 +21,20 @@ export const createChatRoom = createAsyncThunk(
     }
   }
 );
+export const getAllChatRoom = createAsyncThunk(
+  "chat/getAllChatRoom",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const res = await chatService.getAllChatRoom();
+      console.log("getall chatroom ", res.data);
+      return res.data.chatrooms;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(`Get allChatRoom not successful ${error}`);
+    }
+  }
+);
+
 export const getChatRoomInfo = createAsyncThunk(
   "chat/getChatRoomInfo",
   async (payload, thunkAPI) => {
@@ -49,7 +59,7 @@ export const getChatMessage = createAsyncThunk(
     try {
       const res = await chatService.getChatMessage(payload.chatRoomId);
       console.log("getall data ", res.data);
-      return res.data.messages;
+      return { chatRoomId: payload.chatRoomId, messages: res.data.messages };
     } catch (error) {
       console.log(error);
       return rejectWithValue(`Get message not successful ${error}`);
@@ -94,6 +104,18 @@ export const chatRoomSlice = createSlice({
     },
 
     //
+    [getAllChatRoom.pending]: (state, actions) => {
+      console.log("[Pending] getChatRoomInfo", actions);
+    },
+    [getAllChatRoom.rejected]: (state, actions) => {
+      console.log("[Rejected] getAllChatRoom", actions.payload);
+    },
+    [getAllChatRoom.fulfilled]: (state, actions) => {
+      console.log("[Fulfilled] getAllChatRoom", actions);
+      return actions.payload;
+    },
+
+    //
     [getChatMessage.pending]: (state, actions) => {
       console.log("[Pending] getChatMessage ", state);
     },
@@ -105,7 +127,7 @@ export const chatRoomSlice = createSlice({
       console.log("getChatMessage payload ", newMsg);
 
       console.log("[Fulfilled] getChatMessage ");
-      return { ...state.messages, messages: newMsg };
+      state.push(actions.payload);
     },
 
     //

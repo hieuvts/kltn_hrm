@@ -31,12 +31,13 @@ import avatarMale from "../../assets/icons/avatarMale.png";
 import { getChatMessage, addMessageToRoom } from "../../stores/chatRoomSlice";
 
 import "./ChatPanel.css";
-export default function ChatPanel() {
+import { dummyUser } from "../../utilities/dummyUser";
+export default function ChatPanel({ chatRoomId, roomMembers, roomMessages }) {
   const currentUser = useSelector((state) => state.user.currentUser);
-  const chatRoom = useSelector((state) => state.chatRoom);
+
   const [newMessage, setNewMessage] = useState("");
   const [frEmail, setFrEmail] = useState("");
-  const roomId = "test"; // Gets roomId from URL
+  const roomId = chatRoomId; // Gets roomId from URL
   // Creates a websocket and manages messaging
   const { messages, joinRoom, sendMessage } = socketIOService(roomId);
   const dispatch = useDispatch();
@@ -47,13 +48,12 @@ export default function ChatPanel() {
       message: values.message,
       isBroadcast: false,
     };
-    sendMessage(messageBody);
+    sendMessage(chatRoomId, messageBody);
     setNewMessage("");
   };
   const handleFetchMessage = () => {
     dispatch(getChatMessage({ chatRoomId: currentUser.chatRooms[0] }));
   };
-  console.log("chatRoom data ", chatRoom);
   return (
     <>
       <Box sx={rowDirection}>
@@ -65,25 +65,11 @@ export default function ChatPanel() {
         <Typography variant="h5" sx={{ mb: 3 }}>
           {currentUser.employee.fname + currentUser.employee.lname}
         </Typography>
-        <Button variant="contained" onClick={handleFetchMessage}>
-          Pull message
-        </Button>
-        <TextField
-          label="frEmail"
-          name="frEmail"
-          id="frEmail"
-          variant="outlined"
-          placeholder={frEmail}
-          onChange={(e) => setFrEmail(e.target.value)}
-        ></TextField>
-        <Button variant="contained" onClick={joinRoom}>
-          Connect to {frEmail}
-        </Button>
       </Box>
       <Divider variant="fullWidth" sx={{ borderBottomWidth: 4 }} />
       <Box sx={{ colDirection }}>
         <ul className="chatBox">
-          {chatRoom.messages.map((message, index) => {
+          {roomMessages.map((message, index) => {
             return (
               <div className="message-chat" key={index}>
                 <li
@@ -145,5 +131,7 @@ export default function ChatPanel() {
   );
 }
 ChatPanel.propTypes = {
-  user: PropTypes.object,
+  chatRoomId: PropTypes.string,
+  roomMembers: PropTypes.array,
+  roomMessages: PropTypes.array,
 };

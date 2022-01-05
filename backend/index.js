@@ -6,6 +6,8 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
 
+const chatRoomController = require("./controllers/chatRoom.controller");
+
 const employeeRoute = require("./routes/employee.route");
 const departmentRoute = require("./routes/department.route");
 const feedbackFromEmployeeRoute = require("./routes/feedbackFromEmployee.route");
@@ -16,7 +18,8 @@ const roleRoute = require("./routes/role.route");
 const authRoute = require("./routes/auth.route");
 const chatRoom = require("./routes/chatRoom.route");
 const Role = require("./models/role.model");
-const ChatMessage = require("./models/chatMessage.model");
+const ChatRoom = require("./models/chatRoom.model");
+
 const {
   addUser,
   getUser,
@@ -124,6 +127,7 @@ io.use((socket, next) => {
     next(new Error("Unauthorized!"));
   }
 }).on("connection", (socket) => {
+  sessionsMessages = [];
   console.log(`[NewClient]id=${socket.id} joint`);
 
   socket.on("joinRoom", ({ username, room }) => {
@@ -146,19 +150,12 @@ io.use((socket, next) => {
       body["createdAt"] = new Date();
       body["isBroadcast"] = false;
       console.log("messageBody ", body);
-      let chatMsg = new ChatMessage(body);
-      chatMsg.save((error, result) => {
-        if (error) {
-          // res.status(500).send({ message: error });
-          console.log("saveDB error ", error);
-          return;
-        }
-        console.log("saveDB success result ", result);
-      });
+      sessionsMessages.push(body);
       io.to(user.room).emit("message", body);
     });
 
     socket.on("disconnect", () => {
+      // saveMessagesToDB(user.room, sessionsMessages);
       socket.broadcast.to(user.room).emit("message", {
         message: `SYSTEM: ${user.username} has left the chat!`,
         createdAt: new Date(),
@@ -168,6 +165,27 @@ io.use((socket, next) => {
   });
 });
 
+const saveMessagesToDB = (chatRoomId, messages) => {
+  ChatRoom.findById(chatRoomId).exec((error, chatRoom) => {
+    if (error || !chatRoom) {
+      console.log(`Room ${chatRoomId} is not found`);
+      res.status(404).json({
+        message: "[ERROR] [Controller] Room not found!",
+      });
+      return;
+    } else {
+      console.log(moment().format("hh:mm:ss"), `Room ${chatRoomId} found!`);
+      chatRoom.messages = { ...chatRooom.messages, messages: messages };
+      chatRoom.save((error, result) => {
+        if (error) {
+          res.status(200).json({ chatrooms });
+          console.log("[ERROR] saveMessagesToDB ", error);
+        }
+        console.log("[SUCCESS] saveMessagesToDB");
+      });
+    }
+  });
+};
 http.listen(port, () => {
   console.log("Listening on localhost:", port);
 });

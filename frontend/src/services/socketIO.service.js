@@ -45,10 +45,11 @@ export default function chatService(roomId) {
   };
   // Sends a message to the server that
   // forwards it to all users in the same room
-  const sendMessage = (messageBody) => {
+  const sendMessage = (chatRoomId, messageBody) => {
+    console.log("Check ");
     let senderId = socketRef.current.id;
     let messagePkg = { ...messageBody, senderId };
-    socketRef.current.emit(MESSAGE_EVENT, messagePkg);
+    socketRef.current.emit.to(chatRoomId, MESSAGE_EVENT, messagePkg);
   };
 
   return { messages, joinRoom, sendMessage };
