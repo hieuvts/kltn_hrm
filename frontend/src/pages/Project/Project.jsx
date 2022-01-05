@@ -1,38 +1,38 @@
 import React, { useState, useEffect, useCallback } from "react";
-
-import { useDispatch } from "react-redux";
-import { getDepartmentAsync } from "../../stores/departmentSlice";
-
 import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import MuiAlert from "@mui/material/Alert";
-import { Typography, Button, InputBase } from "@mui/material";
+
+import { Typography, Button } from "@mui/material";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
-import DepartmentTable from "../../components/Department/DepartmentList";
-import DialogAddDepartment from "../../components/Department/DialogAddDepartment";
+
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
-import SearchIcon from "@mui/icons-material/Search";
-import debounce from "lodash.debounce";
+import MuiAlert from "@mui/material/Alert";
+import { Snackbar } from "@mui/material";
 import CapitalizeFirstLetter from "../../utilities/captitalizeFirstLetter";
 import MySearchBox from "../../components/StyledSearchBox";
-import { Snackbar } from "@mui/material";
+import ProjectTable from "../../components/Project/ProjectList";
+import DialogAddProject from "../../components/Project/DialogAddProject";
+import DialogUpdateProject from "../../components/Project/DialogUpdateProject";
+import debounce from "lodash.debounce";
+//Redux
+import { useDispatch } from "react-redux";
+import { getProjectAsync } from "../../stores/projectSlice";
+import { getDepartmentAsync } from "../../stores/departmentSlice";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function Department() {
+export default function Project() {
   const dispatch = useDispatch();
   const pathnames = location.pathname.split("/").filter((x) => x);
-  
-  // // Add Department Dialog
+
+  // Add Project Dialog
   const [isDialogOpen, setDialogOpen] = useState(false);
-  // const [isDialogExportEmployeeOpen, setDialogExportEmployeeOpen] =
-  //   useState(false);
+  const [isDialogExportProjectOpen, setDialogExportProjectOpen] =
+    useState(false);
   // Working with Snackbar
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   // Working with search func
@@ -41,9 +41,9 @@ export default function Department() {
     setDialogOpen(true);
   };
 
-  // const setDialogExportEmployeeClose = () => {
-  //   setDialogExportEmployeeOpen(false);
-  // };
+  const setDialogExportProjectClose = () => {
+    setDialogExportProjectOpen(false);
+  };
   const handleDialogClose = () => {
     setDialogOpen(false);
   };
@@ -60,22 +60,20 @@ export default function Department() {
     setSearchQuery(e.target.value);
     console.log("current searchQuery --> ", e.target.value);
   };
-
   const debounceFetchAPI = useCallback(
     debounce((searchQuery) => {
-      dispatch(getDepartmentAsync({ searchQuery: searchQuery }));
-    }, 500),
+      dispatch(getProjectAsync({ searchQuery: searchQuery }));
+    }, 350),
     []
   );
-
   useEffect(() => {
     debounceFetchAPI(searchQuery);
-    // dispatch(getEmployeeAsync());
+    dispatch(getDepartmentAsync());
   }, [handleSearchQueryChange]);
 
   return (
     <>
-    <Snackbar
+      <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         open={isSnackbarOpen}
         autoHideDuration={2500}
@@ -88,11 +86,11 @@ export default function Department() {
           severity="success"
           sx={{ width: "100%" }}
         >
-          Created new department!
+          Created new project!
         </Alert>
       </Snackbar>
 
-      <DialogAddDepartment
+      <DialogAddProject
         isDialogOpen={isDialogOpen}
         setDialogOpen={setDialogOpen}
         handleCloseDialog={handleDialogClose}
@@ -103,54 +101,59 @@ export default function Department() {
           Home
         </Link>
 
-        {pathnames.map((path, idx) => (
+        {pathnames.map((pathName, idx) => (
           <Link
             underline="hover"
             color="text.primary"
-            href={path}
+            href={pathName}
             aria-current="page"
             key={idx}
           >
-            {CapitalizeFirstLetter(path)}
+            {CapitalizeFirstLetter(pathName)}
           </Link>
         ))}
       </Breadcrumbs>
-
-      {/* <Typography variant="h4">Department</Typography> */}
-      <Grid container justifyContent="flex-end" textAlign="right">
-        <Grid item xs={12} md={3}>
+      <Grid
+        container
+        justifyContent="flex-end"
+        textAlign={{ sm: "right", md: "center" }}
+        padding={{ sm: 5, md: 0 }}
+        sx={{ alignItems: "center" }}
+      >
+        <Grid item paddingTop={{ xs: 2, sm: 0 }} xs={12} sm={3} md={2}>
           <Button variant="link">
-            <FileUploadOutlinedIcon fontSize="medium" />
-            <Typography variant="h6" sx={{ px: 1 }}>
+            <FileDownloadOutlinedIcon fontSize="medium" />
+            <Typography variant="h6" sx={{ pl: 1 }}>
               Import
             </Typography>
           </Button>
         </Grid>
-        <Grid item xs={12} md={3}>
-          <Button variant="link">
-            <FileDownloadOutlinedIcon fontSize="medium" />
-            <Typography variant="h6" sx={{ px: 1 }}>
+        <Grid item xs={12} sm={3} md={2}>
+          <Button
+            variant="link"
+            onClick={() => setDialogExportProjectOpen(true)}
+          >
+            <FileUploadOutlinedIcon fontSize="medium" />
+            <Typography variant="h6" sx={{ pl: 1 }}>
               Export
             </Typography>
           </Button>
         </Grid>
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} sm={6} md={2} paddingTop={{ xs: 2, sm: 0, md: 0 }}>
           <Button variant="contained" onClick={() => handleDialogOpen()}>
-            <Typography variant="h6" sx={{ px: 1 }}>
-              Add Department
-            </Typography>
+            <Typography variant="h6">Add Project</Typography>
           </Button>
         </Grid>
       </Grid>
 
-      {/* Search box */}
-
-      <Paper elevation={1} sx={{ mt: 3, p: 3 }}>
-        <MySearchBox placeholder="Search for Department"
-        handleSearchQueryChange={handleSearchQueryChange} />
+      <Paper elevation={1} sx={{ my: 3, p: 3 }}>
+        <MySearchBox
+          placeholder="Search for customer by name, email, phone number..."
+          handleSearchQueryChange={handleSearchQueryChange}
+        />
       </Paper>
       <div>
-        <DepartmentTable />
+        <ProjectTable />
       </div>
     </>
   );

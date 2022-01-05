@@ -17,25 +17,25 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import EditIcon from "@mui/icons-material/Edit"
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import ModeIcon from "@mui/icons-material/Mode";
+import Avatar from "@mui/material/Avatar";
 import { visuallyHidden } from "@mui/utils";
-import DialogDeleteDepartment from "./DialogDeleteDepartment";
-import DialogDeleteMultipleDepartment from "./DialogDeleteMultipleDepartment";
-import DialogUpdateDepartment from "./DialogUpdateDepartment";
-// import DialogEmployeeDetails from "./DialogEmployeeDetails";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+
+import DialogDeleteProject from "./DialogDeleteProject";
+import DialogDeleteMultipleProject from "./DialogDeleteMultipleProject";
+import DialogUpdateProject from "./DialogUpdateProject";
+
 import moment from "moment";
 
 import {
-  setCurrentSelectedDepartment,
-  addToSelectedDepartmentList,
-  removeFromSelectedDepartmentList,
-  setMultiSelectedDepartmentList
-} from "../../stores/departmentSlice";
+  setCurrentSelectedProject,
+  addToSelectedProjectList,
+  removeFromSelectedProjectList,
+  setMultiSelectedProjectList,
+} from "../../stores/projectSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -53,34 +53,46 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-const titleCells = [
+const headCells = [
   {
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "DEPARTMENT NAME",
+    label: "Name",
   },
   {
-    id: "amount",
-    numeric: false,
-    disablePadding: true,
-    label: "AMOUNT OF EMPLOYEE",
-  },
-  {
-    id: "manager",
+    id: "customer",
     numeric: false,
     disablePadding: false,
-    label: "MANAGER",
+    label: "Customer",
+  },
+  {
+    id: "department",
+    numeric: false,
+    disablePadding: false,
+    label: "Department",
+  },
+  {
+    id: "startDate",
+    numeric: false,
+    disablePadding: false,
+    label: "Start Date",
+  },
+  {
+    id: "endDate",
+    numeric: false,
+    disablePadding: false,
+    label: "End Date",
   },
   {
     id: "actions",
     numeric: false,
-    disablePadding: true,
-    label: "Actions"
-  }
+    disablePadding: false,
+    label: "Actions",
+  },
 ];
 
-function DepartmentTableHead(props) {
+function EnhancedTableHead(props) {
   const {
     onSelectAllClick,
     order,
@@ -92,6 +104,7 @@ function DepartmentTableHead(props) {
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
+
   return (
     <TableHead>
       <TableRow>
@@ -102,24 +115,24 @@ function DepartmentTableHead(props) {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={() => onSelectAllClick()}
             inputProps={{
-              "aria-label": "select all department",
+              "aria-label": "select all projects",
             }}
           />
         </TableCell>
-        {titleCells.map((titleCell) => (
+        {headCells.map((headCell) => (
           <TableCell
-            key={titleCell.id}
+            key={headCell.id}
             align={"center"}
-            padding={titleCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === titleCell.id ? order : false}
+            padding={headCell.disablePadding ? "none" : "normal"}
+            sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
-              active={orderBy === titleCell.id}
-              direction={orderBy === titleCell.id ? order : "asc"}
-              onClick={createSortHandler(titleCell.id)}
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : "asc"}
+              onClick={createSortHandler(headCell.id)}
             >
-              {titleCell.label}
-              {orderBy === titleCell.id ? (
+              {headCell.label}
+              {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
@@ -132,7 +145,7 @@ function DepartmentTableHead(props) {
   );
 }
 
-DepartmentTableHead.propTypes = {
+EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
@@ -142,17 +155,15 @@ DepartmentTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected, setSelected, setDialogDeleteMultipleDepartmentOpen } = props;
+  const { numSelected, setSelected, setDialogDeleteMultipleProjectOpen } =
+    props;
   const dispatch = useDispatch();
-
-  // Get selectedDepartmentList to delete multiple, delete all
-  const selectedDepartmentList = useSelector(
-    (state) => state.department.selectedDepartmentList
-  );
-  const handleDeleteMultipleDepartment = () => {
-    setDialogDeleteMultipleDepartmentOpen(true);
+  // Get selectedProjectList to delete multiple, delete all
+  const selectedProjectList = useSelector((state) => state.project);
+  const auth = useSelector((state) => state.auth);
+  const handleDeleteMultipleProject = () => {
+    setDialogDeleteMultipleProjectOpen(true);
   };
-
   return (
     <Toolbar
       sx={{
@@ -179,17 +190,17 @@ const EnhancedTableToolbar = (props) => {
       ) : (
         <Typography
           sx={{ flex: "1 1 100%" }}
-          variant="h6"
+          variant="h5"
           id="tableTitle"
           component="div"
         >
-          Department List
+          Project List
         </Typography>
       )}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete multiple">
-          <IconButton onClick={() => handleDeleteMultipleDepartment()}>
+          <IconButton onClick={() => handleDeleteMultipleProject()}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -207,29 +218,27 @@ const EnhancedTableToolbar = (props) => {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   setSelected: PropTypes.func.isRequired,
-  setDialogDeleteMultipleDepartmentOpen: PropTypes.func.isRequired
+  setDialogDeleteMultipleProjectOpen: PropTypes.func.isRequired,
 };
 
-export default function DepartmentTable() {
+export default function ProjectTable() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [isDialogDeleteDepartmentOpen, setDialogDeleteDepartmentOpen] =
+  const [isDialogDeleteProjectOpen, setDialogDeleteProjectOpen] =
     React.useState(false);
   const [
-    isDialogDeleteMultipleDepartmentOpen,
-    setDialogDeleteMultipleDepartmentOpen,
+    isDialogDeleteMultipleProjectOpen,
+    setDialogDeleteMultipleProjectOpen,
   ] = React.useState(false);
-  const [isDialogUpdateDepartmentOpen, setDialogUpdateDepartmentOpen] =
+  const [isDialogUpdateProjectOpen, setDialogUpdateProjectOpen] =
     React.useState(false);
-  // const [isDialogEmployeeDetailsOpen, setDialogEmployeeDetailsOpen] =
-  //   React.useState(false);
+  const [isDialogProjectDetailsOpen, setDialogProjectDetailsOpen] =
+    React.useState(false);
   const dispatch = useDispatch();
-  var rows = useSelector((state) => state.department.departmentList);
-
+  var rows = useSelector((state) => state.project.projectList);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -239,36 +248,39 @@ export default function DepartmentTable() {
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelecteds = rows.map((n) => n._id);
-      // Select all -> add all employee (equals to 'rows') to the selectedEmployeeList
-      dispatch(setMultiSelectedDepartmentList(rows));
+      // Select all -> add all project (equals to 'rows') to the selectedProjectList
+      dispatch(setMultiSelectedProjectList(rows));
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, department) => {
-    const id = department._id;
+  const handleClick = (event, project) => {
+    const id = project._id;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
+      // If project is not in selectedList -> add to it
       newSelected = newSelected.concat(selected, id);
-      dispatch(addToSelectedDepartmentList({ selectedDepartment: department }));
+      dispatch(addToSelectedProjectList({ selectedProject: project }));
     } else if (selectedIndex === 0) {
+      // If undo checkbox at first selected row
       newSelected = newSelected.concat(selected.slice(1));
-      dispatch(removeFromSelectedDepartmentList({ selectedDepartment: department }));
+      dispatch(removeFromSelectedProjectList({ selectedProject: project }));
     } else if (selectedIndex === selected.length - 1) {
+      // If undo checkbox at last selected row
       newSelected = newSelected.concat(selected.slice(0, -1));
-      dispatch(removeFromSelectedDepartmentList({ selectedDepartment: department }));
+      dispatch(removeFromSelectedProjectList({ selectedProject: project }));
     } else if (selectedIndex > 0) {
+      // If undo checkbox at another selected row
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
         selected.slice(selectedIndex + 1)
       );
-      dispatch(removeFromSelectedDepartmentList({ selectedDepartment: department }));
+      dispatch(removeFromSelectedProjectList({ selectedProject: project }));
     }
-
     setSelected(newSelected);
   };
 
@@ -282,28 +294,31 @@ export default function DepartmentTable() {
   };
 
   const isSelected = (id) => selected.indexOf(id) !== -1;
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-  const handleCloseDialogDeleteDepartment = () => {
-    setDialogDeleteDepartmentOpen(false);
+  const handleCloseDialogDeleteProject = () => {
+    setDialogDeleteProjectOpen(false);
   };
-  const handleCloseDialogDeleteMultipleDepartment = () => {
-    setDialogDeleteMultipleDepartmentOpen(false);
+  const handleCloseDialogDeleteMultipleProject = () => {
+    setDialogDeleteMultipleProjectOpen(false);
   };
-  const handleCloseDialogUpdateDepartment = () => {
-    setDialogUpdateDepartmentOpen(false);
+  const handleCloseDialogUpdateProject = () => {
+    setDialogUpdateProjectOpen(false);
   };
-
-  const RowActions = (currentSelectedDepartment) => {
+  const handleCloseDialogProjectDetails = () => {
+    setDialogProjectDetailsOpen(false);
+  };
+  const RowActions = (currentSelectedProject) => {
     return (
       <Box>
         <Button
           variant="link"
           onClick={() => {
-            dispatch(setCurrentSelectedDepartment(currentSelectedDepartment));
-            setDialogUpdateDepartmentOpen(true);
+            dispatch(setCurrentSelectedProject(currentSelectedProject));
+            setDialogUpdateProjectOpen(true);
           }}
         >
           <ModeIcon color="primary" />
@@ -311,8 +326,8 @@ export default function DepartmentTable() {
         <Button
           variant="link"
           onClick={() => {
-            dispatch(setCurrentSelectedDepartment(currentSelectedDepartment));
-            setDialogDeleteDepartmentOpen(true);
+            dispatch(setCurrentSelectedProject(currentSelectedProject));
+            setDialogDeleteProjectOpen(true);
           }}
         >
           <DeleteIcon color="primary" />
@@ -320,34 +335,41 @@ export default function DepartmentTable() {
       </Box>
     );
   };
-
   return (
     <>
-      <DialogDeleteDepartment
-        isDialogOpen={isDialogDeleteDepartmentOpen}
-        handleCloseDialog={handleCloseDialogDeleteDepartment}
+      <DialogDeleteProject
+        isDialogOpen={isDialogDeleteProjectOpen}
+        handleCloseDialog={handleCloseDialogDeleteProject}
       />
-      <DialogDeleteMultipleDepartment
+      <DialogDeleteMultipleProject
         setSelected={setSelected}
-        isDialogOpen={isDialogDeleteMultipleDepartmentOpen}
-        handleCloseDialog={handleCloseDialogDeleteMultipleDepartment}
+        isDialogOpen={isDialogDeleteMultipleProjectOpen}
+        handleCloseDialog={handleCloseDialogDeleteMultipleProject}
       />
-      <DialogUpdateDepartment
-        isDialogOpen={isDialogUpdateDepartmentOpen}
-        handleCloseDialog={handleCloseDialogUpdateDepartment}
+      <DialogUpdateProject
+        isDialogOpen={isDialogUpdateProjectOpen}
+        handleCloseDialog={handleCloseDialogUpdateProject}
       />
+      {/* <DialogProjectDetails
+        isDialogOpen={isDialogProjectDetailsOpen}
+        handleCloseDialog={handleCloseDialogProjectDetails}
+      /> */}
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2 }}>
-          <EnhancedTableToolbar numSelected={selected.length}
+          <EnhancedTableToolbar
+            numSelected={selected.length}
             setSelected={setSelected}
-            setDialogDeleteMultipleDepartmentOpen={setDialogDeleteMultipleDepartmentOpen} />
+            setDialogDeleteMultipleProjectOpen={
+              setDialogDeleteMultipleProjectOpen
+            }
+          />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
               aria-labelledby="tableTitle"
-              size={dense ? "small" : "medium"}
+              size="medium"
             >
-              <DepartmentTableHead
+              <EnhancedTableHead
                 numSelected={selected.length}
                 order={order}
                 orderBy={orderBy}
@@ -356,8 +378,6 @@ export default function DepartmentTable() {
                 rowCount={rows.length}
               />
               <TableBody>
-                {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                   rows.slice().sort(getComparator(order, orderBy)) */}
                 {rows
                   .slice()
                   .sort(getComparator(order, orderBy))
@@ -369,17 +389,17 @@ export default function DepartmentTable() {
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row._id}
+                        key={index}
                         selected={isItemSelected}
                       >
                         <TableCell padding="checkbox">
                           <Checkbox
                             color="primary"
                             checked={isItemSelected}
+                            onClick={(event) => handleClick(event, row)}
                             inputProps={{
                               "aria-labelledby": labelId,
                             }}
@@ -394,10 +414,28 @@ export default function DepartmentTable() {
                         >
                           {row.name}
                         </TableCell>
-                        <TableCell align="center">{row.amount}</TableCell>
-                        <TableCell align="center">{row.manager}</TableCell>
-                        <TableCell align="right">
-                          <RowActions currentSelectedDepartment={row} />
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                          align="center"
+                        >
+                          {row.customer}
+                        </TableCell>
+                        <TableCell align="center">
+                          {row.departments.map((department, index) => (
+                            <p key={index}>{department.name}</p>
+                          ))}
+                        </TableCell>  
+                        <TableCell align="center">
+                          {moment(row.startDate).format("DD-MM-YYYY")}
+                        </TableCell>
+                        <TableCell align="center">
+                          {moment(row.endDate).format("DD-MM-YYYY")}
+                        </TableCell>
+                        <TableCell align="center">
+                          <RowActions currentSelectedProject={row} />
                         </TableCell>
                       </TableRow>
                     );
@@ -405,7 +443,7 @@ export default function DepartmentTable() {
                 {emptyRows > 0 && (
                   <TableRow
                     style={{
-                      height: (dense ? 33 : 53) * emptyRows,
+                      height: 53 * emptyRows,
                     }}
                   >
                     <TableCell colSpan={6} />
@@ -415,6 +453,7 @@ export default function DepartmentTable() {
             </Table>
           </TableContainer>
           <TablePagination
+            labelRowsPerPage="Projects per page"
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
             count={rows.length}

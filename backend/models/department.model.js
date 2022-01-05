@@ -12,7 +12,7 @@ const departmentSchema = new Schema({
     minlength: 2,
     maxlength: 50,
   },
-  headOfDepartment: {
+  manager: {
     type: String,
     require: true,
     default: "leader",
@@ -20,6 +20,9 @@ const departmentSchema = new Schema({
     maxlength: 50,
   },
   employee: [{ type: Schema.Types.ObjectId, ref: "employee" }],
+  amount :{
+    type: Number
+  },
   isDeleted: {
     type: Boolean,
     default: false,

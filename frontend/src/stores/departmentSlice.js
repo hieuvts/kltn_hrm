@@ -32,9 +32,8 @@ export const addDepartmentAsync = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const res = await departmentService.addDepartment(payload);
-
       return res.data.departments;
-    } catch {
+    } catch(error) {
       return rejectWithValue("Add department not successful");
     }
   }
@@ -58,11 +57,11 @@ export const deleteDepartmentAsync = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const res = await departmentService.deleteDepartment(
-        payload.selectedDepartmentId
+        payload.selectedDepartmentID
       );
-
       return res.data;
-    } catch {
+    } 
+    catch {
       return rejectWithValue("Delete department not successful");
     }
   }
