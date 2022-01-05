@@ -7,6 +7,7 @@ const getUserById = async (req, res, next, userId) => {
   User.findById(userId)
     .populate("roles")
     .populate("employee")
+    .populate("chatRooms")
     .exec((error, result) => {
       if (error || !result) {
         console.log(`user ${userId} is not found`);

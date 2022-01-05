@@ -52,7 +52,7 @@ function a11yProps(index) {
 
 export default function InternalChat() {
   const user = JSON.parse(localStorage.getItem("user"));
-
+  const currentUser = useSelector((state) => state.user.currentUser);
   const [value, setValue] = React.useState(0);
   const chatRoom = useSelector((state) => state.chatRoom);
   const dispatch = useDispatch();
@@ -80,7 +80,7 @@ export default function InternalChat() {
             aria-label="Vertical tabs example"
             sx={{ borderRight: 1, borderColor: "divider" }}
           >
-            {chatRoom.map((room, index) => (
+            {currentUser.chatRooms.map((room, index) => (
               <Tab
                 key={index}
                 label={
@@ -115,7 +115,7 @@ export default function InternalChat() {
         </Box>
       </Grid>
       <Grid item xs={9}>
-        {chatRoom.map((room, index) => (
+        {currentUser.chatRooms.map((room, index) => (
           <TabPanel key={index} value={value} index={index}>
             <span>
               <ChatPanel

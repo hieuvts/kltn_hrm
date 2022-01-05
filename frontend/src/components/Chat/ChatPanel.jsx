@@ -41,7 +41,7 @@ import { dummyUser } from "../../utilities/dummyUser";
 // const token = authHeaderValue["x-access-token"];
 export default function ChatPanel({ chatRoomId, roomName, roomMessages }) {
   const user = JSON.parse(localStorage.getItem("user"));
-  const currentUser = useSelector((state) => state.cloneUser.currentUser);
+  const currentUser = useSelector((state) => state.user.currentUser);
   const [messageToSend, setMessageToSend] = useState("");
   const [frEmail, setFrEmail] = useState("");
   const roomId = chatRoomId; // Gets roomId from URL
@@ -56,19 +56,25 @@ export default function ChatPanel({ chatRoomId, roomName, roomMessages }) {
     };
     sendMessage(messageBody);
     setMessageToSend("");
+    // window.scrollTo(0, document.body.scrollHeight);
   };
-  const socketRef = useRef();
+  // const messagesEndRef = useRef(null);
+  // const scrollToBottom = () => {
+  //   messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  // };
+  // useEffect(scrollToBottom, [messages]);
+  const AlwaysScrollToBottom = () => {
+    const elementRef = useRef();
+    useEffect(() => elementRef.current.scrollIntoView());
+    return <div ref={elementRef} />;
+  };
   // Merge old message (from DB) and new messages (current chatting)
   let mergedMessages = [...roomMessages, ...messages];
 
   useEffect(() => {
     joinRoom(user.email, chatRoomId);
   }, []);
-  // useEffect(() => {
-  //   console.log("Update messages");
-  //   newsad = [...roomMessages, ...messages];
-  //   console.log("newsad ", newsad);
-  // }, [messages]);
+
   return (
     <>
       <Box sx={rowDirection}>
@@ -130,6 +136,7 @@ export default function ChatPanel({ chatRoomId, roomName, roomMessages }) {
                   ) : (
                     <div className="message-broadcast">{message.message}</div>
                   )}
+                  <AlwaysScrollToBottom />
                 </li>
               </div>
             );

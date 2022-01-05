@@ -24,11 +24,7 @@ const userSchema = new Schema({
   },
   employee: { type: Schema.Types.ObjectId, ref: "employee" },
   roles: [{ type: Schema.Types.ObjectId, ref: "role" }],
-  chatRooms: [
-    {
-      type: String,
-    },
-  ],
+  chatRooms: [{ type: Schema.Types.ObjectId, ref: "chatRoom" }],
   isDeleted: {
     type: Boolean,
     default: false,
