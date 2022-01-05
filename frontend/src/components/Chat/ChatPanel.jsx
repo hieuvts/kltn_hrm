@@ -83,22 +83,22 @@ export default function ChatPanel() {
       <Divider variant="fullWidth" sx={{ borderBottomWidth: 4 }} />
       <Box sx={{ colDirection }}>
         <ul className="chatBox">
-          {chatRoom.messages.map((value, index) => {
-            let createdAt = moment(value.createdAt).format("ddd, hA");
-            let messageContent = value.message;
-            let isOwned = value.ownedByCurrentUser;
-            let isBroadcast = value.isBroadcast;
+          {chatRoom.messages.map((message, index) => {
             return (
               <div className="message-chat" key={index}>
                 <li
                   className={`message ${
-                    isOwned ? "message-sent " : "message-received"
+                    message.sender === currentUser.email
+                      ? "message-sent "
+                      : "message-received"
                   }`}
                 >
-                  {!isBroadcast ? (
+                  {!message.isBroadcast ? (
                     <div
                       className={`message ${
-                        isOwned ? "message-sent " : "message-received"
+                        message.sender === currentUser.email
+                          ? "message-sent "
+                          : "message-received"
                       }`}
                     >
                       <StyledBadge
@@ -112,18 +112,22 @@ export default function ChatPanel() {
                         <Avatar alt="U" src={avatarFemale} sx={{ mx: 1 }} />
                       </StyledBadge>
                       <div className="message-bubble">
-                        {!isOwned && (
+                        {message.sender !== currentUser.email && (
                           <div className="message-info">
-                            <div className="message-username">Username</div>
+                            <div className="message-username">
+                              {message.sender}
+                            </div>
                             <div className="message-role">admin</div>
                           </div>
                         )}
-                        <div className="message-content">{messageContent}</div>
-                        <div className="message-time">{createdAt}</div>
+                        <div className="message-content">{message.message}</div>
+                        <div className="message-time">
+                          {moment(message.createdAt).format("ddd, hA")}
+                        </div>
                       </div>
                     </div>
                   ) : (
-                    <div className="message-broadcast">{messageContent}</div>
+                    <div className="message-broadcast">{message.message}</div>
                   )}
                 </li>
               </div>
