@@ -39,9 +39,9 @@ import { dummyUser } from "../../utilities/dummyUser";
 // const JOIN_ROOM_EVENT = "joinRoom";
 // const authHeaderValue = authHeader();
 // const token = authHeaderValue["x-access-token"];
-export default function ChatPanel({ chatRoomId, roomMembers, roomMessages }) {
-  const currentUser = useSelector((state) => state.user.currentUser);
-
+export default function ChatPanel({ chatRoomId, roomName, roomMessages }) {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const currentUser = useSelector((state) => state.cloneUser.currentUser);
   const [messageToSend, setMessageToSend] = useState("");
   const [frEmail, setFrEmail] = useState("");
   const roomId = chatRoomId; // Gets roomId from URL
@@ -57,16 +57,12 @@ export default function ChatPanel({ chatRoomId, roomMembers, roomMessages }) {
     sendMessage(messageBody);
     setMessageToSend("");
   };
-  const handleFetchMessage = () => {
-    dispatch(getChatMessage({ chatRoomId: currentUser.chatRooms[0] }));
-  };
   const socketRef = useRef();
   // Merge old message (from DB) and new messages (current chatting)
   let mergedMessages = [...roomMessages, ...messages];
 
   useEffect(() => {
-    console.log("Joining room with ", currentUser.email, chatRoomId);
-    joinRoom(currentUser.email, chatRoomId);
+    joinRoom(user.email, chatRoomId);
   }, []);
   // useEffect(() => {
   //   console.log("Update messages");
@@ -81,8 +77,9 @@ export default function ChatPanel({ chatRoomId, roomMembers, roomMessages }) {
           src={user.avatar}
           sx={{ width: 50, height: 50, mr: 3 }}
         /> */}
+        {console.log("currentUser ", currentUser)}
         <Typography variant="h5" sx={{ mb: 3 }}>
-          {currentUser.employee.fname + currentUser.employee.lname}
+          {roomName}
         </Typography>
       </Box>
       <Divider variant="fullWidth" sx={{ borderBottomWidth: 4 }} />
@@ -151,6 +148,6 @@ export default function ChatPanel({ chatRoomId, roomMembers, roomMessages }) {
 }
 ChatPanel.propTypes = {
   chatRoomId: PropTypes.string,
-  roomMembers: PropTypes.array,
+  roomName: PropTypes.array,
   roomMessages: PropTypes.array,
 };

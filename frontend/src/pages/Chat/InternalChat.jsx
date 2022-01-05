@@ -52,9 +52,7 @@ function a11yProps(index) {
 
 export default function InternalChat() {
   const user = JSON.parse(localStorage.getItem("user"));
-  useEffect(() => {
-    dispatch(getUser({ userId: user.id }));
-  }, []);
+
   const [value, setValue] = React.useState(0);
   const chatRoom = useSelector((state) => state.chatRoom);
   const dispatch = useDispatch();
@@ -66,6 +64,7 @@ export default function InternalChat() {
   };
   useEffect(() => {
     handleGetAllChatRoom();
+    dispatch(getUser({ userId: user.id }));
   }, []);
   return (
     <Grid container direction="row" columnSpacing={3}>
@@ -120,7 +119,7 @@ export default function InternalChat() {
             <span>
               <ChatPanel
                 chatRoomId={room._id}
-                roomMembers={room.members}
+                roomName={room.name}
                 roomMessages={room.messages}
               />
             </span>

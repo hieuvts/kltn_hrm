@@ -155,6 +155,7 @@ io.use((socket, next) => {
 
     socket.on("disconnect", () => {
       saveMessagesToDB(chatRoomId, sessionsMessages);
+      socket.leave(chatRoomId)
       socket.broadcast.to(chatRoomId).emit("message", {
         message: `SYSTEM: ${email} has left the chat!`,
         createdAt: new Date(),
@@ -165,6 +166,7 @@ io.use((socket, next) => {
 });
 
 const saveMessagesToDB = (chatRoomId, messages) => {
+  console.log("Saving messages to the DB");
   ChatRoom.findByIdAndUpdate(chatRoomId, {
     $push: { messages: messages },
   }).exec((error, chatRoom) => {

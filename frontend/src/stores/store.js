@@ -12,7 +12,7 @@ const reducers = {
   message: messageReducer,
   department: departmentReducer,
   chatRoom: chatRoomReducer,
-  user: userReducer,
+  cloneUser: userReducer,
 };
 const store = configureStore({
   reducer: reducers,
