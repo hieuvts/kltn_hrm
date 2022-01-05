@@ -56,7 +56,7 @@ const addRoomIdToUser = async (req, res, chatRoomId) => {
     );
   });
 };
-const createChatRoom = async (req, res, next) => {
+const createChatRoom = async (req, res) => {
   const newChatRoom = ChatRoom(req.body);
 
   console.log("creatChatRoom ", req.body);

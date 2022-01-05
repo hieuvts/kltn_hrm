@@ -2,25 +2,67 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authService from "../services/auth.service";
 import chatService from "../services/chat.service";
 
-export const initChatMessage = createAsyncThunk(
-  "chat/getAllMessage",
+const initialState = {
+  members: [],
+  name: "",
+  messages: [],
+};
+
+export const createChatRoom = createAsyncThunk(
+  "chat/createChatRoom",
+  async (payload, thunkAPI) => {
+    try {
+      const data = await chatService.createChatRoom(payload.chatRoomInfo);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const getChatRoomInfo = createAsyncThunk(
+  "chat/getChatRoomInfo",
+  async (payload, thunkAPI) => {
+    try {
+      const data = await chatService.getChatRoomInfo(payload.chatRoomId);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+export const getChatMessage = createAsyncThunk(
+  "chat/getChatMessage",
   async (payload, { rejectWithValue }) => {
     try {
-      const res = await chatService.getAllMessage();
-console.log("getall data ", res.data)
+      const res = await chatService.getChatMessage(payload.chatRoomId);
+      console.log("getall data ", res.data);
       return res.data.messages;
     } catch {
       return rejectWithValue("Get message not successful");
     }
   }
 );
-
-export const login = createAsyncThunk(
-  "auth/login",
-  async (payload, thunkAPI) => {
+export const addMessageToRoom = createAsyncThunk(
+  "chat/addMessageToRoom",
+  async (payload, { rejectWithValue }) => {
     try {
-      const data = await authService.login(payload.email, payload.password);
-      return { user: data};
+      const res = await chatService.addMessageToRoom(
+        payload,
+        chatRoomId,
+        payload.message
+      );
     } catch (error) {
       const message =
         (error.response &&
@@ -38,42 +80,54 @@ export const logout = createAsyncThunk("auth/logout", async () => {
   await authService.logout();
 });
 
-export const authSlice = createSlice({
-  name: "auth",
+export const chatSlice = createSlice({
+  name: "chat",
   initialState,
   extraReducers: {
-    [signUp.pending]: (state, actions) => {
-      console.log("[Rejected] signup actions= ", actions);
+    [getChatRoomInfo.pending]: (state, actions) => {
+      console.log("[Pending] getChatRoomInfo", actions);
     },
-    [signUp.rejected]: (state, actions) => {
-      state.isLoggedIn = false;
-      console.log("[Pending] signup actions= ", actions);
+    [getChatRoomInfo.rejected]: (state, actions) => {
+      console.log("[Rejected] getChatRoomInfo", actions.payload);
     },
-    [signUp.fulfilled]: (state, actions) => {
-      state.isLoggedIn = false;
-      console.log("[Fulfilled] signup actions= ", actions);
+    [getChatRoomInfo.fulfilled]: (state, actions) => {
+      state.push(actions.payload);
+      console.log("[Fulfilled] getChatRoomInfo", actions);
     },
-
-    [login.pending]: (state, actions) => {
-      console.log("[Pending] login state= ", state);
+    
+    //
+    [getChatMessage.pending]: (state, actions) => {
+      console.log("[Pending] getChatMessage ", state);
     },
-    [login.rejected]: (state, actions) => {
-      state.isLoggedIn = false;
-      state.user = null;
-      console.log("[Rejected] login error: ", actions.payload);
+    [getChatMessage.rejected]: (state, actions) => {
+      console.log("[Rejected] getChatMessage ", actions.payload);
     },
-    [login.fulfilled]: (state, actions) => {
-      state.isLoggedIn = true;
-      state.user = actions.payload.user;
-      console.log("[Fulfilled] Login with  ");
+    [getChatMessage.fulfilled]: (state, actions) => {
+      console.log("[Fulfilled] getChatMessage ");
     },
 
-    [logout.fulfilled]: (state, actions) => {
-      state.isLoggedIn = false;
-      state.user = null;
-      console.log("[Fulfilled] logout success");
+    //
+    [addMessageToRoom.pending]: (state, actions) => {
+      console.log("[Pending] addMessageToRoom", state);
+    },
+    [addMessageToRoom.rejected]: (state, actions) => {
+      console.log("[Rejected] addMessageToRoom ", actions.payload);
+    },
+    [addMessageToRoom.fulfilled]: (state, actions) => {
+      console.log("[Fulfilled] addMessageToRoom  ");
+    },
+
+    //
+    [createChatRoom.pending]: (state, actions) => {
+      console.log("[Pending] createChatRoom", state);
+    },
+    [createChatRoom.rejected]: (state, actions) => {
+      console.log("[Rejected] createChatRoom", actions.payload);
+    },
+    [createChatRoom.fulfilled]: (state, actions) => {
+      console.log("[Fulfilled] createChatRoom  ");
     },
   },
 });
 
-export default authSlice.reducer;
+export default chatSlice.reducer;

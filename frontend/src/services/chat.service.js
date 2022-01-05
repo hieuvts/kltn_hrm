@@ -4,36 +4,36 @@ import { apiBaseUrl } from "../config/apiBaseUrl";
 
 const API_URL = `${apiBaseUrl}/chat/`;
 
-const getAllMessage = (searchQuery) => {
-  return axios.get(API_URL + "getAll?search=" + searchQuery, {
+const getChatRoomInfo = (chatRoomId) => {
+  return axios.get(API_URL + chatRoomId, {
     headers: authHeader(),
   });
 };
-const addMessage = (employee) => {
-  return axios.post(API_URL + "create", employee, {
+const getChatMessage = (chatRoomId) => {
+  return axios.get(API_URL + chatRoomId + "/getMsg", {
     headers: authHeader(),
   });
 };
-
-const updateMessage = (employeeId, employee) => {
-  return axios.put(API_URL + employeeId + "/update", employee, {
+const addMessageToRoom = (chatRoomId, message) => {
+  return axios.post(API_URL + chatRoomId + "/addMsg", message, {
     headers: authHeader(),
   });
 };
-const deleteMessage = (employeeId) => {
-  return axios.delete(
-    API_URL + employeeId + "/delete",
-    { _id: employeeId },
-    {
-      headers: authHeader(),
-    }
-  );
+// members: ['61d1e81fc580ba64fa2faf0b', '61d579da5cc2556e252bf8d5' ],
+// name: 'Public Chat 4',
+// messages: [ {sender: 'hieu@gmail.com',
+// 	message: 'Hello Vinh',
+// 	isBroadcast: false}]
+const createChatRoom = (chatRoomInfo) => {
+  return axios.put(API_URL + "/createChatRoom", chatRoomInfo, {
+    headers: authHeader(),
+  });
 };
 
 const chatService = {
-  getAllMessage,
-  addMessage,
-  updateMessage,
-  deleteMessage,
+  getChatMessage,
+  getChatRoomInfo,
+  createChatRoom,
+  addMessageToRoom,
 };
 export default chatService;
