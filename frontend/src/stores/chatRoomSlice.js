@@ -45,12 +45,14 @@ export const getChatRoomInfo = createAsyncThunk(
 export const getChatMessage = createAsyncThunk(
   "chat/getChatMessage",
   async (payload, { rejectWithValue }) => {
+    console.log("check get", payload);
     try {
       const res = await chatService.getChatMessage(payload.chatRoomId);
       console.log("getall data ", res.data);
       return res.data.messages;
-    } catch {
-      return rejectWithValue("Get message not successful");
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(`Get message not successful ${error}`);
     }
   }
 );
@@ -76,12 +78,8 @@ export const addMessageToRoom = createAsyncThunk(
   }
 );
 
-export const logout = createAsyncThunk("auth/logout", async () => {
-  await authService.logout();
-});
-
-export const chatSlice = createSlice({
-  name: "chat",
+export const chatRoomSlice = createSlice({
+  name: "chatRoom",
   initialState,
   extraReducers: {
     [getChatRoomInfo.pending]: (state, actions) => {
@@ -94,7 +92,7 @@ export const chatSlice = createSlice({
       state.push(actions.payload);
       console.log("[Fulfilled] getChatRoomInfo", actions);
     },
-    
+
     //
     [getChatMessage.pending]: (state, actions) => {
       console.log("[Pending] getChatMessage ", state);
@@ -103,7 +101,11 @@ export const chatSlice = createSlice({
       console.log("[Rejected] getChatMessage ", actions.payload);
     },
     [getChatMessage.fulfilled]: (state, actions) => {
+      const newMsg = actions.payload;
+      console.log("getChatMessage payload ", newMsg);
+
       console.log("[Fulfilled] getChatMessage ");
+      return { ...state.messages, messages: newMsg };
     },
 
     //
@@ -125,9 +127,10 @@ export const chatSlice = createSlice({
       console.log("[Rejected] createChatRoom", actions.payload);
     },
     [createChatRoom.fulfilled]: (state, actions) => {
+      state.push(actions.payload);
       console.log("[Fulfilled] createChatRoom  ");
     },
   },
 });
 
-export default chatSlice.reducer;
+export default chatRoomSlice.reducer;

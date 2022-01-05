@@ -22,7 +22,7 @@ const userSchema = new Schema({
     minLength: 2,
     required: true,
   },
-  employee: [{ type: Schema.Types.ObjectId, ref: "employee" }],
+  employee: { type: Schema.Types.ObjectId, ref: "employee" },
   roles: [{ type: Schema.Types.ObjectId, ref: "role" }],
   chatRooms: [
     {

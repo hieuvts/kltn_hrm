@@ -39,8 +39,9 @@ export default function chatService(roomId) {
     };
   }, [roomId]);
 
-  const joinRoom = () => {
-    socketRef.current.emit(JOIN_ROOM_EVENT, { username: "hieu", room: "test" });
+  const joinRoom = (chatRoomInfo) => {
+    console.log("socketIOService ", chatRoomInfo);
+    socketRef.current.emit(JOIN_ROOM_EVENT, chatRoomInfo);
   };
   // Sends a message to the server that
   // forwards it to all users in the same room

@@ -19,11 +19,11 @@ import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
 import socketIOClient from "socket.io-client";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import FriendList from "../../components/Chat/FriendList";
 import ChatPanel from "../../components/Chat/ChatPanel";
-
+import { getUser } from "../../stores/userSlice";
 import { dummyUser } from "../../utilities/dummyUser";
 
 function TabPanel(props) {
@@ -56,17 +56,15 @@ function a11yProps(index) {
 }
 
 export default function InternalChat() {
-  const { user: currentUser } = useSelector((state) => state.auth);
+  const user = JSON.parse(localStorage.getItem("user"));
+  useEffect(() => {
+    dispatch(getUser({ userId: user.id }));
+  }, []);
   const [value, setValue] = React.useState(0);
-
+  const dispatch = useDispatch();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  console.log("internalChat", currentUser);
-  console.log(
-    "name",
-    currentUser.employee.fname + " " + currentUser.employee.lname
-  );
   return (
     <Grid container direction="row" columnSpacing={3}>
       <Grid item xs={3}>
@@ -118,7 +116,7 @@ export default function InternalChat() {
         {dummyUser.map((user, index) => (
           <TabPanel key={index} value={value} index={index}>
             <span>
-              <ChatPanel user={user} />
+              <ChatPanel />
             </span>
           </TabPanel>
         ))}

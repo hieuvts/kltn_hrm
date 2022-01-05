@@ -30,12 +30,12 @@ const getUser = async (req, res) => {
     res.status(400).json({
       message: "[ERROR] User not found!",
     });
-    console.log("[SUCCESS] getOneUser");
+    console.log("[ERROR] getOneUser");
   } else {
     res.status(200).json({
       user: req.user,
     });
-    console.log("[ERROR] getOneUser");
+    console.log("[SUCCESS] getOneUser");
   }
 };
 
