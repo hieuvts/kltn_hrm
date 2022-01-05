@@ -154,7 +154,7 @@ io.use((socket, next) => {
     });
 
     socket.on("disconnect", () => {
-      // saveMessagesToDB(user.room, sessionsMessages);
+      saveMessagesToDB(chatRoomId, sessionsMessages);
       socket.broadcast.to(chatRoomId).emit("message", {
         message: `SYSTEM: ${email} has left the chat!`,
         createdAt: new Date(),
@@ -165,7 +165,9 @@ io.use((socket, next) => {
 });
 
 const saveMessagesToDB = (chatRoomId, messages) => {
-  ChatRoom.findById(chatRoomId).exec((error, chatRoom) => {
+  ChatRoom.findByIdAndUpdate(chatRoomId, {
+    $push: { messages: messages },
+  }).exec((error, chatRoom) => {
     if (error || !chatRoom) {
       console.log(`Room ${chatRoomId} is not found`);
       res.status(404).json({
@@ -173,15 +175,7 @@ const saveMessagesToDB = (chatRoomId, messages) => {
       });
       return;
     } else {
-      console.log(moment().format("hh:mm:ss"), `Room ${chatRoomId} found!`);
-      chatRoom.messages = { ...chatRooom.messages, messages: messages };
-      chatRoom.save((error, result) => {
-        if (error) {
-          res.status(200).json({ chatrooms });
-          console.log("[ERROR] saveMessagesToDB ", error);
-        }
-        console.log("[SUCCESS] saveMessagesToDB");
-      });
+      console.log("Saved messages to DB");
     }
   });
 };
