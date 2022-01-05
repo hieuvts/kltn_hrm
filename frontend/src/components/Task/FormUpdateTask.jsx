@@ -18,20 +18,22 @@ import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
-  updateEmployeeAsync,
-  getEmployeeAsync,
-  setCurrentSelectedEmployee,
-} from "../../stores/employeeSlice";
-import { employeeInfoValidationSchema } from "../../utilities/validationSchema";
+  updateProjectAsync,
+  getProjectAsync,
+  setCurrentSelectedProject,
+} from "../../stores/projectSlice";
+import { projectInformationValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
-export default function FormUpdateEmployeeInformation({
+
+export default function FormUpdateProject({
   handleCloseDialog,
   initialValues,
 }) {
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
+  const projects = useSelector((state) => state.project.projectList);
   const departments = useSelector((state) => state.department.departmentList);
-
+  
   const handleSbSuccessClose = () => {
     setSbSuccessOpen(false);
   };
@@ -41,40 +43,49 @@ export default function FormUpdateEmployeeInformation({
 
   const dispatch = useDispatch();
   // state.currentSelectedEmployee
-  // has key/value departments with full data (id, name, headOfDepartment,...)
-  // => Extract only department name, pass it as an array, not JS object
-  // Start - Handling departments value
+  // has key/value projects with full data (id, name, headOfProject,...)
+  // => Extract only project name, pass it as an array, not JS object
+  // Start - Handling projects value
   var formikInitialValues = { ...initialValues };
-  
+
+  //   const initProjectValue = formikInitialValues["projects"].map(
+  //     ({ name }) => ({ name })
+  //   );
+  //   const initRoleValue = formikInitialValues["roles"].map(
+  //     ({ name }) => ({ name })
+  //   );
+
+  //   const projectNameArr = initProjectValue.map((x) => x.name);
+  //   const roleNameArr = initRoleValue.map((x) => x.name);
+
+  //   delete formikInitialValues.projects;
+  //   delete formikInitialValues.roles;
+
+  //   formikInitialValues["projects"] = projectNameArr;
+  //   formikInitialValues["roles"] = roleNameArr;
+  // End - Handling projects value
+
   const initDepartmentValue = formikInitialValues["departments"].map(
     ({ name }) => ({ name })
   );
-  const initRoleValue = formikInitialValues["roles"].map(
-    ({ name }) => ({ name })
-  );
-
   const departmentNameArr = initDepartmentValue.map((x) => x.name);
-  const roleNameArr = initRoleValue.map((x) => x.name);
-
   delete formikInitialValues.departments;
-  delete formikInitialValues.roles;
-  
   formikInitialValues["departments"] = departmentNameArr;
-  formikInitialValues["roles"] = roleNameArr;
-  // End - Handling departments value
 
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: formikInitialValues,
-      validationSchema: employeeInfoValidationSchema,
+      validationSchema: projectInformationValidationSchema,
       onSubmit: (values) => {
-        dispatch(updateEmployeeAsync(values))
+        dispatch(updateProjectAsync(values))
           .unwrap()
           .then(() => {
             dispatch(
-              setCurrentSelectedEmployee({ currentSelectedEmployee: values })
+              setCurrentSelectedProject({
+                currentSelectedProject: values,
+              })
             );
-            dispatch(getEmployeeAsync());
+            dispatch(getProjectAsync());
             setSbSuccessOpen(true);
             setTimeout(() => {
               handleCloseDialog();
@@ -88,68 +99,40 @@ export default function FormUpdateEmployeeInformation({
     return (
       <div style={{ marginTop: "30px" }}>
         <form onSubmit={formik.handleSubmit}>
-          <Grid container rowSpacing={3} columnSpacing={3}>
+        <Grid container rowSpacing={3} columnSpacing={3}>
             <Grid item sm={12} md={6}>
               <TextField
                 fullWidth
-                id="fname"
-                name="fname"
-                label="First name"
-                value={formik.values.fname}
+                id="name"
+                name="name"
+                label="Project Name"
+                value={formik.values.name}
                 onChange={formik.handleChange}
-                error={formik.touched.fname && Boolean(formik.errors.fname)}
-                helperText={formik.touched.fname && formik.errors.fname}
+                error={formik.touched.name && Boolean(formik.errors.name)}
+                helperText={formik.touched.name && formik.errors.name}
                 sx={{ mb: 3 }}
               />
-              <TextField
-                fullWidth
-                id="lname"
-                name="lname"
-                label="Last name"
-                value={formik.values.lname}
-                onChange={formik.handleChange}
-                error={formik.touched.lname && Boolean(formik.errors.lname)}
-                helperText={formik.touched.lname && formik.errors.lname}
-                sx={{ mb: 3 }}
-              />
-              <FormControl fullWidth>
-                <InputLabel id="gender-label">Gender</InputLabel>
-                <Select
-                  labelId="gender-label"
-                  id="gender"
-                  name="gender"
-                  value={formik.values.gender}
-                  label="Gender"
-                  fullWidth
-                  onChange={formik.handleChange}
-                  sx={{ mb: 3 }}
-                >
-                  <MenuItem value={"Male"}>Male</MenuItem>
-                  <MenuItem value={"Female"}>Female</MenuItem>
-                  <MenuItem value={"Other"}>Other</MenuItem>
-                </Select>
-              </FormControl>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DatePicker
-                  id="dateOfBirth"
-                  name="dateOfBirth"
-                  label="Date of birth"
+                  id="startDate"
+                  name="startDate"
+                  label="Start Date"
                   inputFormat="dd/MM/yyyy"
-                  value={formik.values.dateOfBirth}
+                  value={formik.values.startDate}
                   minDate={new Date("1900-01-01")}
                   maxDate={new Date()}
                   onChange={(value) => {
-                    formik.setFieldValue("dateOfBirth", value);
+                    formik.setFieldValue("startDate", value);
                   }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       error={
-                        formik.touched.dateOfBirth &&
-                        Boolean(formik.errors.dateOfBirth)
+                        formik.touched.startDate &&
+                        Boolean(formik.errors.startDate)
                       }
                       helperText={
-                        formik.touched.dateOfBirth && formik.errors.dateOfBirth
+                        formik.touched.startDate && formik.errors.startDate
                       }
                       fullWidth
                       sx={{ mb: 3 }}
@@ -157,16 +140,29 @@ export default function FormUpdateEmployeeInformation({
                   )}
                 />
               </LocalizationProvider>
+
+              <TextField
+                fullWidth
+                id="customer"
+                name="customer"
+                label="Customer"
+                value={formik.values.customer}
+                onChange={formik.handleChange}
+                error={formik.touched.customer && Boolean(formik.errors.customer)}
+                helperText={formik.touched.customer && formik.errors.customer}
+                sx={{ mb: 3 }}
+              />
             </Grid>
+
             <Grid item sm={12} md={6}>
               <FormControl fullWidth>
                 <InputLabel id="departments-label">Departments</InputLabel>
                 <Select
                   labelId="departments-label"
                   id="departments"
-                  fullWidth 
+                  fullWidth
                   multiple
-                  value={formik.values.departments}
+                  value = {formik.values.departments}
                   onChange={(e) => {
                     formik.setFieldValue("departments", e.target.value);
                   }}
@@ -181,55 +177,46 @@ export default function FormUpdateEmployeeInformation({
                   sx={{ mb: 3 }}
                 >
                   {departments.map((department, index) => (
-                    <MenuItem key={index} value={department.name}>
+                    <MenuItem key={index} value= {department.name} >
                       {department.name}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
-              <TextField
-                fullWidth
-                id="phoneNumber"
-                name="phoneNumber"
-                label="Phone number"
-                value={formik.values.phoneNumber}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.phoneNumber &&
-                  Boolean(formik.errors.phoneNumber)
-                }
-                helperText={
-                  formik.touched.phoneNumber && formik.errors.phoneNumber
-                }
-                sx={{ mb: 3 }}
-              />
-              <TextField
-                fullWidth
-                id="email"
-                name="email"
-                label="Email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
-                sx={{ mb: 3 }}
-              />
-              <TextField
-                fullWidth
-                id="address"
-                name="address"
-                label="Address"
-                value={formik.values.address}
-                onChange={formik.handleChange}
-                error={formik.touched.address && Boolean(formik.errors.address)}
-                helperText={formik.touched.address && formik.errors.address}
-                sx={{ mb: 3 }}
-              />
+
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  id="endDate"
+                  name="endDate"
+                  label="End Date"
+                  inputFormat="dd/MM/yyyy"
+                  value={formik.values.endDate}
+                  minDate={new Date("1900-01-01")}
+                  maxDate={new Date()}
+                  onChange={(value) => {
+                    formik.setFieldValue("endDate", value);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      error={
+                        formik.touched.endDate &&
+                        Boolean(formik.errors.endDate)
+                      }
+                      helperText={
+                        formik.touched.endDate && formik.errors.endDate
+                      }
+                      fullWidth
+                      sx={{ mb: 3 }}
+                    />
+                  )}
+                />
+              </LocalizationProvider>
             </Grid>
           </Grid>
 
           <Button variant="contained" color="primary" fullWidth type="submit">
-            UPDATE
+            SUBMIT
           </Button>
         </form>
       </div>
@@ -241,7 +228,7 @@ export default function FormUpdateEmployeeInformation({
       <SnackbarSuccess
         isOpen={isSbSuccessOpen}
         handleClose={handleSbSuccessClose}
-        text={"Updated employee information"}
+        text={"Updated project information"}
       />
       <SnackbarFailed
         isOpen={isSbFailedOpen}
@@ -253,22 +240,18 @@ export default function FormUpdateEmployeeInformation({
   );
 }
 
-FormUpdateEmployeeInformation.propTypes = {
+FormUpdateProject.propTypes = {
   handleCloseDialog: PropTypes.func,
   initialValues: PropTypes.object,
 };
-FormUpdateEmployeeInformation.defaultProps = {
+FormUpdateProject.defaultProps = {
   initialValues: {
-    fname: "",
-    lname: "",
-    gender: "Male",
-    dateOfBirth: new Date(),
-    phoneNumber: "",
-    email: "",
-    address: "",
+    name: "",
+    employee: [],
+    customer: "",
+    startDate: new Date(),
+    endDate: new Date(),
     departments: [],
-    roles: [],
-    projects: [],
     isDeleted: false,
   },
 };

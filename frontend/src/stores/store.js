@@ -4,12 +4,14 @@ import departmentReducer from "./departmentSlice";
 import authReducer from "./authSlice";
 import messageReducer from "./messageSlice";
 import projectReducer from "./projectSlice";
+import taskReducer from "./taskSlice";
 const reducers = {
   auth: authReducer,
   employee: employeeReducer,
   message: messageReducer,
   department: departmentReducer,
-  project: projectReducer
+  project: projectReducer,
+  task: taskReducer
 };
 const store = configureStore({
   reducer: reducers,

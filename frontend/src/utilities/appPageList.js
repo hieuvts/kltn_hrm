@@ -38,8 +38,8 @@ export const pageList = [
   },
   {
     title: "Task",
-    path: "/task",
-    key: "task",
+    path: "/workplace",
+    key: "workplace",
     icon: <AssignmentIcon />,
     className: "nav-text",
   },
