@@ -128,36 +128,35 @@ io.use((socket, next) => {
   }
 }).on("connection", (socket) => {
   sessionsMessages = [];
-  console.log(`[NewClient]id=${socket.id} joint`);
+  // console.log(`[NewClient]id=${socket.id} joint`);
 
-  socket.on("joinRoom", ({ username, room }) => {
-    const user = addUser(socket.id, username, room);
-    console.log("userInfo: ", user);
-    socket.join(user.room);
+  socket.on("joinRoom", ({ email, chatRoomId }) => {
+    socket.join(chatRoomId);
+    console.log("New user Join ", email, chatRoomId);
     io.to(socket.id).emit("message", {
-      message: `Connected to SocketIO server`,
+      message: `${email} Connected to SocketIO server`,
       createdAt: new Date(),
       isBroadcast: true,
     });
-    socket.broadcast.to(user.room).emit("message", {
-      message: `SYSTEM: ${user.username} has joint!`,
+    socket.broadcast.to(chatRoomId).emit("message", {
+      message: `SYSTEM: ${email} has joint!`,
       createdAt: new Date(),
       isBroadcast: true,
     });
     // Listen new message
     socket.on("message", (body) => {
-      body["username"] = username;
+      body["email"] = email;
       body["createdAt"] = new Date();
       body["isBroadcast"] = false;
       console.log("messageBody ", body);
       sessionsMessages.push(body);
-      io.to(user.room).emit("message", body);
+      io.to(chatRoomId).emit("message", body);
     });
 
     socket.on("disconnect", () => {
       // saveMessagesToDB(user.room, sessionsMessages);
-      socket.broadcast.to(user.room).emit("message", {
-        message: `SYSTEM: ${user.username} has left the chat!`,
+      socket.broadcast.to(chatRoomId).emit("message", {
+        message: `SYSTEM: ${email} has left the chat!`,
         createdAt: new Date(),
         isBroadcast: true,
       });

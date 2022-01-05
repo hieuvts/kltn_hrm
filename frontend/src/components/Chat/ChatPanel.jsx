@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -32,28 +32,47 @@ import { getChatMessage, addMessageToRoom } from "../../stores/chatRoomSlice";
 
 import "./ChatPanel.css";
 import { dummyUser } from "../../utilities/dummyUser";
+
+// const API_ENDPOINT = "http://localhost:8000";
+
+// const MESSAGE_EVENT = "message";
+// const JOIN_ROOM_EVENT = "joinRoom";
+// const authHeaderValue = authHeader();
+// const token = authHeaderValue["x-access-token"];
 export default function ChatPanel({ chatRoomId, roomMembers, roomMessages }) {
   const currentUser = useSelector((state) => state.user.currentUser);
 
-  const [newMessage, setNewMessage] = useState("");
+  const [messageToSend, setMessageToSend] = useState("");
   const [frEmail, setFrEmail] = useState("");
   const roomId = chatRoomId; // Gets roomId from URL
   // Creates a websocket and manages messaging
   const { messages, joinRoom, sendMessage } = socketIOService(roomId);
   const dispatch = useDispatch();
-
   const handleSendMessage = (values) => {
     let messageBody = {
       sender: currentUser.email,
       message: values.message,
       isBroadcast: false,
     };
-    sendMessage(chatRoomId, messageBody);
-    setNewMessage("");
+    sendMessage(messageBody);
+    setMessageToSend("");
   };
   const handleFetchMessage = () => {
     dispatch(getChatMessage({ chatRoomId: currentUser.chatRooms[0] }));
   };
+  const socketRef = useRef();
+  // Merge old message (from DB) and new messages (current chatting)
+  let mergedMessages = [...roomMessages, ...messages];
+
+  useEffect(() => {
+    console.log("Joining room with ", currentUser.email, chatRoomId);
+    joinRoom(currentUser.email, chatRoomId);
+  }, []);
+  // useEffect(() => {
+  //   console.log("Update messages");
+  //   newsad = [...roomMessages, ...messages];
+  //   console.log("newsad ", newsad);
+  // }, [messages]);
   return (
     <>
       <Box sx={rowDirection}>
@@ -69,7 +88,7 @@ export default function ChatPanel({ chatRoomId, roomMembers, roomMessages }) {
       <Divider variant="fullWidth" sx={{ borderBottomWidth: 4 }} />
       <Box sx={{ colDirection }}>
         <ul className="chatBox">
-          {roomMessages.map((message, index) => {
+          {mergedMessages.map((message, index) => {
             return (
               <div className="message-chat" key={index}>
                 <li
@@ -122,7 +141,7 @@ export default function ChatPanel({ chatRoomId, roomMembers, roomMessages }) {
         </ul>
         <Box sx={{ mt: 30 }}>
           <ChatMessageInput
-            newMessage={newMessage}
+            messageToSend={messageToSend}
             handleSendMessage={handleSendMessage}
           />
         </Box>

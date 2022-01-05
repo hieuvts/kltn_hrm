@@ -10,7 +10,7 @@ import { useFormik } from "formik";
 
 import { fileNameValidationSchema } from "../../utilities/validationSchema";
 
-export default function ChatMessageInput({ newMessage, handleSendMessage }) {
+export default function ChatMessageInput({ messageToSend, handleSendMessage }) {
   const formik = useFormik({
     initialValues: {
       message: "",
@@ -63,6 +63,6 @@ export default function ChatMessageInput({ newMessage, handleSendMessage }) {
 }
 
 ChatMessageInput.propTypes = {
-  newMessage: PropTypes.string,
+  messageToSend: PropTypes.string,
   handleSendMessage: PropTypes.func,
 };
