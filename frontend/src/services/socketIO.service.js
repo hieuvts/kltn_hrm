@@ -28,10 +28,6 @@ export default function chatService(roomId) {
       };
       setMessages((messages) => [...messages, incomingMessage]);
     });
-    socketRef.current.on("hello", (message) => {
-      console.log("broadcast from server");
-    });
-
     // Destroys the socket reference
     // when the connection is closed
     return () => {
@@ -48,7 +44,6 @@ export default function chatService(roomId) {
   // Sends a message to the server that
   // forwards it to all users in the same room
   const sendMessage = (messageBody) => {
-    console.log("Check messageBody ", messageBody);
     let senderId = socketRef.current.id;
     let messagePkg = { ...messageBody, senderId };
     socketRef.current.emit(MESSAGE_EVENT, messagePkg);

@@ -133,11 +133,11 @@ io.use((socket, next) => {
   socket.on("joinRoom", ({ email, chatRoomId }) => {
     socket.join(chatRoomId);
     console.log("New user Join ", email, chatRoomId);
-    io.to(socket.id).emit("message", {
-      message: `${email} Connected to SocketIO server`,
-      createdAt: new Date(),
-      isBroadcast: true,
-    });
+    // io.to(socket.id).emit("message", {
+    //   message: `${email} Connected to SocketIO server`,
+    //   createdAt: new Date(),
+    //   isBroadcast: true,
+    // });
     socket.broadcast.to(chatRoomId).emit("message", {
       message: `SYSTEM: ${email} has joint!`,
       createdAt: new Date(),
