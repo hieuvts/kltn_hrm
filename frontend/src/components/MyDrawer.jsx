@@ -6,6 +6,7 @@ import Others from "../pages/Others";
 import AboutUs from "../pages/AboutUs/AboutUs";
 import WorkPlace from "../pages/Workplace/Workplace";
 import Company from "../pages/Company/Company";
+import InternalChat from "../pages/Chat/InternalChat";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,6 +21,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+
+import Grid from "@mui/material/Grid";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -31,7 +34,8 @@ import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
 import { styled, alpha, useTheme } from "@mui/material/styles";
 import { logout } from "../stores/authSlice";
 import StyledSearchBox from "./StyledSearchBox";
-import clockTimer from "../utilities/clockTimer";
+import CurrentClock from "./CurrentClock";
+import NotificationBadget from "./NotificationsBadget";
 import { pageList } from "../utilities/appPageList";
 // Mini variant drawer
 const drawerWidth = 240;
@@ -117,6 +121,15 @@ export default function AppBarComponent() {
     setSelectedTabTitle(title);
   };
 
+  // Profile menu
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const pathnames = location.pathname.split("/").filter((x) => x);
   const currentPathname = pathnames.slice(-1)[0];
 
@@ -135,13 +148,7 @@ export default function AppBarComponent() {
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -173,6 +180,7 @@ export default function AppBarComponent() {
               justifyContent: "space-between",
             }}
           >
+            <CurrentClock />
             <StyledSearchBox placeholder="Search…" />
 
             {currentUser && (
@@ -252,6 +260,7 @@ export default function AppBarComponent() {
                 </Menu>
               </div>
             )}
+            <NotificationBadget notificationCount={3} />
           </Box>
         </Toolbar>
       </AppBar>
@@ -342,6 +351,7 @@ export default function AppBarComponent() {
           <Route path="others" element={<Others />} />
           <Route path="setting" element={<Company />} />
           <Route path="about" element={<AboutUs />} />
+          <Route path="chat" element={<InternalChat />} />
           <Route path="*" element={<Navigate to="404" />} />
         </Routes>
       </Box>

@@ -3,6 +3,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import Apartment from "@mui/icons-material/Apartment";
 import Engineering from "@mui/icons-material/Engineering";
 import Mode from "@mui/icons-material/Mode";
+import ChatIcon from '@mui/icons-material/Chat';
 import Error from "@mui/icons-material/Error";
 
 import { VscProject } from "react-icons/vsc";
@@ -34,6 +35,13 @@ export const pageList = [
     path: "/workplace",
     key: "project",
     icon: <VscProject />,
+    className: "nav-text",
+  },
+  {
+    title: "Internal Chat",
+    path: "/chat",
+    key: "chat",
+    icon: <ChatIcon />,
     className: "nav-text",
   },
   {
