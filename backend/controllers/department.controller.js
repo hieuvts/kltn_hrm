@@ -6,13 +6,16 @@ const getDepartmentById = async (req, res, next, departmentId) => {
   // attach to request object
   // https://expressjs.com/en/4x/api.html#router.param
   console.log("Trigger getDepartmentByID");
+  console.log(Department);
   Department.findById(departmentId).exec((error, result) => {
     if (error || !result) {
+      console.log(`Department ${departmentId} is not found`);
       res.status(404).json({
         message: "[ERROR] [Controller] Department not found!",
       });
+      return;
     } else {
-      console.log("[ERROR] [get] Failed!");
+      console.log(`Department ${departmentId} found!`);
     }
     req.department = result;
     next();
@@ -66,19 +69,19 @@ const createDepartment = async (req, res) => {
 
 // Update Department
 const putDepartment = async (req, res) => {
-  const Department = req.Department;
+  const department = req.department;
   // typeof req.body.name === "undefined"
   //   ? (Department.name = Department.name)
   //   : (Department.name = req.body.name);
-  typeof req.body.name !== "undefined" && (Department.name = req.body.name);
-  typeof req.body.headOfDepartment !== "undefined" &&
-    (Department.headOfDepartment = req.body.headOfDepartment);
-  typeof req.body.dateOfBirth !== "undefined" &&
-    (Department.dateOfBirth = req.body.dateOfBirth);
+  typeof req.body.name !== "undefined" && (department.name = req.body.name);
+  typeof req.body.manager !== "undefined" &&
+    (department.manager = req.body.manager);
+  typeof req.body.amount !== "undefined" &&
+    (department.amount = req.body.amount);
   typeof req.body.isDeleted !== "undefined" &&
-    (Department.isDeleted = req.body.isDeleted);
+    (department.isDeleted = req.body.isDeleted);
 
-  Department.save((error, result) => {
+    department.save((error, result) => {
     if (error || !result) {
       return res.status(400).json({
         message: "[UPDATE] Something went wrong",
@@ -87,15 +90,16 @@ const putDepartment = async (req, res) => {
     }
     res.json({
       message: "Update department successfully",
-      Department: Department,
+      Department: department,
     });
   });
 };
 
 // Delete one Department
 const deleteDepartment = async (req, res) => {
+  console.log(req);
   const department = req.department;
-  department.deleteOne({ _id: department._id }, (error, result) => {
+  Department.deleteOne({ _id: department._id }, (error, result) => {
     if (error || !result) {
       res.status(400).json({
         message: "Can't delete!!!",
