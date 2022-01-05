@@ -1,7 +1,9 @@
 const ChatRoom = require("../models/chatRoom.model");
 const ChatMessage = require("../models/chatMessage.model");
+const User = require("../models/user.model");
 
 const moment = require("moment");
+
 // get Message
 const getChatRoomByRoomID = async (req, res, next, chatRoomId) => {
   ChatRoom.findById(chatRoomId).exec((error, result) => {
@@ -31,10 +33,34 @@ const getChatRoomDetail = async (req, res) => {
     console.log(moment().format("hh:mm:ss"), "[ERROR] getChatRoomDetail");
   }
 };
-const createChatRoom = async (req, res, members) => {
+const addRoomIdToUser = async (req, res, chatRoomId) => {
+  const members = req.body.members;
+  const chatRooms = [];
+  console.log("chatRoomId", chatRoomId);
+  await members.map((member, index) => {
+    console.log("current memberid", member);
+    User.findOneAndUpdate(
+      { _id: member },
+      {
+        $push: { chatRooms: chatRoomId },
+      },
+      (error, user) => {
+        if (error) {
+          res
+            .status(500)
+            .send({ message: "[ERROR] addRoomIdToUser " + index + error });
+          return;
+        }
+        console.log("Patched");
+      }
+    );
+  });
+};
+const createChatRoom = async (req, res, next) => {
   const newChatRoom = ChatRoom(req.body);
+
   console.log("creatChatRoom ", req.body);
-  newChatRoom.save((error, result) => {
+  newChatRoom.save(async (error, result) => {
     if (error || !result) {
       res.status(400).json({
         message: "Can't create new chat room",
@@ -42,6 +68,7 @@ const createChatRoom = async (req, res, members) => {
       });
       console.log(moment().format("hh:mm:ss"), "[ERROR] createChatRoom", error);
     } else {
+      await addRoomIdToUser(req, res, result._id);
       res.status(200).json({
         message: "createChatRoom successfully!",
         result: result,
