@@ -166,3 +166,6 @@ export const companyInfoValidationSchema = yup.object().shape({
     .max(15, "Tax code should be of maximum 15 characters length")
     .required("Tax code is required!"),
 });
+export const taskInformationValidationSchema = yup.object().shape({
+  
+});

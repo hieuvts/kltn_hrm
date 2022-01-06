@@ -11,23 +11,40 @@ const taskSchema = new Schema({
     minlength: 2,
     maxlength: 50,
   },
-  volume: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  employeeID: {
+  assignFrom: [{ type: Schema.Types.ObjectId, ref: "employee" }],
+  assignTo: [{ type: Schema.Types.ObjectId, ref: "employee" }],
+  procedureID: [{ type: Schema.Types.ObjectId, ref: "procedure" }],
+  projectID: [{ type: Schema.Types.ObjectId, ref: "project" }],
+  priority: {
     type: String,
-    default: "",
-    required: true,
+    default: "1",
+    max: 10,
+    // Only accepts these values
+    enum: ["1", "2", "3", "Extra"],
   },
   difficulty: {
-    type: Number,
-    default: 1,
-    required: true,
+    type: String,
+    default: "1",
+    max: 10,
+    // Only accepts these values
+    enum: ["1", "2", "3", "Extra"],
   },
-  project: [{ type: Schema.Types.ObjectId, ref: "project" }],
-  employee: [{ type: Schema.Types.ObjectId, ref: "employee" }],
+  deadline: {
+    type: Date,
+    min: "1900-01-01",
+  },
+  status: {
+    type: String,
+    default: "Pending",
+    max: 10,
+    // Only accepts these values
+    enum: ["Pending", "In Progress", "Finish"],
+  },
+  progress: {
+    type: Number,
+    required: true,
+    default: 0
+  },
   isDeleted: {
     type: Boolean,
     default: false,

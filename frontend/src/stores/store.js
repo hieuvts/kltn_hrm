@@ -7,14 +7,15 @@ import chatRoomReducer from "./chatRoomSlice";
 import userReducer from "./userSlice";
 
 import projectReducer from "./projectSlice";
+import taskReducer from "./taskSlice";
 const reducers = {
   auth: authReducer,
   employee: employeeReducer,
   message: messageReducer,
   department: departmentReducer,
-  project: projectReducer,
   chatRoom: chatRoomReducer,
   user: userReducer,
+  task: taskReducer
 };
 const store = configureStore({
   reducer: reducers,
