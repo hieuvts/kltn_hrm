@@ -55,56 +55,49 @@ export default function FormChangeUserPwd({
     return (
       <div style={{ marginTop: "30px" }}>
         <form onSubmit={formik.handleSubmit}>
-          <Grid container rowSpacing={3} columnSpacing={3}>
-            <Grid item sm={12} md={6}>
-              <TextField
-                fullWidth
-                id="oldPassword"
-                name="oldPassword"
-                label="Current password"
-                value={formik.values.oldPassword}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.oldPassword &&
-                  Boolean(formik.errors.oldPassword)
-                }
-                helperText={
-                  formik.touched.oldPassword && formik.errors.oldPassword
-                }
-                sx={{ mb: 3 }}
-              />
-              <TextField
-                fullWidth
-                id="password"
-                name="password"
-                label="New password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.password && Boolean(formik.errors.password)
-                }
-                helperText={formik.touched.password && formik.errors.password}
-                sx={{ mb: 3 }}
-              />
-              <TextField
-                fullWidth
-                id="verifyPassword"
-                name="verifyPassword"
-                label="Verify password"
-                value={formik.values.verifyPassword}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.verifyPassword &&
-                  Boolean(formik.errors.verifyPassword)
-                }
-                helperText={
-                  formik.touched.verifyPassword && formik.errors.verifyPassword
-                }
-                sx={{ mb: 3 }}
-              />
-            </Grid>
-            <Grid item sm={12} md={6}></Grid>
-          </Grid>
+          <TextField
+            fullWidth
+            id="oldPassword"
+            name="oldPassword"
+            label="Current password"
+            type="password"
+            value={formik.values.oldPassword}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.oldPassword && Boolean(formik.errors.oldPassword)
+            }
+            helperText={formik.touched.oldPassword && formik.errors.oldPassword}
+            sx={{ mb: 3 }}
+          />
+          <TextField
+            fullWidth
+            id="password"
+            name="password"
+            label="New password"
+            type="password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            error={formik.touched.password && Boolean(formik.errors.password)}
+            helperText={formik.touched.password && formik.errors.password}
+            sx={{ mb: 3 }}
+          />
+          <TextField
+            fullWidth
+            id="verifyPassword"
+            name="verifyPassword"
+            label="Verify password"
+            type="password"
+            value={formik.values.verifyPassword}
+            onChange={formik.handleChange}
+            error={
+              formik.touched.verifyPassword &&
+              Boolean(formik.errors.verifyPassword)
+            }
+            helperText={
+              formik.touched.verifyPassword && formik.errors.verifyPassword
+            }
+            sx={{ mb: 3 }}
+          />
 
           <Button variant="contained" color="primary" fullWidth type="submit">
             {submitButtonText}

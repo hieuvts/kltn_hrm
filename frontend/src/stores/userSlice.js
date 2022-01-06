@@ -38,18 +38,21 @@ export const getUser = createAsyncThunk(
   }
 );
 
-// export const updateUserInfo = createAsyncThunk(
-//   "user/updateUser",
-//   async (payload, { rejectWithValue }) => {
-//     try {
-//       const res = await userService.updateuser(payload._id, payload);
+export const changePassword = createAsyncThunk(
+  "user/changePassword",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const res = await userService.changePassword(
+        payload._id,
+        payload.newPassword
+      );
 
-//       return res.data.users;
-//     } catch (error) {
-//       return rejectWithValue(`Update user not successful ${error}`);
-//     }
-//   }
-// );
+      return res.data.users;
+    } catch (error) {
+      return rejectWithValue(`Change password not successful ${error}`);
+    }
+  }
+);
 
 // export const deleteUser = createAsyncThunk(
 //   "user/deleteUser",
@@ -93,6 +96,17 @@ export const userSlice = createSlice({
         ...state,
         currentUser: actions.payload,
       };
+    },
+
+    // Change user password
+    [changePassword.pending]: (state, actions) => {
+      console.log("[Pending] changePassword", actions);
+    },
+    [changePassword.rejected]: (state, actions) => {
+      console.log("[Rejected] changePassword", actions.payload);
+    },
+    [changePassword.fulfilled]: (state, actions) => {
+      console.log("[Fulfilled] changePassword", actions);
     },
   },
 });

@@ -13,7 +13,7 @@ import {
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import CapitalizeFirstLetter from "../../utilities/captitalizeFirstLetter";
 import { useSelector, useDispatch } from "react-redux";
-import DialogChangeUserPwd from "../../components/UserProfile/DialogUpdateUserProfile";
+import DialogChangeUserPwd from "../../components/UserProfile/DialogChangeUserPwd";
 import DialogUpdateEmployee from "../../components/Employee/DialogUpdateEmployee";
 import { setCurrentSelectedEmployee } from "../../stores/employeeSlice";
 

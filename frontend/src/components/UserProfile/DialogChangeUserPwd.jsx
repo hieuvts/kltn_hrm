@@ -19,7 +19,7 @@ export default function DialogChangeUserPwd({
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h5">
-              Update your UserProfile information
+              Change password
             </Typography>
             <Button onClick={handleCloseDialog}>
               <CloseIcon fontSize="large" />

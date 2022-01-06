@@ -104,8 +104,6 @@ const login = (req, res) => {
       for (let i = 0; i < user.roles.length; i++) {
         authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
       }
-      // OK - Success
-      console.log("auth.Controller ", user);
       res.status(200).send({
         id: user._id,
         email: user.email,
@@ -118,7 +116,54 @@ const login = (req, res) => {
     });
 };
 
+const verifyOldPassword = async (req, res, next) => {
+  User.findOne({
+    email: req.body.email,
+  }).exec((error, user) => {
+    if (error) {
+      res.status(500).send({ message: error });
+      return;
+    }
+
+    if (!user) {
+      // Not found
+      return res.status(404).send({ message: "Account not found!" });
+    }
+
+    var passwordIsValid = bcrypt.compareSync(
+      req.body.oldPassword,
+      user.password
+    );
+
+    if (!passwordIsValid) {
+      // Unauthorized
+      return res.status(401).send({
+        accessToken: null,
+        message: "Invalid password!",
+      });
+    }
+    req.userId = user._id;
+    next();
+  });
+};
+const changePassword = async (req, res) => {
+  let newPassword = bcrypt.hashSync(req.body.password, 8);
+  User.findByIdAndUpdate(
+    req.userId,
+    { password: newPassword },
+
+    (error, result) => {
+      if (error) {
+        console.log("error ", error);
+        res.status(500).send(error);
+      }
+      res.status(200).send(result);
+    }
+  );
+};
 module.exports = {
   signUp,
   login,
+  verifyOldPassword,
+  changePassword,
 };
