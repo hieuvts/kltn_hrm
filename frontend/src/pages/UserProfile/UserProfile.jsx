@@ -12,16 +12,17 @@ import {
 } from "@mui/material";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import CapitalizeFirstLetter from "../../utilities/captitalizeFirstLetter";
-import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import DialogChangeUserPwd from "../../components/UserProfile/DialogUpdateUserProfile";
 import DialogUpdateEmployee from "../../components/Employee/DialogUpdateEmployee";
+import { setCurrentSelectedEmployee } from "../../stores/employeeSlice";
 
 export default function UserProfile() {
   // const user = useSelector((state) => state.auth);
   // const currentUser = user.currentUser;
   const [isDialogChangeUserPwdOpen, setDialogChangeUserPwd] = useState(false);
   const [isDialogUpdateEmployeeOpen, setDialogUpdateEmployee] = useState(false);
+  const [currentEmployee, setCurrentEmployee] = useState({});
 
   const handleDialogChangeUserPwdClose = () => {
     setDialogChangeUserPwd(false);
@@ -29,6 +30,7 @@ export default function UserProfile() {
   const handleDialogUpdateEmployeeClose = () => {
     setDialogUpdateEmployee(false);
   };
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
 
   const pathnames = location.pathname.split("/").filter((x) => x);
@@ -39,7 +41,7 @@ export default function UserProfile() {
         handleCloseDialog={handleDialogChangeUserPwdClose}
       />
       <DialogUpdateEmployee
-        isDialogOpen={setDialogUpdateEmployee}
+        isDialogOpen={isDialogUpdateEmployeeOpen}
         handleCloseDialog={handleDialogUpdateEmployeeClose}
       />
       <Breadcrumbs aria-label="breadcrumb">
@@ -125,7 +127,14 @@ export default function UserProfile() {
             <Box sx={{ mt: 3, textAlign: "right" }}>
               <Button
                 variant="contained"
-                onClick={() => setDialogUpdateEmployee(true)}
+                onClick={() => {
+                  dispatch(
+                    setCurrentSelectedEmployee({
+                      currentSelectedEmployee: user.employee,
+                    })
+                  );
+                  setDialogUpdateEmployee(true);
+                }}
               >
                 Update
               </Button>
