@@ -14,12 +14,12 @@ import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
 import { useDispatch } from "react-redux";
 import { addEmployeeAsync } from "../../stores/employeeSlice";
-import { userProfileValidationSchema } from "../../utilities/validationSchema";
+import { changePwdValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
-export default function FormUpdateUserProfile({
+export default function FormChangeUserPwd({
   handleCloseDialog,
   submitButtonText,
   initialValues,
@@ -37,7 +37,7 @@ export default function FormUpdateUserProfile({
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
-      validationSchema: userProfileValidationSchema,
+      validationSchema: changePwdValidationSchema,
       onSubmit: (values) => {
         dispatch(addEmployeeAsync(values))
           .unwrap()
@@ -59,13 +59,47 @@ export default function FormUpdateUserProfile({
             <Grid item sm={12} md={6}>
               <TextField
                 fullWidth
-                id="name"
-                name="name"
-                label="First name"
-                value={formik.values.name}
+                id="oldPassword"
+                name="oldPassword"
+                label="Current password"
+                value={formik.values.oldPassword}
                 onChange={formik.handleChange}
-                error={formik.touched.name && Boolean(formik.errors.name)}
-                helperText={formik.touched.name && formik.errors.name}
+                error={
+                  formik.touched.oldPassword &&
+                  Boolean(formik.errors.oldPassword)
+                }
+                helperText={
+                  formik.touched.oldPassword && formik.errors.oldPassword
+                }
+                sx={{ mb: 3 }}
+              />
+              <TextField
+                fullWidth
+                id="password"
+                name="password"
+                label="New password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.password && Boolean(formik.errors.password)
+                }
+                helperText={formik.touched.password && formik.errors.password}
+                sx={{ mb: 3 }}
+              />
+              <TextField
+                fullWidth
+                id="verifyPassword"
+                name="verifyPassword"
+                label="Verify password"
+                value={formik.values.verifyPassword}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.verifyPassword &&
+                  Boolean(formik.errors.verifyPassword)
+                }
+                helperText={
+                  formik.touched.verifyPassword && formik.errors.verifyPassword
+                }
                 sx={{ mb: 3 }}
               />
             </Grid>
@@ -97,14 +131,16 @@ export default function FormUpdateUserProfile({
   );
 }
 
-FormUpdateUserProfile.propTypes = {
+FormChangeUserPwd.propTypes = {
   handleCloseDialog: PropTypes.func,
   submitButtonText: PropTypes.string,
   initialValues: PropTypes.object,
 };
-FormUpdateUserProfile.defaultProps = {
+FormChangeUserPwd.defaultProps = {
   initialValues: {
-    name: "",
+    oldPassword: "",
+    password: "",
+    verifyPassword: "",
   },
-  submitButtonText: "SUBMIT",
+  submitButtonText: "Change Password",
 };

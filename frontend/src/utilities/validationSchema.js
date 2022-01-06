@@ -18,11 +18,7 @@ export const accountSignUpValidationSchema = yup.object().shape({
     ),
 });
 
-export const userProfileValidationSchema = yup.object().shape({
-  email: yup
-    .string("Enter your email")
-    .email("Enter a valid email")
-    .required("Email is required!"),
+export const changePwdValidationSchema = yup.object().shape({
   oldPassword: yup
     .string("Enter your current password")
     .required("Password is required!"),
@@ -36,10 +32,6 @@ export const userProfileValidationSchema = yup.object().shape({
       [yup.ref("password"), null],
       "Password and confirmation password must match!"
     ),
-  roles: yup
-    .mixed()
-    .oneOf(["Admin", "Moderator", "User"])
-    .required("Require at least one role"),
 });
 
 export const accountLoginValidationSchema = yup.object().shape({
