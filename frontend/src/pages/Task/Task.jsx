@@ -121,23 +121,8 @@ export default function Task() {
         sx={{ alignItems: "center" }}
       >
         <Grid item paddingTop={{ xs: 2, sm: 0 }} xs={12} sm={3} md={2}>
-          <Button variant="link">
-            <FileDownloadOutlinedIcon fontSize="medium" />
-            <Typography variant="h6" sx={{ pl: 1 }}>
-              Import
-            </Typography>
-          </Button>
         </Grid>
         <Grid item xs={12} sm={3} md={2}>
-          <Button
-            variant="link"
-            onClick={() => setDialogExportTaskOpen(true)}
-          >
-            <FileUploadOutlinedIcon fontSize="medium" />
-            <Typography variant="h6" sx={{ pl: 1 }}>
-              Export
-            </Typography>
-          </Button>
         </Grid>
         <Grid item xs={12} sm={6} md={2} paddingTop={{ xs: 2, sm: 0, md: 0 }}>
           <Button variant="contained" onClick={() => handleDialogOpen()}>
@@ -146,12 +131,6 @@ export default function Task() {
         </Grid>
       </Grid>
 
-      <Paper elevation={1} sx={{ my: 3, p: 3 }}>
-        <MySearchBox
-          placeholder="Search for customer by name, email, phone number..."
-          handleSearchQueryChange={handleSearchQueryChange}
-        />
-      </Paper>
       <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
         <TaskList />
       </div>
