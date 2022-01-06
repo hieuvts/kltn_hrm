@@ -40,13 +40,6 @@ function getComparator(order, orderBy) {
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
-const itemsFromBackend = [
-  { id: uuidv4(), content: "First task" },
-  { id: uuidv4(), content: "Second task" },
-  { id: uuidv4(), content: "Third task" },
-  { id: uuidv4(), content: "Fourth task" },
-  { id: uuidv4(), content: "Fifth task" },
-];
 
 const statusColumn = {
   ["Pending"]: {
@@ -244,7 +237,6 @@ export default function TaskList() {
                         {column.items.map((item, index) => {
                           return (
                             <Draggable
-                              // key={item._id}
                               key={index}
                               draggableId={item._id}
                               index={index}
