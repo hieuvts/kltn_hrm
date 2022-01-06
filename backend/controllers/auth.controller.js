@@ -69,6 +69,7 @@ const login = (req, res) => {
   })
     .populate("roles", "-__v")
     .populate("employee")
+    .populate("chatRooms")
     .exec((err, user) => {
       if (err) {
         // Internal server error
@@ -103,14 +104,16 @@ const login = (req, res) => {
       for (let i = 0; i < user.roles.length; i++) {
         authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
       }
-      console.log("check be4 send to client \n", user);
       // OK - Success
+      console.log("auth.Controller ", user);
       res.status(200).send({
         id: user._id,
         email: user.email,
-        roles: authorities,
+        roles: user.roles,
         accessToken: token,
-        employee: user.employee[0],
+        employee: user.employee,
+        departments: user.departments,
+        chatRooms: user.chatRooms,
       });
     });
 };

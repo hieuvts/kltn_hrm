@@ -18,6 +18,30 @@ export const accountSignUpValidationSchema = yup.object().shape({
     ),
 });
 
+export const userProfileValidationSchema = yup.object().shape({
+  email: yup
+    .string("Enter your email")
+    .email("Enter a valid email")
+    .required("Email is required!"),
+  oldPassword: yup
+    .string("Enter your current password")
+    .required("Password is required!"),
+  password: yup
+    .string("Enter your new password")
+    .required("Password is required!"),
+  verifyPassword: yup
+    .string()
+    .required("Confirmation password is required!")
+    .oneOf(
+      [yup.ref("password"), null],
+      "Password and confirmation password must match!"
+    ),
+  roles: yup
+    .mixed()
+    .oneOf(["Admin", "Moderator", "User"])
+    .required("Require at least one role"),
+});
+
 export const accountLoginValidationSchema = yup.object().shape({
   email: yup
     .string("Enter your username")
@@ -92,13 +116,12 @@ export const departmentInformationValidationSchema = yup.object().shape({
   name: yup
     .string("Enter department name")
     .required("Name of department is required"),
-  amount: yup
-    .number("Enter amount of department"),
+  amount: yup.number("Enter amount of department"),
   manager: yup
     .string("Enter name of manager")
     .min(1, "Manager name should be of minimum 2 characters length")
     .max(150, "Manager name should be of maximum 150 characters length")
-    .required("Manager name is required!")
+    .required("Manager name is required!"),
 });
 export const projectInformationValidationSchema = yup.object().shape({
   name: yup
