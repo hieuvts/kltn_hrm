@@ -3,7 +3,6 @@ import employeeReducer from "./employeeSlice";
 import departmentReducer from "./departmentSlice";
 import authReducer from "./authSlice";
 import messageReducer from "./messageSlice";
-import departmentReducer from "./departmentSlice";
 import chatRoomReducer from "./chatRoomSlice";
 import userReducer from "./userSlice";
 
@@ -13,7 +12,7 @@ const reducers = {
   employee: employeeReducer,
   message: messageReducer,
   department: departmentReducer,
-  project: projectReducer
+  project: projectReducer,
   chatRoom: chatRoomReducer,
   user: userReducer,
 };
