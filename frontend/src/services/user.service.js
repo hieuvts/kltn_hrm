@@ -12,9 +12,7 @@ const getAllUser = () => {
 const getUser = (userId) => {
   return axios.get(API_URL + userId, { headers: authHeader() });
 };
-const changePassword = (userId) => {
-  return axios.get(API_URL + userId + "/changePwd", { headers: authHeader() });
-};
+
 // const deleteUser = (userId) => {
 //   return axios.get(API_URL + userId, { headers: authHeader() });
 // };
@@ -39,7 +37,6 @@ const getAdminContent = () => {
 const userService = {
   getAllUser,
   getUser,
-  changePassword,
   getPublicContent,
   getUserContent,
   getModeratorContent,

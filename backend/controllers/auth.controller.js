@@ -127,6 +127,7 @@ const verifyOldPassword = async (req, res, next) => {
 
     if (!user) {
       // Not found
+      console.log("invoked verify not found user");
       return res.status(404).send({ message: "Account not found!" });
     }
 
@@ -137,6 +138,7 @@ const verifyOldPassword = async (req, res, next) => {
 
     if (!passwordIsValid) {
       // Unauthorized
+      console.log("invoked verify passworld invalid");
       return res.status(401).send({
         accessToken: null,
         message: "Invalid password!",
@@ -153,11 +155,13 @@ const changePassword = async (req, res) => {
     { password: newPassword },
 
     (error, result) => {
-      if (error) {
+      if (error || !result) {
+        console.log("invoked changePwd error");
         console.log("error ", error);
-        res.status(500).send(error);
+        return res.status(500).send(error);
       }
-      res.status(200).send(result);
+      console.log("invoked changePwd");
+      return res.status(200).send(result);
     }
   );
 };

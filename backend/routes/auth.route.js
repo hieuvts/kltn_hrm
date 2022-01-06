@@ -17,7 +17,7 @@ router.post(
 router.post("/login", authController.login);
 router.post(
   "/changePwd",
-  [authJwt.verifyToken],
+  authJwt.verifyToken,
   authController.verifyOldPassword,
   authController.changePassword
 );

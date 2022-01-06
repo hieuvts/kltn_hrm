@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import userService from "../services/user.service";
+import authService from "../services/auth.service";
 
 const initialState = {
   userList: [],
@@ -42,12 +43,9 @@ export const changePassword = createAsyncThunk(
   "user/changePassword",
   async (payload, { rejectWithValue }) => {
     try {
-      const res = await userService.changePassword(
-        payload._id,
-        payload.newPassword
-      );
+      const res = await authService.changePassword(payload);
 
-      return res.data.users;
+      return res.data;
     } catch (error) {
       return rejectWithValue(`Change password not successful ${error}`);
     }

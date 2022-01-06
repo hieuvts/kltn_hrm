@@ -13,7 +13,8 @@ import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
 import { useDispatch } from "react-redux";
-import { addEmployeeAsync } from "../../stores/employeeSlice";
+import { logout } from "../../stores/authSlice";
+import { changePassword } from "../../stores/userSlice";
 import { changePwdValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -24,6 +25,7 @@ export default function FormChangeUserPwd({
   submitButtonText,
   initialValues,
 }) {
+  const user = JSON.parse(localStorage.getItem("user"));
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
   const handleSbSuccessClose = () => {
@@ -39,12 +41,13 @@ export default function FormChangeUserPwd({
       initialValues: initialValues,
       validationSchema: changePwdValidationSchema,
       onSubmit: (values) => {
-        dispatch(addEmployeeAsync(values))
+        dispatch(changePassword({ ...values, email: user.email }))
           .unwrap()
           .then((originalPromiseResult) => {
             setSbSuccessOpen(true);
             setTimeout(() => {
               handleCloseDialog();
+              dispatch(logout());
             }, 800);
           })
           .catch((rejectedValueOrSerializedError) => {
@@ -112,12 +115,12 @@ export default function FormChangeUserPwd({
       <SnackbarSuccess
         isOpen={isSbSuccessOpen}
         handleClose={handleSbSuccessClose}
-        text={"Add user success"}
+        text={"Change password success"}
       />
       <SnackbarFailed
         isOpen={isSbFailedOpen}
         handleClose={handleSbFailedClose}
-        text={"Add user failed!"}
+        text={"Change password failed!"}
       />
       <FormikWithMUI />
     </div>
