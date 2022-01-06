@@ -69,6 +69,7 @@ const login = (req, res) => {
   })
     .populate("roles", "-__v")
     .populate("employee")
+    .populate("chatRooms")
     .exec((err, user) => {
       if (err) {
         // Internal server error
@@ -103,19 +104,70 @@ const login = (req, res) => {
       for (let i = 0; i < user.roles.length; i++) {
         authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
       }
-      console.log("check be4 send to client \n", user);
-      // OK - Success
       res.status(200).send({
         id: user._id,
         email: user.email,
-        roles: authorities,
+        roles: user.roles,
         accessToken: token,
-        employee: user.employee[0],
+        employee: user.employee,
+        departments: user.departments,
+        chatRooms: user.chatRooms,
       });
     });
 };
 
+const verifyOldPassword = async (req, res, next) => {
+  User.findOne({
+    email: req.body.email,
+  }).exec((error, user) => {
+    if (error) {
+      res.status(500).send({ message: error });
+      return;
+    }
+
+    if (!user) {
+      // Not found
+      console.log("invoked verify not found user");
+      return res.status(404).send({ message: "Account not found!" });
+    }
+
+    var passwordIsValid = bcrypt.compareSync(
+      req.body.oldPassword,
+      user.password
+    );
+
+    if (!passwordIsValid) {
+      // Unauthorized
+      console.log("invoked verify passworld invalid");
+      return res.status(401).send({
+        accessToken: null,
+        message: "Invalid password!",
+      });
+    }
+    req.userId = user._id;
+    next();
+  });
+};
+const changePassword = async (req, res) => {
+  let newPassword = bcrypt.hashSync(req.body.password, 8);
+  User.findByIdAndUpdate(
+    req.userId,
+    { password: newPassword },
+
+    (error, result) => {
+      if (error || !result) {
+        console.log("invoked changePwd error");
+        console.log("error ", error);
+        return res.status(500).send(error);
+      }
+      console.log("invoked changePwd");
+      return res.status(200).send(result);
+    }
+  );
+};
 module.exports = {
   signUp,
   login,
+  verifyOldPassword,
+  changePassword,
 };

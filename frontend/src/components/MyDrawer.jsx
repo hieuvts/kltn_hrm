@@ -7,6 +7,7 @@ import AboutUs from "../pages/AboutUs/AboutUs";
 import WorkPlace from "../pages/Workplace/Workplace";
 import Company from "../pages/Company/Company";
 import InternalChat from "../pages/Chat/InternalChat";
+import UserProfile from "../pages/UserProfile/UserProfile";
 import Project from "../pages/Project/Project";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -352,6 +353,7 @@ export default function AppBarComponent() {
           <Route path="workplace" element={<WorkPlace />} />
           <Route path="others" element={<Others />} />
           <Route path="setting" element={<Company />} />
+          <Route path="profile" element={<UserProfile />} />
           <Route path="about" element={<AboutUs />} />
           <Route path="chat" element={<InternalChat />} />
           <Route path="*" element={<Navigate to="404" />} />
