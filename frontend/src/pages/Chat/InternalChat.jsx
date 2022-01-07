@@ -11,7 +11,7 @@ import Avatar from "@mui/material/Avatar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
-
+import Paper from "@mui/material/Paper";
 import avatarMale from "../../assets/icons/avatarMale.png";
 import { useSelector, useDispatch } from "react-redux";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
@@ -19,7 +19,7 @@ import FriendList from "../../components/Chat/FriendList";
 import ChatPanel from "../../components/Chat/ChatPanel";
 import { getUser } from "../../stores/userSlice";
 import { getAllChatRoom } from "../../stores/chatRoomSlice";
-import { dummyUser } from "../../utilities/dummyUser";
+import StyledSearchBox from "../../components/StyledSearchBox";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -67,63 +67,85 @@ export default function InternalChat() {
     handleGetAllChatRoom();
     dispatch(getUser({ userId: user.id }));
   }, [value]);
+ 
   return (
     <Grid container direction="row" columnSpacing={3}>
-      <Grid item xs={3}>
-        <Box xs={{ colDirection }}>
-          {/* <FriendList /> */}
-          <Tabs
-            orientation="vertical"
-            variant="scrollable"
-            value={value}
-            onChange={handleChange}
-            aria-label="Vertical tabs example"
-            sx={{ borderRight: 1, borderColor: "divider" }}
-          >
-            {currentUser.chatRooms.map((room, index) => (
-              <Tab
-                key={index}
-                label={
-                  <ListItem alignItems="flex-start">
-                    <ListItemAvatar sx={{ alignSelf: "center" }}>
-                      <Avatar
-                        alt={room.name}
-                        src={avatarMale}
-                        sx={{ width: 50, height: 50, mr: 3 }}
+      <Grid item xs={3} direction="column">
+        <Grid item xs={2} sx={{ m: 1 }}>
+          <Paper>
+            <StyledSearchBox placeholder="Search…" />
+          </Paper>
+        </Grid>
+        <Grid item xs={10}>
+          <Paper>
+            <Tabs
+              orientation="vertical"
+              variant="scrollable"
+              value={value}
+              onChange={handleChange}
+              aria-label="Vertical tabs example"
+              TabIndicatorProps={{
+                sx: {
+                  backgroundColor: "primary",
+                },
+              }}
+              sx={{ borderRight: 1, borderColor: "divider" }}
+            >
+              {currentUser.chatRooms.map((room, index) => (
+                <Tab
+                  key={index}
+                  label={
+                    <ListItem alignItems="flex-start">
+                      <ListItemAvatar sx={{ alignSelf: "center" }}>
+                        <Avatar
+                          alt={room.name}
+                          src={avatarMale}
+                          sx={{ width: 50, height: 50, mr: 3 }}
+                        />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={room.name}
+                        secondary={
+                          <React.Fragment>
+                            <Typography
+                              variant="caption"
+                              sx={{ textTransform: "none" }}
+                            >
+                              {(typeof room.messages !== "undefined") &
+                                (room.messages.length >= 1) && (
+                                <Typography variant="body1">
+                                  {room.messages.slice(-1)[0].sender ===
+                                  user.email
+                                    ? "You"
+                                    : room.messages.slice(-1)[0].sender}
+                                  {": "}
+                                  {room.messages
+                                    .slice(-1)[0]
+                                    .message.slice(-30)}
+                                </Typography>
+                              )}
+                            </Typography>
+                          </React.Fragment>
+                        }
                       />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={room.name}
-                      secondary={
-                        <React.Fragment>
-                          <Typography
-                            variant="caption"
-                            sx={{ textTransform: "none" }}
-                          >
-                            {"..."}
-                            {room.messages.slice(-1)[0].message.slice(-30)}
-                          </Typography>
-                        </React.Fragment>
-                      }
-                    />
-                  </ListItem>
-                }
-                {...a11yProps(index)}
-              />
-            ))}
-          </Tabs>
-        </Box>
+                    </ListItem>
+                  }
+                  {...a11yProps(index)}
+                />
+              ))}
+            </Tabs>
+          </Paper>
+        </Grid>
       </Grid>
       <Grid item xs={9}>
         {currentUser.chatRooms.map((room, index) => (
           <TabPanel key={index} value={value} index={index}>
-            <span>
-              <ChatPanel
-                chatRoomId={room._id}
-                roomName={room.name}
-                roomMessages={room.messages}
-              />
-            </span>
+            <ChatPanel
+              chatRoomId={room._id}
+              roomName={room.name}
+              totalMember={room.members.length}
+              roomMessages={room.messages}
+            />
           </TabPanel>
         ))}
       </Grid>

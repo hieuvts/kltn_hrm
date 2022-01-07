@@ -291,7 +291,7 @@ export default function AppBarComponent() {
         >
           <List
             sx={{
-              // selected and (selected + hover) states
+              // Selected
               "&& .Mui-selected, && .Mui-selected:hover": {
                 backgroundColor: "#fff",
                 "&, & .css-10hburv-MuiTypography-root": {
@@ -302,7 +302,7 @@ export default function AppBarComponent() {
                 },
               },
 
-              // hover states
+              // Hover
               "& .MuiListItemButton-root:hover": {
                 bgcolor: "#3b8edf",
               },
@@ -331,7 +331,6 @@ export default function AppBarComponent() {
                 </Link>
                 <Divider
                   component="li"
-                  fullWidth
                   sx={{ background: "white" }}
                 />
               </div>

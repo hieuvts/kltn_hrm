@@ -15,6 +15,7 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
+import Slider from "@mui/material/Slider";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { addTaskAsync } from "../../stores/taskSlice";
@@ -27,6 +28,7 @@ export default function FormAddTask({
 }) {
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
+  const [progressSliderValue, setProgressSliderValue] = useState(0);
   const departments = useSelector((state) => state.department.departmentList);
   const employees = useSelector((state) => state.employee.employeeList);
   const projects = useSelector((state) => state.project.projectList);
@@ -37,7 +39,32 @@ export default function FormAddTask({
     setSbFailedOpen(false);
   };
   const dispatch = useDispatch();
-
+  const progressSliderMarks = [
+    {
+      value: 0,
+      label: "Init",
+    },
+    {
+      value: 20,
+      label: "20%",
+    },
+    {
+      value: 50,
+      label: "50%",
+    },
+    {
+      value: 75,
+      label: "75%",
+    },
+    {
+      value: 100,
+      label: "100%",
+    },
+  ];
+  const getProgressSliderValue = (value) => {
+    return `${value}`;
+  };
+  console.log("progess slider ", progressSliderValue);
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
@@ -111,7 +138,10 @@ export default function FormAddTask({
                   sx={{ mb: 3 }}
                 >
                   {employees.map((employee, index) => (
-                    <MenuItem key={index} value={employee.fname + " " + employee.lname}>
+                    <MenuItem
+                      key={index}
+                      value={employee.fname + " " + employee.lname}
+                    >
                       {employee.fname + " " + employee.lname}
                     </MenuItem>
                   ))}
@@ -244,7 +274,10 @@ export default function FormAddTask({
                   sx={{ mb: 3 }}
                 >
                   {employees.map((employee, index) => (
-                    <MenuItem key={index} value={employee.fname + " " + employee.lname}>
+                    <MenuItem
+                      key={index}
+                      value={employee.fname + " " + employee.lname}
+                    >
                       {employee.fname + " " + employee.lname}
                     </MenuItem>
                   ))}
@@ -264,7 +297,14 @@ export default function FormAddTask({
                 helperText={formik.touched.name && formik.errors.progress}
                 sx={{ mb: 3 }}
               />
-
+              <Slider
+                aria-label="progessSlider"
+                defaultValue={0}
+                getAriaValueText={getProgressSliderValue}
+                step={10}
+                valueLabelDisplay="auto"
+                marks={progressSliderMarks}
+              />
               <FormControl fullWidth>
                 <InputLabel id="p-label">Priority</InputLabel>
                 <Select
@@ -299,12 +339,12 @@ export default function FormAddTask({
       <SnackbarSuccess
         isOpen={isSbSuccessOpen}
         handleClose={handleSbSuccessClose}
-        text={"Added new Task"}
+        text={"Added new task"}
       />
       <SnackbarFailed
         isOpen={isSbFailedOpen}
         handleClose={handleSbFailedClose}
-        text={"Add Task failed!"}
+        text={"Add task failed!"}
       />
       <FormikWithMUI />
     </div>

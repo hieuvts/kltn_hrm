@@ -6,7 +6,7 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
-import InputAdornment from "@mui/material/InputAdornment";
+import Paper from "@mui/material/Paper";
 import MenuIcon from "@mui/icons-material/Menu";
 import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
@@ -39,7 +39,12 @@ import { dummyUser } from "../../utilities/dummyUser";
 // const JOIN_ROOM_EVENT = "joinRoom";
 // const authHeaderValue = authHeader();
 // const token = authHeaderValue["x-access-token"];
-export default function ChatPanel({ chatRoomId, roomName, roomMessages }) {
+export default function ChatPanel({
+  chatRoomId,
+  totalMember,
+  roomName,
+  roomMessages,
+}) {
   const user = JSON.parse(localStorage.getItem("user"));
   const currentUser = useSelector((state) => state.user.currentUser);
   const [messageToSend, setMessageToSend] = useState("");
@@ -77,83 +82,89 @@ export default function ChatPanel({ chatRoomId, roomName, roomMessages }) {
 
   return (
     <>
-      <Box sx={rowDirection}>
-        {/* <Avatar
-          alt={user.username}
-          src={user.avatar}
-          sx={{ width: 50, height: 50, mr: 3 }}
-        /> */}
-        <Typography variant="h5" sx={{ mb: 3 }}>
-          {roomName}
-        </Typography>
-      </Box>
-      <Divider variant="fullWidth" sx={{ borderBottomWidth: 4 }} />
-      <Box sx={{ colDirection }}>
-        <ul className="chatBox">
-          {mergedMessages.map((message, index) => {
-            return (
-              <div className="message-chat" key={index}>
-                <li
-                  className={`message ${
-                    message.sender === currentUser.email
-                      ? "message-sent "
-                      : "message-received"
-                  }`}
-                >
-                  {!message.isBroadcast ? (
-                    <div
+      <Grid container direction="column" columnSpacing={3}>
+        <Grid item xs={1} sx={{ m: 1 }}>
+          <Typography variant="h5" sx={{ m: 1 }}>
+            {roomName}
+          </Typography>
+          <Typography variant="h6" sx={{ m: 1 }}>
+            {totalMember} {" members"}
+          </Typography>
+        </Grid>
+        <Grid item xs={9} sx={{ m: 1 }}>
+          <Paper>
+            <ul>
+              {mergedMessages.map((message, index) => {
+                return (
+                  <div className="message-chat" key={index}>
+                    <li
                       className={`message ${
                         message.sender === currentUser.email
                           ? "message-sent "
                           : "message-received"
                       }`}
                     >
-                      <StyledBadge
-                        overlap="circular"
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "right",
-                        }}
-                        variant="dot"
-                      >
-                        <Avatar alt="U" src={avatarFemale} sx={{ mx: 1 }} />
-                      </StyledBadge>
-                      <div className="message-bubble">
-                        {message.sender !== currentUser.email && (
-                          <div className="message-info">
-                            <div className="message-username">
-                              {message.sender}
+                      {!message.isBroadcast ? (
+                        <div
+                          className={`message ${
+                            message.sender === currentUser.email
+                              ? "message-sent "
+                              : "message-received"
+                          }`}
+                        >
+                          <StyledBadge
+                            overlap="circular"
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "right",
+                            }}
+                            variant="dot"
+                          >
+                            <Avatar alt="U" src={avatarFemale} sx={{ mx: 1 }} />
+                          </StyledBadge>
+                          <div className="message-bubble">
+                            {message.sender !== currentUser.email && (
+                              <div className="message-info">
+                                <div className="message-username">
+                                  {message.sender}
+                                </div>
+                                <div className="message-role">admin</div>
+                              </div>
+                            )}
+                            <div className="message-content">
+                              {message.message}
                             </div>
-                            <div className="message-role">admin</div>
+                            <div className="message-time">
+                              {moment(message.createdAt).format("ddd, hA")}
+                            </div>
                           </div>
-                        )}
-                        <div className="message-content">{message.message}</div>
-                        <div className="message-time">
-                          {moment(message.createdAt).format("ddd, hA")}
                         </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="message-broadcast">{message.message}</div>
-                  )}
-                  <AlwaysScrollToBottom />
-                </li>
-              </div>
-            );
-          })}
-        </ul>
-        <Box sx={{ mt: 30 }}>
+                      ) : (
+                        <div className="message-broadcast">
+                          {message.message}
+                        </div>
+                      )}
+                      <AlwaysScrollToBottom />
+                    </li>
+                  </div>
+                );
+              })}
+            </ul>
+          </Paper>
+        </Grid>
+        <Grid item xs={9} sx={{ m: 0 }}>
           <ChatMessageInput
             messageToSend={messageToSend}
             handleSendMessage={handleSendMessage}
           />
-        </Box>
-      </Box>
+        </Grid>
+      </Grid>
     </>
   );
 }
 ChatPanel.propTypes = {
   chatRoomId: PropTypes.string,
+  totalMember: PropTypes.number,
   roomName: PropTypes.string,
   roomMessages: PropTypes.array,
 };
