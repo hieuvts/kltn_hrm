@@ -1,5 +1,4 @@
 .chatBox {
-  height: calc(100% - 50px);
   overflow: auto;
   padding: 20px;
   padding-bottom: 0;
