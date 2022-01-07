@@ -432,6 +432,7 @@ export default function DepartmentTable() {
             </Table>
           </TableContainer>
           <TablePagination
+           labelRowsPerPage="Departments per page"
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
             count={rows.length}

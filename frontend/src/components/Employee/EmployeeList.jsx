@@ -248,7 +248,6 @@ export default function EmployeeTable() {
     React.useState(false);
   const dispatch = useDispatch();
   var rows = useSelector((state) => state.employee.employeeList);
-  console.log(rows);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");

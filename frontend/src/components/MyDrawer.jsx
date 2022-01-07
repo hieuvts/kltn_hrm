@@ -13,7 +13,13 @@ import Task from "../pages/Task/Task";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Toolbar, IconButton, Typography, Button } from "@mui/material";
+import {
+  Toolbar,
+  IconButton,
+  Typography,
+  Button,
+  ListItemButton,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar from "@mui/material/AppBar";
@@ -109,21 +115,19 @@ const MyDrawer = styled(MuiDrawer, {
 
 export default function AppBarComponent() {
   const theme = useTheme();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [selectedTabTitle, setSelectedTabTitle] = useState("Dashboard");
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const { user: currentUser } = useSelector((state) => state.auth);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedTab, setSelectedTab] = useState(1);
+  const pathnames = location.pathname.split("/").filter((x) => x);
 
+  const dispatch = useDispatch();
   const handleDrawerOpen = () => {
     setIsDrawerOpen(true);
   };
   const handleDrawerClose = () => {
     setIsDrawerOpen(false);
   };
-  const handleChangeTabTitle = (title) => {
-    setSelectedTabTitle(title);
-  };
-
   // Profile menu
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -133,25 +137,9 @@ export default function AppBarComponent() {
     setAnchorEl(null);
   };
 
-  const pathnames = location.pathname.split("/").filter((x) => x);
-  const currentPathname = pathnames.slice(-1)[0];
-
-  const dispatch = useDispatch();
-
-  // const logOut = useCallback(() => {
-  //   dispatch(logout());
-  // }, [dispatch]);
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     console.log("MyDrawer.jsx ", currentUser);
-  //   } else {
-  //     console.log("MyDrawer.jsx not authorized");
-  //   }
-  // }, [currentUser, logOut]);
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
-
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -174,7 +162,7 @@ export default function AppBarComponent() {
               ...(isDrawerOpen && { display: "none" }),
             }}
           >
-            <MenuIcon />
+            <MenuIcon fontSize="large" sx={{ color: "#fff" }} />
           </IconButton>
           <Box
             sx={{
@@ -294,33 +282,42 @@ export default function AppBarComponent() {
           </Box>
 
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
+            <ChevronLeftIcon fontSize="large" sx={{ color: "#fff" }} />
           </IconButton>
         </DrawerHeader>
         {isDrawerOpen && <Divider />}
         <div
           style={{ height: "100%", backgroundColor: "#1976d2", color: "white" }}
         >
-          <List>
+          <List
+            sx={{
+              // selected and (selected + hover) states
+              "&& .Mui-selected, && .Mui-selected:hover": {
+                backgroundColor: "#fff",
+                "&, & .css-10hburv-MuiTypography-root": {
+                  fontWeight: "800",
+                },
+                "&, & .MuiListItemIcon-root": {
+                  color: "#1976D2",
+                },
+              },
+
+              // hover states
+              "& .MuiListItemButton-root:hover": {
+                bgcolor: "#3b8edf",
+              },
+            }}
+          >
             {pageList.map((page, index) => (
               <div key={index}>
                 <Link
                   style={{ textDecoration: "none", color: "white" }}
                   to={page.path}
                 >
-                  <ListItem
-                    button
+                  <ListItemButton
                     key={index}
-                    sx={{
-                      ":hover": {
-                        backgroundColor: "#3b8edf",
-                      },
-                    }}
-                    onClick={() => handleChangeTabTitle(page.title)}
+                    selected={selectedTab === index}
+                    onClick={() => setSelectedTab(index)}
                   >
                     <ListItemIcon
                       sx={{
@@ -330,11 +327,11 @@ export default function AppBarComponent() {
                       {page.icon}
                     </ListItemIcon>
                     <ListItemText primary={page.title} />
-                  </ListItem>
+                  </ListItemButton>
                 </Link>
                 <Divider
-                  variant="inset"
                   component="li"
+                  fullWidth
                   sx={{ background: "white" }}
                 />
               </div>
