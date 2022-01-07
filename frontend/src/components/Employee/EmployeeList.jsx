@@ -422,7 +422,6 @@ export default function EmployeeTable() {
                           padding="none"
                           align="right"
                           onClick={() => {
-                            console.log("current row: ", row);
                             dispatch(
                               setCurrentSelectedEmployee({
                                 currentSelectedEmployee: row,
