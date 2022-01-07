@@ -108,7 +108,7 @@ export const departmentInformationValidationSchema = yup.object().shape({
   name: yup
     .string("Enter department name")
     .required("Name of department is required"),
-  amount: yup.number("Enter amount of department"),
+  amount: yup.number("Enter amount of employees"),
   manager: yup
     .string("Enter name of manager")
     .min(1, "Manager name should be of minimum 2 characters length")
@@ -120,8 +120,8 @@ export const projectInformationValidationSchema = yup.object().shape({
     .string("Enter project name")
     .required("Name of project is required"),
   customer: yup
-    .string("Enter project name")
-    .required("Name of project is required"),
+    .string("Enter project's customers")
+    .required("Customers of project is required"),
   startDate: yup
     .date("Select start date of project")
     .required("Start date is required!"),
