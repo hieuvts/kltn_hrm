@@ -6,7 +6,7 @@ import { getUser } from "../../stores/userSlice";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import socketIOService from "../../services/socketIO.service";
-import { StyledBadge } from "../../components/StyledBadget";
+import { StyledBadge } from "../../components/CustomizedMUIComponents/StyledBadget";
 import ChatMessageInput from "./ChatMessageInput";
 import avatarFemale from "../../assets/icons/avatarFemale.png";
 import avatarMale from "../../assets/icons/avatarMale.png";

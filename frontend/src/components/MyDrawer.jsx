@@ -28,8 +28,7 @@ import {
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import MuiAppBar from "@mui/material/AppBar";
-import MuiDrawer from "@mui/material/Drawer";
+
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -43,82 +42,19 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-
-import { FcAssistant } from "react-icons/fc";
-import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
 import { styled, alpha, useTheme } from "@mui/material/styles";
+import { FcAssistant } from "react-icons/fc";
 import { logout } from "../stores/authSlice";
-import StyledSearchBox from "./StyledSearchBox";
-import CurrentClock from "./CurrentClock";
-import NotificationBadget from "./NotificationsBadget";
+import StyledSearchBox from "../components/CustomizedMUIComponents/StyledSearchBox";
+import CurrentClock from "../components/CustomizedMUIComponents/CurrentClock";
+import NotificationBadget from "../components/CustomizedMUIComponents/NotificationsBadget";
 import { pageList } from "../utilities/appPageList";
 // Mini variant drawer
-const drawerWidth = 240;
-const openedMixin = (theme) => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
-});
-
-const closedMixin = (theme) => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(9)} + 1px)`,
-  },
-});
-
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
-}));
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const MyDrawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
-}));
-
+import {
+  AppBar,
+  MyDrawer,
+  DrawerHeader,
+} from "./CustomizedMUIComponents/MyDrawer";
 export default function AppBarComponent() {
   const location = useLocation();
   const theme = useTheme();
@@ -344,7 +280,6 @@ export default function AppBarComponent() {
       </MyDrawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-
         <Routes>
           <Route path="" element={<Navigate to="dashboard" />} />
           <Route path="dashboard" element={<Dashboard />} />

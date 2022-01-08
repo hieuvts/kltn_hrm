@@ -4,12 +4,11 @@ import {
   Typography,
   Button,
   Box,
-  Breadcrumbs,
   Link,
   Grid,
 } from "@mui/material";
+import MyBreadcrumbs from "../../components/CustomizedMUIComponents/MyBreadcrumbs";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
-import CapitalizeFirstLetter from "../../utilities/captitalizeFirstLetter";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import DialogDeleteCompany from "../../components/Company/DialogDeleteCompany";
@@ -46,24 +45,8 @@ export default function Company() {
         isDialogOpen={isDialogUpdateCompanyOpen}
         handleCloseDialog={handleDialogUpdateCompanyClose}
       />
-      <Breadcrumbs aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" href="/">
-          Home
-        </Link>
-
-        {pathnames.map((pathName, idx) => (
-          <Link
-            underline="hover"
-            color="text.primary"
-            href={pathName}
-            aria-current="page"
-            key={idx}
-          >
-            {CapitalizeFirstLetter(pathName)}
-          </Link>
-        ))}
-      </Breadcrumbs>
-
+      <MyBreadcrumbs pathnames={pathnames} />
+      
       <Grid
         container
         justifyContent="space-between"
