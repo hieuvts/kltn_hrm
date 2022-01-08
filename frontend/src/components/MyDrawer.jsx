@@ -116,9 +116,10 @@ const MyDrawer = styled(MuiDrawer, {
 export default function AppBarComponent() {
   const theme = useTheme();
   const { user: currentUser } = useSelector((state) => state.auth);
+  const selectedTabFromLocalStr = localStorage.getItem("selectedTab");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedTab, setSelectedTab] = useState(1);
+  const [selectedTab, setSelectedTab] = useState(selectedTabFromLocalStr);
   const pathnames = location.pathname.split("/").filter((x) => x);
 
   const dispatch = useDispatch();
@@ -136,7 +137,11 @@ export default function AppBarComponent() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const handleSelectedTab = (key) => {
+    console.log("page141 ", key);
+    setSelectedTab(key);
+    localStorage.setItem("selectedTab", key);
+  };
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
@@ -316,8 +321,8 @@ export default function AppBarComponent() {
                 >
                   <ListItemButton
                     key={index}
-                    selected={selectedTab === index}
-                    onClick={() => setSelectedTab(index)}
+                    selected={selectedTab === page.key}
+                    onClick={() => handleSelectedTab(page.key)}
                   >
                     <ListItemIcon
                       sx={{
@@ -329,10 +334,7 @@ export default function AppBarComponent() {
                     <ListItemText primary={page.title} />
                   </ListItemButton>
                 </Link>
-                <Divider
-                  component="li"
-                  sx={{ background: "white" }}
-                />
+                <Divider component="li" sx={{ background: "white" }} />
               </div>
             ))}
           </List>
