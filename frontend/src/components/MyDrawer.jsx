@@ -10,7 +10,13 @@ import InternalChat from "../pages/Chat/InternalChat";
 import UserProfile from "../pages/UserProfile/UserProfile";
 import Project from "../pages/Project/Project";
 import Task from "../pages/Task/Task";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -114,13 +120,12 @@ const MyDrawer = styled(MuiDrawer, {
 }));
 
 export default function AppBarComponent() {
+  const location = useLocation();
   const theme = useTheme();
   const { user: currentUser } = useSelector((state) => state.auth);
-  const selectedTabFromLocalStr = localStorage.getItem("selectedTab");
+  const pathnames = location.pathname.split("/").filter((x) => x);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedTab, setSelectedTab] = useState(selectedTabFromLocalStr);
-  const pathnames = location.pathname.split("/").filter((x) => x);
 
   const dispatch = useDispatch();
   const handleDrawerOpen = () => {
@@ -137,11 +142,7 @@ export default function AppBarComponent() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleSelectedTab = (key) => {
-    console.log("page141 ", key);
-    setSelectedTab(key);
-    localStorage.setItem("selectedTab", key);
-  };
+
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
@@ -321,8 +322,9 @@ export default function AppBarComponent() {
                 >
                   <ListItemButton
                     key={index}
-                    selected={selectedTab === page.key}
-                    onClick={() => handleSelectedTab(page.key)}
+                    selected={
+                      location.pathname.split("/").slice(-1)[0] === page.key
+                    }
                   >
                     <ListItemIcon
                       sx={{
@@ -344,7 +346,7 @@ export default function AppBarComponent() {
         <DrawerHeader />
 
         <Routes>
-          <Route path="" element={<Dashboard />} />
+          <Route path="" element={<Navigate to="dashboard" />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="department" element={<Department />} />
           <Route path="employee" element={<Employee />} />
