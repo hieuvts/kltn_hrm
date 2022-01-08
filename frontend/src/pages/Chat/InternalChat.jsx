@@ -8,8 +8,8 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
+// import Tabs from "@mui/material/Tabs";
+// import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import avatarMale from "../../assets/icons/avatarMale.png";
@@ -20,41 +20,15 @@ import ChatPanel from "../../components/Chat/ChatPanel";
 import { getUser } from "../../stores/userSlice";
 import { getAllChatRoom } from "../../stores/chatRoomSlice";
 import StyledSearchBox from "../../components/StyledSearchBox";
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `vertical-tab-${index}`,
-    "aria-controls": `vertical-tabpanel-${index}`,
-  };
-}
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "./internalChat.scss";
 
 export default function InternalChat() {
   const user = JSON.parse(localStorage.getItem("user"));
   const currentUser = useSelector((state) => state.user.currentUser);
   const [value, setValue] = React.useState(0);
   const chatRoom = useSelector((state) => state.chatRoom);
+  const [selectedTab, setSelectedTab] = useState(0);
   const dispatch = useDispatch();
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -66,78 +40,51 @@ export default function InternalChat() {
     console.log("Get all room message");
     handleGetAllChatRoom();
     dispatch(getUser({ userId: user.id }));
-  }, [value]);
- 
+  }, [value, setSelectedTab]);
+  // useEffect(() => {}, []);
   return (
-    <Grid container direction="row" columnSpacing={3}>
-      <Grid item xs={3} direction="column">
-        <Grid item xs={2} sx={{ m: 1 }}>
-          <Paper>
-            <StyledSearchBox placeholder="Search…" />
-          </Paper>
-        </Grid>
-        <Grid item xs={10}>
-          <Paper>
-            <Tabs
-              orientation="vertical"
-              variant="scrollable"
-              value={value}
-              onChange={handleChange}
-              aria-label="Vertical tabs example"
-              TabIndicatorProps={{
-                sx: {
-                  backgroundColor: "primary",
-                },
-              }}
-              sx={{ borderRight: 1, borderColor: "divider" }}
-            >
-              {currentUser.chatRooms.map((room, index) => (
-                <Tab
-                  key={index}
-                  label={
-                    <ListItem alignItems="flex-start">
-                      <ListItemAvatar sx={{ alignSelf: "center" }}>
-                        <Avatar
-                          alt={room.name}
-                          src={avatarMale}
-                          sx={{ width: 50, height: 50, mr: 3 }}
-                        />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={room.name}
-                        secondary={
-                          <React.Fragment>
-                            <Typography
-                              variant="caption"
-                              sx={{ textTransform: "none" }}
-                            >
-                              {(typeof room.messages !== "undefined") &
-                                (room.messages.length >= 1) && (
-                                <Typography variant="body1">
-                                  {room.messages.slice(-1)[0].sender ===
-                                  user.email
-                                    ? "You"
-                                    : room.messages.slice(-1)[0].sender}
-                                  {": "}
-                                  {room.messages
-                                    .slice(-1)[0]
-                                    .message.slice(-30)}
-                                </Typography>
-                              )}
-                            </Typography>
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>
+    <div className="chatContainer">
+      <Tabs>
+        <TabList>
+          <div className="friendSearch">
+            <StyledSearchBox placeholder="Search for chat..." />
+          </div>
+          {currentUser.chatRooms.map((room, index) => (
+            <Tab key={index} onClick={() => setSelectedTab(index)}>
+              <ListItem component={"div"}>
+                <ListItemAvatar sx={{ alignSelf: "center" }}>
+                  <Avatar
+                    alt={room.name}
+                    src={avatarMale}
+                    sx={{ width: 50, height: 50, mr: 3 }}
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <React.Fragment>
+                      <Typography variant="body1">{room.name}</Typography>
+                    </React.Fragment>
                   }
-                  {...a11yProps(index)}
+                  secondary={
+                    <React.Fragment>
+                      {(typeof room.messages !== "undefined") &
+                        (room.messages.length >= 1) && (
+                        <Typography component={"span"} variant="body2">
+                          {room.messages.slice(-1)[0].sender === user.email
+                            ? "You"
+                            : room.messages.slice(-1)[0].sender}
+                          {": "}
+                          {room.messages.slice(-1)[0].message.slice(-30)}
+                        </Typography>
+                      )}
+                    </React.Fragment>
+                  }
                 />
-              ))}
-            </Tabs>
-          </Paper>
-        </Grid>
-      </Grid>
-      <Grid item xs={9}>
+              </ListItem>
+            </Tab>
+          ))}
+        </TabList>
+
         {currentUser.chatRooms.map((room, index) => (
           <TabPanel key={index} value={value} index={index}>
             <ChatPanel
@@ -145,10 +92,11 @@ export default function InternalChat() {
               roomName={room.name}
               totalMember={room.members.length}
               roomMessages={room.messages}
+              sx={{ m: 0, p: 0 }}
             />
           </TabPanel>
         ))}
-      </Grid>
-    </Grid>
+      </Tabs>
+    </div>
   );
 }

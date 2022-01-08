@@ -1,0 +1,59 @@
+
+.friendSearch {
+    background: #1976d2;
+    padding-top: 10px;
+    min-height: 4rem;
+    max-height: 4rem;
+}
+.react-tabs {
+    display: flex;
+    width: calc(100vw - 128px);
+    height: calc(100vh - 128px);
+    color: white;
+}
+
+.react-tabs__tab-list {
+    display: flex;
+    flex-direction: column;
+    max-width: 20vw;
+    min-width: 20vw;
+    margin: 0;
+    padding: 0;
+    color: white;
+}
+
+.react-tabs__tab {
+    background-color: white;
+    min-height: 75px;
+    max-height: 100%;
+    color: black;
+    :hover {
+        background: lightgray;
+    }
+}
+
+.react-tabs__tab--selected {
+    background-color: #1976d2;
+    border-color: white;
+    color: white;
+    padding-left: 30px;
+    min-height: 75px;
+    :hover {
+        background: transparent;
+    }
+}
+
+.react-tabs__tab-panel {
+    display: none;
+}
+
+.react-tabs__tab-panel--selected {
+    color: black;
+    min-height: 90%;
+    width: 100%;
+    display: block;
+}
+
+.react-tabs__tab {
+    padding-left: 0px;
+}
