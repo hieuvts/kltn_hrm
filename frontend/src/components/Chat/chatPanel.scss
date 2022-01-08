@@ -2,15 +2,15 @@
   padding-bottom: 0;
   height: 100%;
   width: 100%;
-  border: 2px solid #1976d2;
   padding: 0px;
   .title {
     min-height: 4rem;
     max-height: 4rem;
-    padding-left: 10px;
+    padding: 10px 0 0 10px;
     border-bottom: solid lightgray;
     .chatRoomName {
-      font-weight: 500;
+      font-weight: 550;
+      font-size: 1.2rem;
     }
     .totalMember {
       font-weight: 300;
@@ -18,18 +18,9 @@
     }
   }
   .content {
-    min-height: calc(100% - 4rem - 6rem);
-    max-height: calc(100% - 4rem - 6rem);
+    min-height: calc(100% - 4rem - 4rem);
+    max-height: calc(100% - 4rem - 4rem);
     overflow-y: auto;
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-    ::-webkit-scrollbar-track {
-      background: rgb(206, 205, 205);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #969696;
-    }
     .messageList {
       display: flex;
       align-items: flex-end;
@@ -37,9 +28,6 @@
       width: 99%;
       &.sent {
         flex-direction: row-reverse;
-      }
-      &.received {
-        color: red;
       }
       .broadcast {
         margin: auto;
@@ -55,9 +43,6 @@
         &.sent {
           flex-direction: row-reverse;
         }
-        &.received {
-          color: red;
-        }
         .avatar {
           margin-top: auto;
         }
@@ -68,7 +53,7 @@
           background: #ececec;
           display: flex;
           flex-direction: column;
-          border-radius: 15px;
+          border-radius: 18px;
           &.sent {
             border-bottom-right-radius: 0px;
           }
@@ -92,13 +77,15 @@
               margin-bottom: 5px;
             }
           }
-          .content {
-            font-style: normal;
+          .messageContent {
+            font-weight: 500;
           }
           .time {
             font-size: 0.85em;
             text-align: right;
             margin-top: auto;
+            color: black;
+            font-size: 10px;
           }
         }
       }
@@ -107,7 +94,8 @@
   .messageSender {
     min-height: 4rem;
     max-height: 4rem;
-    margin: 1rem 2rem 0 2rem;
+    // background: lightgray;
+    padding: 1rem 1rem 0 1rem;
     display: flex;
     flex-direction: row;
     .textBox {
@@ -117,10 +105,15 @@
       min-width: 10%;
       text-align: center;
       margin: auto;
+      display: flex;
+      justify-content: end;
     }
   }
 }
 
+ul {
+  padding: 2px;
+}
 ul li {
   list-style-type: none;
   padding: 0;

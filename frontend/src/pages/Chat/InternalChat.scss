@@ -5,52 +5,65 @@
   min-width: 750px;
   height: calc(100vh - 128px);
   background-color: white;
-  border: 0;
+  border: 2px solid #1976d2;
 }
 
-.chatSideBar {
-  border-radius: 10px 0 0 10px;
-  border: solid;
-  flex-basis: 300px;
-  .friendSearch {
-    min-height: 3rem;
-    max-height: 3rem;
-    padding-left: 10px;
-    border-bottom: solid;
-  }
-  .chatRoomList {
-    min-height: 90%;
-    .chatRoom {
-      background-color: red;
-      padding-left: 10px;
-      border: solid;
-      border-color: white;
-      margin-bottom: 10px;
-      min-height: 75px;
-    }
+.friendSearch {
+  background: #1976d2;
+  padding-top: 10px;
+  border-bottom: solid lightgray;
+  min-height: 4rem;
+  max-height: 4rem;
+}
+.react-tabs {
+  display: flex;
+  width: calc(100vw - 128px);
+  height: calc(100vh - 128px);
+  color: white;
+}
+
+.react-tabs__tab-list {
+  display: flex;
+  flex-direction: column;
+  max-width: 20vw;
+  min-width: 20vw;
+  margin: 0;
+  padding: 0;
+  color: white;
+  border-right: 1px solid #1976d2;
+}
+
+.react-tabs__tab {
+  background-color: white;
+  min-height: 75px;
+  max-height: 100%;
+  color: black;
+  :hover {
+    background: lightgray;
   }
 }
 
-.chatPanel {
-  border-radius: 0 10px 10px 0;
-  border: solid;
-  flex-grow: 1;
-  .chatPanelTitle {
-    min-height: 3rem;
-    max-height: 3rem;
-    padding-left: 10px;
-    border-bottom: solid;
-    .chatRoomName {
-      font-weight: 600;
-    }
-    .totalMember {
-      font-weight: 300;
-      color: lightgray;
-    }
+.react-tabs__tab--selected {
+  background-color: #1976d2;
+  border-color: white;
+  color: white;
+  min-height: 75px;
+  :hover {
+    background: transparent;
   }
-  .chatPanelContent {
-    padding-left: 10px;
+}
 
-    min-height: 90%;
-  }
+.react-tabs__tab-panel {
+  display: none;
+}
+
+.react-tabs__tab-panel--selected {
+  color: black;
+  min-height: 90%;
+  width: 100%;
+  display: block;
+}
+
+.react-tabs__tab {
+  padding-left: 0px;
 }

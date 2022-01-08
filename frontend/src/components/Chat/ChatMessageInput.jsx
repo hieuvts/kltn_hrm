@@ -26,7 +26,6 @@ export default function ChatMessageInput({ messageToSend, handleSendMessage }) {
         <div className="textBox">
           <TextField
             id="message"
-            label="Message"
             fullWidth
             InputProps={{
               startAdornment: (

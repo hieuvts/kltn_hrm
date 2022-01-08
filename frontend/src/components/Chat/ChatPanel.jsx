@@ -1,28 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Divider from "@mui/material/Divider";
-import Paper from "@mui/material/Paper";
-import MenuIcon from "@mui/icons-material/Menu";
-import IconButton from "@mui/material/IconButton";
-import InputBase from "@mui/material/InputBase";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
-import Badge from "@mui/material/Badge";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import ListItemButton from "@mui/material/ListItemButton";
-import socketIOClient from "socket.io-client";
 
 import { getUser } from "../../stores/userSlice";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
-import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import socketIOService from "../../services/socketIO.service";
 import { StyledBadge } from "../../components/StyledBadget";
 import ChatMessageInput from "./ChatMessageInput";
@@ -31,14 +13,7 @@ import avatarMale from "../../assets/icons/avatarMale.png";
 import { getChatMessage, addMessageToRoom } from "../../stores/chatRoomSlice";
 
 import "./chatPanel.scss";
-import { dummyUser } from "../../utilities/dummyUser";
 
-// const API_ENDPOINT = "http://localhost:8000";
-
-// const MESSAGE_EVENT = "message";
-// const JOIN_ROOM_EVENT = "joinRoom";
-// const authHeaderValue = authHeader();
-// const token = authHeaderValue["x-access-token"];
 export default function ChatPanel({
   chatRoomId,
   totalMember,
@@ -47,9 +22,8 @@ export default function ChatPanel({
 }) {
   const user = JSON.parse(localStorage.getItem("user"));
   const currentUser = useSelector((state) => state.user.currentUser);
-  const [messageToSend, setMessageToSend] = useState("");
-  const [frEmail, setFrEmail] = useState("");
   const roomId = chatRoomId; // Gets roomId from URL
+  const [messageToSend, setMessageToSend] = useState("");
   // Creates a websocket and manages messaging
   const { messages, joinRoom, sendMessage } = socketIOService(roomId);
   const dispatch = useDispatch();
@@ -61,13 +35,8 @@ export default function ChatPanel({
     };
     sendMessage(messageBody);
     setMessageToSend("");
-    // window.scrollTo(0, document.body.scrollHeight);
   };
-  // const messagesEndRef = useRef(null);
-  // const scrollToBottom = () => {
-  //   messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-  // };
-  // useEffect(scrollToBottom, [messages]);
+
   const AlwaysScrollToBottom = () => {
     const elementRef = useRef();
     useEffect(() => elementRef.current.scrollIntoView());
@@ -84,7 +53,9 @@ export default function ChatPanel({
     <div className="chatBox">
       <div className="title">
         <div className="chatRoomName">{roomName}</div>
-        <div className="totalMember">{totalMember}</div>
+        <div className="totalMember">
+          {totalMember} {"members"}
+        </div>
       </div>
       <div className="content">
         <ul>
@@ -130,14 +101,14 @@ export default function ChatPanel({
                           <div className="role">admin</div>
                         </div>
                       )}
-                      <div className="content">{message.message}</div>
+                      <div className="messageContent">{message.message}</div>
                       <div className="time">
                         {moment(message.createdAt).format("ddd, hA")}
                       </div>
                     </div>
                   </div>
                 )}
-                {/* <AlwaysScrollToBottom /> */}
+                <AlwaysScrollToBottom />
               </li>
             );
           })}

@@ -156,6 +156,7 @@ io.use((socket, next) => {
 
     socket.on("disconnect", () => {
       socket.leave(chatRoomId);
+      console.log("disconnected");
       socket.broadcast.to(chatRoomId).emit("message", {
         message: `SYSTEM: ${email} has left the chat!`,
         createdAt: new Date(),
@@ -177,9 +178,6 @@ const saveMessagesToDB = (chatRoomId, messages) => {
       return;
     } else {
       console.log("Saved messages to DB");
-      res.status(200).json({
-        message: "Saved msg to DB",
-      });
     }
   });
 };
