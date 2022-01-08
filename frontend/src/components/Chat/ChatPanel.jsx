@@ -83,16 +83,18 @@ export default function ChatPanel({
   return (
     <>
       <Grid container direction="column" columnSpacing={3}>
-        <Grid item xs={1} sx={{ m: 1 }}>
-          <Typography variant="h5" sx={{ m: 1 }}>
-            {roomName}
-          </Typography>
-          <Typography variant="h6" sx={{ m: 1 }}>
-            {totalMember} {" members"}
-          </Typography>
+        <Grid item xs={2} >
+          <Paper sx={{ minHeight: 80 }}>
+            <Typography variant="h5" sx={{ m: 0 }}>
+              {roomName}
+            </Typography>
+            <Typography variant="h6" sx={{ m: 0 }}>
+              {totalMember} {" members"}
+            </Typography>
+          </Paper>
         </Grid>
-        <Grid item xs={9} sx={{ m: 1 }}>
-          <Paper>
+        <Grid item xs={9}>
+          <Paper sx={{ minHeight: "70vh" }}>
             <ul>
               {mergedMessages.map((message, index) => {
                 return (

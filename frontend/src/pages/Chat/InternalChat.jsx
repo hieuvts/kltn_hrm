@@ -32,7 +32,7 @@ function TabPanel(props) {
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && <div>{children}</div>}
     </div>
   );
 }
@@ -67,12 +67,16 @@ export default function InternalChat() {
     handleGetAllChatRoom();
     dispatch(getUser({ userId: user.id }));
   }, [value]);
- 
+
   return (
-    <Grid container direction="row" columnSpacing={3}>
-      <Grid item xs={3} direction="column">
-        <Grid item xs={2} sx={{ m: 1 }}>
-          <Paper>
+    <Grid
+      container
+      direction="row"
+      style={{ minHeight: `calc(100vh - 128px)` }}
+    >
+      <Grid item xs={3} direction="column" sx={{ height: "100%" }}>
+        <Grid item xs={2} sx={{ mb: 1 }}>
+          <Paper sx={{ minHeight: 80 }}>
             <StyledSearchBox placeholder="Search…" />
           </Paper>
         </Grid>
@@ -145,6 +149,7 @@ export default function InternalChat() {
               roomName={room.name}
               totalMember={room.members.length}
               roomMessages={room.messages}
+              sx={{ m: 0, p: 0 }}
             />
           </TabPanel>
         ))}
