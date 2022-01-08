@@ -24,7 +24,6 @@ import {
   IconButton,
   Typography,
   Button,
-  Grid,
   ListItemButton,
 } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -34,8 +33,10 @@ import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
+import Grid from "@mui/material/Grid";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -94,112 +95,106 @@ export default function AppBarComponent() {
             justifyContent: "space-between",
           }}
         >
-          <div>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={{
-                ...(isDrawerOpen && { display: "none" }),
-              }}
-            >
-              <MenuIcon fontSize="large" sx={{ color: "#fff" }} />
-            </IconButton>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              minWidth: "100%",
-              flexDirection: "center",
-              justifyContent: "center",
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            sx={{
+              ...(isDrawerOpen && { display: "none" }),
             }}
           >
-            <Grid container sx={{ alignItems: "center" }}>
-              <Grid item xs={4}></Grid>
-              <Grid item xs={4}>
-                <CurrentClock />
-              </Grid>
-              <Grid item xs={4}>
-                {currentUser && (
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "flex-end",
-                      marginRight: "2rem",
-                    }}
+            <MenuIcon fontSize="large" sx={{ color: "#fff" }} />
+          </IconButton>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <CurrentClock />
+            <StyledSearchBox placeholder="Search…" />
+
+            {currentUser && (
+              <div>
+                <IconButton
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Button
+                  variant="contained"
+                  sx={{ borderRadius: 3 }}
+                  onClick={handleMenu}
+                >
+                  <Typography sx={{ alignSelf: "center", color: "white" }}>
+                    {currentUser.email}
+                  </Typography>
+                </Button>
+
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                >
+                  <Link
+                    to="/profile"
+                    style={{ textDecoration: "none", color: "black" }}
                   >
-                    <IconButton
-                      size="large"
-                      aria-label="account of current user"
-                      aria-controls="menu-appbar"
-                      aria-haspopup="true"
-                      onClick={handleMenu}
-                      color="inherit"
-                    >
-                      <AccountCircle />
-                    </IconButton>
-                    <NotificationBadget notificationCount={3} />
-                    <Menu
-                      id="menu-appbar"
-                      anchorEl={anchorEl}
-                      anchorOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
+                    <MenuItem
+                      onClick={() => {
+                        handleClose();
                       }}
-                      keepMounted
-                      transformOrigin={{
-                        vertical: "top",
-                        horizontal: "right",
-                      }}
-                      open={Boolean(anchorEl)}
-                      onClose={handleClose}
                     >
-                      <Link
-                        to="/profile"
-                        style={{ textDecoration: "none", color: "black" }}
-                      >
-                        <MenuItem
-                          onClick={() => {
-                            handleClose();
-                          }}
-                        >
-                          Profile
-                        </MenuItem>
-                      </Link>
-                      <Link
-                        to="/setting"
-                        style={{ textDecoration: "none", color: "black" }}
-                      >
-                        <MenuItem
-                          onClick={() => {
-                            handleClose();
-                          }}
-                        >
-                          Company settings
-                        </MenuItem>
-                      </Link>
-                      <Link
-                        to="/login"
-                        style={{ textDecoration: "none", color: "black" }}
-                      >
-                        <MenuItem
-                          onClick={() => {
-                            dispatch(logout());
-                            handleClose();
-                          }}
-                        >
-                          Logout
-                        </MenuItem>
-                      </Link>
-                    </Menu>
-                  </div>
-                )}
-              </Grid>
-            </Grid>
-          </div>
+                      Profile
+                    </MenuItem>
+                  </Link>
+                  <Link
+                    to="/setting"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        handleClose();
+                      }}
+                    >
+                      Company settings
+                    </MenuItem>
+                  </Link>
+                  <Link
+                    to="/login"
+                    style={{ textDecoration: "none", color: "black" }}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        dispatch(logout());
+                        handleClose();
+                      }}
+                    >
+                      Logout
+                    </MenuItem>
+                  </Link>
+                </Menu>
+              </div>
+            )}
+            <NotificationBadget notificationCount={3} />
+          </Box>
         </Toolbar>
       </AppBar>
       <MyDrawer variant="permanent" open={isDrawerOpen}>

@@ -14,10 +14,7 @@ export default function CurrentClock() {
     };
   }, []);
   return (
-    <Typography
-      variant="h5"
-      sx={{ alignSelf: "center", textAlign: "center", mx: 5 }}
-    >
+    <Typography variant="h5" sx={{ alignSelf: "center", mx: 5 }}>
       {currentTime.toLocaleTimeString("en-GB")}
     </Typography>
   );
