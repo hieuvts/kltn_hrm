@@ -68,7 +68,7 @@ export default function Project() {
   );
   useEffect(() => {
     debounceFetchAPI(searchQuery);
-    dispatch(getDepartmentAsync());
+    dispatch(getProjectAsync());
   }, [handleSearchQueryChange]);
 
   return (
@@ -148,7 +148,7 @@ export default function Project() {
 
       <Paper elevation={1} sx={{ my: 3, p: 3 }}>
         <MySearchBox
-          placeholder="Search for customer by name, email, phone number..."
+          placeholder="Search For Project"
           handleSearchQueryChange={handleSearchQueryChange}
         />
       </Paper>

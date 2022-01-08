@@ -10,7 +10,7 @@ router.param("taskId",task.gettaskById);
 router.post("/create",task.createtask);
 router.delete("/:taskId/delete",task.deletetask);
 router.delete("/deleteall",task.deleteAlltask);
-router.put("/:taskId/put",task.puttask);
+router.put("/:taskId/update",task.puttask);
 // router.post("/task/createmultipletask",task.createMultipletask);
 
 module.exports = router;

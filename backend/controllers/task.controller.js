@@ -49,7 +49,7 @@ const getAlltask = async (req, res) => {
       },
     });
   }
-  
+
   if (tasks) {
     res.status(200).json({
       message: "Get all task successfully!",
@@ -80,21 +80,25 @@ const createtask = async (req, res) => {
 };
 
 const puttask = async (req, res) => {
-  const task = req.Task;
+  const task = req.task;
   // typeof req.body.name === "undefined"
   //   ? (task.name = task.name)
   //   : (task.name = req.body.name);
   typeof req.body.name !== "undefined" && (task.name = req.body.name);
-  typeof req.body.volume !== "undefined" && (task.volume = req.body.volume);
-  typeof req.body.employeeID !== "undefined" &&
-    (task.employeeID = req.body.employeeID);
+  typeof req.body.assignFrom !== "undefined" && (task.assignFrom = req.body.assignFrom);
+  typeof req.body.assignTo !== "undefined" &&
+    (task.assignTo = req.body.assignTo);
   typeof req.body.difficulty !== "undefined" &&
     (task.difficulty = req.body.difficulty);
   typeof req.body.projectID !== "undefined" &&
     (task.projectID = req.body.projectID);
-  typeof req.body.role !== "undefined" && (task.role = req.body.role);
+  typeof req.body.procedureID !== "undefined" && (task.procedureID = req.body.procedureID);
   typeof req.body.isDeleted !== "undefined" &&
     (task.isDeleted = req.body.isDeleted);
+  typeof req.body.priority !== "undefined" && (task.priority = req.body.priority);
+  typeof req.body.deadline !== "undefined" && (task.deadline = req.body.deadline);
+  typeof req.body.status !== "undefined" && (task.status = req.body.status);
+  typeof req.body.progress !== "undefined" && (task.progress = req.body.progress);
 
   task.save((error, result) => {
     if (error || !result) {
@@ -120,7 +124,7 @@ const puttask = async (req, res) => {
 const deletetask = async (req, res) => {
   console.log("Invoked deletetask");
   // Take req.task value from previous function "gettaskById"
-  const task = req.Task;
+  const task = req.task;
   // task.remove((error, result) => {
   //   if (error || !result) {
   //     res
@@ -136,7 +140,7 @@ const deletetask = async (req, res) => {
 
   // result= `1` if MongoDB deleted a doc,
   // `0` if no docs matched the filter `{ name: ... }`
-  Task.deleteOne({ _id: Task._id }, (error, result) => {
+  Task.deleteOne({ _id: task._id }, (error, result) => {
     if (error || !result) {
       res.status(400).json({
         message: "Can't delete!!!",

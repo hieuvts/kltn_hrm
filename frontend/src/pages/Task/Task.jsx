@@ -130,7 +130,12 @@ export default function Task() {
           </Button>
         </Grid>
       </Grid>
-
+      <Paper elevation={1} sx={{ my: 3, p: 3 }}>
+        <MySearchBox
+          placeholder="Search For Task"
+          handleSearchQueryChange={handleSearchQueryChange}
+        />
+      </Paper>
       <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
         <TaskList />
       </div>
