@@ -9,7 +9,7 @@ import AttachmentOutlinedIcon from "@mui/icons-material/AttachmentOutlined";
 import { useFormik } from "formik";
 
 import { fileNameValidationSchema } from "../../utilities/validationSchema";
-
+import "./chatPanel.scss";
 export default function ChatMessageInput({ messageToSend, handleSendMessage }) {
   const formik = useFormik({
     initialValues: {
@@ -22,11 +22,12 @@ export default function ChatMessageInput({ messageToSend, handleSendMessage }) {
   });
   return (
     <form onSubmit={formik.handleSubmit}>
-      <Grid container>
-        <Grid item xs={10}>
+      <div className="messageSender">
+        <div className="textBox">
           <TextField
             id="message"
             label="Message"
+            fullWidth
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start" sx={{ mr: 3 }}>
@@ -38,26 +39,25 @@ export default function ChatMessageInput({ messageToSend, handleSendMessage }) {
             }}
             placeholder="Enter message..."
             variant="standard"
-            fullWidth
             value={formik.values.message}
             error={formik.touched.message && Boolean(formik.errors.message)}
             helperText={formik.touched.message && formik.errors.message}
             onChange={formik.handleChange}
           />
-        </Grid>
-        <Grid
-          item
-          xs={1}
-          sx={{
-            alignSelf: "center",
-            ml: "auto",
-          }}
-        >
-          <Button variant="contained" color="primary" type="submit">
+        </div>
+        <div className="buttonSend">
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            sx={{
+              alignSelf: "center",
+            }}
+          >
             <SendIcon />
           </Button>
-        </Grid>
-      </Grid>
+        </div>
+      </div>
     </form>
   );
 }

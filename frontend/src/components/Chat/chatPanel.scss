@@ -1,0 +1,128 @@
+.chatBox {
+  padding-bottom: 0;
+  height: 100%;
+  width: 100%;
+  border: 2px solid #1976d2;
+  padding: 0px;
+  .title {
+    min-height: 4rem;
+    max-height: 4rem;
+    padding-left: 10px;
+    border-bottom: solid lightgray;
+    .chatRoomName {
+      font-weight: 500;
+    }
+    .totalMember {
+      font-weight: 300;
+      color: lightgray;
+    }
+  }
+  .content {
+    min-height: calc(100% - 4rem - 6rem);
+    max-height: calc(100% - 4rem - 6rem);
+    overflow-y: auto;
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgb(206, 205, 205);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #969696;
+    }
+    .messageList {
+      display: flex;
+      align-items: flex-end;
+      margin-bottom: 10px;
+      width: 99%;
+      &.sent {
+        flex-direction: row-reverse;
+      }
+      &.received {
+        color: red;
+      }
+      .broadcast {
+        margin: auto;
+        color: rgba(21, 19, 19, 0.57);
+        justify-content: center;
+        font-weight: bold;
+        background-color: transparent;
+        border: none;
+      }
+      .message {
+        display: flex;
+        flex-direction: row;
+        &.sent {
+          flex-direction: row-reverse;
+        }
+        &.received {
+          color: red;
+        }
+        .avatar {
+          margin-top: auto;
+        }
+        .bubble {
+          max-width: 450px;
+          min-width: 300px;
+          padding: 15px;
+          background: #ececec;
+          display: flex;
+          flex-direction: column;
+          border-radius: 15px;
+          &.sent {
+            border-bottom-right-radius: 0px;
+          }
+          &.received {
+            border-bottom-left-radius: 0px;
+          }
+          .info {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            .username {
+              margin-right: 10px;
+              font-weight: bold;
+              margin-bottom: 5px;
+            }
+            .role {
+              color: #969696;
+              font-style: italic;
+              margin-right: 10px;
+              font-weight: bold;
+              margin-bottom: 5px;
+            }
+          }
+          .content {
+            font-style: normal;
+          }
+          .time {
+            font-size: 0.85em;
+            text-align: right;
+            margin-top: auto;
+          }
+        }
+      }
+    }
+  }
+  .messageSender {
+    min-height: 4rem;
+    max-height: 4rem;
+    margin: 1rem 2rem 0 2rem;
+    display: flex;
+    flex-direction: row;
+    .textBox {
+      min-width: 90%;
+    }
+    .buttonSend {
+      min-width: 10%;
+      text-align: center;
+      margin: auto;
+    }
+  }
+}
+
+ul li {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}

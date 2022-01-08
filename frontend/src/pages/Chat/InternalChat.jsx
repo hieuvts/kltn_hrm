@@ -8,8 +8,8 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
+// import Tabs from "@mui/material/Tabs";
+// import Tab from "@mui/material/Tab";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import avatarMale from "../../assets/icons/avatarMale.png";
@@ -20,28 +20,30 @@ import ChatPanel from "../../components/Chat/ChatPanel";
 import { getUser } from "../../stores/userSlice";
 import { getAllChatRoom } from "../../stores/chatRoomSlice";
 import StyledSearchBox from "../../components/StyledSearchBox";
-import "./InternalChat.css";
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "./tabStyles.scss";
+import "./InternalChat.scss";
+// function TabPanel(props) {
+//   const { children, value, index, ...other } = props;
 
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    >
-      {value === index && <div>{children}</div>}
-    </div>
-  );
-}
+//   return (
+//     <div
+//       role="tabpanel"
+//       hidden={value !== index}
+//       id={`vertical-tabpanel-${index}`}
+//       aria-labelledby={`vertical-tab-${index}`}
+//       {...other}
+//     >
+//       {value === index && <div>{children}</div>}
+//     </div>
+//   );
+// }
 
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
+// TabPanel.propTypes = {
+//   children: PropTypes.node,
+//   index: PropTypes.number.isRequired,
+//   value: PropTypes.number.isRequired,
+// };
 
 function a11yProps(index) {
   return {
@@ -69,16 +71,80 @@ export default function InternalChat() {
   }, [value]);
 
   return (
+    // <div className="chatContainer">
+    //   <div className="chatSideBar">
+    //     <div className="friendSearch">col1 row1</div>
+    //     <div className="chatRoomList">
+    //       <div className="chatRoom">chatRoom 1</div>
+    //       <div className="chatRoom">chatRoom 2</div>
+    //     </div>
+    //   </div>
+    //   <div className="chatPanel">
+    //     <div className="chatPanelTitle">
+    //       <div className="chatRoomName">KLTN</div>
+    //       <div className="totalMember">4 members</div>
+    //     </div>
+    //     <div className="chatPanelContent">col2 row2</div>
+    //   </div>
+    // </div>
     <div className="chatContainer">
-      <div className="chatSideBar">
-        <div className="friendSearch">col1 row1</div>
-        <div className="chatroomList">col1 row2</div>
-      </div>
-      <div className="chatPanel">
-        <div className="chatPanelTitle">col2 row1</div>
-        <div className="chatPanelContent">col2 row2</div>
-      </div>
+      <Tabs>
+        <TabList>
+          <div className="friendSearch">
+            <StyledSearchBox placeholder="Search for chat..." />
+          </div>
+          {currentUser.chatRooms.map((room, index) => (
+            <Tab key={index}>
+              <ListItem alignItems="start" >
+                <ListItemAvatar sx={{ alignSelf: "center" }}>
+                  <Avatar
+                    alt={room.name}
+                    src={avatarMale}
+                    sx={{ width: 50, height: 50, mr: 3 }}
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={<Typography variant="body1">{room.name}</Typography>}
+                  secondary={
+                    <React.Fragment>
+                      <Typography
+                        variant="body2"
+                        sx={{ textTransform: "none" }}
+                      >
+                        {(typeof room.messages !== "undefined") &
+                          (room.messages.length >= 1) && (
+                          <Typography variant="body2">
+                            {room.messages.slice(-1)[0].sender === user.email
+                              ? "You"
+                              : room.messages.slice(-1)[0].sender}
+                            {": "}
+                            {room.messages.slice(-1)[0].message.slice(-30)}
+                          </Typography>
+                        )}
+                      </Typography>
+                    </React.Fragment>
+                  }
+                 
+                />
+              </ListItem>
+            </Tab>
+          ))}
+        </TabList>
+
+        {currentUser.chatRooms.map((room, index) => (
+          <TabPanel key={index} value={value} index={index}>
+            <ChatPanel
+              chatRoomId={room._id}
+              roomName={room.name}
+              totalMember={room.members.length}
+              roomMessages={room.messages}
+              sx={{ m: 0, p: 0 }}
+            />
+          </TabPanel>
+        ))}
+      </Tabs>
     </div>
+
     // <Grid
     //   container
     //   direction="row"

@@ -30,7 +30,7 @@ import avatarFemale from "../../assets/icons/avatarFemale.png";
 import avatarMale from "../../assets/icons/avatarMale.png";
 import { getChatMessage, addMessageToRoom } from "../../stores/chatRoomSlice";
 
-import "./ChatPanel.css";
+import "./chatPanel.scss";
 import { dummyUser } from "../../utilities/dummyUser";
 
 // const API_ENDPOINT = "http://localhost:8000";
@@ -81,87 +81,72 @@ export default function ChatPanel({
   }, []);
 
   return (
-    <>
-      <Grid container direction="column" columnSpacing={3}>
-        <Grid item xs={2} >
-          <Paper sx={{ minHeight: 80 }}>
-            <Typography variant="h5" sx={{ m: 0 }}>
-              {roomName}
-            </Typography>
-            <Typography variant="h6" sx={{ m: 0 }}>
-              {totalMember} {" members"}
-            </Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={9}>
-          <Paper sx={{ minHeight: "70vh" }}>
-            <ul>
-              {mergedMessages.map((message, index) => {
-                return (
-                  <div className="message-chat" key={index}>
-                    <li
-                      className={`message ${
+    <div className="chatBox">
+      <div className="title">
+        <div className="chatRoomName">{roomName}</div>
+        <div className="totalMember">{totalMember}</div>
+      </div>
+      <div className="content">
+        <ul>
+          {mergedMessages.map((message, index) => {
+            return (
+              <li
+                key={index}
+                className={`messageList ${
+                  message.sender === currentUser.email ? "sent" : "received"
+                }`}
+              >
+                {message.isBroadcast ? (
+                  <div className="broadcast">{message.message}</div>
+                ) : (
+                  <div
+                    className={`message ${
+                      message.sender === currentUser.email ? "sent" : "received"
+                    }`}
+                  >
+                    <div className="avatar">
+                      <StyledBadge
+                        overlap="circular"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                        variant="dot"
+                      >
+                        <Avatar alt="U" src={avatarFemale} sx={{ mx: 1 }} />
+                      </StyledBadge>
+                    </div>
+
+                    <div
+                      className={`bubble ${
                         message.sender === currentUser.email
-                          ? "message-sent "
-                          : "message-received"
+                          ? "sent"
+                          : "received"
                       }`}
                     >
-                      {!message.isBroadcast ? (
-                        <div
-                          className={`message ${
-                            message.sender === currentUser.email
-                              ? "message-sent "
-                              : "message-received"
-                          }`}
-                        >
-                          <StyledBadge
-                            overlap="circular"
-                            anchorOrigin={{
-                              vertical: "bottom",
-                              horizontal: "right",
-                            }}
-                            variant="dot"
-                          >
-                            <Avatar alt="U" src={avatarFemale} sx={{ mx: 1 }} />
-                          </StyledBadge>
-                          <div className="message-bubble">
-                            {message.sender !== currentUser.email && (
-                              <div className="message-info">
-                                <div className="message-username">
-                                  {message.sender}
-                                </div>
-                                <div className="message-role">admin</div>
-                              </div>
-                            )}
-                            <div className="message-content">
-                              {message.message}
-                            </div>
-                            <div className="message-time">
-                              {moment(message.createdAt).format("ddd, hA")}
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="message-broadcast">
-                          {message.message}
+                      {message.sender !== currentUser.email && (
+                        <div className="info">
+                          <div className="username">{message.sender}</div>
+                          <div className="role">admin</div>
                         </div>
                       )}
-                      <AlwaysScrollToBottom />
-                    </li>
+                      <div className="content">{message.message}</div>
+                      <div className="time">
+                        {moment(message.createdAt).format("ddd, hA")}
+                      </div>
+                    </div>
                   </div>
-                );
-              })}
-            </ul>
-          </Paper>
-        </Grid>
-        <Grid item xs={9} sx={{ m: 0 }}>
-          <ChatMessageInput
-            messageToSend={messageToSend}
-            handleSendMessage={handleSendMessage}
-          />
-        </Grid>
-      </Grid>
-    </>
+                )}
+                {/* <AlwaysScrollToBottom /> */}
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      <div className="textFieldSender">
+        <ChatMessageInput handleSendMessage={handleSendMessage} />
+      </div>
+    </div>
   );
 }
 ChatPanel.propTypes = {

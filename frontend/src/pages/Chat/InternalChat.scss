@@ -1,0 +1,56 @@
+.chatContainer {
+  display: flex;
+  flex-grow: 1;
+  max-width: 100vw;
+  min-width: 750px;
+  height: calc(100vh - 128px);
+  background-color: white;
+  border: 0;
+}
+
+.chatSideBar {
+  border-radius: 10px 0 0 10px;
+  border: solid;
+  flex-basis: 300px;
+  .friendSearch {
+    min-height: 3rem;
+    max-height: 3rem;
+    padding-left: 10px;
+    border-bottom: solid;
+  }
+  .chatRoomList {
+    min-height: 90%;
+    .chatRoom {
+      background-color: red;
+      padding-left: 10px;
+      border: solid;
+      border-color: white;
+      margin-bottom: 10px;
+      min-height: 75px;
+    }
+  }
+}
+
+.chatPanel {
+  border-radius: 0 10px 10px 0;
+  border: solid;
+  flex-grow: 1;
+  .chatPanelTitle {
+    min-height: 3rem;
+    max-height: 3rem;
+    padding-left: 10px;
+    border-bottom: solid;
+    .chatRoomName {
+      font-weight: 600;
+    }
+    .totalMember {
+      font-weight: 300;
+      color: lightgray;
+    }
+  }
+  .chatPanelContent {
+    padding-left: 10px;
+
+    min-height: 90%;
+  }
+}
