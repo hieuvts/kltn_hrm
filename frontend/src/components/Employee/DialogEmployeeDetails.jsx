@@ -75,18 +75,18 @@ export default function DialogEmployeeDetails({
                 <EmployeeAvatar />
               </Box>
               <Box sx={{ m: 3 }}>
-                <EffecientLevel />
-              </Box>
-              <Box sx={{ m: 3 }}>
-                <EmploymentHistory />
+                <PersonalInformation />
               </Box>
             </Grid>
             <Grid item sm={12} lg={6}>
               <Box sx={{ m: 3 }}>
-                <PersonalInformation />
+                <EffecientLevel />
               </Box>
               <Box sx={{ m: 3 }}>
                 <AboutMe />
+              </Box>
+              <Box sx={{ m: 3 }}>
+                <EmploymentHistory />
               </Box>
             </Grid>
           </Grid>

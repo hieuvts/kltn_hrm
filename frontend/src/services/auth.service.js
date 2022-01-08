@@ -1,5 +1,6 @@
 import axios from "axios";
 import { apiBaseUrl } from "../config/apiBaseUrl";
+import authHeader from "./authHeader";
 const API_URL = `${apiBaseUrl}/auth/`;
 
 const signUp = (email, password) => {
@@ -14,7 +15,6 @@ const login = (email, password) => {
     if (res.data.accessToken) {
       localStorage.setItem("user", JSON.stringify(res.data));
     }
-    console.log("check res.data", res);
     return res.data;
   });
 };
@@ -22,11 +22,14 @@ const login = (email, password) => {
 const logout = () => {
   localStorage.removeItem("user");
 };
-
+const changePassword = (body) => {
+  return axios.post(API_URL + "changePwd", body, { headers: authHeader() });
+};
 const authService = {
   signUp,
   login,
   logout,
+  changePassword,
 };
 
 export default authService;

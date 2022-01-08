@@ -6,12 +6,20 @@ import Others from "../pages/Others";
 import AboutUs from "../pages/AboutUs/AboutUs";
 import WorkPlace from "../pages/Task/Task";
 import Company from "../pages/Company/Company";
+import InternalChat from "../pages/Chat/InternalChat";
+import UserProfile from "../pages/UserProfile/UserProfile";
 import Project from "../pages/Project/Project";
 import Task from "../pages/Task/Task";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Toolbar, IconButton, Typography, Button } from "@mui/material";
+import {
+  Toolbar,
+  IconButton,
+  Typography,
+  Button,
+  ListItemButton,
+} from "@mui/material";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar from "@mui/material/AppBar";
@@ -22,6 +30,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+
+import Grid from "@mui/material/Grid";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -33,7 +43,8 @@ import CapitalizeFirstLetter from "../utilities/captitalizeFirstLetter";
 import { styled, alpha, useTheme } from "@mui/material/styles";
 import { logout } from "../stores/authSlice";
 import StyledSearchBox from "./StyledSearchBox";
-import clockTimer from "../utilities/clockTimer";
+import CurrentClock from "./CurrentClock";
+import NotificationBadget from "./NotificationsBadget";
 import { pageList } from "../utilities/appPageList";
 // Mini variant drawer
 const drawerWidth = 240;
@@ -104,39 +115,20 @@ const MyDrawer = styled(MuiDrawer, {
 
 export default function AppBarComponent() {
   const theme = useTheme();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [selectedTabTitle, setSelectedTabTitle] = useState("Dashboard");
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const { user: currentUser } = useSelector((state) => state.auth);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedTab, setSelectedTab] = useState(1);
+  const pathnames = location.pathname.split("/").filter((x) => x);
 
+  const dispatch = useDispatch();
   const handleDrawerOpen = () => {
     setIsDrawerOpen(true);
   };
   const handleDrawerClose = () => {
     setIsDrawerOpen(false);
   };
-  const handleChangeTabTitle = (title) => {
-    setSelectedTabTitle(title);
-  };
-
-  const pathnames = location.pathname.split("/").filter((x) => x);
-  const currentPathname = pathnames.slice(-1)[0];
-
-  const dispatch = useDispatch();
-
-  // const logOut = useCallback(() => {
-  //   dispatch(logout());
-  // }, [dispatch]);
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     console.log("MyDrawer.jsx ", currentUser);
-  //   } else {
-  //     console.log("MyDrawer.jsx not authorized");
-  //   }
-  // }, [currentUser, logOut]);
-  if (!currentUser) {
-    return <Navigate to="/login" />;
-  }
+  // Profile menu
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -144,6 +136,10 @@ export default function AppBarComponent() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  if (!currentUser) {
+    return <Navigate to="/login" />;
+  }
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -166,7 +162,7 @@ export default function AppBarComponent() {
               ...(isDrawerOpen && { display: "none" }),
             }}
           >
-            <MenuIcon />
+            <MenuIcon fontSize="large" sx={{ color: "#fff" }} />
           </IconButton>
           <Box
             sx={{
@@ -175,6 +171,7 @@ export default function AppBarComponent() {
               justifyContent: "space-between",
             }}
           >
+            <CurrentClock />
             <StyledSearchBox placeholder="Search…" />
 
             {currentUser && (
@@ -254,6 +251,7 @@ export default function AppBarComponent() {
                 </Menu>
               </div>
             )}
+            <NotificationBadget notificationCount={3} />
           </Box>
         </Toolbar>
       </AppBar>
@@ -284,33 +282,42 @@ export default function AppBarComponent() {
           </Box>
 
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
+            <ChevronLeftIcon fontSize="large" sx={{ color: "#fff" }} />
           </IconButton>
         </DrawerHeader>
         {isDrawerOpen && <Divider />}
         <div
           style={{ height: "100%", backgroundColor: "#1976d2", color: "white" }}
         >
-          <List>
+          <List
+            sx={{
+              // Selected
+              "&& .Mui-selected, && .Mui-selected:hover": {
+                backgroundColor: "#fff",
+                "&, & .css-10hburv-MuiTypography-root": {
+                  fontWeight: "800",
+                },
+                "&, & .MuiListItemIcon-root": {
+                  color: "#1976D2",
+                },
+              },
+
+              // Hover
+              "& .MuiListItemButton-root:hover": {
+                bgcolor: "#3b8edf",
+              },
+            }}
+          >
             {pageList.map((page, index) => (
               <div key={index}>
                 <Link
                   style={{ textDecoration: "none", color: "white" }}
                   to={page.path}
                 >
-                  <ListItem
-                    button
+                  <ListItemButton
                     key={index}
-                    sx={{
-                      ":hover": {
-                        backgroundColor: "#3b8edf",
-                      },
-                    }}
-                    onClick={() => handleChangeTabTitle(page.title)}
+                    selected={selectedTab === index}
+                    onClick={() => setSelectedTab(index)}
                   >
                     <ListItemIcon
                       sx={{
@@ -320,10 +327,9 @@ export default function AppBarComponent() {
                       {page.icon}
                     </ListItemIcon>
                     <ListItemText primary={page.title} />
-                  </ListItem>
+                  </ListItemButton>
                 </Link>
                 <Divider
-                  variant="inset"
                   component="li"
                   sx={{ background: "white" }}
                 />
@@ -341,10 +347,12 @@ export default function AppBarComponent() {
           <Route path="department" element={<Department />} />
           <Route path="employee" element={<Employee />} />
           <Route path="project" element={<Project />} />
-          <Route path="workplace" element={<WorkPlace />} />
+          <Route path="Task" element={<Task />} />
           <Route path="others" element={<Others />} />
           <Route path="setting" element={<Company />} />
+          <Route path="profile" element={<UserProfile />} />
           <Route path="about" element={<AboutUs />} />
+          <Route path="chat" element={<InternalChat />} />
           <Route path="*" element={<Navigate to="404" />} />
         </Routes>
       </Box>

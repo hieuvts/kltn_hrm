@@ -118,6 +118,7 @@ export default function Employee() {
           </Link>
         ))}
       </Breadcrumbs>
+
       <Grid
         container
         justifyContent="flex-end"
@@ -125,17 +126,18 @@ export default function Employee() {
         padding={{ sm: 5, md: 0 }}
         sx={{ alignItems: "center" }}
       >
-        <Grid item paddingTop={{ xs: 2, sm: 0 }} xs={12} sm={3} md={2}>
-          <Button variant="link">
+        <Grid item xs={12} sm={3} md={2} paddingTop={{ xs: 2, sm: 0 }}>
+          <Button variant="outlined">
             <FileDownloadOutlinedIcon fontSize="medium" />
             <Typography variant="h6" sx={{ pl: 1 }}>
               Import
             </Typography>
           </Button>
         </Grid>
+
         <Grid item xs={12} sm={3} md={2}>
           <Button
-            variant="link"
+            variant="outlined"
             onClick={() => setDialogExportEmployeeOpen(true)}
           >
             <FileUploadOutlinedIcon fontSize="medium" />
@@ -144,7 +146,8 @@ export default function Employee() {
             </Typography>
           </Button>
         </Grid>
-        <Grid item xs={12} sm={6} md={2} paddingTop={{ xs: 2, sm: 0, md: 0 }}>
+
+        <Grid item xs={12} sm={6} md={3} paddingTop={{ xs: 2, sm: 0, md: 0 }}>
           <Button variant="contained" onClick={() => handleDialogOpen()}>
             <Typography variant="h6">Add Employee</Typography>
           </Button>
@@ -153,7 +156,7 @@ export default function Employee() {
 
       <Paper elevation={1} sx={{ my: 3, p: 3 }}>
         <MySearchBox
-          placeholder="Search for customer by name, email, phone number..."
+          placeholder="Search for customer..."
           handleSearchQueryChange={handleSearchQueryChange}
         />
       </Paper>

@@ -68,8 +68,10 @@ const getAllEmployee = async (req, res) => {
     console.log(moment().format("hh:mm:ss"), "[ERROR] getAllEmployee");
   }
 };
-const saveEmployeeHelper = (req, res, employee) => {
-  console.log("helper: ", employee);
+
+const saveEmployeeHelper = (req, res, next, employee) => {
+  console.log("saveHelper ", employee);
+  // Attach roles
   if (req.body.roles && req.body.roles.length !== 0) {
     Role.find(
       {
@@ -86,9 +88,8 @@ const saveEmployeeHelper = (req, res, employee) => {
             res.status(500).send({ message: error });
             return;
           }
-          res.send({
-            message: `Create employee with role=${req.body.roles} successfully!`,
-          });
+          req.employeeId = employee._id;
+          next();
         });
       }
     );
@@ -105,47 +106,52 @@ const saveEmployeeHelper = (req, res, employee) => {
           res.status(500).send({ message: error });
           return;
         }
-        res.send({
-          message: `Create employee with role=user successfully!`,
-        });
+        req.employeeId = employee._id;
+        next();
       });
     });
   }
 };
-const createEmployee = async (req, res) => {
-  console.log("invoke createEmployee");
+const createEmployee = async (req, res, next) => {
   const employee = new Employee(req.body);
-
-  // If user provide a custom role (not Admin, Moderator, User)
+  // Attach departments
   if (!req.body.departments || req.body.departments.length === 0) {
-    console.log("not provide departments");
-    saveEmployeeHelper(req, res, employee);
+    saveEmployeeHelper(req, res, next, employee);
+    return res.status(200).json({
+      message: "Create employee successfully! [without Departments]",
+    });
   } else if (req.body.departments) {
-    console.log("had provided departments");
     Department.find(
       {
         name: { $in: req.body.departments },
       },
       (error, departments) => {
         if (error || !departments) {
+          console.log("dont have depart");
           // save without add departments
-          saveEmployeeHelper(req, res, employee);
+          saveEmployeeHelper(req, res, next, employee);
+          return res.status(404).json({
+            message: "[AddEmployee] Can't find departments",
+          });
         } else {
           employee.departments = departments.map(
             (department) => department._id
           );
+
           // save with departments id found from DB
-          saveEmployeeHelper(req, res, employee);
+          saveEmployeeHelper(req, res, next, employee);
+          return res.status(200).json({
+            message: "Create employee successfully!",
+          });
         }
       }
     );
   }
 };
 
-const updateEmployee = async (req, res) => {
-  console.log("invoked be updateEmployee");
+const updateEmployee = async (req, res, next) => {
   const employee = req.employee;
-
+  console.log("updateEmployee ", employee);
   typeof req.body.fname !== "undefined" && (employee.fname = req.body.fname);
   typeof req.body.lname !== "undefined" && (employee.lname = req.body.lname);
   typeof req.body.gender !== "undefined" && (employee.gender = req.body.gender);
@@ -163,10 +169,11 @@ const updateEmployee = async (req, res) => {
     (employee.isDeleted = req.body.isDeleted);
 
   if (!req.body.departments || req.body.departments.length === 0) {
-    console.log("not provide departments");
-    saveEmployeeHelper(req, res, employee);
+    saveEmployeeHelper(req, res, next, employee);
+    return res.status(200).json({
+      message: "Update employee successfully!",
+    });
   } else if (req.body.departments) {
-    console.log("had provided departments");
     Department.find(
       {
         name: { $in: req.body.departments },
@@ -174,64 +181,23 @@ const updateEmployee = async (req, res) => {
       (error, departments) => {
         if (error || !departments) {
           // save without add departments
-          saveEmployeeHelper(req, res, employee);
+          saveEmployeeHelper(req, res, next, employee);
+          return res.status(404).json({
+            message: "[updateEmployee] Can't find departments",
+          });
         } else {
           employee.departments = departments.map(
             (department) => department._id
           );
           // save with departments id found from DB
-          saveEmployeeHelper(req, res, employee);
+          saveEmployeeHelper(req, res, next, employee);
+          return res.status(200).json({
+            message: "Update employee successfully!",
+          });
         }
       }
     );
   }
-  // employee.save((error, result) => {
-  //   if (error || !result) {
-  //     res.status(500).send(err);
-  //     return;
-  //   }
-  //   if (req.body.roles) {
-  //     Role.find(
-  //       {
-  //         name: { $in: req.body.roles },
-  //       },
-  //       (error, roles) => {
-  //         if (error) {
-  //           res.status(500).send({ message: error });
-  //           return;
-  //         }
-
-  //         employee.roles = roles.map((role) => role._id);
-  //         employee.save((error) => {
-  //           if (error) {
-  //             res.status(500).send({ message: error });
-  //             return;
-  //           }
-
-  //           res.send({ message: "Update employee successfully!" });
-  //         });
-  //       }
-  //     );
-  //   } else {
-  //     // If user not provide any role -> Assign them to "admin" role
-  //     Role.findOne({ name: "user" }, (error, role) => {
-  //       if (error) {
-  //         res.status(500).send({ message: error });
-  //         return;
-  //       }
-
-  //       employee.roles = [role._id];
-  //       employee.save((error) => {
-  //         if (error) {
-  //           res.status(500).send({ message: error });
-  //           return;
-  //         }
-
-  //         res.send({ message: "Create employee successfully!" });
-  //       });
-  //     });
-  //   }
-  // });
 };
 
 // findOneAndDelete() returns the deleted document after having deleted it

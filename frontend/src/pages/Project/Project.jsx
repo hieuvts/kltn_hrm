@@ -121,7 +121,7 @@ export default function Project() {
         sx={{ alignItems: "center" }}
       >
         <Grid item paddingTop={{ xs: 2, sm: 0 }} xs={12} sm={3} md={2}>
-          <Button variant="link">
+          <Button variant="outlined">
             <FileDownloadOutlinedIcon fontSize="medium" />
             <Typography variant="h6" sx={{ pl: 1 }}>
               Import
@@ -130,7 +130,7 @@ export default function Project() {
         </Grid>
         <Grid item xs={12} sm={3} md={2}>
           <Button
-            variant="link"
+            variant="outlined"
             onClick={() => setDialogExportProjectOpen(true)}
           >
             <FileUploadOutlinedIcon fontSize="medium" />
