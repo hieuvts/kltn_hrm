@@ -48,12 +48,27 @@ const getAllEmployee = async (req, res) => {
     employees = await Employee.find().populate("departments").populate("roles");
   } else {
     console.log("Return employees with search= ", query);
-    employees = await Employee.find({
-      $text: {
-        $search: `"${query}"`,
-        // $search: `.*(\b${query}\b).*`,
-      },
-    })
+    employees = await Employee.find()
+      .or([
+        {
+          fname: {
+            $regex: query,
+            $options: "i",
+          },
+        },
+        {
+          lname: {
+            $regex: query,
+            $options: "i",
+          },
+        },
+        {
+          phoneNumber: {
+            $regex: query,
+            $options: "i",
+          },
+        },
+      ])
       .populate("departments")
       .populate("roles");
   }

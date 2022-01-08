@@ -20,7 +20,7 @@ import ChatPanel from "../../components/Chat/ChatPanel";
 import { getUser } from "../../stores/userSlice";
 import { getAllChatRoom } from "../../stores/chatRoomSlice";
 import StyledSearchBox from "../../components/StyledSearchBox";
-
+import "./InternalChat.css";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -69,91 +69,101 @@ export default function InternalChat() {
   }, [value]);
 
   return (
-    <Grid
-      container
-      direction="row"
-      style={{ minHeight: `calc(100vh - 128px)` }}
-    >
-      <Grid item xs={3} direction="column" sx={{ height: "100%" }}>
-        <Grid item xs={2} sx={{ mb: 1 }}>
-          <Paper sx={{ minHeight: 80 }}>
-            <StyledSearchBox placeholder="Search…" />
-          </Paper>
-        </Grid>
-        <Grid item xs={10}>
-          <Paper>
-            <Tabs
-              orientation="vertical"
-              variant="scrollable"
-              value={value}
-              onChange={handleChange}
-              aria-label="Vertical tabs example"
-              TabIndicatorProps={{
-                sx: {
-                  backgroundColor: "primary",
-                },
-              }}
-              sx={{ borderRight: 1, borderColor: "divider" }}
-            >
-              {currentUser.chatRooms.map((room, index) => (
-                <Tab
-                  key={index}
-                  label={
-                    <ListItem alignItems="flex-start">
-                      <ListItemAvatar sx={{ alignSelf: "center" }}>
-                        <Avatar
-                          alt={room.name}
-                          src={avatarMale}
-                          sx={{ width: 50, height: 50, mr: 3 }}
-                        />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={room.name}
-                        secondary={
-                          <React.Fragment>
-                            <Typography
-                              variant="caption"
-                              sx={{ textTransform: "none" }}
-                            >
-                              {(typeof room.messages !== "undefined") &
-                                (room.messages.length >= 1) && (
-                                <Typography variant="body1">
-                                  {room.messages.slice(-1)[0].sender ===
-                                  user.email
-                                    ? "You"
-                                    : room.messages.slice(-1)[0].sender}
-                                  {": "}
-                                  {room.messages
-                                    .slice(-1)[0]
-                                    .message.slice(-30)}
-                                </Typography>
-                              )}
-                            </Typography>
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>
-                  }
-                  {...a11yProps(index)}
-                />
-              ))}
-            </Tabs>
-          </Paper>
-        </Grid>
-      </Grid>
-      <Grid item xs={9}>
-        {currentUser.chatRooms.map((room, index) => (
-          <TabPanel key={index} value={value} index={index}>
-            <ChatPanel
-              chatRoomId={room._id}
-              roomName={room.name}
-              totalMember={room.members.length}
-              roomMessages={room.messages}
-              sx={{ m: 0, p: 0 }}
-            />
-          </TabPanel>
-        ))}
-      </Grid>
-    </Grid>
+    <div className="chatContainer">
+      <div className="chatSideBar">
+        <div className="friendSearch">col1 row1</div>
+        <div className="chatroomList">col1 row2</div>
+      </div>
+      <div className="chatPanel">
+        <div className="chatPanelTitle">col2 row1</div>
+        <div className="chatPanelContent">col2 row2</div>
+      </div>
+    </div>
+    // <Grid
+    //   container
+    //   direction="row"
+    //   style={{ minHeight: `calc(100vh - 128px)` }}
+    // >
+    //   <Grid item xs={3} direction="column" sx={{ height: "100%" }}>
+    //     <Grid item xs={2} sx={{ mb: 1 }}>
+    //       <Paper sx={{ minHeight: 80 }}>
+    //         <StyledSearchBox placeholder="Search…" />
+    //       </Paper>
+    //     </Grid>
+    //     <Grid item xs={10}>
+    //       <Paper>
+    //         <Tabs
+    //           orientation="vertical"
+    //           variant="scrollable"
+    //           value={value}
+    //           onChange={handleChange}
+    //           aria-label="Vertical tabs example"
+    //           TabIndicatorProps={{
+    //             sx: {
+    //               backgroundColor: "primary",
+    //             },
+    //           }}
+    //           sx={{ borderRight: 1, borderColor: "divider" }}
+    //         >
+    //           {currentUser.chatRooms.map((room, index) => (
+    //             <Tab
+    //               key={index}
+    //               label={
+    //                 <ListItem alignItems="flex-start">
+    //                   <ListItemAvatar sx={{ alignSelf: "center" }}>
+    //                     <Avatar
+    //                       alt={room.name}
+    //                       src={avatarMale}
+    //                       sx={{ width: 50, height: 50, mr: 3 }}
+    //                     />
+    //                   </ListItemAvatar>
+    //                   <ListItemText
+    //                     primary={room.name}
+    //                     secondary={
+    //                       <React.Fragment>
+    //                         <Typography
+    //                           variant="caption"
+    //                           sx={{ textTransform: "none" }}
+    //                         >
+    //                           {(typeof room.messages !== "undefined") &
+    //                             (room.messages.length >= 1) && (
+    //                             <Typography variant="body1">
+    //                               {room.messages.slice(-1)[0].sender ===
+    //                               user.email
+    //                                 ? "You"
+    //                                 : room.messages.slice(-1)[0].sender}
+    //                               {": "}
+    //                               {room.messages
+    //                                 .slice(-1)[0]
+    //                                 .message.slice(-30)}
+    //                             </Typography>
+    //                           )}
+    //                         </Typography>
+    //                       </React.Fragment>
+    //                     }
+    //                   />
+    //                 </ListItem>
+    //               }
+    //               {...a11yProps(index)}
+    //             />
+    //           ))}
+    //         </Tabs>
+    //       </Paper>
+    //     </Grid>
+    //   </Grid>
+    //   <Grid item xs={9}>
+    //     {currentUser.chatRooms.map((room, index) => (
+    //       <TabPanel key={index} value={value} index={index}>
+    //         <ChatPanel
+    //           chatRoomId={room._id}
+    //           roomName={room.name}
+    //           totalMember={room.members.length}
+    //           roomMessages={room.messages}
+    //           sx={{ m: 0, p: 0 }}
+    //         />
+    //       </TabPanel>
+    //     ))}
+    //   </Grid>
+    // </Grid>
   );
 }
