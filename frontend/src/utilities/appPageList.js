@@ -39,8 +39,8 @@ export const pageList = [
   },
   {
     title: "Task",
-    path: "/workplace",
-    key: "workplace",
+    path: "/task",
+    key: "task",
     icon: <AssignmentIcon />,
     className: "nav-text",
   },

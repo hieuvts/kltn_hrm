@@ -347,7 +347,7 @@ export default function AppBarComponent() {
           <Route path="department" element={<Department />} />
           <Route path="employee" element={<Employee />} />
           <Route path="project" element={<Project />} />
-          <Route path="workplace" element={<WorkPlace />} />
+          <Route path="Task" element={<Task />} />
           <Route path="others" element={<Others />} />
           <Route path="setting" element={<Company />} />
           <Route path="profile" element={<UserProfile />} />
