@@ -18,7 +18,7 @@ import SnackbarFailed from "../Snackbar/SnackbarFailed";
 import Slider from "@mui/material/Slider";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
-import { addTaskAsync } from "../../stores/taskSlice";
+import { addTaskAsync, getTaskAsync } from "../../stores/taskSlice";
 import { taskInformationValidationSchema } from "../../utilities/validationSchema";
 
 export default function FormAddTask({
@@ -29,7 +29,6 @@ export default function FormAddTask({
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
   const [progressSliderValue, setProgressSliderValue] = useState(0);
-  const departments = useSelector((state) => state.department.departmentList);
   const employees = useSelector((state) => state.employee.employeeList);
   const projects = useSelector((state) => state.project.projectList);
   const handleSbSuccessClose = () => {
@@ -73,6 +72,7 @@ export default function FormAddTask({
         dispatch(addTaskAsync(values))
           .unwrap()
           .then((originalPromiseResult) => {
+            dispatch(getTaskAsync());
             setSbSuccessOpen(true);
             setTimeout(() => {
               handleCloseDialog();
@@ -236,9 +236,9 @@ export default function FormAddTask({
                         Boolean(formik.errors.deadline)
                       }
                       helperText={
-                        formik.touched.endDate && formik.errors.deadline
+                        formik.touched.deadline && formik.errors.deadline
                       }
-                      deadline
+                      fullWidth
                       sx={{ mb: 3 }}
                     />
                   )}
@@ -266,14 +266,14 @@ export default function FormAddTask({
                 <InputLabel id="asignTo-label">Asign To</InputLabel>
                 <Select
                   labelId="AsignTo-label"
-                  id="AsignTo"
+                  id="asignTo"
                   fullWidth
                   multiple
                   value={formik.values.asignTo}
                   onChange={(e) => {
-                    formik.setFieldValue("AsignTo", e.target.value);
+                    formik.setFieldValue("asignTo", e.target.value);
                   }}
-                  input={<OutlinedInput id="AsignTo" label="AsignTo" />}
+                  input={<OutlinedInput id="asignTo" label="asignTo" />}
                   renderValue={(selected) => (
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                       {selected.map((value) => (

@@ -114,7 +114,6 @@ export default function FormUpdateTask({ handleCloseDialog, initialValues }) {
                 step={10}
                 valueLabelDisplay="on"
                 marks={progressSliderMarks}
-                value={formik.values.progress}
               />
           </Box>
           <Grid container rowSpacing={3} columnSpacing={3}>
@@ -257,9 +256,9 @@ export default function FormUpdateTask({ handleCloseDialog, initialValues }) {
                         Boolean(formik.errors.deadline)
                       }
                       helperText={
-                        formik.touched.endDate && formik.errors.deadline
+                        formik.touched.deadline && formik.errors.deadline
                       }
-                      deadline
+                      fullWidth
                       sx={{ mb: 3 }}
                     />
                   )}
@@ -287,14 +286,14 @@ export default function FormUpdateTask({ handleCloseDialog, initialValues }) {
                 <InputLabel id="asignTo-label">Asign To</InputLabel>
                 <Select
                   labelId="AsignTo-label"
-                  id="AsignTo"
+                  id="asignTo"
                   fullWidth
                   multiple
                   value={formik.values.asignTo}
                   onChange={(e) => {
-                    formik.setFieldValue("AsignTo", e.target.value);
+                    formik.setFieldValue("asignTo", e.target.value);
                   }}
-                  input={<OutlinedInput id="AsignTo" label="AsignTo" />}
+                  input={<OutlinedInput id="asignTo" label="asignTo" />}
                   renderValue={(selected) => (
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                       {selected.map((value) => (
@@ -336,7 +335,7 @@ export default function FormUpdateTask({ handleCloseDialog, initialValues }) {
           </Grid>
 
           <Button variant="contained" color="primary" fullWidth type="Update">
-            SUBMIT
+            Update
           </Button>
         </form>
       </div>
@@ -380,4 +379,5 @@ FormUpdateTask.defaultProps = {
     employees: [],
     projects: [],
   },
+  submitButtonText: "SUBMIT",
 };

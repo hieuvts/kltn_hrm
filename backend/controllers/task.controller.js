@@ -1,5 +1,6 @@
 const Task = require("../models/task.model");
-
+const Employee = require("../models/employee.model");
+const Project =  require("../models/project.model");
 const gettaskById = async (req, res, next, taskId) => {
   // Get task details from task model and
   // attach to request object
@@ -39,17 +40,33 @@ const getAlltask = async (req, res) => {
 
   if (typeof query === "undefined" || query.length === 0) {
     console.log("Return all tasks");
-    tasks = await Task.find();
+    tasks = await Task.find().populate("assignFrom").populate("assignTo").populate("project");
   } else {
     console.log("Return tasks with search= ", query);
-    tasks = await Task.find({
-      $text: {
-        $search: `"${query}"`,
-        // $search: `.*(\b${query}\b).*`,
+    tasks = await Task.find()
+    .or([
+      {
+        name: {
+          $regex: query,
+          $options: "i",
+        },
       },
-    });
+      {
+        assignFrom: {
+          $regex: query,
+          $options: "i",
+        },
+      },
+      {
+        assignTo: {
+          $regex: query,
+          $options: "i",
+        },
+      },
+    ])
+    .populate("assignFrom").populate("assignTo").populate("project");
+    ;
   }
-
   if (tasks) {
     res.status(200).json({
       message: "Get all task successfully!",
@@ -65,6 +82,43 @@ const getAlltask = async (req, res) => {
 const createtask = async (req, res) => {
   console.log("Invoked createtask");
   const task = new Task(req.body);
+  if (req.body.asignFrom || req.body.asignFrom.length !== 0)
+  {
+    Employee.find({
+      name: { $in: req.body.asignFrom},
+    },
+    (error, employees)=>{
+      if(error || !employees){
+      }
+      else{
+        task.assignFrom = employees.map((employee) => employee._id);
+      }
+    });
+  }
+  if (req.body.asignTo || req.body.asignTo.length  !== 0){
+    Employee.find({
+      name: { $in: req.body.asignTo },
+    },
+    (error, employees)=>{
+      if(error || !employees){
+      }
+      else{
+        task.assignTo = employees.map((employee) => employee._id);
+      }
+    });
+  }
+  if (req.body.projects || req.body.projects.length !== 0){
+    Project.find({
+      name: { $in: req.body.projects },
+    },
+    (error, projects)=>{
+      if(error || !projects){
+      }
+      else{
+        task.project = projects.map((project) => project._id);
+      }
+    });
+  }
   task.save((error, result) => {
     if (error || !result) {
       res.status(400).json({
@@ -85,9 +139,9 @@ const puttask = async (req, res) => {
   //   ? (task.name = task.name)
   //   : (task.name = req.body.name);
   typeof req.body.name !== "undefined" && (task.name = req.body.name);
-  typeof req.body.assignFrom !== "undefined" && (task.assignFrom = req.body.assignFrom);
-  typeof req.body.assignTo !== "undefined" &&
-    (task.assignTo = req.body.assignTo);
+  typeof req.body.asignFrom !== "undefined" && (task.asignFrom = req.body.assignFrom);
+  typeof req.body.asignTo !== "undefined" &&
+    (task.asignTo = req.body.asignTo);
   typeof req.body.difficulty !== "undefined" &&
     (task.difficulty = req.body.difficulty);
   typeof req.body.projectID !== "undefined" &&
@@ -99,8 +153,44 @@ const puttask = async (req, res) => {
   typeof req.body.deadline !== "undefined" && (task.deadline = req.body.deadline);
   typeof req.body.status !== "undefined" && (task.status = req.body.status);
   typeof req.body.progress !== "undefined" && (task.progress = req.body.progress);
-
-  task.save((error, result) => {
+  if (req.body.asignFrom || req.body.asignFrom.length !== 0)
+  {
+    Employee.find({
+      name: { $in: req.body.asignFrom},
+    },
+    (error, employees)=>{
+      if(error || !employees){
+      }
+      else{
+        task.assignFrom = employees.map((employee) => employee._id);
+      }
+    });
+  }
+  if (req.body.asignTo || req.body.asignTo.length  !== 0){
+    Employee.find({
+      name: { $in: req.body.asignTo },
+    },
+    (error, employees)=>{
+      if(error || !employees){
+      }
+      else{
+        task.assignTo = employees.map((employee) => employee._id);
+      }
+    });
+  }
+  if (req.body.projects || req.body.projects.length !== 0){
+    Project.find({
+      name: { $in: req.body.projects },
+    },
+    (error, projects)=>{
+      if(error || !projects){
+      }
+      else{
+        task.project = projects.map((project) => project._id);
+      }
+    });
+  }
+  task.save((error, result) => {  
     if (error || !result) {
       return res.status(400).json({
         message: "[UPDATE] Something went wrong",
