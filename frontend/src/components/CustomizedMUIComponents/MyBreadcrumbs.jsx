@@ -7,7 +7,10 @@ import CapitalizeFirstLetter from "../../utilities/captitalizeFirstLetter";
 
 export default function MyBreadcrumbs({ pathnames }) {
   return (
-    <Breadcrumbs aria-label="breadcrumb">
+    <Breadcrumbs
+      aria-label="breadcrumb"
+      sx={{ pl: 3, pt: 3, fontSize: "1.5rem" }}
+    >
       <Link underline="hover" color="inherit" href="/">
         Home
       </Link>
