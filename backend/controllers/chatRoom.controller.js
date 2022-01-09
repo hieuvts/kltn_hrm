@@ -50,7 +50,7 @@ const addRoomIdToUser = async (req, res, chatRoomId) => {
             .send({ message: "[ERROR] addRoomIdToUser " + index + error });
           return;
         }
-        console.log("Patched");
+        console.log("Added roomId to users profile");
       }
     );
   });

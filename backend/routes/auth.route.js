@@ -15,5 +15,11 @@ router.post(
 );
 
 router.post("/login", authController.login);
+router.post(
+  "/changePwd",
+  authJwt.verifyToken,
+  authController.verifyOldPassword,
+  authController.changePassword
+);
 
 module.exports = router;

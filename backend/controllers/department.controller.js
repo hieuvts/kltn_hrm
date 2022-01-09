@@ -32,12 +32,20 @@ const getAllDepartment = async (req, res) => {
     departments = await Department.find();
   } else {
     console.log("Return departments with search= ", query);
-    departments = await Department.find({
-      $text: {
-        $search: `"${query}"`,
-        // $search: `.*(\b${query}\b).*`,
+    departments = await Department.find().or([
+      {
+        name: {
+          $regex: query,
+          $options: "i",
+        },
       },
-    });
+      {
+        manager: {
+          $regex: query,
+          $options: "i",
+        },
+      },
+    ]);
   }
 
   if (departments) {
@@ -81,7 +89,7 @@ const putDepartment = async (req, res) => {
   typeof req.body.isDeleted !== "undefined" &&
     (department.isDeleted = req.body.isDeleted);
 
-    department.save((error, result) => {
+  department.save((error, result) => {
     if (error || !result) {
       return res.status(400).json({
         message: "[UPDATE] Something went wrong",

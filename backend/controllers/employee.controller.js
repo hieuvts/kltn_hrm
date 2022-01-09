@@ -48,12 +48,27 @@ const getAllEmployee = async (req, res) => {
     employees = await Employee.find().populate("departments").populate("roles");
   } else {
     console.log("Return employees with search= ", query);
-    employees = await Employee.find({
-      $text: {
-        $search: `"${query}"`,
-        // $search: `.*(\b${query}\b).*`,
-      },
-    })
+    employees = await Employee.find()
+      .or([
+        {
+          fname: {
+            $regex: query,
+            $options: "i",
+          },
+        },
+        {
+          lname: {
+            $regex: query,
+            $options: "i",
+          },
+        },
+        {
+          phoneNumber: {
+            $regex: query,
+            $options: "i",
+          },
+        },
+      ])
       .populate("departments")
       .populate("roles");
   }
@@ -70,6 +85,7 @@ const getAllEmployee = async (req, res) => {
 };
 
 const saveEmployeeHelper = (req, res, next, employee) => {
+  console.log("saveHelper ", employee);
   // Attach roles
   if (req.body.roles && req.body.roles.length !== 0) {
     Role.find(
@@ -112,12 +128,13 @@ const saveEmployeeHelper = (req, res, next, employee) => {
   }
 };
 const createEmployee = async (req, res, next) => {
-  console.log("invoke createEmployee");
   const employee = new Employee(req.body);
-
-   // Attach departments
+  // Attach departments
   if (!req.body.departments || req.body.departments.length === 0) {
     saveEmployeeHelper(req, res, next, employee);
+    return res.status(200).json({
+      message: "Create employee successfully! [without Departments]",
+    });
   } else if (req.body.departments) {
     Department.find(
       {
@@ -125,24 +142,31 @@ const createEmployee = async (req, res, next) => {
       },
       (error, departments) => {
         if (error || !departments) {
+          console.log("dont have depart");
           // save without add departments
           saveEmployeeHelper(req, res, next, employee);
+          return res.status(404).json({
+            message: "[AddEmployee] Can't find departments",
+          });
         } else {
           employee.departments = departments.map(
             (department) => department._id
           );
+
           // save with departments id found from DB
           saveEmployeeHelper(req, res, next, employee);
+          return res.status(200).json({
+            message: "Create employee successfully!",
+          });
         }
       }
     );
   }
 };
 
-const updateEmployee = async (req, res) => {
-  console.log("invoked be updateEmployee");
+const updateEmployee = async (req, res, next) => {
   const employee = req.employee;
-
+  console.log("updateEmployee ", employee);
   typeof req.body.fname !== "undefined" && (employee.fname = req.body.fname);
   typeof req.body.lname !== "undefined" && (employee.lname = req.body.lname);
   typeof req.body.gender !== "undefined" && (employee.gender = req.body.gender);
@@ -160,10 +184,11 @@ const updateEmployee = async (req, res) => {
     (employee.isDeleted = req.body.isDeleted);
 
   if (!req.body.departments || req.body.departments.length === 0) {
-    console.log("not provide departments");
-    saveEmployeeHelper(req, res, employee);
+    saveEmployeeHelper(req, res, next, employee);
+    return res.status(200).json({
+      message: "Update employee successfully!",
+    });
   } else if (req.body.departments) {
-    console.log("had provided departments");
     Department.find(
       {
         name: { $in: req.body.departments },
@@ -171,13 +196,19 @@ const updateEmployee = async (req, res) => {
       (error, departments) => {
         if (error || !departments) {
           // save without add departments
-          saveEmployeeHelper(req, res, employee);
+          saveEmployeeHelper(req, res, next, employee);
+          return res.status(404).json({
+            message: "[updateEmployee] Can't find departments",
+          });
         } else {
           employee.departments = departments.map(
             (department) => department._id
           );
           // save with departments id found from DB
-          saveEmployeeHelper(req, res, employee);
+          saveEmployeeHelper(req, res, next, employee);
+          return res.status(200).json({
+            message: "Update employee successfully!",
+          });
         }
       }
     );

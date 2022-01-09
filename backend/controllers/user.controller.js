@@ -72,6 +72,7 @@ const getAllUser = async (req, res) => {
   }
 };
 
+
 const publicAccess = (req, res) => {
   res.status(200).send("Public Content.");
 };

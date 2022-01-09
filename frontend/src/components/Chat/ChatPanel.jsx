@@ -1,50 +1,29 @@
 import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Divider from "@mui/material/Divider";
-import InputAdornment from "@mui/material/InputAdornment";
-import MenuIcon from "@mui/icons-material/Menu";
-import IconButton from "@mui/material/IconButton";
-import InputBase from "@mui/material/InputBase";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
-import Badge from "@mui/material/Badge";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import ListItemButton from "@mui/material/ListItemButton";
-import socketIOClient from "socket.io-client";
 
 import { getUser } from "../../stores/userSlice";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
-import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import socketIOService from "../../services/socketIO.service";
-import { StyledBadge } from "../../components/StyledBadget";
+import { StyledBadge } from "../../components/CustomizedMUIComponents/StyledBadget";
 import ChatMessageInput from "./ChatMessageInput";
 import avatarFemale from "../../assets/icons/avatarFemale.png";
 import avatarMale from "../../assets/icons/avatarMale.png";
 import { getChatMessage, addMessageToRoom } from "../../stores/chatRoomSlice";
 
-import "./ChatPanel.css";
-import { dummyUser } from "../../utilities/dummyUser";
+import "./chatPanel.scss";
 
-// const API_ENDPOINT = "http://localhost:8000";
-
-// const MESSAGE_EVENT = "message";
-// const JOIN_ROOM_EVENT = "joinRoom";
-// const authHeaderValue = authHeader();
-// const token = authHeaderValue["x-access-token"];
-export default function ChatPanel({ chatRoomId, roomName, roomMessages }) {
+export default function ChatPanel({
+  chatRoomId,
+  totalMember,
+  roomName,
+  roomMessages,
+}) {
   const user = JSON.parse(localStorage.getItem("user"));
   const currentUser = useSelector((state) => state.user.currentUser);
-  const [messageToSend, setMessageToSend] = useState("");
-  const [frEmail, setFrEmail] = useState("");
   const roomId = chatRoomId; // Gets roomId from URL
+  const [messageToSend, setMessageToSend] = useState("");
   // Creates a websocket and manages messaging
   const { messages, joinRoom, sendMessage } = socketIOService(roomId);
   const dispatch = useDispatch();
@@ -56,13 +35,8 @@ export default function ChatPanel({ chatRoomId, roomName, roomMessages }) {
     };
     sendMessage(messageBody);
     setMessageToSend("");
-    // window.scrollTo(0, document.body.scrollHeight);
   };
-  // const messagesEndRef = useRef(null);
-  // const scrollToBottom = () => {
-  //   messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-  // };
-  // useEffect(scrollToBottom, [messages]);
+
   const AlwaysScrollToBottom = () => {
     const elementRef = useRef();
     useEffect(() => elementRef.current.scrollIntoView());
@@ -76,38 +50,32 @@ export default function ChatPanel({ chatRoomId, roomName, roomMessages }) {
   }, []);
 
   return (
-    <>
-      <Box sx={rowDirection}>
-        {/* <Avatar
-          alt={user.username}
-          src={user.avatar}
-          sx={{ width: 50, height: 50, mr: 3 }}
-        /> */}
-        <Typography variant="h5" sx={{ mb: 3 }}>
-          {roomName}
-        </Typography>
-      </Box>
-      <Divider variant="fullWidth" sx={{ borderBottomWidth: 4 }} />
-      <Box sx={{ colDirection }}>
-        <ul className="chatBox">
+    <div className="chatBox">
+      <div className="title">
+        <div className="chatRoomName">{roomName}</div>
+        <div className="totalMember">
+          {totalMember} {"members"}
+        </div>
+      </div>
+      <div className="content">
+        <ul>
           {mergedMessages.map((message, index) => {
             return (
-              <div className="message-chat" key={index}>
-                <li
-                  className={`message ${
-                    message.sender === currentUser.email
-                      ? "message-sent "
-                      : "message-received"
-                  }`}
-                >
-                  {!message.isBroadcast ? (
-                    <div
-                      className={`message ${
-                        message.sender === currentUser.email
-                          ? "message-sent "
-                          : "message-received"
-                      }`}
-                    >
+              <li
+                key={index}
+                className={`messageList ${
+                  message.sender === currentUser.email ? "sent" : "received"
+                }`}
+              >
+                {message.isBroadcast ? (
+                  <div className="broadcast">{message.message}</div>
+                ) : (
+                  <div
+                    className={`message ${
+                      message.sender === currentUser.email ? "sent" : "received"
+                    }`}
+                  >
+                    <div className="avatar">
                       <StyledBadge
                         overlap="circular"
                         anchorOrigin={{
@@ -118,42 +86,43 @@ export default function ChatPanel({ chatRoomId, roomName, roomMessages }) {
                       >
                         <Avatar alt="U" src={avatarFemale} sx={{ mx: 1 }} />
                       </StyledBadge>
-                      <div className="message-bubble">
-                        {message.sender !== currentUser.email && (
-                          <div className="message-info">
-                            <div className="message-username">
-                              {message.sender}
-                            </div>
-                            <div className="message-role">admin</div>
-                          </div>
-                        )}
-                        <div className="message-content">{message.message}</div>
-                        <div className="message-time">
-                          {moment(message.createdAt).format("ddd, hA")}
+                    </div>
+
+                    <div
+                      className={`bubble ${
+                        message.sender === currentUser.email
+                          ? "sent"
+                          : "received"
+                      }`}
+                    >
+                      {message.sender !== currentUser.email && (
+                        <div className="info">
+                          <div className="username">{message.sender}</div>
+                          <div className="role">admin</div>
                         </div>
+                      )}
+                      <div className="messageContent">{message.message}</div>
+                      <div className="time">
+                        {moment(message.createdAt).format("ddd, hA")}
                       </div>
                     </div>
-                  ) : (
-                    <div className="message-broadcast">{message.message}</div>
-                  )}
-                  <AlwaysScrollToBottom />
-                </li>
-              </div>
+                  </div>
+                )}
+                <AlwaysScrollToBottom />
+              </li>
             );
           })}
         </ul>
-        <Box sx={{ mt: 30 }}>
-          <ChatMessageInput
-            messageToSend={messageToSend}
-            handleSendMessage={handleSendMessage}
-          />
-        </Box>
-      </Box>
-    </>
+      </div>
+      <div className="textFieldSender">
+        <ChatMessageInput handleSendMessage={handleSendMessage} />
+      </div>
+    </div>
   );
 }
 ChatPanel.propTypes = {
   chatRoomId: PropTypes.string,
+  totalMember: PropTypes.number,
   roomName: PropTypes.string,
   roomMessages: PropTypes.array,
 };

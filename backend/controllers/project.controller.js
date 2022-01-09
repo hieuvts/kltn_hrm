@@ -42,14 +42,24 @@ const getAllproject = async (req, res) => {
     projects = await Project.find().populate("departments");
   } else {
     console.log("Return projects with search= ", query);
-    projects = await Project.find({
-      $text: {
-        $search: `"${query}"`,
-        // $search: `.*(\b${query}\b).*`,
-      },
-    }).populate("departments");
+    projects = await Project.find()
+      .or([
+        {
+          name: {
+            $regex: query,
+            $options: "i",
+          },
+        },
+        {
+          customer: {
+            $regex: query,
+            $options: "i",
+          },
+        },
+      ])
+      .populate("departments");
   }
-  
+
   if (projects) {
     res.status(200).json({
       message: "Get all project successfully!",
@@ -64,8 +74,7 @@ const getAllproject = async (req, res) => {
 
 const createproject = async (req, res) => {
   const project = new Project(req.body);
-  if(!req.body.departments || req.body.departments.length === 0)
-  {
+  if (!req.body.departments || req.body.departments.length === 0) {
     console.log("not provide departments");
     project.save((error, result) => {
       if (error || !result) {
@@ -79,13 +88,12 @@ const createproject = async (req, res) => {
         });
       }
     });
-  }
-  else
-  {
-    Department.find({
-      name: {$in: req.body.departments}
-    },
-    (error, departments) => {
+  } else {
+    Department.find(
+      {
+        name: { $in: req.body.departments },
+      },
+      (error, departments) => {
         if (error || !departments) {
           // save without add departments
           project.save((error, result) => {
@@ -101,9 +109,7 @@ const createproject = async (req, res) => {
             }
           });
         } else {
-          project.departments = departments.map(
-            (department) => department._id
-          );
+          project.departments = departments.map((department) => department._id);
           project.save((error, result) => {
             if (error || !result) {
               res.status(400).json({
@@ -118,27 +124,28 @@ const createproject = async (req, res) => {
           });
         }
       }
-    )
+    );
   }
 };
 
 const putproject = async (req, res) => {
   const project = req.project;
   typeof req.body.name !== "undefined" && (project.name = req.body.name);
-  typeof req.body.customer !== "undefined" && (project.customer = req.body.customer);
+  typeof req.body.customer !== "undefined" &&
+    (project.customer = req.body.customer);
   typeof req.body.startDate !== "undefined" &&
     (project.startDate = req.body.startDate);
   typeof req.body.phoneNumber !== "undefined" &&
     (project.phoneNumber = req.body.phoneNumber);
-  typeof req.body.endDate !== "undefined" && (project.endDate = req.body.endDate);
+  typeof req.body.endDate !== "undefined" &&
+    (project.endDate = req.body.endDate);
   typeof req.body.address !== "undefined" &&
     (project.address = req.body.address);
   typeof req.body.departments !== "undefined" &&
     (project.departments = req.body.departments);
   typeof req.body.isDeleted !== "undefined" &&
     (project.isDeleted = req.body.isDeleted);
-  if(!req.body.departments || req.body.departments.length === 0)
-  {
+  if (!req.body.departments || req.body.departments.length === 0) {
     console.log("not provide departments");
     project.save((error, result) => {
       if (error || !result) {
@@ -152,13 +159,12 @@ const putproject = async (req, res) => {
         });
       }
     });
-  }
-  else
-  {
-    Department.find({
-      name: {$in: req.body.departments}
-    },
-    (error, departments) => {
+  } else {
+    Department.find(
+      {
+        name: { $in: req.body.departments },
+      },
+      (error, departments) => {
         if (error || !departments) {
           // save without add departments
           project.save((error, result) => {
@@ -174,9 +180,7 @@ const putproject = async (req, res) => {
             }
           });
         } else {
-          project.departments = departments.map(
-            (department) => department._id
-          );
+          project.departments = departments.map((department) => department._id);
           project.save((error, result) => {
             if (error || !result) {
               res.status(400).json({
@@ -191,7 +195,7 @@ const putproject = async (req, res) => {
           });
         }
       }
-    )
+    );
   }
 };
 

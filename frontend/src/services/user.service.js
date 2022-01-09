@@ -10,12 +10,9 @@ const getAllUser = () => {
   return axios.get(API_URL + "getAll", { headers: authHeader() });
 };
 const getUser = (userId) => {
-  console.log("user.service userId= ", userId);
   return axios.get(API_URL + userId, { headers: authHeader() });
 };
-// const updateUser = (userId) => {
-//   return axios.get(API_URL + userId, { headers: authHeader() });
-// };
+
 // const deleteUser = (userId) => {
 //   return axios.get(API_URL + userId, { headers: authHeader() });
 // };

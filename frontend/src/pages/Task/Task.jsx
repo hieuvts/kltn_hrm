@@ -1,36 +1,30 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 
 import { Typography, Button } from "@mui/material";
-import Link from "@mui/material/Link";
-import MyBreadcrumbs from "../../components/CustomizedMUIComponents/MyBreadcrumbs";
-import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
-import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
+
 import MuiAlert from "@mui/material/Alert";
 import { Snackbar } from "@mui/material";
-import MySearchBox from "../../components/CustomizedMUIComponents/StyledSearchBox";
-import ProjectTable from "../../components/Project/ProjectList";
-import DialogAddProject from "../../components/Project/DialogAddProject";
-import DialogUpdateProject from "../../components/Project/DialogUpdateProject";
+import TaskList from "../../components/Task/TaskList";
+import DialogAddTask from "../../components/Task/DialogAddTask";
+import MyBreadcrumbs from "../../components/CustomizedMUIComponents/MyBreadcrumbs";
 import debounce from "lodash.debounce";
 //Redux
-import { useDispatch } from "react-redux";
-import { getProjectAsync } from "../../stores/projectSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getTaskAsync } from "../../stores/taskSlice";
 import { getDepartmentAsync } from "../../stores/departmentSlice";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export default function Project() {
+export default function Task() {
   const dispatch = useDispatch();
   const pathnames = location.pathname.split("/").filter((x) => x);
 
-  // Add Project Dialog
+  // Add Task Dialog
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const [isDialogExportProjectOpen, setDialogExportProjectOpen] =
-    useState(false);
+  const [isDialogExportTaskOpen, setDialogExportTaskOpen] = useState(false);
   // Working with Snackbar
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   // Working with search func
@@ -39,8 +33,8 @@ export default function Project() {
     setDialogOpen(true);
   };
 
-  const setDialogExportProjectClose = () => {
-    setDialogExportProjectOpen(false);
+  const setDialogExportTaskClose = () => {
+    setDialogExportTaskOpen(false);
   };
   const handleDialogClose = () => {
     setDialogOpen(false);
@@ -60,7 +54,7 @@ export default function Project() {
   };
   const debounceFetchAPI = useCallback(
     debounce((searchQuery) => {
-      dispatch(getProjectAsync({ searchQuery: searchQuery }));
+      dispatch(getTaskAsync({ searchQuery: searchQuery }));
     }, 350),
     []
   );
@@ -84,17 +78,16 @@ export default function Project() {
           severity="success"
           sx={{ width: "100%" }}
         >
-          Created new project!
+          Created new task!
         </Alert>
       </Snackbar>
 
-      <DialogAddProject
+      <DialogAddTask
         isDialogOpen={isDialogOpen}
         setDialogOpen={setDialogOpen}
         handleCloseDialog={handleDialogClose}
         handleSnackbarOpen={handleSnackbarOpen}
       />
-
       <MyBreadcrumbs pathnames={pathnames} />
       <Grid
         container
@@ -103,40 +96,19 @@ export default function Project() {
         padding={{ sm: 5, md: 0 }}
         sx={{ alignItems: "center" }}
       >
-        <Grid item paddingTop={{ xs: 2, sm: 0 }} xs={12} sm={3} md={2}>
-          <Button variant="outlined">
-            <FileDownloadOutlinedIcon fontSize="medium" />
-            <Typography variant="h6" sx={{ pl: 1 }}>
-              Import
-            </Typography>
-          </Button>
-        </Grid>
-        <Grid item xs={12} sm={3} md={2}>
-          <Button
-            variant="outlined"
-            onClick={() => setDialogExportProjectOpen(true)}
-          >
-            <FileUploadOutlinedIcon fontSize="medium" />
-            <Typography variant="h6" sx={{ pl: 1 }}>
-              Export
-            </Typography>
-          </Button>
-        </Grid>
+        <Grid item paddingTop={{ xs: 2, sm: 0 }} xs={12} sm={3} md={2}></Grid>
+        <Grid item xs={12} sm={3} md={2}></Grid>
         <Grid item xs={12} sm={6} md={2} paddingTop={{ xs: 2, sm: 0, md: 0 }}>
           <Button variant="contained" onClick={() => handleDialogOpen()}>
-            <Typography variant="h6">Add Project</Typography>
+            <Typography variant="h6">Add Task</Typography>
           </Button>
         </Grid>
       </Grid>
 
-      <Paper elevation={1} sx={{ my: 3, p: 3 }}>
-        <MySearchBox
-          placeholder="Search for customer by name, email, phone number..."
-          handleSearchQueryChange={handleSearchQueryChange}
-        />
-      </Paper>
-      <div>
-        <ProjectTable />
+      <div
+        style={{ display: "flex", justifyContent: "center", height: "100%" }}
+      >
+        <TaskList />
       </div>
     </>
   );

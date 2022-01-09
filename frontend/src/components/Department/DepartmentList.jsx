@@ -17,7 +17,7 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import EditIcon from "@mui/icons-material/Edit"
+import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import ModeIcon from "@mui/icons-material/Mode";
@@ -25,16 +25,14 @@ import { visuallyHidden } from "@mui/utils";
 import DialogDeleteDepartment from "./DialogDeleteDepartment";
 import DialogDeleteMultipleDepartment from "./DialogDeleteMultipleDepartment";
 import DialogUpdateDepartment from "./DialogUpdateDepartment";
-// import DialogEmployeeDetails from "./DialogEmployeeDetails";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 
 import {
   setCurrentSelectedDepartment,
   addToSelectedDepartmentList,
   removeFromSelectedDepartmentList,
-  setMultiSelectedDepartmentList
+  setMultiSelectedDepartmentList,
 } from "../../stores/departmentSlice";
 
 function descendingComparator(a, b, orderBy) {
@@ -58,26 +56,26 @@ const titleCells = [
     id: "name",
     numeric: false,
     disablePadding: true,
-    label: "DEPARTMENT NAME",
+    label: "Department name",
   },
   {
     id: "amount",
     numeric: false,
     disablePadding: true,
-    label: "AMOUNT OF EMPLOYEE",
+    label: "Amount of employees",
   },
   {
     id: "manager",
     numeric: false,
     disablePadding: false,
-    label: "MANAGER",
+    label: "Manager",
   },
   {
     id: "actions",
     numeric: false,
     disablePadding: true,
-    label: "Actions"
-  }
+    label: "Actions",
+  },
 ];
 
 function DepartmentTableHead(props) {
@@ -142,7 +140,8 @@ DepartmentTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected, setSelected, setDialogDeleteMultipleDepartmentOpen } = props;
+  const { numSelected, setSelected, setDialogDeleteMultipleDepartmentOpen } =
+    props;
   const dispatch = useDispatch();
 
   // Get selectedDepartmentList to delete multiple, delete all
@@ -207,7 +206,7 @@ const EnhancedTableToolbar = (props) => {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   setSelected: PropTypes.func.isRequired,
-  setDialogDeleteMultipleDepartmentOpen: PropTypes.func.isRequired
+  setDialogDeleteMultipleDepartmentOpen: PropTypes.func.isRequired,
 };
 
 export default function DepartmentTable() {
@@ -257,16 +256,22 @@ export default function DepartmentTable() {
       dispatch(addToSelectedDepartmentList({ selectedDepartment: department }));
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
-      dispatch(removeFromSelectedDepartmentList({ selectedDepartment: department }));
+      dispatch(
+        removeFromSelectedDepartmentList({ selectedDepartment: department })
+      );
     } else if (selectedIndex === selected.length - 1) {
       newSelected = newSelected.concat(selected.slice(0, -1));
-      dispatch(removeFromSelectedDepartmentList({ selectedDepartment: department }));
+      dispatch(
+        removeFromSelectedDepartmentList({ selectedDepartment: department })
+      );
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
         selected.slice(selectedIndex + 1)
       );
-      dispatch(removeFromSelectedDepartmentList({ selectedDepartment: department }));
+      dispatch(
+        removeFromSelectedDepartmentList({ selectedDepartment: department })
+      );
     }
 
     setSelected(newSelected);
@@ -338,9 +343,13 @@ export default function DepartmentTable() {
       />
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2 }}>
-          <EnhancedTableToolbar numSelected={selected.length}
+          <EnhancedTableToolbar
+            numSelected={selected.length}
             setSelected={setSelected}
-            setDialogDeleteMultipleDepartmentOpen={setDialogDeleteMultipleDepartmentOpen} />
+            setDialogDeleteMultipleDepartmentOpen={
+              setDialogDeleteMultipleDepartmentOpen
+            }
+          />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
@@ -369,7 +378,6 @@ export default function DepartmentTable() {
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
@@ -380,6 +388,7 @@ export default function DepartmentTable() {
                           <Checkbox
                             color="primary"
                             checked={isItemSelected}
+                            onClick={(event) => handleClick(event, row)}
                             inputProps={{
                               "aria-labelledby": labelId,
                             }}
@@ -391,6 +400,14 @@ export default function DepartmentTable() {
                           scope="row"
                           padding="none"
                           align="center"
+                          onClick={() => {
+                            dispatch(
+                              setCurrentSelectedDepartment({
+                                currentSelectedDepartment: row,
+                              })
+                            );
+                            // setDialogEmployeeDetailsOpen(true);
+                          }}
                         >
                           {row.name}
                         </TableCell>
@@ -415,6 +432,7 @@ export default function DepartmentTable() {
             </Table>
           </TableContainer>
           <TablePagination
+           labelRowsPerPage="Departments per page"
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
             count={rows.length}

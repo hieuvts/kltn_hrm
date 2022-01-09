@@ -149,13 +149,14 @@ io.use((socket, next) => {
       body["createdAt"] = new Date();
       body["isBroadcast"] = false;
       console.log("messageBody ", body);
-      sessionsMessages.push(body);
+      // sessionsMessages.push(body);
+      saveMessagesToDB(chatRoomId, body);
       io.to(chatRoomId).emit("message", body);
     });
 
     socket.on("disconnect", () => {
-      saveMessagesToDB(chatRoomId, sessionsMessages);
-      socket.leave(chatRoomId)
+      socket.leave(chatRoomId);
+      console.log("disconnected");
       socket.broadcast.to(chatRoomId).emit("message", {
         message: `SYSTEM: ${email} has left the chat!`,
         createdAt: new Date(),
@@ -166,7 +167,6 @@ io.use((socket, next) => {
 });
 
 const saveMessagesToDB = (chatRoomId, messages) => {
-  console.log("Saving messages to the DB");
   ChatRoom.findByIdAndUpdate(chatRoomId, {
     $push: { messages: messages },
   }).exec((error, chatRoom) => {

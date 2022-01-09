@@ -18,6 +18,22 @@ export const accountSignUpValidationSchema = yup.object().shape({
     ),
 });
 
+export const changePwdValidationSchema = yup.object().shape({
+  oldPassword: yup
+    .string("Enter your current password")
+    .required("Password is required!"),
+  password: yup
+    .string("Enter your new password")
+    .required("Password is required!"),
+  verifyPassword: yup
+    .string()
+    .required("Confirmation password is required!")
+    .oneOf(
+      [yup.ref("password"), null],
+      "Password and confirmation password must match!"
+    ),
+});
+
 export const accountLoginValidationSchema = yup.object().shape({
   email: yup
     .string("Enter your username")
@@ -92,21 +108,20 @@ export const departmentInformationValidationSchema = yup.object().shape({
   name: yup
     .string("Enter department name")
     .required("Name of department is required"),
-  amount: yup
-    .number("Enter amount of department"),
+  amount: yup.number("Enter amount of employees"),
   manager: yup
     .string("Enter name of manager")
     .min(1, "Manager name should be of minimum 2 characters length")
     .max(150, "Manager name should be of maximum 150 characters length")
-    .required("Manager name is required!")
+    .required("Manager name is required!"),
 });
 export const projectInformationValidationSchema = yup.object().shape({
   name: yup
     .string("Enter project name")
     .required("Name of project is required"),
   customer: yup
-    .string("Enter project name")
-    .required("Name of project is required"),
+    .string("Enter project's customers")
+    .required("Customers of project is required"),
   startDate: yup
     .date("Select start date of project")
     .required("Start date is required!"),
@@ -150,4 +165,25 @@ export const companyInfoValidationSchema = yup.object().shape({
     .min(8, "Tax code should be of minimum 8 characters length")
     .max(15, "Tax code should be of maximum 15 characters length")
     .required("Tax code is required!"),
+});
+export const taskInformationValidationSchema = yup.object().shape({
+  name: yup
+    .string("Enter task name")
+    .min(1, "Should be of minimum 1 characters length")
+    .max(150, "Should be of maximum 150 characters length")
+    .required("Task name is required!"),
+  // status: yup
+  //   .string("Enter task status")
+  //   .min(1, "Should be of minimum 1 characters length")
+  //   .max(150, "Should be of maximum 150 characters length")
+  //   .required("Task status is required!"),
+  // asignFrom: yup
+  //   .string("Enter task assigner ")
+  //   .required("Assigner is required!"),
+  // AsignTo: yup.string("Enter task assignee").required("Assignee is required!"),
+  // projects: yup
+  //   .string("Choose parent project")
+  //   .required("Project is required!"),
+  // difficulty: yup.string().required("Difficulty is required!"),
+  // priority: yup.string().required("Priority is required!"),
 });
