@@ -48,6 +48,7 @@ import StyledSearchBox from "../components/CustomizedMUIComponents/StyledSearchB
 import CurrentClock from "../components/CustomizedMUIComponents/CurrentClock";
 import NotificationBadget from "../components/CustomizedMUIComponents/NotificationsBadget";
 import { pageList } from "../utilities/appPageList";
+import jwtParser from "../utilities/jwtParser";
 // Mini variant drawer
 import {
   AppBar,
@@ -81,6 +82,7 @@ export default function AppBarComponent() {
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />

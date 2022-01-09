@@ -187,3 +187,9 @@ export const taskInformationValidationSchema = yup.object().shape({
   // difficulty: yup.string().required("Difficulty is required!"),
   // priority: yup.string().required("Priority is required!"),
 });
+
+export const chatValidationSchema = yup.object().shape({
+  message: yup
+    .string("Enter your message")
+    .required(""),
+});

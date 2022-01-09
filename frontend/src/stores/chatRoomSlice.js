@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authService from "../services/auth.service";
 import chatService from "../services/chat.service";
+import { logout } from "./authSlice";
 
 const initialState = [];
 
@@ -16,21 +17,31 @@ export const createChatRoom = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
-      thunkAPI.dispatch(setMessage(message));
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 export const getAllChatRoom = createAsyncThunk(
   "chat/getAllChatRoom",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
       const res = await chatService.getAllChatRoom();
       console.log("getall chatroom ", res.data);
       return res.data.chatrooms;
     } catch (error) {
-      console.log(error);
-      return rejectWithValue(`Get allChatRoom not successful ${error}`);
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -47,28 +58,38 @@ export const getChatRoomInfo = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
-      thunkAPI.dispatch(setMessage(message));
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 export const getChatMessage = createAsyncThunk(
   "chat/getChatMessage",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     console.log("check get", payload);
     try {
       const res = await chatService.getChatMessage(payload.chatRoomId);
       console.log("getall data ", res.data);
       return { chatRoomId: payload.chatRoomId, messages: res.data.messages };
     } catch (error) {
-      console.log(error);
-      return rejectWithValue(`Get message not successful ${error}`);
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 export const addMessageToRoom = createAsyncThunk(
   "chat/addMessageToRoom",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
       const res = await chatService.addMessageToRoom(
         payload,
@@ -82,7 +103,9 @@ export const addMessageToRoom = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
-      thunkAPI.dispatch(setMessage(message));
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
       return thunkAPI.rejectWithValue(message);
     }
   }

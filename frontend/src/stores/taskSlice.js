@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import taskService from "../services/task.service";
+import { logout } from "./authSlice";
 
 const initialState = {
   taskList: [],
@@ -9,7 +10,7 @@ const initialState = {
 
 export const getTaskAsync = createAsyncThunk(
   "task/getAllTask",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     let searchQuery = "";
     if (typeof payload === "undefined") {
       console.log("search is undefined");
@@ -21,48 +22,81 @@ export const getTaskAsync = createAsyncThunk(
       const res = await taskService.getAllTask(searchQuery);
 
       return res.data.tasks;
-    } catch {
-      return rejectWithValue("Get task not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const addTaskAsync = createAsyncThunk(
   "task/addTask",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
       const res = await taskService.addTask(payload);
       return res.data.tasks;
-    } catch(error) {
-      return rejectWithValue("Add task not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const updateTaskAsync = createAsyncThunk(
   "task/updateTask",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
       const res = await taskService.updateTask(payload._id, payload);
 
       return res.data.tasks;
-    } catch {
-      return rejectWithValue("Update task not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const deleteTaskAsync = createAsyncThunk(
   "task/delete",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
-      const res = await taskService.deleteTask(
-        payload.selectedTaskID
-      );
+      const res = await taskService.deleteTask(payload.selectedTaskID);
       return res.data;
-    } 
-    catch {
-      return rejectWithValue("Delete task not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -91,9 +125,7 @@ export const taskSlice = createSlice({
     },
     setMultiSelectedTaskList: (state, action) => {
       const selectedTaskList = action.payload;
-      selectedTaskList.forEach((task) =>
-        state.selectedTaskList.push(task)
-      );
+      selectedTaskList.forEach((task) => state.selectedTaskList.push(task));
     },
   },
   extraReducers: {

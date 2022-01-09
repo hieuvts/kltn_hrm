@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import projectService from "../services/project.service";
+import { logout } from "./authSlice";
 
 const initialState = {
   projectList: [],
@@ -9,7 +10,7 @@ const initialState = {
 
 export const getProjectAsync = createAsyncThunk(
   "project/getAllProject",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     let searchQuery = "";
     if (typeof payload === "undefined") {
       console.log("search is undefined");
@@ -21,48 +22,81 @@ export const getProjectAsync = createAsyncThunk(
       const res = await projectService.getAllProject(searchQuery);
 
       return res.data.projects;
-    } catch {
-      return rejectWithValue("Get project not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const addProjectAsync = createAsyncThunk(
   "project/addProject",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
       const res = await projectService.addProject(payload);
       return res.data.projects;
-    } catch(error) {
-      return rejectWithValue("Add project not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const updateProjectAsync = createAsyncThunk(
   "project/updateProject",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
       const res = await projectService.updateProject(payload._id, payload);
 
       return res.data.projects;
-    } catch {
-      return rejectWithValue("Update project not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const deleteProjectAsync = createAsyncThunk(
   "project/delete",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
-      const res = await projectService.deleteProject(
-        payload.selectedProjectID
-      );
+      const res = await projectService.deleteProject(payload.selectedProjectID);
       return res.data;
-    } 
-    catch {
-      return rejectWithValue("Delete project not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );

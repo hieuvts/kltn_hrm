@@ -3,11 +3,27 @@ const router = express.Router();
 const { authJwt } = require("../middlewares");
 const chatRoomController = require("../controllers/chatRoom.controller");
 
-router.get("/getAll", chatRoomController.getAllChatRoom);
-router.post("/createChatRoom", chatRoomController.createChatRoom);
+router.get("/getAll", authJwt.verifyToken, chatRoomController.getAllChatRoom);
+router.post(
+  "/createChatRoom",
+  authJwt.verifyToken,
+  chatRoomController.createChatRoom
+);
 router.param("chatRoomId", chatRoomController.getChatRoomByRoomID);
-router.get("/:chatRoomId", chatRoomController.getChatRoomDetail);
-router.get("/:chatRoomId/getMsg", chatRoomController.getAllMessageInRoom);
-router.put("/:chatRoomId/addMsg", chatRoomController.addMessageToRoom);
+router.get(
+  "/:chatRoomId",
+  authJwt.verifyToken,
+  chatRoomController.getChatRoomDetail
+);
+router.get(
+  "/:chatRoomId/getMsg",
+  authJwt.verifyToken,
+  chatRoomController.getAllMessageInRoom
+);
+router.put(
+  "/:chatRoomId/addMsg",
+  authJwt.verifyToken,
+  chatRoomController.addMessageToRoom
+);
 
 module.exports = router;

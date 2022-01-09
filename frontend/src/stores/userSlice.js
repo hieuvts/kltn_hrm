@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import userService from "../services/user.service";
 import authService from "../services/auth.service";
+import { logout } from "./authSlice";
 
 const initialState = {
   userList: [],
@@ -15,39 +16,60 @@ const initialState = {
 
 export const getAllUser = createAsyncThunk(
   "user/getAllUser",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
       const res = await userService.getAllUser();
 
       return res.data;
     } catch (error) {
-      return rejectWithValue(`Get all user not successful ${error}`);
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const getUser = createAsyncThunk(
   "user/getUser",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
       const res = await userService.getUser(payload.userId);
 
       return res.data.user;
     } catch (error) {
-      return rejectWithValue(`Get user not successful ${error}`);
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const changePassword = createAsyncThunk(
   "user/changePassword",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
       const res = await authService.changePassword(payload);
 
       return res.data;
     } catch (error) {
-      return rejectWithValue(`Change password not successful ${error}`);
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );

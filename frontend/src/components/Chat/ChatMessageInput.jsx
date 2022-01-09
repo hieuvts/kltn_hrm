@@ -6,15 +6,18 @@ import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import SendIcon from "@mui/icons-material/Send";
 import AttachmentOutlinedIcon from "@mui/icons-material/AttachmentOutlined";
+import { chatValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
 
 import { fileNameValidationSchema } from "../../utilities/validationSchema";
 import "./chatPanel.scss";
+
 export default function ChatMessageInput({ messageToSend, handleSendMessage }) {
   const formik = useFormik({
     initialValues: {
       message: "",
     },
+    validationSchema: chatValidationSchema,
     onSubmit: (values) => {
       handleSendMessage(values);
       formik.resetForm();
