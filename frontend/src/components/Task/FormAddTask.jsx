@@ -127,21 +127,21 @@ export default function FormAddTask({
                 </Select>
               </FormControl>
               <FormControl fullWidth>
-                <InputLabel id="asignFrom-label">Assign from</InputLabel>
+                <InputLabel id="assignFrom-label">Assign from</InputLabel>
                 <Select
-                  labelId="asignFrom-label"
-                  id="asignFrom"
+                  labelId="assignFrom-label"
+                  id="assignFrom"
                   fullWidth
                   multiple
-                  value={formik.values.asignFrom}
+                  value={formik.values.assignFrom}
                   onChange={(e) => {
-                    formik.setFieldValue("asignFrom", e.target.value);
+                    formik.setFieldValue("assignFrom", e.target.value);
                   }}
-                  input={<OutlinedInput id="asignFrom" label="asignFrom" />}
+                  input={<OutlinedInput id="assignFrom" label="assignFrom" />}
                   renderValue={(selected) => (
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                       {selected.map((value) => (
-                        <Chip key={value} label={value} />
+                        <Chip key={value._id} label={value.fname + " " + value.lname} />
                       ))}
                     </Box>
                   )}
@@ -150,7 +150,7 @@ export default function FormAddTask({
                   {employees.map((employee, index) => (
                     <MenuItem
                       key={index}
-                      value={employee.fname + " " + employee.lname}
+                      value = {employee}
                     >
                       {employee.fname + " " + employee.lname}
                     </MenuItem>
@@ -194,9 +194,9 @@ export default function FormAddTask({
                   id="projects"
                   fullWidth
                   multiple
-                  value={formik.values.projects}
+                  value={formik.values.project}
                   onChange={(e) => {
-                    formik.setFieldValue("projects", e.target.value);
+                    formik.setFieldValue("project", e.target.value);
                   }}
                   input={<OutlinedInput id="project" label="Project" />}
                   renderValue={(selected) => (
@@ -263,21 +263,21 @@ export default function FormAddTask({
                 </Select>
               </FormControl>
               <FormControl fullWidth>
-                <InputLabel id="asignTo-label">Asign To</InputLabel>
+                <InputLabel id="assignTo-label">Asign To</InputLabel>
                 <Select
                   labelId="AsignTo-label"
-                  id="asignTo"
+                  id="assignTo"
                   fullWidth
                   multiple
-                  value={formik.values.asignTo}
+                  value={formik.values.assignTo}
                   onChange={(e) => {
-                    formik.setFieldValue("asignTo", e.target.value);
+                    formik.setFieldValue("assignTo", e.target.value);
                   }}
-                  input={<OutlinedInput id="asignTo" label="asignTo" />}
+                  input={<OutlinedInput id="assignTo" label="assignTo" />}
                   renderValue={(selected) => (
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                       {selected.map((value) => (
-                        <Chip key={value} label={value} />
+                        <Chip key={value._id} label={value.fname + " " + value.lname} />
                       ))}
                     </Box>
                   )}
@@ -286,7 +286,7 @@ export default function FormAddTask({
                   {employees.map((employee, index) => (
                     <MenuItem
                       key={index}
-                      value={employee.fname + " " + employee.lname}
+                      value = {employee}
                     >
                       {employee.fname + " " + employee.lname}
                     </MenuItem>
@@ -347,10 +347,10 @@ FormAddTask.propTypes = {
 FormAddTask.defaultProps = {
   initialValues: {
     name: "",
-    asignFrom: [],
-    asignTo: [],
+    assignFrom: [],
+    assignTo: [],
     procedureID: [],
-    projectID: [],
+    project: [],
     priority: "",
     difficulty: "",
     status: "",

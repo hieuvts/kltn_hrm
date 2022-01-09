@@ -108,7 +108,7 @@ const createproject = async (req, res) => {
               });
             }
           });
-        } else {
+        } else {                                
           project.departments = departments.map((department) => department._id);
           project.save((error, result) => {
             if (error || !result) {

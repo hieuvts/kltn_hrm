@@ -171,19 +171,5 @@ export const taskInformationValidationSchema = yup.object().shape({
     .string("Enter task name")
     .min(1, "Should be of minimum 1 characters length")
     .max(150, "Should be of maximum 150 characters length")
-    .required("Task name is required!"),
-  // status: yup
-  //   .string("Enter task status")
-  //   .min(1, "Should be of minimum 1 characters length")
-  //   .max(150, "Should be of maximum 150 characters length")
-  //   .required("Task status is required!"),
-  // asignFrom: yup
-  //   .string("Enter task assigner ")
-  //   .required("Assigner is required!"),
-  // AsignTo: yup.string("Enter task assignee").required("Assignee is required!"),
-  // projects: yup
-  //   .string("Choose parent project")
-  //   .required("Project is required!"),
-  // difficulty: yup.string().required("Difficulty is required!"),
-  // priority: yup.string().required("Priority is required!"),
+    .required("Task name is required!")
 });

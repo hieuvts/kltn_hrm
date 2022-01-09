@@ -32,19 +32,14 @@ export default function FormUpdateTask({ handleCloseDialog, initialValues }) {
   const employees = useSelector((state) => state.employee.employeeList);
   const projects = useSelector((state) => state.project.projectList);
   var formikInitialValues = { ...initialValues };
-  const initassignFromFromValue = formikInitialValues["assignFrom"].map(
-    ({ name }) => ({ name })
-  );
-  const assignFromNameArr = initassignFromFromValue.map((x) => x.name);
-  delete formikInitialValues.assignTo;
-  formikInitialValues["assignFrom"] = assignFromNameArr;
 
-  const initassignToValue = formikInitialValues["assignFrom"].map(
+  const initprojectValue = formikInitialValues["project"].map(
     ({ name }) => ({ name })
   );
-  const assignToNameArr = initassignToValue.map((x) => x.name);
-  delete formikInitialValues.assignFrom;
-  formikInitialValues["assignTo"] = assignToNameArr;
+  const projectNameArr = initprojectValue.map((x) => x.name);
+  delete formikInitialValues.project;
+  formikInitialValues["project"] = projectNameArr;
+
   const progressSliderMarks = [
     {
       value: 0,
@@ -106,15 +101,21 @@ export default function FormUpdateTask({ handleCloseDialog, initialValues }) {
     return (
       <div style={{ marginTop: "30px" }}>
         <form onSubmit={formik.handleSubmit}>
-        <Box sx= {{display: "flex", justifyContent:"center", marginBottom: "40px"}}>
-              <Slider
-                aria-label="progessSlider"
-                defaultValue={0}
-                getAriaValueText={getProgressSliderValue}
-                step={10}
-                valueLabelDisplay="on"
-                marks={progressSliderMarks}
-              />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "40px",
+            }}
+          >
+            <Slider
+              aria-label="progessSlider"
+              defaultValue={0}
+              getAriaValueText={getProgressSliderValue}
+              step={10}
+              valueLabelDisplay="on"
+              marks={progressSliderMarks}
+            />
           </Box>
           <Grid container rowSpacing={3} columnSpacing={3}>
             <Grid item sm={12} md={6}>
@@ -146,22 +147,22 @@ export default function FormUpdateTask({ handleCloseDialog, initialValues }) {
                   <MenuItem value={"Finish"}>Finish</MenuItem>
                 </Select>
               </FormControl>
-              <FormControl fullWidth>
-                <InputLabel id="asignFrom-label">Assign from</InputLabel>
+              < FormControl fullWidth>
+                <InputLabel id="assignFrom-label">Assign from</InputLabel>
                 <Select
-                  labelId="asignFrom-label"
-                  id="asignFrom"
+                  labelId="assignFrom-label"
+                  id="assignFrom"
                   fullWidth
                   multiple
-                  value={formik.values.asignFrom}
+                  value={formik.values.assignFrom}
                   onChange={(e) => {
-                    formik.setFieldValue("asignFrom", e.target.value);
+                    formik.setFieldValue("assignFrom", e.target.value);
                   }}
-                  input={<OutlinedInput id="asignFrom" label="asignFrom" />}
+                  input={<OutlinedInput id="assignFrom" label="assignFrom" />}
                   renderValue={(selected) => (
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                       {selected.map((value) => (
-                        <Chip key={value} label={value} />
+                        <Chip key={value} label={value.fname + " " + value.lname} />
                       ))}
                     </Box>
                   )}
@@ -170,7 +171,7 @@ export default function FormUpdateTask({ handleCloseDialog, initialValues }) {
                   {employees.map((employee, index) => (
                     <MenuItem
                       key={index}
-                      value={employee.fname + " " + employee.lname}
+                      value={employee}
                     >
                       {employee.fname + " " + employee.lname}
                     </MenuItem>
@@ -214,9 +215,9 @@ export default function FormUpdateTask({ handleCloseDialog, initialValues }) {
                   id="projects"
                   fullWidth
                   multiple
-                  value={formik.values.projects}
+                  value={formik.values.project}
                   onChange={(e) => {
-                    formik.setFieldValue("projects", e.target.value);
+                    formik.setFieldValue("project", e.target.value);
                   }}
                   input={<OutlinedInput id="project" label="Project" />}
                   renderValue={(selected) => (
@@ -283,21 +284,21 @@ export default function FormUpdateTask({ handleCloseDialog, initialValues }) {
                 </Select>
               </FormControl>
               <FormControl fullWidth>
-                <InputLabel id="asignTo-label">Asign To</InputLabel>
+                <InputLabel id="assignTo-label">Asign To</InputLabel>
                 <Select
                   labelId="AsignTo-label"
-                  id="asignTo"
+                  id="assignTo"
                   fullWidth
                   multiple
-                  value={formik.values.asignTo}
+                  value={formik.values.assignTo}
                   onChange={(e) => {
-                    formik.setFieldValue("asignTo", e.target.value);
+                    formik.setFieldValue("assignTo", e.target.value);
                   }}
-                  input={<OutlinedInput id="asignTo" label="asignTo" />}
+                  input={<OutlinedInput id="assignTo" label="assignTo" />}
                   renderValue={(selected) => (
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                       {selected.map((value) => (
-                        <Chip key={value} label={value} />
+                        <Chip key={value} label={value.fname + " " + value.lname} />
                       ))}
                     </Box>
                   )}
@@ -306,7 +307,7 @@ export default function FormUpdateTask({ handleCloseDialog, initialValues }) {
                   {employees.map((employee, index) => (
                     <MenuItem
                       key={index}
-                      value={employee.fname + " " + employee.lname}
+                      value={employee}
                     >
                       {employee.fname + " " + employee.lname}
                     </MenuItem>
@@ -366,10 +367,9 @@ FormUpdateTask.propTypes = {
 FormUpdateTask.defaultProps = {
   initialValues: {
     name: "",
-    asignFrom: [],
-    asignTo: [],
+    assignFrom: [],
+    assignTo: [],
     procedureID: [],
-    projectID: [],
     priority: "",
     difficulty: "",
     status: "",
@@ -377,7 +377,7 @@ FormUpdateTask.defaultProps = {
     deadline: new Date(),
     isDeleted: false,
     employees: [],
-    projects: [],
+    project: [],
   },
   submitButtonText: "SUBMIT",
 };
