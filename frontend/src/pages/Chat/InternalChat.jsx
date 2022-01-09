@@ -21,7 +21,7 @@ import { getUser } from "../../stores/userSlice";
 import { getAllChatRoom } from "../../stores/chatRoomSlice";
 import StyledSearchBox from "../../components/CustomizedMUIComponents/StyledSearchBox";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import "./internalChat.scss";
+import "./InternalChat.scss";
 
 export default function InternalChat() {
   const user = JSON.parse(localStorage.getItem("user"));

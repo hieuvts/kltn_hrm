@@ -283,8 +283,8 @@ export default function AppBarComponent() {
           </List>
         </div>
       </MyDrawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
+      <Box component="main" sx={{ flexGrow: 1, p: 0, mt: "4rem" }}>
+        {/* <DrawerHeader /> */}
         <Routes>
           <Route path="" element={<Navigate to="dashboard" />} />
           <Route path="dashboard" element={<Dashboard />} />
