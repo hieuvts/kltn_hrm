@@ -5,7 +5,7 @@ const verifySignUp = require("../middlewares/verifySignUp");
 const employeeControllers = require("../controllers/employee.controller");
 
 // Router-level middleware
-router.get("/getAll", employeeControllers.getAllEmployee);
+router.get("/getAll", authJwt.verifyToken, employeeControllers.getAllEmployee);
 router.param("employeeId", employeeControllers.getEmployeeById);
 router.get("/:employeeId", employeeControllers.getOneEmployee);
 router.post(

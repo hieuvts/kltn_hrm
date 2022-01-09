@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import departmentService from "../services/department.service";
+import { logout } from "./authSlice";
 
 const initialState = {
   departmentList: [],
@@ -9,7 +10,7 @@ const initialState = {
 
 export const getDepartmentAsync = createAsyncThunk(
   "department/getAllDepartment",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     let searchQuery = "";
     if (typeof payload === "undefined") {
       console.log("search is undefined");
@@ -21,48 +22,86 @@ export const getDepartmentAsync = createAsyncThunk(
       const res = await departmentService.getAllDepartment(searchQuery);
 
       return res.data.departments;
-    } catch {
-      return rejectWithValue("Get department not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const addDepartmentAsync = createAsyncThunk(
   "department/addDepartment",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
       const res = await departmentService.addDepartment(payload);
       return res.data.departments;
-    } catch(error) {
-      return rejectWithValue("Add department not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === "401") {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const updateDepartmentAsync = createAsyncThunk(
   "department/updateDepartment",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
-      const res = await departmentService.updateDepartment(payload._id, payload);
+      const res = await departmentService.updateDepartment(
+        payload._id,
+        payload
+      );
 
       return res.data.departments;
-    } catch {
-      return rejectWithValue("Update department not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const deleteDepartmentAsync = createAsyncThunk(
   "department/delete",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
       const res = await departmentService.deleteDepartment(
         payload.selectedDepartmentID
       );
       return res.data;
-    } 
-    catch {
-      return rejectWithValue("Delete department not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -120,7 +159,10 @@ export const departmentSlice = createSlice({
       // state.push(actions.payload.Department);
     },
     [updateDepartmentAsync.rejected]: (state, actions) => {
-      console.log("[Rejected] updateDepartmentAsync errorMsg= ", actions.payload);
+      console.log(
+        "[Rejected] updateDepartmentAsync errorMsg= ",
+        actions.payload
+      );
     },
     [updateDepartmentAsync.fulfilled]: (state, actions) => {
       console.log(
@@ -133,7 +175,10 @@ export const departmentSlice = createSlice({
 
     // Delete Department from server
     [deleteDepartmentAsync.rejected]: (state, actions) => {
-      console.log("[Rejected] deleteDepartmentAsync errorMsg ", actions.payload);
+      console.log(
+        "[Rejected] deleteDepartmentAsync errorMsg ",
+        actions.payload
+      );
     },
     [deleteDepartmentAsync.fulfilled]: (state, actions) => {
       console.log(

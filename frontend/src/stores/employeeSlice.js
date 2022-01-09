@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import employeeService from "../services/employee.service";
-
+import { logout } from "./authSlice";
 const initialState = {
   employeeList: [],
   currentSelectedEmployee: {},
@@ -9,7 +9,7 @@ const initialState = {
 
 export const getEmployeeAsync = createAsyncThunk(
   "employee/getAllEmployee",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     let searchQuery = "";
     if (typeof payload === "undefined") {
       console.log("search is undefined");
@@ -21,49 +21,85 @@ export const getEmployeeAsync = createAsyncThunk(
       const res = await employeeService.getAllEmployee(searchQuery);
 
       return res.data.employees;
-    } catch {
-      return rejectWithValue("Get employee not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const addEmployeeAsync = createAsyncThunk(
   "employee/addEmployee",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
       const res = await employeeService.addEmployee(payload);
 
       return res.data.employees;
-    } catch {
-      return rejectWithValue("Add employee not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const updateEmployeeAsync = createAsyncThunk(
   "employee/updateEmployee",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
       const res = await employeeService.updateEmployee(payload._id, payload);
 
       return res.data.employees;
-    } catch {
-      return rejectWithValue("Update employee not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
 export const deleteEmployeeAsync = createAsyncThunk(
   "employee/delete",
-  async (payload, { rejectWithValue }) => {
+  async (payload, thunkAPI) => {
     try {
       const res = await employeeService.deleteEmployee(
         payload.selectedEmployeeId
       );
 
       return res.data;
-    } catch {
-      return rejectWithValue("Delete employee not successful");
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
