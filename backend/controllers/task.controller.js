@@ -83,10 +83,10 @@ const createtask = async (req, res) => {
   console.log("Invoked createtask");
   const task = new Task(req.body);
   if (req.body.assignFrom || req.body.assignFrom.length !== 0) {
-    task.assignFrom = await Employee.find({ _id: { $in: req.body.assignFrom._id } });
+    task.assignFrom = await Employee.find({ _id: { $in: req.body.assignFrom[0]._id } });
   }
   if (req.body.assignTo || req.body.assignTo.length !== 0) {
-    task.assignTo = await Employee.find({ _id: { $in: req.body.assignTo._id } });
+    task.assignTo = await Employee.find({ _id: { $in: req.body.assignTo[0]._id } });
   }
   if (req.body.project || req.body.project.length !== 0) {
     task.project = await Project.find({ name: { $in: req.body.project } });
