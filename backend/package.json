@@ -17,7 +17,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "mongoose": "^6.0.12",
-    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
     "nodemon": "^2.0.14",
     "socket.io": "^4.4.0",
     "validator": "^13.7.0"
