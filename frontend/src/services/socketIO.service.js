@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import socketIOClient from "socket.io-client";
 
 import authHeader from "./authHeader";
-const API_ENDPOINT = "http://localhost:8000";
+import { socketIOEndPoint } from "../config/apiBaseUrl";
 
 const MESSAGE_EVENT = "message";
 const JOIN_ROOM_EVENT = "joinRoom";
@@ -15,7 +15,7 @@ export default function chatService(roomId) {
 
   useEffect(() => {
     // Creates a WebSocket connection
-    socketRef.current = socketIOClient(API_ENDPOINT, {
+    socketRef.current = socketIOClient(socketIOEndPoint, {
       auth: { token },
       query: { roomId },
     });

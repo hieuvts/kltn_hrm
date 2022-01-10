@@ -3,15 +3,13 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 
 import { Typography, Button } from "@mui/material";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
-
+import MyBreadcrumbs from "../../components/CustomizedMUIComponents/MyBreadcrumbs";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import MuiAlert from "@mui/material/Alert";
 import { Snackbar } from "@mui/material";
-import CapitalizeFirstLetter from "../../utilities/captitalizeFirstLetter";
-import MySearchBox from "../../components/StyledSearchBox";
+import MySearchBox from "../../components/CustomizedMUIComponents/StyledSearchBox";
 import ProjectTable from "../../components/Project/ProjectList";
 import DialogAddProject from "../../components/Project/DialogAddProject";
 import DialogUpdateProject from "../../components/Project/DialogUpdateProject";
@@ -96,23 +94,8 @@ export default function Project() {
         handleCloseDialog={handleDialogClose}
         handleSnackbarOpen={handleSnackbarOpen}
       />
-      <Breadcrumbs aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" href="/">
-          Home
-        </Link>
 
-        {pathnames.map((pathName, idx) => (
-          <Link
-            underline="hover"
-            color="text.primary"
-            href={pathName}
-            aria-current="page"
-            key={idx}
-          >
-            {CapitalizeFirstLetter(pathName)}
-          </Link>
-        ))}
-      </Breadcrumbs>
+      <MyBreadcrumbs pathnames={pathnames} />
       <Grid
         container
         justifyContent="flex-end"

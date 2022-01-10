@@ -4,8 +4,8 @@ const { authJwt } = require("../middlewares");
 const task = require("../controllers/task.controller");
 
 // Router-level middleware
-router.get("/getAll",task.getAlltask);
-router.param("taskId",task.gettaskById);
+router.get("/getAll", authJwt.verifyToken, task.getAlltask);
+router.param("taskId", task.gettaskById);
 // router.get("/task/:task",task.getOnetask);
 router.post("/create",task.createtask);
 router.delete("/:taskId/delete",task.deletetask);

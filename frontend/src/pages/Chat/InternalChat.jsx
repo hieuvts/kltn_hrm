@@ -19,7 +19,7 @@ import FriendList from "../../components/Chat/FriendList";
 import ChatPanel from "../../components/Chat/ChatPanel";
 import { getUser } from "../../stores/userSlice";
 import { getAllChatRoom } from "../../stores/chatRoomSlice";
-import StyledSearchBox from "../../components/StyledSearchBox";
+import StyledSearchBox from "../../components/CustomizedMUIComponents/StyledSearchBox";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "./InternalChat.scss";
 

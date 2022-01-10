@@ -173,3 +173,9 @@ export const taskInformationValidationSchema = yup.object().shape({
     .max(150, "Should be of maximum 150 characters length")
     .required("Task name is required!")
 });
+
+export const chatValidationSchema = yup.object().shape({
+  message: yup
+    .string("Enter your message")
+    .required(""),
+});
