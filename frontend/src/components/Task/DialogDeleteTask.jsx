@@ -10,10 +10,10 @@ import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
 import PropTypes from "prop-types";
-import { deleteProjectAsync, getProjectAsync } from "../../stores/projectSlice";
+import { deleteTaskAsync, getTaskAsync } from "../../stores/taskSlice";
 import { useSelector, useDispatch } from "react-redux";
 
-export default function DialogDeleteProject({
+export default function DialogDeleteTask({
   isDialogOpen,
   handleCloseDialog,
 }) {
@@ -27,14 +27,14 @@ export default function DialogDeleteProject({
   };
 
   const dispatch = useDispatch();
-  const selectedProjectID = useSelector(
-    (state) => state.project.currentSelectedProject._id
+  const selectedTaskID = useSelector(
+    (state) => state.task.currentSelectedTask._id
   );
-  const handleDeleteProject = () => {
-    dispatch(deleteProjectAsync({ selectedProjectID: selectedProjectID }))
+  const handleDeleteTask = () => {
+    dispatch(deleteTaskAsync({ selectedTaskID: selectedTaskID }))
       .unwrap()
       .then(() => {
-        dispatch(getProjectAsync());
+        dispatch(getTaskAsync());
         setSbSuccessOpen(true);
         setTimeout(() => {
           handleCloseDialog();
@@ -49,17 +49,17 @@ export default function DialogDeleteProject({
       <SnackbarSuccess
         isOpen={isSbSuccessOpen}
         handleClose={handleSbSuccessClose}
-        text={"Deleted an project"}
+        text={"Deleted an task"}
       />
       <SnackbarFailed
         isOpen={isSbFailedOpen}
         handleClose={handleSbFailedClose}
-        text={"Delete project failed!"}
+        text={"Delete task failed!"}
       />
       <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <h5>Are you sure you want to delete this project?</h5>
+            <h5>Are you sure you want to delete this task?</h5>
             <Button onClick={handleCloseDialog}>
               <CloseIcon fontSize="large" />
             </Button>
@@ -77,7 +77,7 @@ export default function DialogDeleteProject({
           <Button
             variant="outlined"
             color="primary"
-            onClick={() => handleDeleteProject()}
+            onClick={() => handleDeleteTask()}
           >
             Yes
           </Button>
@@ -86,7 +86,7 @@ export default function DialogDeleteProject({
     </div>
   );
 }
-DialogDeleteProject.propTypes = {
+DialogDeleteTask.propTypes = {
   isDialogOpen: PropTypes.bool,
   handleCloseDialog: PropTypes.func,
 };

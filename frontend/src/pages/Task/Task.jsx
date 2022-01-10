@@ -12,8 +12,8 @@ import debounce from "lodash.debounce";
 //Redux
 import { useDispatch, useSelector } from "react-redux";
 import { getTaskAsync } from "../../stores/taskSlice";
-import { getDepartmentAsync } from "../../stores/departmentSlice";
-
+import { getEmployeeAsync } from "../../stores/employeeSlice";
+import { getProjectAsync } from "../../stores/projectSlice";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -60,7 +60,8 @@ export default function Task() {
   );
   useEffect(() => {
     debounceFetchAPI(searchQuery);
-    dispatch(getDepartmentAsync());
+    dispatch(getEmployeeAsync());
+    dispatch(getProjectAsync());
   }, [handleSearchQueryChange]);
 
   return (
@@ -104,10 +105,13 @@ export default function Task() {
           </Button>
         </Grid>
       </Grid>
-
-      <div
-        style={{ display: "flex", justifyContent: "center", height: "100%" }}
-      >
+      <Paper elevation={1} sx={{ my: 3, p: 3 }}>
+        <MySearchBox
+          placeholder="Search For Task"
+          handleSearchQueryChange={handleSearchQueryChange}
+        />
+      </Paper>
+      <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
         <TaskList />
       </div>
     </>

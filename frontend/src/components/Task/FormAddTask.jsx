@@ -18,7 +18,7 @@ import SnackbarFailed from "../Snackbar/SnackbarFailed";
 import Slider from "@mui/material/Slider";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
-import { addTaskAsync } from "../../stores/taskSlice";
+import { addTaskAsync, getTaskAsync } from "../../stores/taskSlice";
 import { taskInformationValidationSchema } from "../../utilities/validationSchema";
 
 export default function FormAddTask({
@@ -29,7 +29,6 @@ export default function FormAddTask({
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
   const [progressSliderValue, setProgressSliderValue] = useState(0);
-  const departments = useSelector((state) => state.department.departmentList);
   const employees = useSelector((state) => state.employee.employeeList);
   const projects = useSelector((state) => state.project.projectList);
   const handleSbSuccessClose = () => {
@@ -73,6 +72,7 @@ export default function FormAddTask({
         dispatch(addTaskAsync(values))
           .unwrap()
           .then((originalPromiseResult) => {
+            dispatch(getTaskAsync());
             setSbSuccessOpen(true);
             setTimeout(() => {
               handleCloseDialog();
@@ -86,6 +86,16 @@ export default function FormAddTask({
     return (
       <div style={{ marginTop: "30px" }}>
         <form onSubmit={formik.handleSubmit}>
+        <Box sx= {{display: "flex", justifyContent:"center", marginBottom: "40px"}}>
+              <Slider
+                aria-label="progessSlider"
+                defaultValue={0}
+                getAriaValueText={getProgressSliderValue}
+                step={10}
+                valueLabelDisplay="on"
+                marks={progressSliderMarks}
+              />
+          </Box>
           <Grid container rowSpacing={3} columnSpacing={3}>
             <Grid item sm={12} md={6}>
               <TextField
@@ -117,21 +127,21 @@ export default function FormAddTask({
                 </Select>
               </FormControl>
               <FormControl fullWidth>
-                <InputLabel id="asignFrom-label">Assign from</InputLabel>
+                <InputLabel id="assignFrom-label">Assign from</InputLabel>
                 <Select
-                  labelId="asignFrom-label"
-                  id="asignFrom"
+                  labelId="assignFrom-label"
+                  id="assignFrom"
                   fullWidth
                   multiple
-                  value={formik.values.asignFrom}
+                  value={formik.values.assignFrom}
                   onChange={(e) => {
-                    formik.setFieldValue("asignFrom", e.target.value);
+                    formik.setFieldValue("assignFrom", e.target.value);
                   }}
-                  input={<OutlinedInput id="asignFrom" label="asignFrom" />}
+                  input={<OutlinedInput id="assignFrom" label="assignFrom" />}
                   renderValue={(selected) => (
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                       {selected.map((value) => (
-                        <Chip key={value} label={value} />
+                        <Chip key={value._id} label={value.fname + " " + value.lname} />
                       ))}
                     </Box>
                   )}
@@ -140,7 +150,7 @@ export default function FormAddTask({
                   {employees.map((employee, index) => (
                     <MenuItem
                       key={index}
-                      value={employee.fname + " " + employee.lname}
+                      value = {employee}
                     >
                       {employee.fname + " " + employee.lname}
                     </MenuItem>
@@ -184,9 +194,9 @@ export default function FormAddTask({
                   id="projects"
                   fullWidth
                   multiple
-                  value={formik.values.projects}
+                  value={formik.values.project}
                   onChange={(e) => {
-                    formik.setFieldValue("projects", e.target.value);
+                    formik.setFieldValue("project", e.target.value);
                   }}
                   input={<OutlinedInput id="project" label="Project" />}
                   renderValue={(selected) => (
@@ -226,9 +236,9 @@ export default function FormAddTask({
                         Boolean(formik.errors.deadline)
                       }
                       helperText={
-                        formik.touched.endDate && formik.errors.deadline
+                        formik.touched.deadline && formik.errors.deadline
                       }
-                      deadline
+                      fullWidth
                       sx={{ mb: 3 }}
                     />
                   )}
@@ -253,21 +263,21 @@ export default function FormAddTask({
                 </Select>
               </FormControl>
               <FormControl fullWidth>
-                <InputLabel id="asignTo-label">Asign To</InputLabel>
+                <InputLabel id="assignTo-label">Asign To</InputLabel>
                 <Select
                   labelId="AsignTo-label"
-                  id="AsignTo"
+                  id="assignTo"
                   fullWidth
                   multiple
-                  value={formik.values.asignTo}
+                  value={formik.values.assignTo}
                   onChange={(e) => {
-                    formik.setFieldValue("AsignTo", e.target.value);
+                    formik.setFieldValue("assignTo", e.target.value);
                   }}
-                  input={<OutlinedInput id="AsignTo" label="AsignTo" />}
+                  input={<OutlinedInput id="assignTo" label="assignTo" />}
                   renderValue={(selected) => (
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                       {selected.map((value) => (
-                        <Chip key={value} label={value} />
+                        <Chip key={value._id} label={value.fname + " " + value.lname} />
                       ))}
                     </Box>
                   )}
@@ -276,35 +286,13 @@ export default function FormAddTask({
                   {employees.map((employee, index) => (
                     <MenuItem
                       key={index}
-                      value={employee.fname + " " + employee.lname}
+                      value = {employee}
                     >
                       {employee.fname + " " + employee.lname}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
-
-              <TextField
-                fullWidth
-                id="progress"
-                name="progress"
-                label="Progress"
-                value={formik.values.progress}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.progress && Boolean(formik.errors.progress)
-                }
-                helperText={formik.touched.name && formik.errors.progress}
-                sx={{ mb: 3 }}
-              />
-              <Slider
-                aria-label="progessSlider"
-                defaultValue={0}
-                getAriaValueText={getProgressSliderValue}
-                step={10}
-                valueLabelDisplay="auto"
-                marks={progressSliderMarks}
-              />
               <FormControl fullWidth>
                 <InputLabel id="p-label">Priority</InputLabel>
                 <Select
@@ -317,9 +305,9 @@ export default function FormAddTask({
                   fullWidth
                   sx={{ mb: 3 }}
                 >
-                  <MenuItem value={"1"}>Pending</MenuItem>
-                  <MenuItem value={"2"}>In Progress</MenuItem>
-                  <MenuItem value={"3"}>Finish</MenuItem>
+                  <MenuItem value={"1"}>1</MenuItem>
+                  <MenuItem value={"2"}>2</MenuItem>
+                  <MenuItem value={"3"}>3</MenuItem>
                   <MenuItem value={"Extra"}>Extra</MenuItem>
                 </Select>
               </FormControl>
@@ -359,10 +347,10 @@ FormAddTask.propTypes = {
 FormAddTask.defaultProps = {
   initialValues: {
     name: "",
-    asignFrom: [],
-    asignTo: [],
+    assignFrom: [],
+    assignTo: [],
     procedureID: [],
-    projectID: [],
+    project: [],
     priority: "",
     difficulty: "",
     status: "",

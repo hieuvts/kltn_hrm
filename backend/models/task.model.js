@@ -13,8 +13,8 @@ const taskSchema = new Schema({
   },
   assignFrom: [{ type: Schema.Types.ObjectId, ref: "employee" }],
   assignTo: [{ type: Schema.Types.ObjectId, ref: "employee" }],
-  procedureID: [{ type: Schema.Types.ObjectId, ref: "procedure" }],
-  projectID: [{ type: Schema.Types.ObjectId, ref: "project" }],
+  procedure: [{ type: Schema.Types.ObjectId, ref: "procedure" }],
+  project : [{ type: Schema.Types.ObjectId, ref: "project" }],
   priority: {
     type: String,
     default: "1",

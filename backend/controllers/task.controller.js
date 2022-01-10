@@ -1,5 +1,6 @@
 const Task = require("../models/task.model");
-
+const Employee = require("../models/employee.model");
+const Project =  require("../models/project.model");
 const gettaskById = async (req, res, next, taskId) => {
   // Get task details from task model and
   // attach to request object
@@ -39,17 +40,33 @@ const getAlltask = async (req, res) => {
 
   if (typeof query === "undefined" || query.length === 0) {
     console.log("Return all tasks");
-    tasks = await Task.find();
+    tasks = await Task.find().populate("assignFrom").populate("assignTo").populate("project");
   } else {
     console.log("Return tasks with search= ", query);
-    tasks = await Task.find({
-      $text: {
-        $search: `"${query}"`,
-        // $search: `.*(\b${query}\b).*`,
+    tasks = await Task.find()
+    .or([
+      {
+        name: {
+          $regex: query,
+          $options: "i",
+        },
       },
-    });
+      {
+        assignFrom: {
+          $regex: query,
+          $options: "i",
+        },
+      },
+      {
+        assignTo: {
+          $regex: query,
+          $options: "i",
+        },
+      },
+    ])
+    .populate("assignFrom").populate("assignTo").populate("project");
+    ;
   }
-  
   if (tasks) {
     res.status(200).json({
       message: "Get all task successfully!",
@@ -65,38 +82,57 @@ const getAlltask = async (req, res) => {
 const createtask = async (req, res) => {
   console.log("Invoked createtask");
   const task = new Task(req.body);
+  if (req.body.assignFrom || req.body.assignFrom.length !== 0) {
+    task.assignFrom = await Employee.find({ _id: { $in: req.body.assignFrom[0]._id } });
+  }
+  if (req.body.assignTo || req.body.assignTo.length !== 0) {
+    task.assignTo = await Employee.find({ _id: { $in: req.body.assignTo[0]._id } });
+  }
+  if (req.body.project || req.body.project.length !== 0) {
+    task.project = await Project.find({ name: { $in: req.body.project } });
+  }
   task.save((error, result) => {
     if (error || !result) {
-      res.status(400).json({
-        message: "[ERROR] [create]",
-        errMsg: error.message,
-      });
-    } else {
-      res.status(200).json({
-        message: "Create task successfully!",
+      return res.status(400).json({
+        message: "[UPDATE] Something went wrong",
+        error: error,
       });
     }
+    res.json({
+      message: "Update user successfully",
+      task: task,
+    });
   });
-};
+}
 
 const puttask = async (req, res) => {
-  const task = req.Task;
+  const task = req.task;
   // typeof req.body.name === "undefined"
   //   ? (task.name = task.name)
   //   : (task.name = req.body.name);
   typeof req.body.name !== "undefined" && (task.name = req.body.name);
-  typeof req.body.volume !== "undefined" && (task.volume = req.body.volume);
-  typeof req.body.employeeID !== "undefined" &&
-    (task.employeeID = req.body.employeeID);
+  typeof req.body.assignFrom !== "undefined" && (task.assignFrom = req.body.assignFrom);
+  typeof req.body.assignTo !== "undefined" &&
+    (task.assignTo = req.body.assignTo);
   typeof req.body.difficulty !== "undefined" &&
     (task.difficulty = req.body.difficulty);
-  typeof req.body.projectID !== "undefined" &&
-    (task.projectID = req.body.projectID);
-  typeof req.body.role !== "undefined" && (task.role = req.body.role);
+  typeof req.body.procedureID !== "undefined" && (task.procedureID = req.body.procedureID);
   typeof req.body.isDeleted !== "undefined" &&
     (task.isDeleted = req.body.isDeleted);
-
-  task.save((error, result) => {
+  typeof req.body.priority !== "undefined" && (task.priority = req.body.priority);
+  typeof req.body.deadline !== "undefined" && (task.deadline = req.body.deadline);
+  typeof req.body.status !== "undefined" && (task.status = req.body.status);
+  typeof req.body.progress !== "undefined" && (task.progress = req.body.progress);
+  if (req.body.assignFrom || req.body.assignFrom.length !== 0) {
+    task.assignFrom = await Employee.find({ _id: { $in: req.body.assignFrom[0]._id } });
+  }
+  if (req.body.assignTo || req.body.assignTo.length !== 0) {
+    task.assignTo = await Employee.find({ _id: { $in: req.body.assignTo[0]._id } });
+  }
+  if (req.body.project || req.body.project.length !== 0) {
+    task.project = await Project.find({ name: { $in: req.body.project } });
+  }
+  task.save((error, result) => {  
     if (error || !result) {
       return res.status(400).json({
         message: "[UPDATE] Something went wrong",
@@ -120,7 +156,7 @@ const puttask = async (req, res) => {
 const deletetask = async (req, res) => {
   console.log("Invoked deletetask");
   // Take req.task value from previous function "gettaskById"
-  const task = req.Task;
+  const task = req.task;
   // task.remove((error, result) => {
   //   if (error || !result) {
   //     res
@@ -136,7 +172,7 @@ const deletetask = async (req, res) => {
 
   // result= `1` if MongoDB deleted a doc,
   // `0` if no docs matched the filter `{ name: ... }`
-  Task.deleteOne({ _id: Task._id }, (error, result) => {
+  Task.deleteOne({ _id: task._id }, (error, result) => {
     if (error || !result) {
       res.status(400).json({
         message: "Can't delete!!!",
