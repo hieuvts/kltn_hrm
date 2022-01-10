@@ -33,12 +33,29 @@ export default function FormUpdateTask({ handleCloseDialog, initialValues }) {
   const projects = useSelector((state) => state.project.projectList);
   var formikInitialValues = { ...initialValues };
 
+  const initassignFromValue = formikInitialValues["assignFrom"].map(
+    ({ fname,lname }) => ({ fname,lname })
+  );
+
+  const initassignToValue = formikInitialValues["assignTo"].map(
+    ({ fname,lname }) => ({ fname,lname })
+  );
+
   const initprojectValue = formikInitialValues["project"].map(
     ({ name }) => ({ name })
   );
+
   const projectNameArr = initprojectValue.map((x) => x.name);
+  const assignFromNameArr = [];
+  assignFromNameArr.push(initassignFromValue[0].fname + " " + initassignFromValue[0].lname);
+  const assignToNameArr= [];
+  assignToNameArr.push(initassignToValue[0].fname + " " + initassignToValue[0].lname);
   delete formikInitialValues.project;
   formikInitialValues["project"] = projectNameArr;
+// delete formikInitialValues.assignFrom;
+// delete formikInitialValues.assignTo;
+// formikInitialValues["assignFrom"] =  assignFromNameArr;
+// formikInitialValues["assignTo"] =  assignToNameArr;
 
   const progressSliderMarks = [
     {
@@ -292,6 +309,7 @@ export default function FormUpdateTask({ handleCloseDialog, initialValues }) {
                   multiple
                   value={formik.values.assignTo}
                   onChange={(e) => {
+                    console.log("update assignTookie ", formik.values.assignTo)
                     formik.setFieldValue("assignTo", e.target.value);
                   }}
                   input={<OutlinedInput id="assignTo" label="assignTo" />}
