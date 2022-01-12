@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import Grid from "@mui/material/Grid";
 
 import { Typography, Button } from "@mui/material";
-
+import { Paper } from "@mui/material";
+import MySearchBox from "../../components/CustomizedMUIComponents/StyledSearchBox";
 import MuiAlert from "@mui/material/Alert";
 import { Snackbar } from "@mui/material";
 import TaskList from "../../components/Task/TaskList";
