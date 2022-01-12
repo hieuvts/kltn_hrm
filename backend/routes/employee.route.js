@@ -5,30 +5,19 @@ const verifySignUp = require("../middlewares/verifySignUp");
 const employeeControllers = require("../controllers/employee.controller");
 
 // Router-level middleware
-router.get("/getAll", authJwt.verifyToken, employeeControllers.getAllEmployee);
-router.param("employeeId", employeeControllers.getEmployeeById);
-router.get(
-  "/:employeeId",
-  authJwt.verifyToken,
-  employeeControllers.getOneEmployee
-);
+router.get("/get", authJwt.verifyToken, employeeControllers.getEmployee);
 router.post(
   "/create",
   authJwt.verifyToken,
-  [verifySignUp.checkExistedEmail, verifySignUp.checkRolesIsExisted],
+  verifySignUp.checkExistedEmail,
   employeeControllers.createEmployee
 );
+router.put("/update", authJwt.verifyToken, employeeControllers.updateEmployee);
 router.delete(
-  "/:employeeId/delete",
+  "/delete",
   authJwt.verifyToken,
   employeeControllers.deleteEmployee
 );
 router.delete("/deleteall", employeeControllers.deleteAllEmployee);
-router.put(
-  "/:employeeId/update",
-  authJwt.verifyToken,
-  [verifySignUp.checkExistedEmail, verifySignUp.checkRolesIsExisted],
-  employeeControllers.updateEmployee
-);
 
 module.exports = router;

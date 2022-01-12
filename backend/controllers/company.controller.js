@@ -26,7 +26,6 @@ const getCompany = async (req, res) => {
 
 const createCompany = async (req, res) => {
   const dataToInsert = {
-    id: req.body.id,
     name: req.body.name,
     typeOfCompany: req.body.typeOfCompany,
     mainBusinessLines: req.body.mainBusinessLines,
