@@ -1,7 +1,6 @@
 require("dotenv").config({ path: "./config/.env" });
 const db = require("../models");
 const AuthAccount = db.AuthAccount;
-const Op = db.Sequelize.Op;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const jwtSecret = process.env.JWT_SECRET;
@@ -30,6 +29,11 @@ const login = (req, res) => {
     where: { email: req.body.email },
   })
     .then((authAccount) => {
+      if (!authAccount) {
+        return res.status(404).send({
+          message: `Account with email ${req.body.email} not found`,
+        });
+      }
       var passwordIsValid = bcrypt.compareSync(
         req.body.password,
         authAccount.password
@@ -43,13 +47,14 @@ const login = (req, res) => {
         });
       }
 
-      var token = jwt.sign({ id: authAccount.id }, jwtSecret, {
+      var token = jwt.sign({ email: authAccount.email }, jwtSecret, {
         expiresIn: 86400, // 24 hours
       });
       res.status(200).send({
         id: authAccount.id,
         email: authAccount.email,
         privilege: authAccount.privilege,
+        companyID: authAccount.companyID,
         accessToken: token,
       });
     })
@@ -59,58 +64,53 @@ const login = (req, res) => {
     });
 };
 
-const verifyOldPassword = async (req, res, next) => {
-  User.findOne({
-    email: req.body.email,
-  }).exec((error, user) => {
-    if (error) {
+const changePassword = async (req, res, next) => {
+  AuthAccount.findOne({
+    where: { email: req.body.email },
+  })
+    .then((authAccount) => {
+      if (!authAccount) {
+        return res.status(404).send({
+          message: `Account with email ${req.body.email} not found`,
+        });
+      }
+      var passwordIsValid = bcrypt.compareSync(
+        req.body.oldPassword,
+        authAccount.password
+      );
+
+      if (!passwordIsValid) {
+        // Unauthorized
+        console.log("changePwd.verify password invalid");
+        return res.status(401).send({
+          accessToken: null,
+          message: "Invalid password!",
+        });
+      }
+      // req.authAccountId = authAccount.id;
+
+      // next();
+      let newPassword = bcrypt.hashSync(req.body.password, 8);
+      authAccount.update({ password: newPassword }).then((updated) => {
+        console.log(
+          "Change password successfully",
+          JSON.stringify(updated, null, 2)
+        );
+        return res
+          .status(200)
+          .send({ message: "Change password successfully" });
+      });
+      // .catch((error) => {
+      //   throw new Error(error);
+      // });
+    })
+    .catch((error) => {
       res.status(500).send({ message: error });
       return;
-    }
-
-    if (!user) {
-      // Not found
-      console.log("invoked verify not found user");
-      return res.status(404).send({ message: "Account not found!" });
-    }
-
-    var passwordIsValid = bcrypt.compareSync(
-      req.body.oldPassword,
-      user.password
-    );
-
-    if (!passwordIsValid) {
-      // Unauthorized
-      console.log("invoked verify passworld invalid");
-      return res.status(401).send({
-        accessToken: null,
-        message: "Invalid password!",
-      });
-    }
-    req.userId = user._id;
-    next();
-  });
-};
-const changePassword = async (req, res) => {
-  let newPassword = bcrypt.hashSync(req.body.password, 8);
-  User.findByIdAndUpdate(
-    req.userId,
-    { password: newPassword },
-
-    (error, result) => {
-      if (error || !result) {
-        console.log("invoked changePwd error");
-        console.log("error ", error);
-        return res.status(500).send(error);
-      }
-      console.log("invoked changePwd");
-      return res.status(200).send(result);
-    }
-  );
+    });
 };
 module.exports = {
   signUp,
   login,
-  verifyOldPassword,
   changePassword,
 };

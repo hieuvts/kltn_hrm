@@ -1,9 +1,8 @@
 require("dotenv").config({ path: "./config/.env" });
+const db = require("../models");
+const AuthAccount = db.AuthAccount;
 const jwt = require("jsonwebtoken");
-const User = require("../models/user.model");
-
 const jwtSecret = process.env.JWT_SECRET;
-console.log("[INFO] jwtSecret", jwtSecret);
 
 const verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
@@ -18,72 +17,42 @@ const verifyToken = (req, res, next) => {
         .status(401)
         .send({ message: "[WARNING] Unauthorized!", error: err });
     }
-    req.userId = decoded.id;
+    req.authAccountID = decoded.id;
     next();
   });
 };
 
 const isAdmin = (req, res, next) => {
-  console.log("isAdmin>> ", req.userId);
-  User.findById(req.userId).exec((err, user) => {
+  AuthAccount.findOne({
+    where: { email: req.body.email },
+  }).then((err, authAccount) => {
     if (err) {
-      console.log("error findUser ", err);
       res.status(500).send({ message: err });
       return;
     }
-    console.log("Found rose isAdmin ", user);
-    Role.find(
-      {
-        _id: { $in: user.roles },
-      },
-      (err, roles) => {
-        if (err) {
-          res.status(500).send({ message: err });
-          return;
-        }
-
-        for (let i = 0; i < roles.length; i++) {
-          if (roles[i].name === "admin") {
-            next();
-            return;
-          }
-        }
-
-        res.status(403).send({ message: "Require admin role!" });
-        return;
-      }
-    );
+    if (authAccount.privilege.toUpperCase() === "admin".toUpperCase()) {
+      next();
+      return;
+    }
+    res.status(403).send({ message: "Require admin role!" });
+    return;
   });
 };
 
 const isModerator = (req, res, next) => {
-  User.findById(req.userId).exec((err, user) => {
+  AuthAccount.findOne({
+    where: { email: req.body.email },
+  }).then((err, authAccount) => {
     if (err) {
       res.status(500).send({ message: err });
       return;
     }
-
-    Role.find(
-      {
-        _id: { $in: user.roles },
-      },
-      (err, roles) => {
-        if (err) {
-          res.status(500).send({ message: err });
-          return;
-        }
-
-        for (let i = 0; i < roles.length; i++) {
-          if (roles[i].name === "moderator") {
-            next();
-            return;
-          }
-        }
-
-        res.status(403).send({ message: "Require moderator role!" });
-        return;
-      }
-    );
+    if (authAccount.privilege.toUpperCase() === "moderator".toUpperCase()) {
+      next();
+      return;
+    }
+    res.status(403).send({ message: "Require moderator role!" });
+    return;
   });
 };
 
