@@ -13,6 +13,7 @@ const port = process.env.PORT || 8000;
 // const userRoute = require("./routes/user.route");
 // const roleRoute = require("./routes/role.route");
 const authRoute = require("./routes/auth.route");
+const companyRoute = require("./routes/company.route");
 // const chatRoom = require("./routes/chatRoom.route");
 
 const app = express();
@@ -42,6 +43,7 @@ app.use((err, req, res, next) => {
 // app.use("/api/role", roleRoute);
 // app.use("/api/project", projectRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/company", companyRoute);
 // app.use("/api/user", userRoute);
 // app.use("/api/chat", chatRoom);
 app.get("/testapi", (req, res) => {
