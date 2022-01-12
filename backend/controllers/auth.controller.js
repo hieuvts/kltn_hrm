@@ -1,94 +1,38 @@
 require("dotenv").config({ path: "./config/.env" });
-const Role = require("../models/role.model");
-const User = require("../models/user.model");
-const db = require("../middlewares/dbConnection");
+const db = require("../models");
+const AuthAccount = db.AuthAccount;
+const Op = db.Sequelize.Op;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const jwtSecret = process.env.JWT_SECRET;
 
 const signUp = (req, res, next) => {
   console.log("invoke signUp");
-  const user = new User({
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8),
-  });
-
   const dataToInsert = {
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
+    privilege: req.body.privilege ? req.body.privilege : "user",
+    companyID: req.body.companyID,
   };
-  user.save((err, user) => {
-    if (err) {
-      res.status(500).send(err);
-      return;
-    }
-    // If user provide a custom role (not Admin, Moderator, User)
-    if (req.body.roles) {
-      Role.find(
-        {
-          name: { $in: req.body.roles },
-        },
-        (err, roles) => {
-          if (err) {
-            res.status(500).send({ message: err });
-            return;
-          }
-
-          user.roles = roles.map((role) => role._id);
-          user.save((err) => {
-            if (err) {
-              res.status(500).send({ message: err });
-              return;
-            }
-            next();
-            // res.send({ message: "Account was registered successfully!" });
-          });
-        }
-      );
-    } else {
-      // If user not provide any role -> Assign them to "admin" role
-      Role.findOne({ name: "admin" }, (err, role) => {
-        if (err) {
-          res.status(500).send({ message: err });
-          return;
-        }
-
-        user.roles = [role._id];
-        user.save((err) => {
-          if (err) {
-            res.status(500).send({ message: err });
-            return;
-          }
-          next();
-          // res.send({ message: "Admin account was registered successfully!" });
-        });
+  AuthAccount.create(dataToInsert)
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((error) => {
+      res.status(500).send({
+        message: "Error when trying to create new account",
       });
-    }
-  });
+    });
 };
 
 const login = (req, res) => {
-  User.findOne({
-    email: req.body.email,
+  AuthAccount.findOne({
+    where: { email: req.body.email },
   })
-    .populate("roles", "-__v")
-    .populate("employee")
-    .populate("chatRooms")
-    .exec((err, user) => {
-      if (err) {
-        // Internal server error
-        res.status(500).send({ message: err });
-        return;
-      }
-
-      if (!user) {
-        // Not found
-        return res.status(404).send({ message: "Account not found!" });
-      }
-
+    .then((authAccount) => {
       var passwordIsValid = bcrypt.compareSync(
         req.body.password,
-        user.password
+        authAccount.password
       );
 
       if (!passwordIsValid) {
@@ -99,24 +43,19 @@ const login = (req, res) => {
         });
       }
 
-      var token = jwt.sign({ id: user.id }, jwtSecret, {
+      var token = jwt.sign({ id: authAccount.id }, jwtSecret, {
         expiresIn: 86400, // 24 hours
       });
-
-      var authorities = [];
-
-      for (let i = 0; i < user.roles.length; i++) {
-        authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
-      }
       res.status(200).send({
-        id: user._id,
-        email: user.email,
-        roles: user.roles,
+        id: authAccount.id,
+        email: authAccount.email,
+        privilege: authAccount.privilege,
         accessToken: token,
-        employee: user.employee,
-        departments: user.departments,
-        chatRooms: user.chatRooms,
       });
+    })
+    .catch((error) => {
+      console.log("error when login", error);
+      return res.status(401).send({ error: error.message });
     });
 };
 
