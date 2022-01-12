@@ -3,10 +3,12 @@ import { apiBaseUrl } from "../config/apiBaseUrl";
 import authHeader from "./authHeader";
 const API_URL = `${apiBaseUrl}/auth/`;
 
-const signUp = (email, password) => {
+const signUp = (email, password, privilege, companyID) => {
   return axios.post(API_URL + "signup", {
     email,
     password,
+    privilege,
+    companyID,
   });
 };
 
