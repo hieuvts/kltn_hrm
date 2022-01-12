@@ -101,7 +101,7 @@ const deleteDepartment = async (req, res) => {
 };
 
 const deleteAllDepartment = async (req, res) => {
-  Department.destroy({ where: { _id: req.params.id }, truncate: false })
+  Department.destroy({ where: {}, truncate: false })
     .then((affectedRows) => {
       console.log(
         moment().format("hh:mm:ss"),

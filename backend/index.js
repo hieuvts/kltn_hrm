@@ -7,11 +7,8 @@ const moment = require("moment");
 const port = process.env.PORT || 8000;
 const employeeRoute = require("./routes/employee.route");
 const departmentRoute = require("./routes/department.route");
-// const feedbackFromEmployeeRoute = require("./routes/feedbackFromEmployee.route");
-// const projectRoute = require("./routes/project.route");
-// const taskRoute = require("./routes/task.route");
-// const userRoute = require("./routes/user.route");
-// const roleRoute = require("./routes/role.route");
+const projectRoute = require("./routes/project.route");
+const taskRoute = require("./routes/task.route");
 const authRoute = require("./routes/auth.route");
 const companyRoute = require("./routes/company.route");
 // const chatRoom = require("./routes/chatRoom.route");
@@ -38,13 +35,10 @@ app.use((err, req, res, next) => {
 
 app.use("/api/department", departmentRoute);
 app.use("/api/employee", employeeRoute);
-// app.use("/api/feedbackfromemployee", feedbackFromEmployeeRoute);
-// app.use("/api/task", taskRoute);
-// app.use("/api/role", roleRoute);
-// app.use("/api/project", projectRoute);
+app.use("/api/task", taskRoute);
+app.use("/api/project", projectRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/company", companyRoute);
-// app.use("/api/user", userRoute);
 // app.use("/api/chat", chatRoom);
 app.get("/testapi", (req, res) => {
   res.send("Hello World!!!");

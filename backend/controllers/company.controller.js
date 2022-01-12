@@ -104,7 +104,7 @@ const deleteCompany = async (req, res) => {
 };
 
 const deleteAllCompany = async (req, res) => {
-  Company.destroy({ where: { _id: req.params.id }, truncate: false })
+  Company.destroy({ where: {}, truncate: false })
     .then((affectedRows) => {
       console.log(
         moment().format("hh:mm:ss"),

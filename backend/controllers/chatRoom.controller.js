@@ -1,5 +1,6 @@
-const ChatRoom = require("../models/chatRoom.model");
-const User = require("../models/user.model");
+const db = require("../models");
+const ChatRoom = db.ChatRoom;
+const AuthAccount = db.AuthAccount;
 
 const moment = require("moment");
 

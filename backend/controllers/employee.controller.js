@@ -103,7 +103,7 @@ const deleteEmployee = async (req, res) => {
 };
 
 const deleteAllEmployee = async (req, res) => {
-  Employee.destroy({ where: { _id: req.params.id }, truncate: false })
+  Employee.destroy({ where: {}, truncate: false })
     .then((affectedRows) => {
       console.log(
         moment().format("hh:mm:ss"),
