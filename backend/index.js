@@ -6,7 +6,7 @@ const cors = require("cors");
 const moment = require("moment");
 const port = process.env.PORT || 8000;
 const employeeRoute = require("./routes/employee.route");
-// const departmentRoute = require("./routes/department.route");
+const departmentRoute = require("./routes/department.route");
 // const feedbackFromEmployeeRoute = require("./routes/feedbackFromEmployee.route");
 // const projectRoute = require("./routes/project.route");
 // const taskRoute = require("./routes/task.route");
@@ -36,7 +36,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// app.use("/api/department", departmentRoute);
+app.use("/api/department", departmentRoute);
 app.use("/api/employee", employeeRoute);
 // app.use("/api/feedbackfromemployee", feedbackFromEmployeeRoute);
 // app.use("/api/task", taskRoute);

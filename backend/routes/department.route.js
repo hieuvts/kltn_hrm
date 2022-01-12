@@ -1,39 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const { authJwt } = require("../middlewares");
+const verifySignUp = require("../middlewares/verifySignUp");
 const departmentControllers = require("../controllers/department.controller");
 
 // Router-level middleware
-router.get(
-  "/getAll",
-  authJwt.verifyToken,
-  departmentControllers.getAllDepartment
-);
-router.param(
-  "departmentId",
-  departmentControllers.getDepartmentById
-);
-// router.get("/department/:departmentId", departmentControllers.getOnedepartment);
+router.get("/get", departmentControllers.getDepartment);
 router.post(
   "/create",
-  authJwt.verifyToken,
+  verifySignUp.checkExistedEmail,
   departmentControllers.createDepartment
 );
-router.delete(
-  "/:departmentId/delete",
-  authJwt.verifyToken,
-  departmentControllers.deleteDepartment
-);
-router.delete(
-  "/deleteall",
-  authJwt.verifyToken,
-  departmentControllers.deleteAllDepartment
-);
-router.put(
-  "/:departmentId/update",
-  authJwt.verifyToken,
-  departmentControllers.putDepartment
-);
-// router.post("/department/createmultipledepartment", departmentControllers.createMultipledepartment);
+router.put("/update", departmentControllers.updateDepartment);
+router.delete("/delete", departmentControllers.deleteDepartment);
+router.delete("/deleteall", departmentControllers.deleteAllDepartment);
 
 module.exports = router;
