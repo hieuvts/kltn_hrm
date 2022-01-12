@@ -6,11 +6,7 @@ const departmentControllers = require("../controllers/department.controller");
 
 // Router-level middleware
 router.get("/get", departmentControllers.getDepartment);
-router.post(
-  "/create",
-  verifySignUp.checkExistedEmail,
-  departmentControllers.createDepartment
-);
+router.post("/create", departmentControllers.createDepartment);
 router.put("/update", departmentControllers.updateDepartment);
 router.delete("/delete", departmentControllers.deleteDepartment);
 router.delete("/deleteall", departmentControllers.deleteAllDepartment);
