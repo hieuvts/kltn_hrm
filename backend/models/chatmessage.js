@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   ChatMessage.init({
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     senderEmail: DataTypes.STRING,
     chatRoomID: DataTypes.INTEGER,
     message: DataTypes.STRING,

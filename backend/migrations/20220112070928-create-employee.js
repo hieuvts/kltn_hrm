@@ -1,30 +1,39 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('ChatMessages', {
+    await queryInterface.createTable('Employees', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id: {
-        type: Sequelize.INTEGER
-      },
-      senderEmail: {
+      fname: {
         type: Sequelize.STRING
       },
-      chatRoomID: {
-        type: Sequelize.INTEGER
-      },
-      message: {
+      lname: {
         type: Sequelize.STRING
       },
-      isBroadcast: {
-        type: Sequelize.BOOLEAN
+      gender: {
+        type: Sequelize.STRING
       },
-      createdAt: {
+      dateOfBirth: {
         type: Sequelize.DATE
+      },
+      phoneNumber: {
+        type: Sequelize.STRING
+      },
+      email: {
+        type: Sequelize.STRING
+      },
+      address: {
+        type: Sequelize.STRING
+      },
+      position: {
+        type: Sequelize.STRING
+      },
+      departmentID: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -37,6 +46,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('ChatMessages');
+    await queryInterface.dropTable('Employees');
   }
 };

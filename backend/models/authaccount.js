@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   AuthAccount.init({
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     privilege: DataTypes.STRING,

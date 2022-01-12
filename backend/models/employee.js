@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Employee.init({
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     fname: DataTypes.STRING,
     lname: DataTypes.STRING,
     gender: DataTypes.STRING,

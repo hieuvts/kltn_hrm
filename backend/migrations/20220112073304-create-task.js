@@ -1,42 +1,36 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Employees', {
+    await queryInterface.createTable('Tasks', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id: {
+      projectID: {
         type: Sequelize.INTEGER
       },
-      fname: {
+      name: {
         type: Sequelize.STRING
       },
-      lname: {
-        type: Sequelize.STRING
+      assignerID: {
+        type: Sequelize.INTEGER
       },
-      gender: {
-        type: Sequelize.STRING
+      assigneeID: {
+        type: Sequelize.INTEGER
       },
-      dateOfBirth: {
+      priority: {
+        type: Sequelize.INTEGER
+      },
+      difficulty: {
+        type: Sequelize.INTEGER
+      },
+      dueDate: {
         type: Sequelize.DATE
       },
-      phoneNumber: {
+      progress: {
         type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING
-      },
-      address: {
-        type: Sequelize.STRING
-      },
-      position: {
-        type: Sequelize.STRING
-      },
-      departmentID: {
-        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -49,6 +43,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Employees');
+    await queryInterface.dropTable('Tasks');
   }
 };

@@ -1,5 +1,7 @@
-"use strict";
-const { Model } = require("sequelize");
+'use strict';
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Project extends Model {
     /**
@@ -9,26 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Project.belongsTo(models.Department, {
-        foreignKey: "departmentID",
-        //  if a department is deleted,
-        // the project belongs to that dept will be deleted too.
-        onDelete: "cascasde",
-      });
     }
-  }
-  Project.init(
-    {
-      id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-      name: DataTypes.STRING,
-      startDate: DataTypes.DATE,
-      endDate: DataTypes.DATE,
-      departmentID: DataTypes.INTEGER,
-    },
-    {
-      sequelize,
-      modelName: "Project",
-    }
-  );
+  };
+  Project.init({
+    name: DataTypes.STRING,
+    startDate: DataTypes.DATE,
+    endDate: DataTypes.DATE,
+    departmentID: DataTypes.INTEGER
+  }, {
+    sequelize,
+    modelName: 'Project',
+  });
   return Project;
 };

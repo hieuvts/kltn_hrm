@@ -11,15 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Department.hasOne(models.Project, {
-        foreignKey: 'departmentID',
-      })
     }
   };
   Department.init({
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     name: DataTypes.STRING,
-    manager: DataTypes.STRING,
+    manager: DataTypes.INTEGER,
     companyID: DataTypes.INTEGER
   }, {
     sequelize,

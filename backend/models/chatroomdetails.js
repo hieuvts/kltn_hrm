@@ -14,7 +14,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   ChatRoomDetails.init({
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     chatRoomID: DataTypes.INTEGER,
     memberID: DataTypes.INTEGER
   }, {
