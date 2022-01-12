@@ -28,25 +28,6 @@ const io = require("socket.io")(http, {
   },
 });
 
-const port = process.env.PORT || 8000;
-
-var con = mysql.createConnection({
-  host: "localhost",
-  user: "hieuvts",
-  password: "admin",
-  database: "hrm",
-});
-
-con.connect((error) => {
-  if (!error) {
-    console.log("Connected to DB!");
-  } else throw error;
-});
-
-// A route will match any path that follows its path immediately with a “/”.
-// For example: app.use('/apple', ...) will match “/apple” so on.
-// Since path defaults to “/” middleware mounted without a path
-// will be executed for every request to the app.
 app.use((err, req, res, next) => {
   res.status(err.status || 404).json({
     message: "[ERROR] No such route exists!",

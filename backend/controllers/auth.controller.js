@@ -1,7 +1,7 @@
 require("dotenv").config({ path: "./config/.env" });
 const Role = require("../models/role.model");
 const User = require("../models/user.model");
-
+const db = require("../middlewares/dbConnection");
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const jwtSecret = process.env.JWT_SECRET;
@@ -13,6 +13,10 @@ const signUp = (req, res, next) => {
     password: bcrypt.hashSync(req.body.password, 8),
   });
 
+  const dataToInsert = {
+    email: req.body.email,
+    password: bcrypt.hashSync(req.body.password, 8),
+  };
   user.save((err, user) => {
     if (err) {
       res.status(500).send(err);

@@ -1,0 +1,5 @@
+
+
+const authAccount = {
+    signUp:
+}
