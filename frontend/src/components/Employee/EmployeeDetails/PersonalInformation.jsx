@@ -67,13 +67,9 @@ export default function PersonalInformation() {
           </Box>
           <Box sx={rowDirection}>
             <Typography variant="h6">Department: </Typography>
-            {employee.departments.map((department, index) => {
-              return (
-                <Typography key={index} variant="h6">
-                  {department.name}
-                </Typography>
-              );
-            })}
+            <Typography variant="h6">
+              {employee.departmentID}
+            </Typography>
           </Box>
         </Box>
       </Paper>

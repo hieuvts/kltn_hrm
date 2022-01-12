@@ -458,16 +458,8 @@ export default function EmployeeTable() {
                         </TableCell>
                         <TableCell align="right">{row.email}</TableCell>
                         <TableCell align="right">{row.phoneNumber}</TableCell>
-                        <TableCell align="right">
-                          {row.roles.map((role, index) => (
-                            <p key={index}>{role.name}</p>
-                          ))}
-                        </TableCell>
-                        <TableCell align="right">
-                          {row.departments.map((department, index) => (
-                            <p key={index}>{department.name}</p>
-                          ))}
-                        </TableCell>
+                        <TableCell align="right">{row.position}</TableCell>
+                        <TableCell align="right">{row.departmentID}</TableCell>
                         <TableCell align="right">
                           <RowActions currentSelectedEmployee={row} />
                         </TableCell>

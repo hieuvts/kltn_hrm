@@ -20,7 +20,7 @@ export const getEmployeeAsync = createAsyncThunk(
     try {
       const res = await employeeService.getAllEmployee(searchQuery);
 
-      return res.data.employees;
+      return res.data;
     } catch (error) {
       const message =
         (error.response &&
