@@ -1,39 +1,40 @@
-'use strict';
+"use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('ChatMessages', {
+    await queryInterface.createTable("ChatMessages", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       senderEmail: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       chatRoomID: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: "chatrooms",
+          key: "id",
+        },
       },
       message: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       isBroadcast: {
-        type: Sequelize.BOOLEAN
-      },
-      createdAt: {
-        type: Sequelize.DATE
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('ChatMessages');
-  }
+    await queryInterface.dropTable("ChatMessages");
+  },
 };

@@ -33,7 +33,11 @@ module.exports = {
         type: Sequelize.STRING
       },
       departmentID: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: "departments",
+          key: "id",
+        },
       },
       createdAt: {
         allowNull: false,
