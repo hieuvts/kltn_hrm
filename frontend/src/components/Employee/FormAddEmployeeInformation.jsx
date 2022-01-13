@@ -133,7 +133,7 @@ export default function FormAddEmployeeInformation({
                 <Select
                   labelId="departments-label"
                   id="departmentID"
-                  name="Department"
+                  name="departmentID"
                   label="Department"
                   fullWidth
                   value={formik.values.departmentID}
@@ -220,7 +220,7 @@ FormAddEmployeeInformation.propTypes = {
 };
 FormAddEmployeeInformation.defaultProps = {
   initialValues: {
-    fname: "hieu",
+    fname: "",
     lname: "",
     gender: "Male",
     dateOfBirth: new Date(),
@@ -228,8 +228,6 @@ FormAddEmployeeInformation.defaultProps = {
     email: "",
     address: "",
     departmentID: "1",
-    projects: [],
-    roles: [],
     isDeleted: false,
   },
 };

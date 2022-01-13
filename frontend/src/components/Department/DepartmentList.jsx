@@ -411,7 +411,9 @@ export default function DepartmentTable() {
                         >
                           {row.name}
                         </TableCell>
-                        <TableCell align="center">{row.amount}</TableCell>
+                        <TableCell align="center">
+                          {row.Employees.length}
+                        </TableCell>
                         <TableCell align="center">{row.manager}</TableCell>
                         <TableCell align="right">
                           <RowActions currentSelectedDepartment={row} />
@@ -432,7 +434,7 @@ export default function DepartmentTable() {
             </Table>
           </TableContainer>
           <TablePagination
-           labelRowsPerPage="Departments per page"
+            labelRowsPerPage="Departments per page"
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
             count={rows.length}

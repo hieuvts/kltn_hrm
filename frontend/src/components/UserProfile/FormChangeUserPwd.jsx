@@ -14,7 +14,6 @@ import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
 import { useDispatch } from "react-redux";
 import { logout } from "../../stores/authSlice";
-import { changePassword } from "../../stores/userSlice";
 import { changePwdValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -41,18 +40,18 @@ export default function FormChangeUserPwd({
       initialValues: initialValues,
       validationSchema: changePwdValidationSchema,
       onSubmit: (values) => {
-        dispatch(changePassword({ ...values, email: user.email }))
-          .unwrap()
-          .then((originalPromiseResult) => {
-            setSbSuccessOpen(true);
-            setTimeout(() => {
-              handleCloseDialog();
-              dispatch(logout());
-            }, 800);
-          })
-          .catch((rejectedValueOrSerializedError) => {
-            setSbFailedOpen(true);
-          });
+        // dispatch(changePassword({ ...values, email: user.email }))
+        //   .unwrap()
+        //   .then((originalPromiseResult) => {
+        //     setSbSuccessOpen(true);
+        //     setTimeout(() => {
+        //       handleCloseDialog();
+        //       dispatch(logout());
+        //     }, 800);
+        //   })
+        //   .catch((rejectedValueOrSerializedError) => {
+        //     setSbFailedOpen(true);
+        //   });
       },
     });
     return (

@@ -97,7 +97,10 @@ export default function FormAddDepartmentInformation({
               sx={{ mb: 3 }}
             >
               {employees.map((employee, index) => (
-                <MenuItem key={index} value={employee.id}>
+                <MenuItem
+                  key={index}
+                  value={employee.fname + " " + employee.lname}
+                >
                   {employee.fname + " " + employee.lname}
                 </MenuItem>
               ))}
@@ -139,6 +142,7 @@ FormAddDepartmentInformation.defaultProps = {
     name: "",
     amount: "",
     manager: "",
+    companyID: 1,
   },
   submitButtonText: "SUBMIT",
 };

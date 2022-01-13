@@ -1,11 +1,14 @@
 const db = require("../models");
+const { QueryTypes } = require("sequelize");
 const Department = db.Department;
 const Employee = db.Employee;
 const moment = require("moment");
 
+// get departmens of selected company
 const getAllDepartment = async (req, res) => {
+  const companyID = req.query.companyID || 1;
   Department.findAll({
-    where: { companyID: req.query.companyID },
+    where: { companyID: companyID },
   })
     .then((departments) => {
       if (departments) {
@@ -70,7 +73,7 @@ const getDeptAndEmpByID = async (req, res) => {
     include: [Employee],
   })
     .then((departments) => {
-      if (departments) {
+      if (departments && departments.length !== 0) {
         res.status(200).json(departments);
         console.log(moment().format("hh:mm:ss"), "[SUCCESS] getOneDeptAndEmp");
       } else {
@@ -96,8 +99,8 @@ const getDeptAndEmpByID = async (req, res) => {
 const createDepartment = async (req, res) => {
   const dataToInsert = {
     name: req.body.name,
-    managerID: req.body.managerID,
-    companyID: req.body.companyID,
+    manager: req.body.managerID,
+    companyID: req.body.companyID || 1,
   };
   Department.create(dataToInsert)
     .then((department) => {

@@ -7,21 +7,21 @@ module.exports = {
       [
         {
           name: "Sale",
-          managerID: "1",
+          manager: "Hieu Pham",
           companyID: "1",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           name: "HR",
-          managerID: "2",
+          manager: "Hieu Pham",
           companyID: "1",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           name: "HR",
-          managerID: "1",
+          manager: "Vinh Hoang",
           companyID: "2",
           createdAt: new Date(),
           updatedAt: new Date(),

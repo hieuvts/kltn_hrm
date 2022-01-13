@@ -17,7 +17,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import FriendList from "../../components/Chat/FriendList";
 import ChatPanel from "../../components/Chat/ChatPanel";
-import { getUser } from "../../stores/userSlice";
 import { getAllChatRoom } from "../../stores/chatRoomSlice";
 import StyledSearchBox from "../../components/CustomizedMUIComponents/StyledSearchBox";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
@@ -39,7 +38,6 @@ export default function InternalChat() {
   useEffect(() => {
     console.log("Get all room message");
     handleGetAllChatRoom();
-    dispatch(getUser({ userId: user.id }));
   }, [value, setSelectedTab]);
   // useEffect(() => {}, []);
   return (

@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Avatar from "@mui/material/Avatar";
 
-import { getUser } from "../../stores/userSlice";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import socketIOService from "../../services/socketIO.service";

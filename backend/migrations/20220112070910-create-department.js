@@ -11,8 +11,8 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
       },
-      managerID: {
-        type: Sequelize.INTEGER,
+      manager: {
+        type: Sequelize.STRING,
       },
       companyID: {
         type: Sequelize.INTEGER,

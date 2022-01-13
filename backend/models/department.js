@@ -17,15 +17,12 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.Project, {
         foreignKey: "departmentID",
       });
-      this.belongsTo(models.Employee, {
-        foreignKey: "managerID",
-      });
     }
   }
   Department.init(
     {
       name: DataTypes.STRING,
-      managerID: DataTypes.INTEGER,
+      manager: DataTypes.STRING,
       companyID: DataTypes.INTEGER,
     },
     {

@@ -150,9 +150,9 @@ export default function FormUpdateEmployeeInformation({
                 <Select
                   labelId="departments-label"
                   id="departmentID"
+                  name="departmentID"
                   label="Department"
                   fullWidth
-                  name="departmentID"
                   value={formik.values.departmentID}
                   onChange={formik.handleChange}
                   sx={{ mb: 3 }}

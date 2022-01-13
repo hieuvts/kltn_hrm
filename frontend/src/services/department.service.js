@@ -4,8 +4,8 @@ import { apiBaseUrl } from "../config/apiBaseUrl";
 
 const API_URL = `${apiBaseUrl}/department/`;
 
-const getAllDepartment = () => {
-  return axios.get(API_URL + "get", {
+const getAllDepartmentEmployee = () => {
+  return axios.get(API_URL + "getDeptEmp", {
     headers: authHeader(),
   });
 };
@@ -27,7 +27,7 @@ const deleteDepartment = (departmentId) => {
 };
 
 const departmentService = {
-  getAllDepartment,
+  getAllDepartmentEmployee,
   addDepartment,
   updateDepartment,
   deleteDepartment,

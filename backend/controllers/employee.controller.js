@@ -26,11 +26,6 @@ const getAllEmployee = async (req, res) => {
 };
 
 const getAllEmpAndDept = async (req, res) => {
-  if (typeof req.query.id === "undefined" || req.query.id.length === 0) {
-    return res.status(404).json({
-      message: "Employee ID is not provided!",
-    });
-  }
   Employee.findAll({
     include: [Department],
   })
@@ -74,7 +69,7 @@ const getEmpAndDeptByID = async (req, res) => {
     include: [Department],
   })
     .then((employees) => {
-      if (employees) {
+      if (employees && employees.length !== 0) {
         res.status(200).json(employees);
         console.log(moment().format("hh:mm:ss"), "[SUCCESS] getEmpAndDeptByID");
       } else {
