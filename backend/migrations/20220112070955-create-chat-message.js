@@ -14,7 +14,7 @@ module.exports = {
       chatRoomID: {
         type: Sequelize.INTEGER,
         references: {
-          model: "chatrooms",
+          model: "ChatRooms",
           key: "id",
         },
       },

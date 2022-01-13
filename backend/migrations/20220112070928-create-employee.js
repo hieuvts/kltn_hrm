@@ -35,7 +35,14 @@ module.exports = {
       departmentID: {
         type: Sequelize.INTEGER,
         references: {
-          model: "departments",
+          model: "Departments",
+          key: "id",
+        },
+      },
+      authAccountID: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "AuthAccounts",
           key: "id",
         },
       },

@@ -11,14 +11,14 @@ module.exports = {
       chatRoomID: {
         type: Sequelize.INTEGER,
         references: {
-          model: "chatrooms",
+          model: "ChatRooms",
           key: "id",
         },
       },
       memberID: {
         type: Sequelize.INTEGER,
         references: {
-          model: "authaccounts",
+          model: "AuthAccounts",
           key: "id",
         },
       },

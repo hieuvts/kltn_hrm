@@ -1,8 +1,9 @@
 const db = require("../models");
 const Employee = db.Employee;
+const Department = db.Department;
 const moment = require("moment");
 
-const getEmployee = async (req, res) => {
+const getAllEmployee = async (req, res) => {
   Employee.findAll()
     .then((employees) => {
       if (employees) {
@@ -17,6 +18,37 @@ const getEmployee = async (req, res) => {
     })
     .catch((error) => {
       console.log(moment().format("hh:mm:ss"), "[ERROR] getAllemployee", error);
+      res.status(500).json({
+        message: "[ERROR] [getAll] Something went wrong",
+        error: error,
+      });
+    });
+};
+
+const getEmployeeAndDepartment = async (req, res) => {
+  console.log("Get empdept", req.query.id);
+  if (typeof req.query.id === "undefined" || req.query.id.length === 0) {
+    return res.status(404).json({
+      message: "Employee ID is not provided!",
+    });
+  }
+  Employee.findAll({
+    where: { id: req.query.id },
+    include: [Department],
+  })
+    .then((employees) => {
+      if (employees) {
+        res.status(200).json(employees);
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getAll EmpDept");
+      } else {
+        res.status(400).json({
+          message: "[ERROR] [getAll] Something went wrong",
+        });
+        console.log(moment().format("hh:mm:ss"), "[ERROR] getAll EmpDept");
+      }
+    })
+    .catch((error) => {
+      console.log(moment().format("hh:mm:ss"), "[ERROR] getAll EmpDept", error);
       res.status(500).json({
         message: "[ERROR] [getAll] Something went wrong",
         error: error,
@@ -128,7 +160,8 @@ const deleteAllEmployee = async (req, res) => {
 };
 
 module.exports = {
-  getEmployee,
+  getAllEmployee,
+  getEmployeeAndDepartment,
   createEmployee,
   deleteEmployee,
   updateEmployee,

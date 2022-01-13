@@ -12,9 +12,9 @@ module.exports = {
         type: Sequelize.STRING,
       },
       managerID: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
         references: {
-          model: "authaccounts",
+          model: "AuthAccounts",
           key: "id",
         },
       },
