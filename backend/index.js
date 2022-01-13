@@ -11,6 +11,7 @@ const projectRoute = require("./routes/project.route");
 const taskRoute = require("./routes/task.route");
 const authRoute = require("./routes/auth.route");
 const companyRoute = require("./routes/company.route");
+const chatRoomDetailsRoute = require("./routes/chatRoomDetails.route");
 // const chatRoom = require("./routes/chatRoom.route");
 
 const app = express();
@@ -39,6 +40,7 @@ app.use("/api/task", taskRoute);
 app.use("/api/project", projectRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/company", companyRoute);
+app.use("/api/chatRoomDetails", chatRoomDetailsRoute);
 // app.use("/api/chat", chatRoom);
 app.get("/testapi", (req, res) => {
   res.send("Hello World!!!");

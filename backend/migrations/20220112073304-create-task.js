@@ -21,14 +21,14 @@ module.exports = {
       assignerID: {
         type: Sequelize.INTEGER,
         references: {
-          model: "AuthAccounts",
+          model: "Employees",
           key: "id",
         },
       },
       assigneeID: {
         type: Sequelize.INTEGER,
         references: {
-          model: "AuthAccounts",
+          model: "Employees",
           key: "id",
         },
       },

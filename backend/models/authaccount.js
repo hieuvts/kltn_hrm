@@ -9,6 +9,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.belongsTo(models.Company);
+      this.belongsToMany(models.ChatRoom, {
+        through: models.ChatRoomDetails,
+        foreignKey: "memberID",
+      });
+      this.hasOne(models.Employee, {
+        foreignKey: "authAccountID",
+      });
     }
   }
   AuthAccount.init(

@@ -6,7 +6,8 @@ const employeeControllers = require("../controllers/employee.controller");
 
 // Router-level middleware
 router.get("/get", employeeControllers.getAllEmployee);
-router.get("/getEmpDept", employeeControllers.getEmployeeAndDepartment);
+router.get("/getEmpDept", employeeControllers.getAllEmpAndDept);
+router.get("/getEmpDeptByID", employeeControllers.getEmpAndDeptByID);
 router.post(
   "/create",
   verifySignUp.checkExistedEmail,

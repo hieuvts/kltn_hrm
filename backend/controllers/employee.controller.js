@@ -25,8 +25,45 @@ const getAllEmployee = async (req, res) => {
     });
 };
 
-const getEmployeeAndDepartment = async (req, res) => {
-  console.log("Get empdept", req.query.id);
+const getAllEmpAndDept = async (req, res) => {
+  if (typeof req.query.id === "undefined" || req.query.id.length === 0) {
+    return res.status(404).json({
+      message: "Employee ID is not provided!",
+    });
+  }
+  Employee.findAll({
+    include: [Department],
+  })
+    .then((employees) => {
+      if (employees) {
+        res.status(200).json(employees);
+        console.log(
+          moment().format("hh:mm:ss"),
+          "[SUCCESS] getAll getAllDeptAndEmp"
+        );
+      } else {
+        res.status(400).json({
+          message: "[ERROR] [getAllDeptAndEmp] Something went wrong",
+        });
+        console.log(
+          moment().format("hh:mm:ss"),
+          "[ERROR] getAll getAllDeptAndEmp"
+        );
+      }
+    })
+    .catch((error) => {
+      console.log(
+        moment().format("hh:mm:ss"),
+        "[ERROR] getAll getAllDeptAndEmp",
+        error
+      );
+      res.status(500).json({
+        message: "[ERROR] [getAllDeptAndEmp] Something went wrong",
+        error: error,
+      });
+    });
+};
+const getEmpAndDeptByID = async (req, res) => {
   if (typeof req.query.id === "undefined" || req.query.id.length === 0) {
     return res.status(404).json({
       message: "Employee ID is not provided!",
@@ -39,18 +76,22 @@ const getEmployeeAndDepartment = async (req, res) => {
     .then((employees) => {
       if (employees) {
         res.status(200).json(employees);
-        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getAll EmpDept");
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getEmpAndDeptByID");
       } else {
         res.status(400).json({
-          message: "[ERROR] [getAll] Something went wrong",
+          message: "[ERROR] [getEmpAndDeptByID] Something went wrong",
         });
-        console.log(moment().format("hh:mm:ss"), "[ERROR] getAll EmpDept");
+        console.log(moment().format("hh:mm:ss"), "[ERROR] getEmpAndDeptByID");
       }
     })
     .catch((error) => {
-      console.log(moment().format("hh:mm:ss"), "[ERROR] getAll EmpDept", error);
+      console.log(
+        moment().format("hh:mm:ss"),
+        "[ERROR] getAll getEmpAndDeptByID",
+        error
+      );
       res.status(500).json({
-        message: "[ERROR] [getAll] Something went wrong",
+        message: "[ERROR] [getEmpAndDeptByID] Something went wrong",
         error: error,
       });
     });
@@ -161,7 +202,8 @@ const deleteAllEmployee = async (req, res) => {
 
 module.exports = {
   getAllEmployee,
-  getEmployeeAndDepartment,
+  getAllEmpAndDept,
+  getEmpAndDeptByID,
   createEmployee,
   deleteEmployee,
   updateEmployee,

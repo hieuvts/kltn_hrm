@@ -13,15 +13,11 @@ module.exports = {
       },
       managerID: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "AuthAccounts",
-          key: "id",
-        },
       },
       companyID: {
         type: Sequelize.INTEGER,
         references: {
-          model: "companies",
+          model: "Companies",
           key: "id",
         },
       },

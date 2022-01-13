@@ -1,18 +1,21 @@
 const db = require("../models");
 const Department = db.Department;
+const Employee = db.Employee;
 const moment = require("moment");
 
-const getDepartment = async (req, res) => {
-  Department.findAll()
+const getAllDepartment = async (req, res) => {
+  Department.findAll({
+    where: { companyID: req.query.companyID },
+  })
     .then((departments) => {
       if (departments) {
         res.status(200).json(departments);
-        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getAlldepartment");
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getAllDepartment");
       } else {
         res.status(400).json({
           message: "[ERROR] [getAll] Something went wrong",
         });
-        console.log(moment().format("hh:mm:ss"), "[ERROR] getAlldepartment");
+        console.log(moment().format("hh:mm:ss"), "[ERROR] getAllDepartment");
       }
     })
     .catch((error) => {
@@ -28,10 +31,72 @@ const getDepartment = async (req, res) => {
     });
 };
 
+const getAllDeptAndEmp = async (req, res) => {
+  Department.findAll({
+    include: [Employee],
+  })
+    .then((departments) => {
+      if (departments) {
+        res.status(200).json(departments);
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getAllDeptAndEmp");
+      } else {
+        res.status(400).json({
+          message: "[ERROR] [getAllDeptAndEmp] Something went wrong",
+        });
+        console.log(moment().format("hh:mm:ss"), "[ERROR] getAllDeptAndEmp");
+      }
+    })
+    .catch((error) => {
+      console.log(
+        moment().format("hh:mm:ss"),
+        "[ERROR] getAllDeptAndEmp",
+        error
+      );
+      res.status(500).json({
+        message: "[ERROR] [getAllDeptAndEmp] Something went wrong",
+        error: error,
+      });
+    });
+};
+
+const getDeptAndEmpByID = async (req, res) => {
+  if (typeof req.query.id === "undefined" || req.query.id.length === 0) {
+    return res.status(404).json({
+      message: "Department ID is not provided!",
+    });
+  }
+  Department.findAll({
+    where: { id: req.query.id },
+    include: [Employee],
+  })
+    .then((departments) => {
+      if (departments) {
+        res.status(200).json(departments);
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getOneDeptAndEmp");
+      } else {
+        res.status(400).json({
+          message: "[ERROR] [getOneDeptAndEmp] Something went wrong",
+        });
+        console.log(moment().format("hh:mm:ss"), "[ERROR] getOneDeptAndEmp");
+      }
+    })
+    .catch((error) => {
+      console.log(
+        moment().format("hh:mm:ss"),
+        "[ERROR] getOneDeptAndEmp",
+        error
+      );
+      res.status(500).json({
+        message: "[ERROR] [getOneDeptAndEmp] Something went wrong",
+        error: error,
+      });
+    });
+};
+
 const createDepartment = async (req, res) => {
   const dataToInsert = {
     name: req.body.name,
-    manager: req.body.manager,
+    managerID: req.body.managerID,
     companyID: req.body.companyID,
   };
   Department.create(dataToInsert)
@@ -122,7 +187,9 @@ const deleteAllDepartment = async (req, res) => {
 };
 
 module.exports = {
-  getDepartment,
+  getAllDepartment,
+  getAllDeptAndEmp,
+  getDeptAndEmpByID,
   createDepartment,
   deleteDepartment,
   updateDepartment,
