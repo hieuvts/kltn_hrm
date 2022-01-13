@@ -62,7 +62,7 @@ export const updateEmployeeAsync = createAsyncThunk(
   "employee/updateEmployee",
   async (payload, thunkAPI) => {
     try {
-      const res = await employeeService.updateEmployee(payload._id, payload);
+      const res = await employeeService.updateEmployee(payload.id, payload);
 
       return res.data.employees;
     } catch (error) {
@@ -135,9 +135,6 @@ export const employeeSlice = createSlice({
   },
   extraReducers: {
     // Get Employee from server
-    [getEmployeeAsync.pending]: (state, actions) => {
-      console.log("[Pending] getEmployeeAsync state= ", state);
-    },
     [getEmployeeAsync.rejected]: (state, actions) => {
       console.log("[Rejected] getEmployeeAsync errorMsg= ", actions);
     },

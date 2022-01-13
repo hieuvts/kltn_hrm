@@ -256,7 +256,7 @@ export default function EmployeeTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n._id);
+      const newSelecteds = rows.map((n) => n.id);
       // Select all -> add all employee (equals to 'rows') to the selectedEmployeeList
       dispatch(setMultiSelectedEmployeeList(rows));
       setSelected(newSelecteds);
@@ -266,7 +266,7 @@ export default function EmployeeTable() {
   };
 
   const handleClick = (event, employee) => {
-    const id = employee._id;
+    const id = employee.id;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
@@ -392,7 +392,7 @@ export default function EmployeeTable() {
                   .sort(getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row._id);
+                    const isItemSelected = isSelected(row.id);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (

@@ -1,24 +1,19 @@
 import React, { useState, useEffect, useCallback } from "react";
 
-import { useDispatch } from "react-redux";
-import { getDepartmentAsync } from "../../stores/departmentSlice";
-
 import Paper from "@mui/material/Paper";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import MuiAlert from "@mui/material/Alert";
-import { Typography, Button, InputBase } from "@mui/material";
+import { Typography, Button, Snackbar } from "@mui/material";
 import MyBreadcrumbs from "../../components/CustomizedMUIComponents/MyBreadcrumbs";
-import Link from "@mui/material/Link";
 import DepartmentTable from "../../components/Department/DepartmentList";
 import DialogAddDepartment from "../../components/Department/DialogAddDepartment";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
-import SearchIcon from "@mui/icons-material/Search";
 import debounce from "lodash.debounce";
 import MySearchBox from "../../components/CustomizedMUIComponents/StyledSearchBox";
-import { Snackbar } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { getDepartmentAsync } from "../../stores/departmentSlice";
+import { getEmployeeAsync } from "../../stores/employeeSlice";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -40,9 +35,6 @@ export default function Department() {
     setDialogOpen(true);
   };
 
-  // const setDialogExportEmployeeClose = () => {
-  //   setDialogExportEmployeeOpen(false);
-  // };
   const handleDialogClose = () => {
     setDialogOpen(false);
   };
@@ -69,7 +61,7 @@ export default function Department() {
 
   useEffect(() => {
     debounceFetchAPI(searchQuery);
-    // dispatch(getEmployeeAsync());
+    dispatch(getEmployeeAsync());
   }, [handleSearchQueryChange]);
 
   return (

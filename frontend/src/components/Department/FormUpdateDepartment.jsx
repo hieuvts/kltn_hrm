@@ -31,7 +31,7 @@ export default function FormUpdateDepartment({
 }) {
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
-  const departments = useSelector((state) => state.department.departmentList);
+  const employees = useSelector((state) => state.employee.employeeList);
 
   const handleSbSuccessClose = () => {
     setSbSuccessOpen(false);
@@ -41,29 +41,8 @@ export default function FormUpdateDepartment({
   };
 
   const dispatch = useDispatch();
-  // state.currentSelectedEmployee
-  // has key/value departments with full data (id, name, headOfDepartment,...)
-  // => Extract only department name, pass it as an array, not JS object
-  // Start - Handling departments value
+
   var formikInitialValues = { ...initialValues };
-
-  //   const initDepartmentValue = formikInitialValues["departments"].map(
-  //     ({ name }) => ({ name })
-  //   );
-  //   const initRoleValue = formikInitialValues["roles"].map(
-  //     ({ name }) => ({ name })
-  //   );
-
-  //   const departmentNameArr = initDepartmentValue.map((x) => x.name);
-  //   const roleNameArr = initRoleValue.map((x) => x.name);
-
-  //   delete formikInitialValues.departments;
-  //   delete formikInitialValues.roles;
-
-  //   formikInitialValues["departments"] = departmentNameArr;
-  //   formikInitialValues["roles"] = roleNameArr;
-  // End - Handling departments value
-
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: formikInitialValues,
@@ -98,13 +77,8 @@ export default function FormUpdateDepartment({
             label="Name of Department"
             value={formik.values.name}
             onChange={formik.handleChange}
-            error={
-              formik.touched.name &&
-              Boolean(formik.errors.name)
-            }
-            helperText={
-              formik.touched.name && formik.errors.name
-            }
+            error={formik.touched.name && Boolean(formik.errors.name)}
+            helperText={formik.touched.name && formik.errors.name}
             sx={{ mb: 3 }}
           />
           <TextField
@@ -119,17 +93,25 @@ export default function FormUpdateDepartment({
             sx={{ mb: 3 }}
           />
           {/* <InputLabel id="gender">Gender</InputLabel> */}
-          <TextField
-            fullWidth
-            id="manager"
-            name="manager"
-            label="Name of Manager"
-            value={formik.values.manager}
-            onChange={formik.handleChange}
-            error={formik.touched.manager && Boolean(formik.errors.manager)}
-            helperText={formik.touched.manager && formik.errors.manager}
-            sx={{ mb: 3 }}
-          />
+          <FormControl fullWidth>
+            <InputLabel id="manager-label">Manager</InputLabel>
+            <Select
+              labelId="manager-label"
+              id="manager"
+              name="manager"
+              label="Manager"
+              fullWidth
+              value={formik.values.manager}
+              onChange={formik.handleChange}
+              sx={{ mb: 3 }}
+            >
+              {employees.map((employee, index) => (
+                <MenuItem key={index} value={employee.id}>
+                  {employee.fname + " " + employee.lname}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
           <Button variant="contained" color="primary" fullWidth type="submit">
             UPDATE

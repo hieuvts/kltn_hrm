@@ -45,22 +45,7 @@ export default function FormUpdateEmployeeInformation({
   // => Extract only department name, pass it as an array, not JS object
   // Start - Handling departments value
   var formikInitialValues = { ...initialValues };
-  
-  const initDepartmentValue = formikInitialValues["departments"].map(
-    ({ name }) => ({ name })
-  );
-  const initRoleValue = formikInitialValues["roles"].map(
-    ({ name }) => ({ name })
-  );
 
-  const departmentNameArr = initDepartmentValue.map((x) => x.name);
-  const roleNameArr = initRoleValue.map((x) => x.name);
-
-  delete formikInitialValues.departments;
-  delete formikInitialValues.roles;
-  
-  formikInitialValues["departments"] = departmentNameArr;
-  formikInitialValues["roles"] = roleNameArr;
   // End - Handling departments value
 
   const FormikWithMUI = () => {
@@ -68,6 +53,7 @@ export default function FormUpdateEmployeeInformation({
       initialValues: formikInitialValues,
       validationSchema: employeeInfoValidationSchema,
       onSubmit: (values) => {
+        values.departmentID = values.departmentID.toString();
         dispatch(updateEmployeeAsync(values))
           .unwrap()
           .then(() => {
@@ -160,28 +146,19 @@ export default function FormUpdateEmployeeInformation({
             </Grid>
             <Grid item sm={12} md={6}>
               <FormControl fullWidth>
-                <InputLabel id="departments-label">Departments</InputLabel>
+                <InputLabel id="departments-label">Department</InputLabel>
                 <Select
                   labelId="departments-label"
-                  id="departments"
-                  fullWidth 
-                  multiple
-                  value={formik.values.departments}
-                  onChange={(e) => {
-                    formik.setFieldValue("departments", e.target.value);
-                  }}
-                  input={<OutlinedInput id="departments" label="Departments" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
+                  id="departmentID"
+                  label="Department"
+                  fullWidth
+                  name="departmentID"
+                  value={formik.values.departmentID}
+                  onChange={formik.handleChange}
                   sx={{ mb: 3 }}
                 >
                   {departments.map((department, index) => (
-                    <MenuItem key={index} value={department.name}>
+                    <MenuItem key={index} value={department.id}>
                       {department.name}
                     </MenuItem>
                   ))}

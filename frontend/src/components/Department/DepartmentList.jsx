@@ -237,7 +237,7 @@ export default function DepartmentTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n._id);
+      const newSelecteds = rows.map((n) => n.id);
       // Select all -> add all employee (equals to 'rows') to the selectedEmployeeList
       dispatch(setMultiSelectedDepartmentList(rows));
       setSelected(newSelecteds);
@@ -247,7 +247,7 @@ export default function DepartmentTable() {
   };
 
   const handleClick = (event, department) => {
-    const id = department._id;
+    const id = department.id;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
@@ -372,7 +372,7 @@ export default function DepartmentTable() {
                   .sort(getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row._id);
+                    const isItemSelected = isSelected(row.id);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
@@ -381,7 +381,7 @@ export default function DepartmentTable() {
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row._id}
+                        key={row.id}
                         selected={isItemSelected}
                       >
                         <TableCell padding="checkbox">

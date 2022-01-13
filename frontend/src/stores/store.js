@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import employeeReducer from "./employeeSlice";
 import departmentReducer from "./departmentSlice";
 import authReducer from "./authSlice";
@@ -20,6 +20,10 @@ const reducers = {
 const store = configureStore({
   reducer: reducers,
   devTools: true,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export default store;

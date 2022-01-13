@@ -21,7 +21,7 @@ export const getDepartmentAsync = createAsyncThunk(
     try {
       const res = await departmentService.getAllDepartment(searchQuery);
 
-      return res.data.departments;
+      return res.data;
     } catch (error) {
       const message =
         (error.response &&
@@ -63,7 +63,7 @@ export const updateDepartmentAsync = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const res = await departmentService.updateDepartment(
-        payload._id,
+        payload.id,
         payload
       );
 

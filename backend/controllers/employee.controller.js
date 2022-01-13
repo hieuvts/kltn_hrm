@@ -53,7 +53,7 @@ const createEmployee = async (req, res) => {
 };
 
 const updateEmployee = async (req, res) => {
-  console.log("invoked update");
+  console.log("update values \n", req.body);
   Employee.update(req.body, {
     where: { id: req.query.id },
   })
@@ -71,7 +71,11 @@ const updateEmployee = async (req, res) => {
       }
     })
     .catch((error) => {
-      console.log(moment().format("hh:mm:ss"), "[ERROR] updateEmployee");
+      console.log(
+        moment().format("hh:mm:ss"),
+        "[ERROR] updateEmployee",
+        error.message
+      );
       return res.status(500).json({
         error: error,
       });

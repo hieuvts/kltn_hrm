@@ -51,7 +51,7 @@ const createDepartment = async (req, res) => {
 };
 
 const updateDepartment = async (req, res) => {
-  console.log("invoked update");
+  console.log("invoked update", req.body);
   Department.update(req.body, {
     where: { id: req.query.id },
   })
