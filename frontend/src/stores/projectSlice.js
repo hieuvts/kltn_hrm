@@ -21,7 +21,7 @@ export const getProjectAsync = createAsyncThunk(
     try {
       const res = await projectService.getAllProject(searchQuery);
 
-      return res.data.projects;
+      return res.data;
     } catch (error) {
       const message =
         (error.response &&

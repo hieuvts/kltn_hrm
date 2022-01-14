@@ -21,7 +21,7 @@ export const getTaskAsync = createAsyncThunk(
     try {
       const res = await taskService.getAllTask(searchQuery);
 
-      return res.data.tasks;
+      return res.data;
     } catch (error) {
       const message =
         (error.response &&

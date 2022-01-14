@@ -25,12 +25,7 @@ const getTask = async (req, res) => {
 };
 
 const createTask = async (req, res) => {
-  const dataToInsert = {
-    name: req.body.name,
-    startDate: req.body.startDate || new Date(),
-    endDate: req.body.endDate,
-    departmentID: req.body.departmentID,
-  };
+  const dataToInsert = req.body;
   Task.create(dataToInsert)
     .then((task) => {
       res.status(200).json({
