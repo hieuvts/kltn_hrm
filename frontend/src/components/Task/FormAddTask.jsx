@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
@@ -26,7 +27,7 @@ export default function FormAddTask({
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
   const [progressSliderValue, setProgressSliderValue] = useState(0);
- 
+
   const employees = useSelector((state) => state.employee.employeeList);
   const projects = useSelector((state) => state.project.projectList);
   const handleSbSuccessClose = () => {
@@ -61,7 +62,7 @@ export default function FormAddTask({
   const getProgressSliderValue = (value) => {
     return `${value}`;
   };
-  
+
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
@@ -84,15 +85,21 @@ export default function FormAddTask({
     return (
       <div style={{ marginTop: "30px" }}>
         <form onSubmit={formik.handleSubmit}>
-        <Box sx= {{display: "flex", justifyContent:"center", marginBottom: "40px"}}>
-              <Slider
-                aria-label="progessSlider"
-                defaultValue={0}
-                getAriaValueText={getProgressSliderValue}
-                step={10}
-                valueLabelDisplay="on"
-                marks={progressSliderMarks}
-              />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "40px",
+            }}
+          >
+            <Slider
+              aria-label="progessSlider"
+              defaultValue={0}
+              getAriaValueText={getProgressSliderValue}
+              step={10}
+              valueLabelDisplay="on"
+              marks={progressSliderMarks}
+            />
           </Box>
           <Grid container rowSpacing={3} columnSpacing={3}>
             <Grid item sm={12} md={6}>

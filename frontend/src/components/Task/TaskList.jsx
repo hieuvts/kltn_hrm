@@ -252,7 +252,7 @@ export default function TaskList() {
                             return (
                               <Draggable
                                 key={index}
-                                draggableId={item._id}
+                                draggableId={item.id}
                                 index={index}
                               >
                                 {(provided, snapshot) => {
