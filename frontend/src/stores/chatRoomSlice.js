@@ -24,27 +24,6 @@ export const createChatRoom = createAsyncThunk(
     }
   }
 );
-export const getAllChatRoom = createAsyncThunk(
-  "chat/getAllChatRoom",
-  async (payload, thunkAPI) => {
-    try {
-      const res = await chatService.getAllChatRoom();
-      console.log("getall chatroom ", res.data);
-      return res.data.chatrooms;
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      if (error.response.status === 401) {
-        thunkAPI.dispatch(logout());
-      }
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
 
 export const getChatRoomInfo = createAsyncThunk(
   "chat/getChatRoomInfo",
@@ -124,18 +103,6 @@ export const chatRoomSlice = createSlice({
     [getChatRoomInfo.fulfilled]: (state, actions) => {
       state.push(actions.payload);
       console.log("[Fulfilled] getChatRoomInfo", actions);
-    },
-
-    //
-    [getAllChatRoom.pending]: (state, actions) => {
-      console.log("[Pending] getChatRoomInfo", actions);
-    },
-    [getAllChatRoom.rejected]: (state, actions) => {
-      console.log("[Rejected] getAllChatRoom", actions.payload);
-    },
-    [getAllChatRoom.fulfilled]: (state, actions) => {
-      console.log("[Fulfilled] getAllChatRoom", actions);
-      return actions.payload;
     },
 
     //

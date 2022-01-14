@@ -33,7 +33,7 @@ export const login = createAsyncThunk(
   async (payload, thunkAPI) => {
     try {
       const data = await authService.login(payload.email, payload.password);
-      return { user: data};
+      return { user: data };
     } catch (error) {
       const message =
         (error.response &&
@@ -50,6 +50,27 @@ export const login = createAsyncThunk(
 export const logout = createAsyncThunk("auth/logout", async () => {
   await authService.logout();
 });
+
+export const getChatRoomByAuthAccount = createAsyncThunk(
+  "auth/getChatRoomByAuthAccount",
+  async (payload, thunkAPI) => {
+    try {
+      const res = await authService.getChatRoomByAuthAccount(payload.id);
+      return res.data.ChatRooms;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const authSlice = createSlice({
   name: "auth",
@@ -85,6 +106,14 @@ export const authSlice = createSlice({
       state.isLoggedIn = false;
       state.user = null;
       console.log("[Fulfilled] logout success");
+    },
+
+    [getChatRoomByAuthAccount.rejected]: (state, actions) => {
+      console.log("[Rejected] getChatRoomByAuthAccount ", actions.payload);
+    },
+    [getChatRoomByAuthAccount.fulfilled]: (state, actions) => {
+      return { ...state, chatRooms: actions.payload };
+      console.log("[Fulfilled] getChatRoomByAuthAccount");
     },
   },
 });

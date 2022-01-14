@@ -1,8 +1,13 @@
 require("dotenv").config({ path: "./config/.env" });
 const db = require("../models");
 const AuthAccount = db.AuthAccount;
+const ChatMessage = db.ChatMessage;
+const ChatRoom = db.ChatRoom;
+const Company = db.Company;
+
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
+const authaccount = require("../models/authaccount");
 const jwtSecret = process.env.JWT_SECRET;
 
 const signUp = (req, res, next) => {
@@ -134,9 +139,29 @@ const deleteAuthAccount = async (req, res) => {
     });
 };
 
+const getChatRooms = (req, res) => {
+  console.log("invoked getChatRooms");
+  AuthAccount.findOne({
+    where: { id: req.query.id },
+    include: [ChatRoom],
+  })
+    .then((authAccount) => {
+      if (!authAccount) {
+        return res.status(404).send({
+          message: `Account with email ${req.body.email} not found`,
+        });
+      }
+      res.status(200).send(authAccount);
+    })
+    .catch((error) => {
+      console.log("error when get chatRooms", error);
+      return res.status(401).send({ error: error.message });
+    });
+};
 module.exports = {
   signUp,
   login,
+  getChatRooms,
   changePassword,
   deleteAuthAccount,
 };

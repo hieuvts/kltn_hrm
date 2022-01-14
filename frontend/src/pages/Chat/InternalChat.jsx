@@ -17,29 +17,29 @@ import { useSelector, useDispatch } from "react-redux";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import FriendList from "../../components/Chat/FriendList";
 import ChatPanel from "../../components/Chat/ChatPanel";
-import { getAllChatRoom } from "../../stores/chatRoomSlice";
 import StyledSearchBox from "../../components/CustomizedMUIComponents/StyledSearchBox";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import { getChatRoomByAuthAccount } from "../../stores/authSlice";
 import "./InternalChat.scss";
 
 export default function InternalChat() {
   const user = JSON.parse(localStorage.getItem("user"));
-  const currentUser = useSelector((state) => state.user.currentUser);
   const [value, setValue] = React.useState(0);
-  const chatRoom = useSelector((state) => state.chatRoom);
   const [selectedTab, setSelectedTab] = useState(0);
+  const chatRooms = useSelector((state) => state.auth.chatRooms);
   const dispatch = useDispatch();
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   const handleGetAllChatRoom = () => {
-    dispatch(getAllChatRoom());
+    dispatch(getChatRoomByAuthAccount({ id: user.id }));
   };
+
   useEffect(() => {
     console.log("Get all room message");
     handleGetAllChatRoom();
   }, [value, setSelectedTab]);
-  // useEffect(() => {}, []);
+
   return (
     <div className="chatContainer">
       <Tabs>
@@ -47,7 +47,7 @@ export default function InternalChat() {
           <div className="friendSearch">
             <StyledSearchBox placeholder="Search for chat..." />
           </div>
-          {currentUser.chatRooms.map((room, index) => (
+          {chatRooms.map((room, index) => (
             <Tab key={index} onClick={() => setSelectedTab(index)}>
               <ListItem component={"div"}>
                 <ListItemAvatar sx={{ alignSelf: "center" }}>
@@ -63,37 +63,37 @@ export default function InternalChat() {
                       <Typography variant="body1">{room.name}</Typography>
                     </React.Fragment>
                   }
-                  secondary={
-                    <React.Fragment>
-                      {(typeof room.messages !== "undefined") &
-                        (room.messages.length >= 1) && (
-                        <Typography component={"span"} variant="body2">
-                          {room.messages.slice(-1)[0].sender === user.email
-                            ? "You"
-                            : room.messages.slice(-1)[0].sender}
-                          {": "}
-                          {room.messages.slice(-1)[0].message.slice(-30)}
-                        </Typography>
-                      )}
-                    </React.Fragment>
-                  }
+                  // secondary={
+                  //   <React.Fragment>
+                  //     {(typeof room.messages !== "undefined") &
+                  //       (room.messages.length >= 1) && (
+                  //       <Typography component={"span"} variant="body2">
+                  //         {room.messages.slice(-1)[0].sender === user.email
+                  //           ? "You"
+                  //           : room.messages.slice(-1)[0].sender}
+                  //         {": "}
+                  //         {room.messages.slice(-1)[0].message.slice(-30)}
+                  //       </Typography>
+                  //     )}
+                  //   </React.Fragment>
+                  // }
                 />
               </ListItem>
             </Tab>
           ))}
         </TabList>
 
-        {currentUser.chatRooms.map((room, index) => (
+        {/* {chatRooms.map((room, index) => (
           <TabPanel key={index} value={value} index={index}>
             <ChatPanel
-              chatRoomId={room._id}
+              chatRoomId={room.id}
               roomName={room.name}
-              totalMember={room.members.length}
+              totalMember={4}
               roomMessages={room.messages}
               sx={{ m: 0, p: 0 }}
             />
           </TabPanel>
-        ))}
+        ))} */}
       </Tabs>
     </div>
   );
