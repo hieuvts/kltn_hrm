@@ -52,7 +52,6 @@ const statusColumn = {
 };
 
 const addItemToColumn = (items) => {
-  let idList = [];
   statusColumn.Pending.items = [];
   statusColumn.InProgress.items = [];
   statusColumn.Finish.items = [];
@@ -70,6 +69,7 @@ const addItemToColumn = (items) => {
         break;
     }
   });
+  console.log(statusColumn);
 };
 const setBackGroundColor = (status) => {
   let backgroundColor;
@@ -156,6 +156,7 @@ export default function TaskList() {
   };
   addItemToColumn(items);
   const [columns, setColumns] = React.useState(statusColumn);
+
   const CardAction = (currentSelectedTask) => {
     const dispatch = useDispatch();
     return (
@@ -181,6 +182,7 @@ export default function TaskList() {
       </Box>
     );
   };
+  
   return (
     <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
       <DialogDeleteTask
@@ -386,9 +388,7 @@ export default function TaskList() {
                                           justifyContent: "flex-end",
                                         }}
                                       >
-                                        <CardAction
-                                          currentSelectedTask={item}
-                                        />
+                                        <CardAction currentSelectedTask={item} />
                                       </Box>
                                     </Card>
                                   );

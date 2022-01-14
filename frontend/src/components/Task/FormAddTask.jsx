@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { addTaskAsync, getTaskAsync } from "../../stores/taskSlice";
 import { taskInformationValidationSchema } from "../../utilities/validationSchema";
-
+import { Box } from "@mui/material";
 export default function FormAddTask({
   handleCloseDialog,
   submitButtonText,
@@ -85,7 +85,7 @@ export default function FormAddTask({
     return (
       <div style={{ marginTop: "30px" }}>
         <form onSubmit={formik.handleSubmit}>
-          <Box
+        <Box
             sx={{
               display: "flex",
               justifyContent: "center",
@@ -192,7 +192,6 @@ export default function FormAddTask({
                       helperText={
                         formik.touched.endDate && formik.errors.dueDate
                       }
-                      dueDate
                       sx={{ mb: 3 }}
                     />
                   )}
@@ -235,6 +234,7 @@ export default function FormAddTask({
                   ))}
                 </Select>
               </FormControl>
+              
               <FormControl fullWidth>
                 <InputLabel id="p-label">Priority</InputLabel>
                 <Select
