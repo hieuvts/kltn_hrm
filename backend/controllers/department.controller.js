@@ -1,151 +1,200 @@
-const Department = require("../models/department.model");
+const db = require("../models");
+const { QueryTypes } = require("sequelize");
+const Department = db.Department;
+const Employee = db.Employee;
+const moment = require("moment");
 
-// GET BY ID
-const getDepartmentById = async (req, res, next, departmentId) => {
-  // Get Department details from Department model and
-  // attach to request object
-  // https://expressjs.com/en/4x/api.html#router.param
-  console.log("Trigger getDepartmentByID");
-  console.log(Department);
-  Department.findById(departmentId).exec((error, result) => {
-    if (error || !result) {
-      console.log(`Department ${departmentId} is not found`);
-      res.status(404).json({
-        message: "[ERROR] [Controller] Department not found!",
-      });
-      return;
-    } else {
-      console.log(`Department ${departmentId} found!`);
-    }
-    req.department = result;
-    next();
-  });
-};
-
-// GET ALL
+// get departmens of selected company
 const getAllDepartment = async (req, res) => {
-  let query = req.query.search;
-  let departments = {};
-
-  if (typeof query === "undefined" || query.length === 0) {
-    console.log("Return all departments");
-    departments = await Department.find();
-  } else {
-    console.log("Return departments with search= ", query);
-    departments = await Department.find().or([
-      {
-        name: {
-          $regex: query,
-          $options: "i",
-        },
-      },
-      {
-        manager: {
-          $regex: query,
-          $options: "i",
-        },
-      },
-    ]);
-  }
-
-  if (departments) {
-    res.status(200).json({ departments });
-  } else {
-    res.status(400).json({
-      message: "[ERROR] [getAll] Something went wrong",
+  const companyID = req.query.companyID || 1;
+  Department.findAll({
+    where: { companyID: companyID },
+  })
+    .then((departments) => {
+      if (departments) {
+        res.status(200).json(departments);
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getAllDepartment");
+      } else {
+        res.status(400).json({
+          message: "[ERROR] [getAll] Something went wrong",
+        });
+        console.log(moment().format("hh:mm:ss"), "[ERROR] getAllDepartment");
+      }
+    })
+    .catch((error) => {
+      console.log(
+        moment().format("hh:mm:ss"),
+        "[ERROR] getAllDepartment",
+        error
+      );
+      res.status(500).json({
+        message: "[ERROR] [getAll] Something went wrong",
+        error: error,
+      });
     });
-  }
 };
 
-// Create Department
+const getAllDeptAndEmp = async (req, res) => {
+  Department.findAll({
+    include: [Employee],
+  })
+    .then((departments) => {
+      if (departments) {
+        res.status(200).json(departments);
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getAllDeptAndEmp");
+      } else {
+        res.status(400).json({
+          message: "[ERROR] [getAllDeptAndEmp] Something went wrong",
+        });
+        console.log(moment().format("hh:mm:ss"), "[ERROR] getAllDeptAndEmp");
+      }
+    })
+    .catch((error) => {
+      console.log(
+        moment().format("hh:mm:ss"),
+        "[ERROR] getAllDeptAndEmp",
+        error
+      );
+      res.status(500).json({
+        message: "[ERROR] [getAllDeptAndEmp] Something went wrong",
+        error: error,
+      });
+    });
+};
+
+const getDeptAndEmpByID = async (req, res) => {
+  if (typeof req.query.id === "undefined" || req.query.id.length === 0) {
+    return res.status(404).json({
+      message: "Department ID is not provided!",
+    });
+  }
+  Department.findAll({
+    where: { id: req.query.id },
+    include: [Employee],
+  })
+    .then((departments) => {
+      if (departments && departments.length !== 0) {
+        res.status(200).json(departments);
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getOneDeptAndEmp");
+      } else {
+        res.status(400).json({
+          message: "[ERROR] [getOneDeptAndEmp] Something went wrong",
+        });
+        console.log(moment().format("hh:mm:ss"), "[ERROR] getOneDeptAndEmp");
+      }
+    })
+    .catch((error) => {
+      console.log(
+        moment().format("hh:mm:ss"),
+        "[ERROR] getOneDeptAndEmp",
+        error
+      );
+      res.status(500).json({
+        message: "[ERROR] [getOneDeptAndEmp] Something went wrong",
+        error: error,
+      });
+    });
+};
+
 const createDepartment = async (req, res) => {
-  console.log("Invoked create Department");
-  const department = new Department(req.body);
-  department.save((error, result) => {
-    if (error || !result) {
-      res.status(400).json({
-        message: "[ERROR] [post] ",
-        errMsg: error.message,
-      });
-    } else {
-      res.json({
-        message: "Create department successfully!",
-      });
-    }
-  });
-};
-
-// Update Department
-const putDepartment = async (req, res) => {
-  const department = req.department;
-  // typeof req.body.name === "undefined"
-  //   ? (Department.name = Department.name)
-  //   : (Department.name = req.body.name);
-  typeof req.body.name !== "undefined" && (department.name = req.body.name);
-  typeof req.body.manager !== "undefined" &&
-    (department.manager = req.body.manager);
-  typeof req.body.amount !== "undefined" &&
-    (department.amount = req.body.amount);
-  typeof req.body.isDeleted !== "undefined" &&
-    (department.isDeleted = req.body.isDeleted);
-
-  department.save((error, result) => {
-    if (error || !result) {
-      return res.status(400).json({
-        message: "[UPDATE] Something went wrong",
-        error: error,
-      });
-    }
-    res.json({
-      message: "Update department successfully",
-      Department: department,
-    });
-  });
-};
-
-// Delete one Department
-const deleteDepartment = async (req, res) => {
-  console.log(req);
-  const department = req.department;
-  Department.deleteOne({ _id: department._id }, (error, result) => {
-    if (error || !result) {
-      res.status(400).json({
-        message: "Can't delete!!!",
-        error: error,
-      });
-    } else {
+  const dataToInsert = {
+    name: req.body.name,
+    manager: req.body.managerID,
+    companyID: req.body.companyID || 1,
+  };
+  Department.create(dataToInsert)
+    .then((department) => {
       res.status(200).json({
-        message: "Delete successfully!",
-        result: result,
+        message: "Create departments successfully!",
       });
-    }
-  });
+      console.log(moment().format("hh:mm:ss"), "[SUCCESS] createDepartment");
+    })
+    .catch((error) => {
+      console.log(moment().format("hh:mm:ss"), "[ERROR] getAllDepartment");
+      res.status(500).json({
+        message: "[ERROR] [getAll] Something went wrong",
+        error: error,
+      });
+    });
 };
 
-// Delete all Department
-const deleteAllDepartment = async (req, res) => {
-  console.log("Invoked deleteAllDepartment");
-  // const count = req.body.count;
-  // Removes all documents that match the filter from a collection.
-  // To delete all documents in a collection,
-  // pass in an empty document ({ }).
-  Department.deleteMany((error, result) => {
-    if (error || !result) {
-      return res.status(400).json({
-        message: "[ERROR] [deleteAll] Something went wrong",
+const updateDepartment = async (req, res) => {
+  console.log("invoked update", req.body);
+  Department.update(req.body, {
+    where: { id: req.query.id },
+  })
+    .then((affectedRows) => {
+      if (affectedRows == 1) {
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] updateDepartment");
+        res.status(200).json({
+          message: "Update department successfully",
+        });
+      } else {
+        console.log(moment().format("hh:mm:ss"), "[Can't] updateDepartment");
+        return res.status(400).json({
+          message: "Can't update department",
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(moment().format("hh:mm:ss"), "[ERROR] updateDepartment");
+      return res.status(500).json({
+        error: error,
       });
-    }
-    res.json({
-      message: "Delete all department successfully!",
     });
-  });
+};
+
+const deleteDepartment = async (req, res) => {
+  console.log("==> ", req.query.id);
+  Department.destroy({ where: { id: req.query.id } })
+    .then((affectedRows) => {
+      if (affectedRows == 1) {
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] deleteDepartment");
+        res.status(200).json({
+          message: "Delete department successfully",
+        });
+      } else {
+        console.log(moment().format("hh:mm:ss"), "[Can't] deleteDepartment");
+        return res.status(400).json({
+          message: "Can't delete department",
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(moment().format("hh:mm:ss"), "[ERROR] deleteDepartment");
+      return res.status(500).json({
+        error: error,
+      });
+    });
+};
+
+const deleteAllDepartment = async (req, res) => {
+  Department.destroy({ where: {}, truncate: false })
+    .then((affectedRows) => {
+      console.log(
+        moment().format("hh:mm:ss"),
+        "[SUCCESS] deleteDepartment rows= ",
+        affectedRows
+      );
+      res.status(200).json({
+        message: "Delete all department successfully",
+        affectedRows: affectedRows,
+      });
+    })
+    .catch((error) => {
+      console.log(moment().format("hh:mm:ss"), "[ERROR] deleteDepartment");
+      return res.status(500).json({
+        error: error,
+      });
+    });
 };
 
 module.exports = {
-  getDepartmentById,
   getAllDepartment,
+  getAllDeptAndEmp,
+  getDeptAndEmpByID,
   createDepartment,
-  putDepartment,
-  deleteAllDepartment,
   deleteDepartment,
+  updateDepartment,
+  deleteAllDepartment,
 };

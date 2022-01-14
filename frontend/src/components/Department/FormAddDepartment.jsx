@@ -3,15 +3,14 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 import PropTypes from "prop-types";
 import MuiAlert from "@mui/material/Alert";
 import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addDepartmentAsync } from "../../stores/departmentSlice";
 import { departmentInformationValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
@@ -27,6 +26,8 @@ export default function FormAddDepartmentInformation({
 }) {
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
+  const employees = useSelector((state) => state.employee.employeeList);
+
   const handleSbSuccessClose = () => {
     setSbSuccessOpen(false);
   };
@@ -63,8 +64,13 @@ export default function FormAddDepartmentInformation({
             label="Name of Department"
             value={formik.values.departmentName}
             onChange={formik.handleChange}
-            error={formik.touched.departmentName && Boolean(formik.errors.departmentName)}
-            helperText={formik.touched.departmentName && formik.errors.departmentName}
+            error={
+              formik.touched.departmentName &&
+              Boolean(formik.errors.departmentName)
+            }
+            helperText={
+              formik.touched.departmentName && formik.errors.departmentName
+            }
             sx={{ mb: 3 }}
           />
           <TextField
@@ -78,18 +84,28 @@ export default function FormAddDepartmentInformation({
             helperText={formik.touched.amount && formik.errors.amount}
             sx={{ mb: 3 }}
           />
-          {/* <InputLabel id="gender">Gender</InputLabel> */}
-          <TextField
-            fullWidth
-            id="manager"
-            name="manager"
-            label="Name of Manager"
-            value={formik.values.manager}
-            onChange={formik.handleChange}
-            error={formik.touched.manager && Boolean(formik.errors.manager)}
-            helperText={formik.touched.manager && formik.errors.manager}
-            sx={{ mb: 3 }}
-          />
+          <FormControl fullWidth>
+            <InputLabel id="manager-label">Manager</InputLabel>
+            <Select
+              labelId="manager-label"
+              id="manager"
+              name="manager"
+              label="Manager"
+              fullWidth
+              value={formik.values.manager}
+              onChange={formik.handleChange}
+              sx={{ mb: 3 }}
+            >
+              {employees.map((employee, index) => (
+                <MenuItem
+                  key={index}
+                  value={employee.fname + " " + employee.lname}
+                >
+                  {employee.fname + " " + employee.lname}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
           <Button variant="contained" color="primary" fullWidth type="submit">
             SUBMIT
@@ -125,7 +141,8 @@ FormAddDepartmentInformation.defaultProps = {
   initialValues: {
     name: "",
     amount: "",
-    manager: ""
+    manager: "",
+    companyID: 1,
   },
   submitButtonText: "SUBMIT",
 };

@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authService from "../services/auth.service";
 import chatService from "../services/chat.service";
+import chatRoomDetailsService from "../services/chatRoomDetails.service";
 import { logout } from "./authSlice";
 
 const initialState = [];
 
 export const createChatRoom = createAsyncThunk(
-  "chat/createChatRoom",
+  "chatRoom/createChatRoom",
   async (payload, thunkAPI) => {
     try {
       const data = await chatService.createChatRoom(payload.chatRoomInfo);
@@ -24,30 +25,9 @@ export const createChatRoom = createAsyncThunk(
     }
   }
 );
-export const getAllChatRoom = createAsyncThunk(
-  "chat/getAllChatRoom",
-  async (payload, thunkAPI) => {
-    try {
-      const res = await chatService.getAllChatRoom();
-      console.log("getall chatroom ", res.data);
-      return res.data.chatrooms;
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      if (error.response.status === 401) {
-        thunkAPI.dispatch(logout());
-      }
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
 
 export const getChatRoomInfo = createAsyncThunk(
-  "chat/getChatRoomInfo",
+  "chatRoom/getChatRoomInfo",
   async (payload, thunkAPI) => {
     try {
       const data = await chatService.getChatRoomInfo(payload.chatRoomId);
@@ -65,8 +45,31 @@ export const getChatRoomInfo = createAsyncThunk(
     }
   }
 );
+export const getQtyMemberInRoomID = createAsyncThunk(
+  "chatRoom/getQtyMemberInRoomID",
+  async (payload, thunkAPI) => {
+    try {
+      const res = await chatRoomDetailsService.getQtyMemberInRoomID(
+        payload.chatRoomId
+      );
+      return res.data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const getChatMessage = createAsyncThunk(
-  "chat/getChatMessage",
+  "chatRoom/getChatMessage",
   async (payload, thunkAPI) => {
     console.log("check get", payload);
     try {
@@ -88,7 +91,7 @@ export const getChatMessage = createAsyncThunk(
   }
 );
 export const addMessageToRoom = createAsyncThunk(
-  "chat/addMessageToRoom",
+  "chatRoom/addMessageToRoom",
   async (payload, thunkAPI) => {
     try {
       const res = await chatService.addMessageToRoom(
@@ -126,16 +129,12 @@ export const chatRoomSlice = createSlice({
       console.log("[Fulfilled] getChatRoomInfo", actions);
     },
 
-    //
-    [getAllChatRoom.pending]: (state, actions) => {
-      console.log("[Pending] getChatRoomInfo", actions);
+    [getQtyMemberInRoomID.rejected]: (state, actions) => {
+      console.log("[Rejected] getQtyMemberInRoomID", actions.payload);
     },
-    [getAllChatRoom.rejected]: (state, actions) => {
-      console.log("[Rejected] getAllChatRoom", actions.payload);
-    },
-    [getAllChatRoom.fulfilled]: (state, actions) => {
-      console.log("[Fulfilled] getAllChatRoom", actions);
-      return actions.payload;
+    [getQtyMemberInRoomID.fulfilled]: (state, actions) => {
+      console.log("[Fulfilled] getQtyMemberInRoomID", actions.payload);
+      return { ...state, QtyMemberInRoomID: actions.payload };
     },
 
     //

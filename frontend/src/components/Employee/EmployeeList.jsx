@@ -170,6 +170,7 @@ const EnhancedTableToolbar = (props) => {
   // Get selectedEmployeeList to delete multiple, delete all
   const selectedEmployeeList = useSelector((state) => state.employee);
   const auth = useSelector((state) => state.auth);
+
   const handleDeleteMultipleEmployee = () => {
     setDialogDeleteMultipleEmployeeOpen(true);
   };
@@ -248,6 +249,7 @@ export default function EmployeeTable() {
     React.useState(false);
   const dispatch = useDispatch();
   var rows = useSelector((state) => state.employee.employeeList);
+  const departments = useSelector((state) => state.department.departmentList);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -256,7 +258,7 @@ export default function EmployeeTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n._id);
+      const newSelecteds = rows.map((n) => n.id);
       // Select all -> add all employee (equals to 'rows') to the selectedEmployeeList
       dispatch(setMultiSelectedEmployeeList(rows));
       setSelected(newSelecteds);
@@ -266,7 +268,7 @@ export default function EmployeeTable() {
   };
 
   const handleClick = (event, employee) => {
-    const id = employee._id;
+    const id = employee.id;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
@@ -392,7 +394,7 @@ export default function EmployeeTable() {
                   .sort(getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row._id);
+                    const isItemSelected = isSelected(row.id);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
@@ -458,15 +460,13 @@ export default function EmployeeTable() {
                         </TableCell>
                         <TableCell align="right">{row.email}</TableCell>
                         <TableCell align="right">{row.phoneNumber}</TableCell>
+                        <TableCell align="right">{row.position}</TableCell>
                         <TableCell align="right">
-                          {row.roles.map((role, index) => (
-                            <p key={index}>{role.name}</p>
-                          ))}
-                        </TableCell>
-                        <TableCell align="right">
-                          {row.departments.map((department, index) => (
-                            <p key={index}>{department.name}</p>
-                          ))}
+                          {departments.map((department) => {
+                            if (department.id == row.departmentID) {
+                              return department.name;
+                            }
+                          })}
                         </TableCell>
                         <TableCell align="right">
                           <RowActions currentSelectedEmployee={row} />

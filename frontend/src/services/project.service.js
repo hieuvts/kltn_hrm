@@ -5,7 +5,7 @@ import { apiBaseUrl } from "../config/apiBaseUrl";
 const API_URL = `${apiBaseUrl}/project/`;
 
 const getAllProject = (searchQuery) => {
-  return axios.get(API_URL + "getAll?search=" + searchQuery, {
+  return axios.get(API_URL + "get" + searchQuery, {
     headers: authHeader(),
   });
 };
@@ -16,18 +16,14 @@ const addProject = (project) => {
 };
 
 const updateProject = (projectId, project) => {
-  return axios.put(API_URL + projectId + "/update", project, {
+  return axios.put(API_URL + "/update/?id=" + projectId, project, {
     headers: authHeader(),
   });
 };
 const deleteProject = (projectId) => {
-  return axios.delete(
-    API_URL + projectId + "/delete",
-    { _id: projectId },
-    {
-      headers: authHeader(),
-    }
-  );
+  return axios.delete(API_URL + "/delete/?id=" + projectId, {
+    headers: authHeader(),
+  });
 };
 
 const projectService = {

@@ -41,6 +41,7 @@ export default function FormAddProject({
       initialValues: initialValues,
       validationSchema: projectInformationValidationSchema,
       onSubmit: (values) => {
+        console.log("sub dept", values);
         dispatch(addProjectAsync(values))
           .unwrap()
           .then((originalPromiseResult) => {
@@ -106,7 +107,9 @@ export default function FormAddProject({
                 label="Customer"
                 value={formik.values.customer}
                 onChange={formik.handleChange}
-                error={formik.touched.customer && Boolean(formik.errors.customer)}
+                error={
+                  formik.touched.customer && Boolean(formik.errors.customer)
+                }
                 helperText={formik.touched.customer && formik.errors.customer}
                 sx={{ mb: 3 }}
               />
@@ -114,28 +117,19 @@ export default function FormAddProject({
 
             <Grid item sm={12} md={6}>
               <FormControl fullWidth>
-                <InputLabel id="departments-label">Departments</InputLabel>
+                <InputLabel id="department-label">Department</InputLabel>
                 <Select
-                  labelId="departments-label"
-                  id="departments"
+                  labelId="department-label"
+                  id="departmentID"
+                  name="departmentID"
+                  label="Department"
                   fullWidth
-                  multiple
-                  value={formik.values.departments}
-                  onChange={(e) => {
-                    formik.setFieldValue("departments", e.target.value);
-                  }}
-                  input={<OutlinedInput id="departments" label="Departments" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
+                  value={formik.values.departmentID}
+                  onChange={formik.handleChange}
                   sx={{ mb: 3 }}
                 >
                   {departments.map((department, index) => (
-                    <MenuItem key={index} value={department.name}>
+                    <MenuItem key={index} value={department.id}>
                       {department.name}
                     </MenuItem>
                   ))}
@@ -157,8 +151,7 @@ export default function FormAddProject({
                     <TextField
                       {...params}
                       error={
-                        formik.touched.endDate &&
-                        Boolean(formik.errors.endDate)
+                        formik.touched.endDate && Boolean(formik.errors.endDate)
                       }
                       helperText={
                         formik.touched.endDate && formik.errors.endDate
@@ -205,11 +198,10 @@ FormAddProject.propTypes = {
 FormAddProject.defaultProps = {
   initialValues: {
     name: "",
-    employee: [],
     customer: "",
     startDate: new Date(),
     endDate: new Date(),
-    departments: [],
+    departmentID: "",
     isDeleted: false,
   },
   submitButtonText: "SUBMIT",

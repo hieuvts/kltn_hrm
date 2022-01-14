@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import InputLabel from "@mui/material/InputLabel";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import MenuItem from "@mui/material/MenuItem";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import PropTypes from "prop-types";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
@@ -29,6 +26,7 @@ export default function FormAddTask({
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
   const [progressSliderValue, setProgressSliderValue] = useState(0);
+ 
   const employees = useSelector((state) => state.employee.employeeList);
   const projects = useSelector((state) => state.project.projectList);
   const handleSbSuccessClose = () => {
@@ -63,7 +61,7 @@ export default function FormAddTask({
   const getProgressSliderValue = (value) => {
     return `${value}`;
   };
-  console.log("progess slider ", progressSliderValue);
+  
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
@@ -129,87 +127,36 @@ export default function FormAddTask({
               <FormControl fullWidth>
                 <InputLabel id="assignFrom-label">Assign from</InputLabel>
                 <Select
-                  labelId="assignFrom-label"
-                  id="assignFrom"
+                  labelId="asignFrom-label"
+                  id="assignerID"
+                  name="assignerID"
+                  label="Assign from"
                   fullWidth
-                  multiple
-                  value={formik.values.assignFrom}
-                  onChange={(e) => {
-                    formik.setFieldValue("assignFrom", e.target.value);
-                  }}
-                  input={<OutlinedInput id="assignFrom" label="assignFrom" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value._id} label={value.fname + " " + value.lname} />
-                      ))}
-                    </Box>
-                  )}
+                  value={formik.values.assignerID}
+                  onChange={formik.handleChange}
                   sx={{ mb: 3 }}
                 >
                   {employees.map((employee, index) => (
-                    <MenuItem
-                      key={index}
-                      value = {employee}
-                    >
+                    <MenuItem key={index} value={employee.id}>
                       {employee.fname + " " + employee.lname}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
 
-              {/* <FormControl fullWidth>
-                  <InputLabel id="procedure-label">Procedure</InputLabel>
-                  <Select
-                    labelId="procedure-label"
-                    id="procedures"
-                    fullWidth
-                    multiple
-                    value={formik.values.procedures}
-                    onChange={(e) => {
-                      formik.setFieldValue("procedures", e.target.value);
-                    }}
-                    input={<OutlinedInput id="procedures" label="Procedure" />}
-                    renderValue={(selected) => (
-                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                        {selected.map((value) => (
-                          <Chip key={value} label={value} />
-                        ))}
-                      </Box>
-                    )}
-                    sx={{ mb: 3 }}
-                  >
-                    {procedures.map((procedure, index) => (
-                      <MenuItem key={index} value={procedure.name}>
-                        {procedure.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl> */}
-
               <FormControl fullWidth>
-                <InputLabel id="project-label">Projects</InputLabel>
+                <InputLabel id="project-label">Project</InputLabel>
                 <Select
                   labelId="project-label"
-                  id="projects"
+                  id="projectID"
+                  name="projectID"
+                  label="Project"
                   fullWidth
-                  multiple
-                  value={formik.values.project}
-                  onChange={(e) => {
-                    formik.setFieldValue("project", e.target.value);
-                  }}
-                  input={<OutlinedInput id="project" label="Project" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
-                  sx={{ mb: 3 }}
+                  value={formik.values.projectID}
+                  onChange={formik.handleChange}
                 >
                   {projects.map((project, index) => (
-                    <MenuItem key={index} value={project.name}>
+                    <MenuItem key={index} value={project.id}>
                       {project.name}
                     </MenuItem>
                   ))}
@@ -220,25 +167,25 @@ export default function FormAddTask({
             <Grid item sm={12} md={6}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateTimePicker
-                  id="deadline"
-                  name="deadLine"
-                  label="Deadline"
-                  value={formik.values.deadline}
+                  id="dueDate"
+                  name="dueDate"
+                  label="Due date"
+                  inputFormat="dd/MM/yyyy"
+                  value={formik.values.dueDate}
                   minDate={new Date("1900-01-01")}
                   onChange={(value) => {
-                    formik.setFieldValue("deadline", value);
+                    formik.setFieldValue("dueDate", value);
                   }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       error={
-                        formik.touched.deadline &&
-                        Boolean(formik.errors.deadline)
+                        formik.touched.dueDate && Boolean(formik.errors.dueDate)
                       }
                       helperText={
-                        formik.touched.deadline && formik.errors.deadline
+                        formik.touched.endDate && formik.errors.dueDate
                       }
-                      fullWidth
+                      dueDate
                       sx={{ mb: 3 }}
                     />
                   )}
@@ -265,29 +212,17 @@ export default function FormAddTask({
               <FormControl fullWidth>
                 <InputLabel id="assignTo-label">Asign To</InputLabel>
                 <Select
-                  labelId="AsignTo-label"
-                  id="assignTo"
+                  labelId="asignFrom-label"
+                  id="assigneeID"
+                  name="assigneeID"
+                  label="Assign from"
                   fullWidth
-                  multiple
-                  value={formik.values.assignTo}
-                  onChange={(e) => {
-                    formik.setFieldValue("assignTo", e.target.value);
-                  }}
-                  input={<OutlinedInput id="assignTo" label="assignTo" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value._id} label={value.fname + " " + value.lname} />
-                      ))}
-                    </Box>
-                  )}
+                  value={formik.values.assigneeID}
+                  onChange={formik.handleChange}
                   sx={{ mb: 3 }}
                 >
                   {employees.map((employee, index) => (
-                    <MenuItem
-                      key={index}
-                      value = {employee}
-                    >
+                    <MenuItem key={index} value={employee.id}>
                       {employee.fname + " " + employee.lname}
                     </MenuItem>
                   ))}
@@ -347,18 +282,14 @@ FormAddTask.propTypes = {
 FormAddTask.defaultProps = {
   initialValues: {
     name: "",
-    assignFrom: [],
-    assignTo: [],
-    procedureID: [],
-    project: [],
+    assigneeID: "",
+    assignerID: "",
+    projectID: "",
     priority: "",
-    difficulty: "",
-    status: "",
+    difficulty: "1",
+    status: "Pending",
     progress: 0,
-    deadline: new Date(),
-    isDeleted: false,
-    employees: [],
-    projects: [],
+    dueDate: new Date(),
   },
   submitButtonText: "SUBMIT",
 };

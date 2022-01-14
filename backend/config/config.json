@@ -1,0 +1,24 @@
+{
+  "development": {
+    "username": "hieuvts",
+    "password": "admin",
+    "database": "hrm",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "logging": false
+  },
+  "test": {
+    "username": "hieuvts",
+    "password": "admin",
+    "database": "hrm",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "hieuvts",
+    "password": "admin",
+    "database": "hrm",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

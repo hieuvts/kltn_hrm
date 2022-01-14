@@ -15,9 +15,10 @@ import DialogUpdateEmploee from "../DialogUpdateEmployee";
 import { rowDirection, colDirection } from "../../../utilities/flexBoxStyle";
 
 export default function PersonalInformation() {
-  var employee = (employee = useSelector(
+  const employee = useSelector(
     (state) => state.employee.currentSelectedEmployee
-  ));
+  );
+  const departments = useSelector((state) => state.department.departmentList);
   const dispatch = useDispatch();
   const [isDialogUpdateEmployeeOpen, setDialogUpdateEmployee] = useState(false);
   const handleCloseDialogUpdateEmployee = () => {
@@ -67,13 +68,13 @@ export default function PersonalInformation() {
           </Box>
           <Box sx={rowDirection}>
             <Typography variant="h6">Department: </Typography>
-            {employee.departments.map((department, index) => {
-              return (
-                <Typography key={index} variant="h6">
-                  {department.name}
-                </Typography>
-              );
-            })}
+            <Typography variant="h6">
+              {departments.map((department) => {
+                if (department.id == employee.departmentID) {
+                  return department.name;
+                }
+              })}
+            </Typography>
           </Box>
         </Box>
       </Paper>

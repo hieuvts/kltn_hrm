@@ -23,13 +23,11 @@ export default function EmployeeAvatar() {
     <Paper elevation={3} sx={{ p: 3 }}>
       <Box sx={rowDirection}>
         <Typography variant="h6" sx={{ mb: 3 }}>
-          Role:
+          Position:
         </Typography>
-        {employee.roles.map((role, index) => (
-          <Typography key={index} variant="h6" sx={{ mb: 3 }}>
-            {role.name}
-          </Typography>
-        ))}
+        <Typography variant="h6" sx={{ mb: 3 }}>
+          {employee.position}
+        </Typography>
       </Box>
 
       <Box sx={{ width: "100%", textAlign: "center" }}>

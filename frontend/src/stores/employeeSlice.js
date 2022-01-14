@@ -20,7 +20,7 @@ export const getEmployeeAsync = createAsyncThunk(
     try {
       const res = await employeeService.getAllEmployee(searchQuery);
 
-      return res.data.employees;
+      return res.data;
     } catch (error) {
       const message =
         (error.response &&
@@ -62,7 +62,7 @@ export const updateEmployeeAsync = createAsyncThunk(
   "employee/updateEmployee",
   async (payload, thunkAPI) => {
     try {
-      const res = await employeeService.updateEmployee(payload._id, payload);
+      const res = await employeeService.updateEmployee(payload.id, payload);
 
       return res.data.employees;
     } catch (error) {
@@ -135,9 +135,6 @@ export const employeeSlice = createSlice({
   },
   extraReducers: {
     // Get Employee from server
-    [getEmployeeAsync.pending]: (state, actions) => {
-      console.log("[Pending] getEmployeeAsync state= ", state);
-    },
     [getEmployeeAsync.rejected]: (state, actions) => {
       console.log("[Rejected] getEmployeeAsync errorMsg= ", actions);
     },
@@ -166,7 +163,7 @@ export const employeeSlice = createSlice({
     //   console.log("[Pending] updateEmployeeAsync state= ", state);
     // },
     [updateEmployeeAsync.rejected]: (state, actions) => {
-      console.log("[Rejected] updateEmployeeAsync errorMsg= ", actions.payload);
+      console.log("[Rejected] updateEmployeeAsync errorMsg= ", actions);
     },
     [updateEmployeeAsync.fulfilled]: (state, actions) => {
       console.log(

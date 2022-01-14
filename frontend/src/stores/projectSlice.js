@@ -21,7 +21,7 @@ export const getProjectAsync = createAsyncThunk(
     try {
       const res = await projectService.getAllProject(searchQuery);
 
-      return res.data.projects;
+      return res.data;
     } catch (error) {
       const message =
         (error.response &&
@@ -62,7 +62,7 @@ export const updateProjectAsync = createAsyncThunk(
   "project/updateProject",
   async (payload, thunkAPI) => {
     try {
-      const res = await projectService.updateProject(payload._id, payload);
+      const res = await projectService.updateProject(payload.id, payload);
 
       return res.data.projects;
     } catch (error) {

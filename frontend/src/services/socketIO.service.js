@@ -36,8 +36,9 @@ export default function chatService(roomId) {
   }, [roomId]);
 
   const joinRoom = (email, chatRoomId) => {
+    console.log("invoke socketioservice joinRoom");
     socketRef.current.emit(JOIN_ROOM_EVENT, {
-      email: email,
+      senderEmail: email,
       chatRoomId: chatRoomId,
     });
   };

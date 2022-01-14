@@ -1,123 +1,133 @@
-const Company = require("../models/company.model");
+const db = require("../models");
+const Company = db.Company;
 const moment = require("moment");
-const getcompanyById = async (req, res, next, companyId) => {
-  // Get company details from company model and
-  // attach to request object
-  // https://expressjs.com/en/4x/api.html#router.param
-  Company.findById(companyId).exec((error, result) => {
-    if (error || !result) {
-      console.log(`Company ${companyId} is not found`);
-      res.status(404).json({
-        message: "[ERROR] [Controller] Company not found!",
-      });
-      return;
-    } else {
-      console.log(moment().format("hh:mm:ss"), `Company ${companyId} found!`);
-    }
-    req.company = result;
-    next();
-  });
-};
 
 const getCompany = async (req, res) => {
-  let company = await company.find();
-
-  if (company) {
-    res.status(200).json({ company });
-    console.log(
-      moment().format("hh:mm:ss"),
-      "[SUCCESS] getAllcompany",
-      company
-    );
-  } else {
-    res.status(400).json({
-      message: "[ERROR] [getAll] Something went wrong",
+  Company.findAll()
+    .then((companies) => {
+      if (companies) {
+        res.status(200).json(companies);
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getAllcompany");
+      } else {
+        res.status(400).json({
+          message: "[ERROR] [getAll] Something went wrong",
+        });
+        console.log(moment().format("hh:mm:ss"), "[ERROR] getAllcompany");
+      }
+    })
+    .catch((error) => {
+      console.log(moment().format("hh:mm:ss"), "[ERROR] getAllcompany", error);
+      res.status(500).json({
+        message: "[ERROR] [getAll] Something went wrong",
+        error: error,
+      });
     });
-    console.log(moment().format("hh:mm:ss"), "[ERROR] getAllcompany");
-  }
 };
 
 const createCompany = async (req, res) => {
-  const company = new Company(req.body);
-  company.save((error, result) => {
-    if (error || !result) {
-      res.status(400).json({
-        message: "Can't create new company",
-        errMsg: error.message,
-      });
-      console.log(moment().format("hh:mm:ss"), "[ERROR] createcompany", error);
-    } else {
+  const dataToInsert = {
+    name: req.body.name,
+    typeOfCompany: req.body.typeOfCompany,
+    mainBusinessLines: req.body.mainBusinessLines,
+    establishedDate: req.body.establishedDate,
+    address: req.body.address,
+    address2: req.body.address2 || "Not available",
+    phoneNumber: req.body.phoneNumber,
+    fax: req.body.fax || "Not available",
+    email: req.body.email,
+    website: req.body.website || "Not available",
+    taxCode: req.body.taxCode,
+  };
+  Company.create(dataToInsert)
+    .then((company) => {
       res.status(200).json({
         message: "Create company successfully!",
       });
-      console.log(moment().format("hh:mm:ss"), "[SUCCESS] createcompany");
-    }
-  });
+      console.log(moment().format("hh:mm:ss"), "[SUCCESS] createCompany");
+    })
+    .catch((error) => {
+      console.log(moment().format("hh:mm:ss"), "[ERROR] getAllCompany");
+      res.status(500).json({
+        message: "[ERROR] [getAll] Something went wrong",
+        error: error,
+      });
+    });
 };
 
 const updateCompany = async (req, res) => {
-  const company = req.company;
-
-  typeof req.body.name !== "undefined" && (company.name = req.body.name);
-
-  typeof req.body.address !== "undefined" &&
-    (company.address = req.body.address);
-
-  typeof req.body.address1 !== "undefined" &&
-    (company.address1 = req.body.address1);
-
-  typeof req.body.phoneNumber !== "undefined" &&
-    (company.phoneNumber = req.body.phoneNumber);
-
-  typeof req.body.fax !== "undefined" && (company.fax = req.body.fax);
-
-  typeof req.body.email !== "undefined" && (company.email = req.body.email);
-
-  typeof req.body.website !== "undefined" &&
-    (company.website = req.body.website);
-
-  typeof req.body.tax !== "undefined" && (company.tax = req.body.tax);
-
-  company.save((error, result) => {
-    if (error || !result) {
-      console.log(moment().format("hh:mm:ss"), "[ERROR] updatecompany");
-      return res.status(400).json({
-        message: "Update employee not successfully",
+  Company.update(req.body, {
+    where: { id: req.query.id },
+  })
+    .then((affectedRows) => {
+      if (affectedRows == 1) {
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] updateCompany");
+        res.status(200).json({
+          message: "Update company successfully",
+        });
+      } else {
+        console.log(moment().format("hh:mm:ss"), "[Can't] updateCompany");
+        return res.status(400).json({
+          message: "Can't update company",
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(moment().format("hh:mm:ss"), "[ERROR] updateCompany");
+      return res.status(500).json({
         error: error,
       });
-    } else {
-      res.status(200).json({
-        company,
-      });
-      console.log(moment().format("hh:mm:ss"), "[SUCCESS] updatecompany");
-    }
-  });
+    });
 };
 
 const deleteCompany = async (req, res) => {
-  const company = req.company;
-
-  company.deleteOne({ _id: company._id }, (error, result) => {
-    if (error || !result) {
-      res.status(400).json({
-        message: "Delete company not successful",
+  console.log("==> ", req.query.id);
+  Company.destroy({ where: { id: req.query.id } })
+    .then((affectedRows) => {
+      if (affectedRows == 1) {
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] deleteCompany");
+        res.status(200).json({
+          message: "Delete company successfully",
+        });
+      } else {
+        console.log(moment().format("hh:mm:ss"), "[Can't] deleteCompany");
+        return res.status(400).json({
+          message: "Can't delete company",
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(moment().format("hh:mm:ss"), "[ERROR] deleteCompany");
+      return res.status(500).json({
         error: error,
       });
-      console.log(moment().format("hh:mm:ss"), "[ERROR] deletecompany");
-    } else {
+    });
+};
+
+const deleteAllCompany = async (req, res) => {
+  Company.destroy({ where: {}, truncate: false })
+    .then((affectedRows) => {
+      console.log(
+        moment().format("hh:mm:ss"),
+        "[SUCCESS] deleteCompany rows= ",
+        affectedRows
+      );
       res.status(200).json({
-        message: "Delete company successfully!",
-        result: result,
+        message: "Delete all company successfully",
+        affectedRows: affectedRows,
       });
-      console.log(moment().format("hh:mm:ss"), "[SUCCESS] deletecompany");
-    }
-  });
+    })
+    .catch((error) => {
+      console.log(moment().format("hh:mm:ss"), "[ERROR] deleteCompany");
+      return res.status(500).json({
+        error: error,
+      });
+    });
 };
 
 module.exports = {
-  getcompanyById,
   getCompany,
   createCompany,
   deleteCompany,
   updateCompany,
+  deleteAllCompany,
 };

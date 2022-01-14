@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
 import DatePicker from "@mui/lab/DatePicker";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import InputLabel from "@mui/material/InputLabel";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import MenuItem from "@mui/material/MenuItem";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import PropTypes from "prop-types";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
@@ -132,28 +129,19 @@ export default function FormAddEmployeeInformation({
 
             <Grid item sm={12} md={6}>
               <FormControl fullWidth>
-                <InputLabel id="departments-label">Departments</InputLabel>
+                <InputLabel id="departments-label">Department</InputLabel>
                 <Select
                   labelId="departments-label"
-                  id="departments"
+                  id="departmentID"
+                  name="departmentID"
+                  label="Department"
                   fullWidth
-                  multiple
-                  value={formik.values.departments}
-                  onChange={(e) => {
-                    formik.setFieldValue("departments", e.target.value);
-                  }}
-                  input={<OutlinedInput id="departments" label="Departments" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
+                  value={formik.values.departmentID}
+                  onChange={formik.handleChange}
                   sx={{ mb: 3 }}
                 >
                   {departments.map((department, index) => (
-                    <MenuItem key={index} value={department.name}>
+                    <MenuItem key={index} value={department.id}>
                       {department.name}
                     </MenuItem>
                   ))}
@@ -232,16 +220,14 @@ FormAddEmployeeInformation.propTypes = {
 };
 FormAddEmployeeInformation.defaultProps = {
   initialValues: {
-    fname: "hieu",
+    fname: "",
     lname: "",
     gender: "Male",
     dateOfBirth: new Date(),
     phoneNumber: "",
     email: "",
     address: "",
-    departments: [],
-    projects: [],
-    roles: [],
+    departmentID: "1",
     isDeleted: false,
   },
 };

@@ -15,6 +15,7 @@ const getChatRoomInfo = (chatRoomId) => {
     headers: authHeader(),
   });
 };
+
 const getChatMessage = (chatRoomId) => {
   return axios.get(API_URL + chatRoomId + "/getMsg", {
     headers: authHeader(),

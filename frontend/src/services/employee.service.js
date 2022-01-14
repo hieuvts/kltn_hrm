@@ -5,7 +5,7 @@ import { apiBaseUrl } from "../config/apiBaseUrl";
 const API_URL = `${apiBaseUrl}/employee/`;
 
 const getAllEmployee = (searchQuery) => {
-  return axios.get(API_URL + "getAll?search=" + searchQuery, {
+  return axios.get(API_URL + "get" + searchQuery, {
     headers: authHeader(),
   });
 };
@@ -16,18 +16,15 @@ const addEmployee = (employee) => {
 };
 
 const updateEmployee = (employeeId, employee) => {
-  return axios.put(API_URL + employeeId + "/update", employee, {
+  delete employee.id;
+  return axios.put(API_URL + "/update?id=" + employeeId, employee, {
     headers: authHeader(),
   });
 };
 const deleteEmployee = (employeeId) => {
-  return axios.delete(
-    API_URL + employeeId + "/delete",
-    { _id: employeeId },
-    {
-      headers: authHeader(),
-    }
-  );
+  return axios.delete(API_URL + "/delete?id=" + employeeId, {
+    headers: authHeader(),
+  });
 };
 
 const employeeService = {

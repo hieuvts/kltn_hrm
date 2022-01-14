@@ -33,7 +33,7 @@ export default function FormUpdateProject({
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
   const projects = useSelector((state) => state.project.projectList);
   const departments = useSelector((state) => state.department.departmentList);
-  
+
   const handleSbSuccessClose = () => {
     setSbSuccessOpen(false);
   };
@@ -42,35 +42,7 @@ export default function FormUpdateProject({
   };
 
   const dispatch = useDispatch();
-  // state.currentSelectedEmployee
-  // has key/value projects with full data (id, name, headOfProject,...)
-  // => Extract only project name, pass it as an array, not JS object
-  // Start - Handling projects value
   var formikInitialValues = { ...initialValues };
-
-  //   const initProjectValue = formikInitialValues["projects"].map(
-  //     ({ name }) => ({ name })
-  //   );
-  //   const initRoleValue = formikInitialValues["roles"].map(
-  //     ({ name }) => ({ name })
-  //   );
-
-  //   const projectNameArr = initProjectValue.map((x) => x.name);
-  //   const roleNameArr = initRoleValue.map((x) => x.name);
-
-  //   delete formikInitialValues.projects;
-  //   delete formikInitialValues.roles;
-
-  //   formikInitialValues["projects"] = projectNameArr;
-  //   formikInitialValues["roles"] = roleNameArr;
-  // End - Handling projects value
-
-  const initDepartmentValue = formikInitialValues["departments"].map(
-    ({ name }) => ({ name })
-  );
-  const departmentNameArr = initDepartmentValue.map((x) => x.name);
-  delete formikInitialValues.departments;
-  formikInitialValues["departments"] = departmentNameArr;
 
   const FormikWithMUI = () => {
     const formik = useFormik({
@@ -80,6 +52,7 @@ export default function FormUpdateProject({
         dispatch(updateProjectAsync(values))
           .unwrap()
           .then(() => {
+            values.id = formikInitialValues.id;
             dispatch(
               setCurrentSelectedProject({
                 currentSelectedProject: values,
@@ -99,7 +72,7 @@ export default function FormUpdateProject({
     return (
       <div style={{ marginTop: "30px" }}>
         <form onSubmit={formik.handleSubmit}>
-        <Grid container rowSpacing={3} columnSpacing={3}>
+          <Grid container rowSpacing={3} columnSpacing={3}>
             <Grid item sm={12} md={6}>
               <TextField
                 fullWidth
@@ -148,7 +121,9 @@ export default function FormUpdateProject({
                 label="Customer"
                 value={formik.values.customer}
                 onChange={formik.handleChange}
-                error={formik.touched.customer && Boolean(formik.errors.customer)}
+                error={
+                  formik.touched.customer && Boolean(formik.errors.customer)
+                }
                 helperText={formik.touched.customer && formik.errors.customer}
                 sx={{ mb: 3 }}
               />
@@ -156,28 +131,19 @@ export default function FormUpdateProject({
 
             <Grid item sm={12} md={6}>
               <FormControl fullWidth>
-                <InputLabel id="departments-label">Departments</InputLabel>
+                <InputLabel id="department-label">Department</InputLabel>
                 <Select
-                  labelId="departments-label"
-                  id="departments"
+                  labelId="department-label"
+                  id="departmentID"
+                  name="departmentID"
+                  label="Department"
                   fullWidth
-                  multiple
-                  value = {formik.values.departments}
-                  onChange={(e) => {
-                    formik.setFieldValue("departments", e.target.value);
-                  }}
-                  input={<OutlinedInput id="departments" label="Departments" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
+                  value={formik.values.departmentID}
+                  onChange={formik.handleChange}
                   sx={{ mb: 3 }}
                 >
                   {departments.map((department, index) => (
-                    <MenuItem key={index} value= {department.name} >
+                    <MenuItem key={index} value={department.id}>
                       {department.name}
                     </MenuItem>
                   ))}
@@ -200,8 +166,7 @@ export default function FormUpdateProject({
                     <TextField
                       {...params}
                       error={
-                        formik.touched.endDate &&
-                        Boolean(formik.errors.endDate)
+                        formik.touched.endDate && Boolean(formik.errors.endDate)
                       }
                       helperText={
                         formik.touched.endDate && formik.errors.endDate
@@ -247,11 +212,10 @@ FormUpdateProject.propTypes = {
 FormUpdateProject.defaultProps = {
   initialValues: {
     name: "",
-    employee: [],
     customer: "",
     startDate: new Date(),
     endDate: new Date(),
-    departments: [],
+    departments: "",
     isDeleted: false,
   },
 };

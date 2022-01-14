@@ -17,7 +17,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../stores/authSlice";
 import { clearMessage } from "../../stores/messageSlice";
 import SnackbarFailed from "../../components/Snackbar/SnackbarFailed";
-import { getUser } from "../../stores/userSlice";
 export default function Login({ handleChange, history }) {
   const [isDialogForgotPwdOpen, setDialogForgotPwdOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
@@ -56,7 +55,7 @@ export default function Login({ handleChange, history }) {
   };
 
   if (isLoggedIn) {
-    dispatch(getUser());
+    // dispatch(getUser());
     return <Navigate to="/" />;
   }
   const initialValues = {

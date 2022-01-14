@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Avatar from "@mui/material/Avatar";
 
-import { getUser } from "../../stores/userSlice";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import socketIOService from "../../services/socketIO.service";
@@ -10,26 +9,29 @@ import { StyledBadge } from "../../components/CustomizedMUIComponents/StyledBadg
 import ChatMessageInput from "./ChatMessageInput";
 import avatarFemale from "../../assets/icons/avatarFemale.png";
 import avatarMale from "../../assets/icons/avatarMale.png";
-import { getChatMessage, addMessageToRoom } from "../../stores/chatRoomSlice";
+import {
+  getChatMessage,
+  addMessageToRoom,
+} from "../../stores/chatRoomSlice";
 
 import "./chatPanel.scss";
 
 export default function ChatPanel({
   chatRoomId,
-  totalMember,
   roomName,
+  QtyMemberInRoom,
   roomMessages,
 }) {
   const user = JSON.parse(localStorage.getItem("user"));
-  const currentUser = useSelector((state) => state.user.currentUser);
   const roomId = chatRoomId; // Gets roomId from URL
   const [messageToSend, setMessageToSend] = useState("");
   // Creates a websocket and manages messaging
   const { messages, joinRoom, sendMessage } = socketIOService(roomId);
+  const roomMembersQty = useSelector((state) => state.chatRoom.QtyMemberInRoomID);
   const dispatch = useDispatch();
   const handleSendMessage = (values) => {
     let messageBody = {
-      sender: currentUser.email,
+      sender: user.email,
       message: values.message,
       isBroadcast: false,
     };
@@ -54,7 +56,7 @@ export default function ChatPanel({
       <div className="title">
         <div className="chatRoomName">{roomName}</div>
         <div className="totalMember">
-          {totalMember} {"members"}
+          {roomMembersQty} {"members"}
         </div>
       </div>
       <div className="content">
@@ -64,7 +66,7 @@ export default function ChatPanel({
               <li
                 key={index}
                 className={`messageList ${
-                  message.sender === currentUser.email ? "sent" : "received"
+                  message.senderEmail === user.email ? "sent" : "received"
                 }`}
               >
                 {message.isBroadcast ? (
@@ -72,7 +74,7 @@ export default function ChatPanel({
                 ) : (
                   <div
                     className={`message ${
-                      message.sender === currentUser.email ? "sent" : "received"
+                      message.senderEmail === user.email ? "sent" : "received"
                     }`}
                   >
                     <div className="avatar">
@@ -90,14 +92,12 @@ export default function ChatPanel({
 
                     <div
                       className={`bubble ${
-                        message.sender === currentUser.email
-                          ? "sent"
-                          : "received"
+                        message.senderEmail === user.email ? "sent" : "received"
                       }`}
                     >
-                      {message.sender !== currentUser.email && (
+                      {message.senderEmail !== user.email && (
                         <div className="info">
-                          <div className="username">{message.sender}</div>
+                          <div className="username">{message.senderEmail}</div>
                           <div className="role">admin</div>
                         </div>
                       )}
@@ -121,8 +121,8 @@ export default function ChatPanel({
   );
 }
 ChatPanel.propTypes = {
-  chatRoomId: PropTypes.string,
-  totalMember: PropTypes.number,
+  chatRoomId: PropTypes.number,
+  QtyMemberInRoom: PropTypes.number,
   roomName: PropTypes.string,
   roomMessages: PropTypes.array,
 };

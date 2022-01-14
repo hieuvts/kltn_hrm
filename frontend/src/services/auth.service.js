@@ -3,10 +3,12 @@ import { apiBaseUrl } from "../config/apiBaseUrl";
 import authHeader from "./authHeader";
 const API_URL = `${apiBaseUrl}/auth/`;
 
-const signUp = (email, password) => {
+const signUp = (email, password, privilege, companyID) => {
   return axios.post(API_URL + "signup", {
     email,
     password,
+    privilege,
+    companyID,
   });
 };
 
@@ -25,10 +27,15 @@ const logout = () => {
 const changePassword = (body) => {
   return axios.post(API_URL + "changePwd", body, { headers: authHeader() });
 };
+
+const getChatRoomByAuthAccount = (authAccountID) => {
+  return axios.get(API_URL + "getChatRooms?id=" + authAccountID);
+};
 const authService = {
   signUp,
   login,
   logout,
+  getChatRoomByAuthAccount,
   changePassword,
 };
 

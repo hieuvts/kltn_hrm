@@ -1,31 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
-import UserService from "../../services/user.service";
-
+import { useDispatch } from "react-redux";
+import { getChatRoomByAuthAccount } from "../../stores/authSlice";
 export default function Dashboard() {
-  const [content, setContent] = useState("");
-
+  const user = JSON.parse(localStorage.getItem("user"));
+  const dispatch = useDispatch();
   useEffect(() => {
-    UserService.getAdminContent().then(
-      (response) => {
-        setContent(response.data);
-      },
-      (error) => {
-        const _content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        setContent(_content);
-      }
-    );
+    console.log("get chat with user.id ", user.id);
+    dispatch(getChatRoomByAuthAccount({ id: user.id }));
   }, []);
-
   return (
     <div>
       <Typography variant="h4">Dashboard page</Typography>
-      <Typography variant="h4">Role: {content}</Typography>
     </div>
   );
 }
