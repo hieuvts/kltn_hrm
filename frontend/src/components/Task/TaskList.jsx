@@ -5,9 +5,7 @@ import DialogDeleteMultipleTask from "./DialogDeleteMultipleTask";
 import DialogUpdateTask from "./DialogUpdateTask";
 import {
   setCurrentSelectedTask,
-  addToSelectedTaskList,
-  removeFromSelectedTaskList,
-  setMultiSelectedTaskList,
+  updateTaskAsync,
 } from "../../stores/taskSlice";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
@@ -57,55 +55,24 @@ const statusColumn = {
 };
 
 const addItemToColumn = (items) => {
-  let idList = [];
-  statusColumn.Pending.items.forEach((item) => {
-    idList.push(item.id);
-  });
-  statusColumn.InProgress.items.forEach((item) => {
-    idList.push(item.id);
-  });
-  statusColumn.Finish.items.forEach((item) => {
-    idList.push(item.id);
-  });
-
+  statusColumn.Pending.items = [];
+  statusColumn.InProgress.items = [];
+  statusColumn.Finish.items = [];
   items.map((item) => {
     let index = 0;
     switch (item.status) {
       case "Pending":
-        index = idList.filter((id, index) => {
-          if (id === item.id) {
-            return index;
-          }
-        });
-        if (index !== 0 && index.length > 0) {
-          break;
-        }
         statusColumn.Pending.items.push(item);
         break;
       case "In Progress":
-        index = idList.filter((id, index) => {
-          if (id === item.id) {
-            return index;
-          }
-        });
-        if (index !== 0 && index.length > 0) {
-          break;
-        }
         statusColumn.InProgress.items.push(item);
         break;
       case "Finish":
-        index = idList.filter((id, index) => {
-          if (id === item.id) {
-            return index;
-          }
-        });
-        if (index !== 0 && index.length > 0) {
-          break;
-        }
         statusColumn.Finish.items.push(item);
         break;
     }
   });
+  console.log(statusColumn);
 };
 const setBackGroundColor = (item) => {
   let backgroundColor;
@@ -126,7 +93,6 @@ const setBackGroundColor = (item) => {
 const onDragEnd = (result, columns, setColumns) => {
   if (!result.destination) return;
   const { source, destination } = result;
-
   if (source.droppableId !== destination.droppableId) {
     const sourceColumn = columns[source.droppableId];
     const destColumn = columns[destination.droppableId];
@@ -163,31 +129,6 @@ const onDragEnd = (result, columns, setColumns) => {
   }
 };
 
-const CardAction = (currentSelectedTask) => {
-  return (
-    <Box>
-      <Button
-        variant="link"
-        onClick={() => {
-          dispatch(setCurrentSelectedTask(currentSelectedTask));
-          setDialogUpdateTaskOpen(true);
-        }}
-      >
-        <ModeIcon color="text" size="small" />
-      </Button>
-      <Button
-        variant="link"
-        onClick={() => {
-          dispatch(setCurrentSelectedTask(currentSelectedTask));
-          setDialogDeleteTaskOpen(true);
-        }}
-      >
-        <DeleteIcon color="text" size="small" />
-      </Button>
-    </Box>
-  );
-};
-
 export default function TaskList() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
@@ -200,17 +141,82 @@ export default function TaskList() {
     React.useState(false);
   const dispatch = useDispatch();
   var items = useSelector((state) => state.task.taskList);
+  var selectedTask = useSelector((state) => state.task.currentSelectedTask);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+  const handleCloseDialogDeleteTask = () => {
+    setDialogDeleteTaskOpen(false);
+  };
+  const handleCloseDialogUpdateTask = () => {
+    setDialogUpdateTaskOpen(false);
+  };
+  const handleCloseDialogTaskDetails = () => {
+    setDialogTaskDetailsOpen(false);
+  };
   addItemToColumn(items);
   const [columns, setColumns] = React.useState(statusColumn);
+
+  const CardAction = (currentSelectedTask) => {
+    const dispatch = useDispatch();
+    return (
+      <Box>
+        <Button
+          variant="link"
+          onClick={() => {
+            dispatch(setCurrentSelectedTask(currentSelectedTask));
+            setDialogUpdateTaskOpen(true);
+          }}
+        >
+          <ModeIcon color="text" size="small" />
+        </Button>
+        <Button
+          variant="link"
+          onClick={() => {
+            dispatch(setCurrentSelectedTask(currentSelectedTask));
+            setDialogDeleteTaskOpen(true);
+          }}
+        >
+          <DeleteIcon color="text" size="small" />
+        </Button>
+      </Box>
+    );
+  };
+  
   return (
     <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
+      <DialogDeleteTask
+        isDialogOpen={isDialogDeleteTaskOpen}
+        handleCloseDialog={handleCloseDialogDeleteTask}
+      />
+      <DialogUpdateTask
+        isDialogOpen={isDialogUpdateTaskOpen}
+        handleCloseDialog={handleCloseDialogUpdateTask}
+      />
       <DragDropContext
-        onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
+        onDragEnd={(result) => {
+          onDragEnd(result, columns, setColumns);
+          let temp = JSON.parse(JSON.stringify(selectedTask));
+          let status = "";
+          if (result.destination === null) {
+            return;
+          }
+          switch (result.destination.droppableId) {
+            case "Pending":
+              status = "Pending";
+              break;
+            case "InProgress":
+              status = "In Progress";
+              break;
+            case "Finish":
+              status = "Finish";
+              break;
+          }
+          temp.status = status;
+          dispatch(updateTaskAsync(temp));
+        }}
       >
         {Object.entries(columns).map(([columnId, column], index) => {
           return (
@@ -244,7 +250,7 @@ export default function TaskList() {
                             return (
                               <Draggable
                                 key={index}
-                                draggableId={item.id}
+                                draggableId={item.id.toString()}
                                 index={index}
                               >
                                 {(provided, snapshot) => {
@@ -264,6 +270,13 @@ export default function TaskList() {
                                         color: "#758195",
                                         borderRadius: "10px",
                                         ...provided.draggableProps.style,
+                                      }}
+                                      onMouseOver={() => {
+                                        dispatch(
+                                          setCurrentSelectedTask({
+                                            currentSelectedTask: item,
+                                          })
+                                        );
                                       }}
                                     >
                                       <Box sx={{ textAlign: "right" }}>
@@ -362,7 +375,7 @@ export default function TaskList() {
                                           justifyContent: "flex-end",
                                         }}
                                       >
-                                        <CardAction />
+                                        <CardAction currentSelectedTask={item} />
                                       </Box>
                                     </Card>
                                   );

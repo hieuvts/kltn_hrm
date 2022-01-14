@@ -62,7 +62,7 @@ export const updateTaskAsync = createAsyncThunk(
   "task/updateTask",
   async (payload, thunkAPI) => {
     try {
-      const res = await taskService.updateTask(payload._id, payload);
+      const res = await taskService.updateTask(payload.id, payload);
 
       return res.data.tasks;
     } catch (error) {
@@ -120,7 +120,7 @@ export const taskSlice = createSlice({
     },
     removeFromSelectedTaskList: (state, action) => {
       state.selectedTaskList = state.selectedTaskList.filter(
-        (task) => task._id !== action.payload.selectedTask._id
+        (task) => task.id !== action.payload.selectedTask.id
       );
     },
     setMultiSelectedTaskList: (state, action) => {
