@@ -170,6 +170,7 @@ const EnhancedTableToolbar = (props) => {
   // Get selectedEmployeeList to delete multiple, delete all
   const selectedEmployeeList = useSelector((state) => state.employee);
   const auth = useSelector((state) => state.auth);
+
   const handleDeleteMultipleEmployee = () => {
     setDialogDeleteMultipleEmployeeOpen(true);
   };
@@ -248,6 +249,7 @@ export default function EmployeeTable() {
     React.useState(false);
   const dispatch = useDispatch();
   var rows = useSelector((state) => state.employee.employeeList);
+  const departments = useSelector((state) => state.department.departmentList);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -459,7 +461,13 @@ export default function EmployeeTable() {
                         <TableCell align="right">{row.email}</TableCell>
                         <TableCell align="right">{row.phoneNumber}</TableCell>
                         <TableCell align="right">{row.position}</TableCell>
-                        <TableCell align="right">{row.departmentID}</TableCell>
+                        <TableCell align="right">
+                          {departments.map((department) => {
+                            if (department.id === row.departmentID) {
+                              return department.name;
+                            }
+                          })}
+                        </TableCell>
                         <TableCell align="right">
                           <RowActions currentSelectedEmployee={row} />
                         </TableCell>
