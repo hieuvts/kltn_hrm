@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import InputLabel from "@mui/material/InputLabel";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import MenuItem from "@mui/material/MenuItem";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import PropTypes from "prop-types";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
@@ -29,7 +26,7 @@ export default function FormAddTask({
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
   const [progressSliderValue, setProgressSliderValue] = useState(0);
-  const departments = useSelector((state) => state.department.departmentList);
+ 
   const employees = useSelector((state) => state.employee.employeeList);
   const projects = useSelector((state) => state.project.projectList);
   const handleSbSuccessClose = () => {
@@ -64,7 +61,7 @@ export default function FormAddTask({
   const getProgressSliderValue = (value) => {
     return `${value}`;
   };
-  console.log("progess slider ", progressSliderValue);
+  
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
@@ -135,35 +132,6 @@ export default function FormAddTask({
                   ))}
                 </Select>
               </FormControl>
-
-              {/* <FormControl fullWidth>
-                  <InputLabel id="procedure-label">Procedure</InputLabel>
-                  <Select
-                    labelId="procedure-label"
-                    id="procedures"
-                    fullWidth
-                    multiple
-                    value={formik.values.procedures}
-                    onChange={(e) => {
-                      formik.setFieldValue("procedures", e.target.value);
-                    }}
-                    input={<OutlinedInput id="procedures" label="Procedure" />}
-                    renderValue={(selected) => (
-                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                        {selected.map((value) => (
-                          <Chip key={value} label={value} />
-                        ))}
-                      </Box>
-                    )}
-                    sx={{ mb: 3 }}
-                  >
-                    {procedures.map((procedure, index) => (
-                      <MenuItem key={index} value={procedure.name}>
-                        {procedure.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl> */}
 
               <FormControl fullWidth>
                 <InputLabel id="project-label">Project</InputLabel>

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
-import DatePicker from "@mui/lab/DatePicker";
+import DateTimePicker from "@mui/lab/DateTimePicker";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import InputLabel from "@mui/material/InputLabel";
@@ -15,6 +13,7 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
+import Slider from "@mui/material/Slider";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -31,9 +30,10 @@ export default function FormUpdateProject({
 }) {
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
+  const [progressSliderValue, setProgressSliderValue] = useState(0);
   const projects = useSelector((state) => state.project.projectList);
-  const departments = useSelector((state) => state.department.departmentList);
-  
+  const employees = useSelector((state) => state.employee.employeeList);
+
   const handleSbSuccessClose = () => {
     setSbSuccessOpen(false);
   };
@@ -42,41 +42,41 @@ export default function FormUpdateProject({
   };
 
   const dispatch = useDispatch();
-  // state.currentSelectedEmployee
-  // has key/value projects with full data (id, name, headOfProject,...)
-  // => Extract only project name, pass it as an array, not JS object
-  // Start - Handling projects value
+
+  const progressSliderMarks = [
+    {
+      value: 0,
+      label: "Init",
+    },
+    {
+      value: 20,
+      label: "20%",
+    },
+    {
+      value: 50,
+      label: "50%",
+    },
+    {
+      value: 75,
+      label: "75%",
+    },
+    {
+      value: 100,
+      label: "100%",
+    },
+  ];
+  const getProgressSliderValue = (value) => {
+    return `${value}`;
+  };
+
   var formikInitialValues = { ...initialValues };
-
-  //   const initProjectValue = formikInitialValues["projects"].map(
-  //     ({ name }) => ({ name })
-  //   );
-  //   const initRoleValue = formikInitialValues["roles"].map(
-  //     ({ name }) => ({ name })
-  //   );
-
-  //   const projectNameArr = initProjectValue.map((x) => x.name);
-  //   const roleNameArr = initRoleValue.map((x) => x.name);
-
-  //   delete formikInitialValues.projects;
-  //   delete formikInitialValues.roles;
-
-  //   formikInitialValues["projects"] = projectNameArr;
-  //   formikInitialValues["roles"] = roleNameArr;
-  // End - Handling projects value
-
-  const initDepartmentValue = formikInitialValues["departments"].map(
-    ({ name }) => ({ name })
-  );
-  const departmentNameArr = initDepartmentValue.map((x) => x.name);
-  delete formikInitialValues.departments;
-  formikInitialValues["departments"] = departmentNameArr;
 
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: formikInitialValues,
       validationSchema: projectInformationValidationSchema,
       onSubmit: (values) => {
+        values.id = formikInitialValues.id;
         dispatch(updateProjectAsync(values))
           .unwrap()
           .then(() => {
@@ -99,122 +99,182 @@ export default function FormUpdateProject({
     return (
       <div style={{ marginTop: "30px" }}>
         <form onSubmit={formik.handleSubmit}>
-        <Grid container rowSpacing={3} columnSpacing={3}>
+          <Grid container rowSpacing={3} columnSpacing={3}>
             <Grid item sm={12} md={6}>
               <TextField
                 fullWidth
                 id="name"
                 name="name"
-                label="Project Name"
+                label="Task Name"
                 value={formik.values.name}
                 onChange={formik.handleChange}
                 error={formik.touched.name && Boolean(formik.errors.name)}
                 helperText={formik.touched.name && formik.errors.name}
                 sx={{ mb: 3 }}
               />
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                  id="startDate"
-                  name="startDate"
-                  label="Start Date"
-                  inputFormat="dd/MM/yyyy"
-                  value={formik.values.startDate}
-                  minDate={new Date("1900-01-01")}
-                  maxDate={new Date()}
-                  onChange={(value) => {
-                    formik.setFieldValue("startDate", value);
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      error={
-                        formik.touched.startDate &&
-                        Boolean(formik.errors.startDate)
-                      }
-                      helperText={
-                        formik.touched.startDate && formik.errors.startDate
-                      }
-                      fullWidth
-                      sx={{ mb: 3 }}
-                    />
-                  )}
-                />
-              </LocalizationProvider>
-
-              <TextField
-                fullWidth
-                id="customer"
-                name="customer"
-                label="Customer"
-                value={formik.values.customer}
-                onChange={formik.handleChange}
-                error={formik.touched.customer && Boolean(formik.errors.customer)}
-                helperText={formik.touched.customer && formik.errors.customer}
-                sx={{ mb: 3 }}
-              />
-            </Grid>
-
-            <Grid item sm={12} md={6}>
               <FormControl fullWidth>
-                <InputLabel id="departments-label">Departments</InputLabel>
+                <InputLabel id="status-label">Status</InputLabel>
                 <Select
-                  labelId="departments-label"
-                  id="departments"
+                  labelId="status-label"
+                  id="status"
+                  name="status"
+                  label="Status"
+                  value={formik.values.status}
+                  onChange={formik.handleChange}
                   fullWidth
-                  multiple
-                  value = {formik.values.departments}
-                  onChange={(e) => {
-                    formik.setFieldValue("departments", e.target.value);
-                  }}
-                  input={<OutlinedInput id="departments" label="Departments" />}
-                  renderValue={(selected) => (
-                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                      {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
-                    </Box>
-                  )}
                   sx={{ mb: 3 }}
                 >
-                  {departments.map((department, index) => (
-                    <MenuItem key={index} value= {department.name} >
-                      {department.name}
+                  <MenuItem value={"Pending"}>Pending</MenuItem>
+                  <MenuItem value={"In Progress"}>In Progress</MenuItem>
+                  <MenuItem value={"Finish"}>Finish</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl fullWidth>
+                <InputLabel id="asignFrom-label">Assign from</InputLabel>
+                <Select
+                  labelId="asignFrom-label"
+                  id="assignerID"
+                  name="assignerID"
+                  label="Assign from"
+                  fullWidth
+                  value={formik.values.assignerID}
+                  onChange={formik.handleChange}
+                  sx={{ mb: 3 }}
+                >
+                  {employees.map((employee, index) => (
+                    <MenuItem key={index} value={employee.id}>
+                      {employee.fname + " " + employee.lname}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
 
+              <FormControl fullWidth>
+                <InputLabel id="project-label">Project</InputLabel>
+                <Select
+                  labelId="project-label"
+                  id="projectID"
+                  name="projectID"
+                  label="Project"
+                  fullWidth
+                  value={formik.values.projectID}
+                  onChange={formik.handleChange}
+                >
+                  {projects.map((project, index) => (
+                    <MenuItem key={index} value={project.id}>
+                      {project.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item sm={12} md={6}>
               <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                  id="endDate"
-                  name="endDate"
-                  label="End Date"
+                <DateTimePicker
+                  id="dueDate"
+                  name="dueDate"
+                  label="Due date"
                   inputFormat="dd/MM/yyyy"
-                  value={formik.values.endDate}
+                  value={formik.values.dueDate}
                   minDate={new Date("1900-01-01")}
-                  maxDate={new Date()}
                   onChange={(value) => {
-                    formik.setFieldValue("endDate", value);
+                    formik.setFieldValue("dueDate", value);
                   }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
                       error={
-                        formik.touched.endDate &&
-                        Boolean(formik.errors.endDate)
+                        formik.touched.dueDate && Boolean(formik.errors.dueDate)
                       }
                       helperText={
-                        formik.touched.endDate && formik.errors.endDate
+                        formik.touched.endDate && formik.errors.dueDate
                       }
-                      fullWidth
+                      dueDate
                       sx={{ mb: 3 }}
                     />
                   )}
                 />
               </LocalizationProvider>
+              <FormControl fullWidth>
+                <InputLabel id="difficulty-label">Difficulty</InputLabel>
+                <Select
+                  labelId="difficulty-label"
+                  id="difficulty"
+                  name="difficulty"
+                  label="Difficulty"
+                  value={formik.values.difficulty}
+                  onChange={formik.handleChange}
+                  fullWidth
+                  sx={{ mb: 3 }}
+                >
+                  <MenuItem value={"1"}>1</MenuItem>
+                  <MenuItem value={"2"}>2</MenuItem>
+                  <MenuItem value={"3"}>3</MenuItem>
+                  <MenuItem value={"Extra"}>Extra</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl fullWidth>
+                <InputLabel id="asignTo-label">Asign To</InputLabel>
+                <Select
+                  labelId="asignFrom-label"
+                  id="assigneeID"
+                  name="assigneeID"
+                  label="Assign from"
+                  fullWidth
+                  value={formik.values.assigneeID}
+                  onChange={formik.handleChange}
+                  sx={{ mb: 3 }}
+                >
+                  {employees.map((employee, index) => (
+                    <MenuItem key={index} value={employee.id}>
+                      {employee.fname + " " + employee.lname}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <TextField
+                fullWidth
+                id="progress"
+                name="progress"
+                label="Progress"
+                value={formik.values.progress}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.progress && Boolean(formik.errors.progress)
+                }
+                helperText={formik.touched.name && formik.errors.progress}
+                sx={{ mb: 3 }}
+              />
+              <Slider
+                aria-label="progessSlider"
+                defaultValue={0}
+                getAriaValueText={getProgressSliderValue}
+                step={10}
+                valueLabelDisplay="auto"
+                marks={progressSliderMarks}
+              />
+              <FormControl fullWidth>
+                <InputLabel id="p-label">Priority</InputLabel>
+                <Select
+                  labelId="priority-label"
+                  id="priority"
+                  name="priority"
+                  label="Priority"
+                  value={formik.values.priority}
+                  onChange={formik.handleChange}
+                  fullWidth
+                  sx={{ mb: 3 }}
+                >
+                  <MenuItem value={"1"}>Pending</MenuItem>
+                  <MenuItem value={"2"}>In Progress</MenuItem>
+                  <MenuItem value={"3"}>Finish</MenuItem>
+                  <MenuItem value={"Extra"}>Extra</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
           </Grid>
-
           <Button variant="contained" color="primary" fullWidth type="submit">
             SUBMIT
           </Button>
