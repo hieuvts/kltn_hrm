@@ -20,12 +20,12 @@ import ChatPanel from "../../components/Chat/ChatPanel";
 import StyledSearchBox from "../../components/CustomizedMUIComponents/StyledSearchBox";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { getChatRoomByAuthAccount } from "../../stores/authSlice";
+import { getQtyMemberInRoomID } from "../../stores/chatRoomSlice";
 import "./InternalChat.scss";
 
 export default function InternalChat() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [value, setValue] = React.useState(0);
-  const [selectedTab, setSelectedTab] = useState(0);
   const chatRooms = useSelector((state) => state.auth.chatRooms);
   const dispatch = useDispatch();
   const handleChange = (event, newValue) => {
@@ -34,14 +34,14 @@ export default function InternalChat() {
   const handleGetAllChatRoom = () => {
     dispatch(getChatRoomByAuthAccount({ id: user.id }));
   };
-
-  useLayoutEffect(() => {
-    handleGetAllChatRoom();
-  }, []);
+  const handleGetQtyMemberInRoom = () => {
+    dispatch(getQtyMemberInRoomID({ chatRoomId: value + 1 }));
+  };
   useEffect(() => {
     console.log("Get all room message");
     handleGetAllChatRoom();
-  }, [value, setSelectedTab]);
+    handleGetQtyMemberInRoom();
+  }, [value]);
 
   return (
     <div className="chatContainer">
@@ -51,7 +51,12 @@ export default function InternalChat() {
             <StyledSearchBox placeholder="Search for chat..." />
           </div>
           {chatRooms.map((room, index) => (
-            <Tab key={index} onClick={() => setSelectedTab(index)}>
+            <Tab
+              key={index}
+              onClick={(e) => {
+                handleChange(e, index);
+              }}
+            >
               <ListItem component={"div"}>
                 <ListItemAvatar sx={{ alignSelf: "center" }}>
                   <Avatar

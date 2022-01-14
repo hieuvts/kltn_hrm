@@ -3,6 +3,7 @@ const db = require("../models");
 const AuthAccount = db.AuthAccount;
 const ChatMessage = db.ChatMessage;
 const ChatRoom = db.ChatRoom;
+const ChatRoomDetails = db.ChatRoomDetails;
 const Company = db.Company;
 
 var jwt = require("jsonwebtoken");
@@ -146,12 +147,21 @@ const getChatRooms = (req, res) => {
     include: [
       {
         model: ChatRoom,
+        through: {
+          // don't want anything from
+          // the junction table
+          attributes: [],
+        },
         include: [
           {
             model: ChatMessage,
           },
         ],
       },
+    ],
+    order: [
+      [ChatRoom, "updatedAt", "ASC"],
+      [ChatRoom, ChatMessage, "updatedAt", "ASC"],
     ],
   })
     .then((authAccount) => {
