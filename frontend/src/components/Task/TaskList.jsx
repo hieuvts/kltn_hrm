@@ -1,10 +1,11 @@
 import * as React from "react";
-import { DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import DialogDeleteTask from "./DialogDeleteTask";
 import DialogDeleteMultipleTask from "./DialogDeleteMultipleTask";
 import DialogUpdateTask from "./DialogUpdateTask";
 import {
-  setCurrentSelectedTask, updateTaskAsync
+  setCurrentSelectedTask,
+  updateTaskAsync,
 } from "../../stores/taskSlice";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
@@ -191,25 +192,26 @@ export default function TaskList() {
         handleCloseDialog={handleCloseDialogUpdateTask}
       />
       <DragDropContext
-        onDragEnd={(result) => {onDragEnd(result, columns, setColumns)
-        let temp = JSON.parse(JSON.stringify(selectedTask));
-        let status = "";
-        if (result.destination === null) {
-          return;
-        }
-        switch (result.destination.droppableId) {
-          case "Pending":
-            status = "Pending";
-            break;
-          case "InProgress":
-            status = "In Progress";
-            break;
-          case "Finish":
-            status = "Finish";
-            break;
-        }
-        temp.status = status;
-        dispatch(updateTaskAsync(temp));
+        onDragEnd={(result) => {
+          onDragEnd(result, columns, setColumns);
+          let temp = JSON.parse(JSON.stringify(selectedTask));
+          let status = "";
+          if (result.destination === null) {
+            return;
+          }
+          switch (result.destination.droppableId) {
+            case "Pending":
+              status = "Pending";
+              break;
+            case "InProgress":
+              status = "In Progress";
+              break;
+            case "Finish":
+              status = "Finish";
+              break;
+          }
+          temp.status = status;
+          dispatch(updateTaskAsync(temp));
         }}
       >
         {Object.entries(columns).map(([columnId, column], index) => {
@@ -252,7 +254,7 @@ export default function TaskList() {
                             return (
                               <Draggable
                                 key={index}
-                                draggableId={item.id}
+                                draggableId={item.id.toString()}
                                 index={index}
                               >
                                 {(provided, snapshot) => {
@@ -384,7 +386,9 @@ export default function TaskList() {
                                           justifyContent: "flex-end",
                                         }}
                                       >
-                                        <CardAction currentSelectedTask={item}/>
+                                        <CardAction
+                                          currentSelectedTask={item}
+                                        />
                                       </Box>
                                     </Card>
                                   );
