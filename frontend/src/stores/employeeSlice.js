@@ -163,7 +163,7 @@ export const employeeSlice = createSlice({
     //   console.log("[Pending] updateEmployeeAsync state= ", state);
     // },
     [updateEmployeeAsync.rejected]: (state, actions) => {
-      console.log("[Rejected] updateEmployeeAsync errorMsg= ", actions.payload);
+      console.log("[Rejected] updateEmployeeAsync errorMsg= ", actions);
     },
     [updateEmployeeAsync.fulfilled]: (state, actions) => {
       console.log(

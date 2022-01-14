@@ -463,7 +463,7 @@ export default function EmployeeTable() {
                         <TableCell align="right">{row.position}</TableCell>
                         <TableCell align="right">
                           {departments.map((department) => {
-                            if (department.id === row.departmentID) {
+                            if (department.id == row.departmentID) {
                               return department.name;
                             }
                           })}

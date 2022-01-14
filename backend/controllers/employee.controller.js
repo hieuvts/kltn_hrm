@@ -122,6 +122,7 @@ const createEmployee = async (req, res) => {
 
 const updateEmployee = async (req, res) => {
   console.log("update values \n", req.body);
+  console.log("update id \n", req.query.id);
   Employee.update(req.body, {
     where: { id: req.query.id },
   })

@@ -54,9 +54,11 @@ export default function FormUpdateEmployeeInformation({
       validationSchema: employeeInfoValidationSchema,
       onSubmit: (values) => {
         values.departmentID = values.departmentID.toString();
+
         dispatch(updateEmployeeAsync(values))
           .unwrap()
           .then(() => {
+            values.id = formikInitialValues.id;
             dispatch(
               setCurrentSelectedEmployee({ currentSelectedEmployee: values })
             );
@@ -243,9 +245,5 @@ FormUpdateEmployeeInformation.defaultProps = {
     phoneNumber: "",
     email: "",
     address: "",
-    departments: [],
-    roles: [],
-    projects: [],
-    isDeleted: false,
   },
 };
