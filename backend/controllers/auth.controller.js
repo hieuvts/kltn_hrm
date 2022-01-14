@@ -109,8 +109,34 @@ const changePassword = async (req, res, next) => {
       return;
     });
 };
+
+const deleteAuthAccount = async (req, res) => {
+  console.log("==> ", req.query.id);
+  AuthAccount.destroy({ where: { id: req.query.id } })
+    .then((affectedRows) => {
+      if (affectedRows == 1) {
+        console.log("[SUCCESS] delete authAccount");
+        res.status(200).json({
+          message: "Delete authAccount successfully",
+        });
+      } else {
+        console.log("[Can't] delete authAccount");
+        return res.status(400).json({
+          message: "Can't delete authAccount",
+        });
+      }
+    })
+    .catch((error) => {
+      console.log("[ERROR] deleteCompany");
+      return res.status(500).json({
+        error: error,
+      });
+    });
+};
+
 module.exports = {
   signUp,
   login,
   changePassword,
+  deleteAuthAccount,
 };
