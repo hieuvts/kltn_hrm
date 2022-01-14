@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       senderEmail: DataTypes.STRING,
       message: DataTypes.STRING,
+      chatRoomId: DataTypes.INTEGER,
       isBroadcast: DataTypes.BOOLEAN,
       createdAt: DataTypes.DATE,
     },

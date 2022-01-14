@@ -30,6 +30,7 @@ const io = require("socket.io")(http, {
 });
 
 db.sequelize.sync();
+
 app.use((err, req, res, next) => {
   res.status(err.status || 404).json({
     message: "[ERROR] No such route exists!",
@@ -50,43 +51,45 @@ app.get("/testapi", (req, res) => {
 
 // begin socketio
 io.use((socket, next) => {
-  if (socket.handshake.auth && socket.handshake.auth.token) {
-    jwt.verify(socket.handshake.auth.token, jwtSecret, (err, decoded) => {
-      if (err) {
-        console.log("Authentication failed ", err);
-        return next(new Error("Unauthorized!"));
-      }
-      console.log("Authenticated, next()");
-      socket.decoded = decoded;
-      next();
-    });
-  } else {
-    console.log("No token provided!");
-    next(new Error("Unauthorized!"));
-  }
+  // if (socket.handshake.auth && socket.handshake.auth.token) {
+  //   jwt.verify(socket.handshake.auth.token, jwtSecret, (err, decoded) => {
+  //     if (err) {
+  //       console.log("Authentication failed ", err);
+  //       return next(new Error("Unauthorized!"));
+  //     }
+  //     console.log("Authenticated, next()");
+  //     socket.decoded = decoded;
+  //     next();
+  //   });
+  // } else {
+  //   console.log("No token provided!");
+  //   next(new Error("Unauthorized!"));
+  // }
+  next();
 }).on("connection", (socket) => {
   console.log(`[NewClient]id=${socket.id} joint`);
 
-  socket.on("joinRoom", ({ email, chatRoomId }) => {
+  socket.on("joinRoom", ({ senderEmail, chatRoomId }) => {
     socket.join(chatRoomId);
-    console.log("New user Join ", email, chatRoomId);
+    console.log("New user Join ", senderEmail, chatRoomId);
     // io.to(socket.id).emit("message", {
     //   message: `${email} Connected to SocketIO server`,
     //   createdAt: new Date(),
     //   isBroadcast: true,
     // });
     socket.broadcast.to(chatRoomId).emit("message", {
-      message: `SYSTEM: ${email} has joint!`,
+      message: `SYSTEM: ${senderEmail} has joint!`,
       createdAt: new Date(),
       isBroadcast: true,
     });
     // Listen new message
     socket.on("message", (body) => {
-      body["email"] = email;
+      body["senderEmail"] = senderEmail;
       body["createdAt"] = new Date();
       body["isBroadcast"] = false;
+      body["chatRoomId"] = chatRoomId;
       console.log("messageBody ", body);
-      saveMessagesToDB(chatRoomId, body);
+      saveMessagesToDB(body);
       io.to(chatRoomId).emit("message", body);
     });
 
@@ -94,7 +97,7 @@ io.use((socket, next) => {
       socket.leave(chatRoomId);
       console.log("disconnected");
       socket.broadcast.to(chatRoomId).emit("message", {
-        message: `SYSTEM: ${email} has left the chat!`,
+        message: `SYSTEM: ${senderEmail} has left the chat!`,
         createdAt: new Date(),
         isBroadcast: true,
       });
@@ -102,21 +105,15 @@ io.use((socket, next) => {
   });
 });
 
-const saveMessagesToDB = (chatRoomId, messages) => {
+const saveMessagesToDB = (messages) => {
   ChatMessage.create(messages)
     .then((message) => {
       if (message) {
-        console.log("add msg ok");
-        return res.status(200).json({
-          message: "add msg ok",
-        });
+        console.log("add msg ok", message);
       }
     })
     .catch((error) => {
       console.log(moment().format("hh:mm:ss"), "[ERROR] addMsg");
-      return res.status(500).json({
-        error: error,
-      });
     });
 };
 
