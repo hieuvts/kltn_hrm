@@ -78,7 +78,7 @@ export default function InternalChat() {
                         <Typography
                           component={"span"}
                           variant="body2"
-                          sx={{ color: "white" }}
+                          sx={{ color: "#000000" }}
                         >
                           {room.ChatMessages.slice(-1)[0].sender === user.email
                             ? "You"
