@@ -48,7 +48,7 @@ const createProject = async (req, res) => {
 };
 
 const updateProject = async (req, res) => {
-  console.log("invoked update");
+  console.log("invoked update", req.query.id);
   Project.update(req.body, {
     where: { id: req.query.id },
   })

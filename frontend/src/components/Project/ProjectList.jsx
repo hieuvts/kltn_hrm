@@ -238,7 +238,8 @@ export default function ProjectTable() {
   const [isDialogProjectDetailsOpen, setDialogProjectDetailsOpen] =
     React.useState(false);
   const dispatch = useDispatch();
-  var rows = useSelector((state) => state.project.projectList);
+  var projects = useSelector((state) => state.project.projectList);
+  var departments = useSelector((state) => state.department.departmentList);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -247,9 +248,9 @@ export default function ProjectTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n._id);
-      // Select all -> add all project (equals to 'rows') to the selectedProjectList
-      dispatch(setMultiSelectedProjectList(rows));
+      const newSelecteds = projects.map((n) => n._id);
+      // Select all -> add all project (equals to 'projects') to the selectedProjectList
+      dispatch(setMultiSelectedProjectList(projects));
       setSelected(newSelecteds);
       return;
     }
@@ -297,7 +298,7 @@ export default function ProjectTable() {
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - projects.length) : 0;
 
   const handleCloseDialogDeleteProject = () => {
     setDialogDeleteProjectOpen(false);
@@ -375,10 +376,10 @@ export default function ProjectTable() {
                 orderBy={orderBy}
                 onSelectAllClick={() => handleSelectAllClick(event)}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
+                rowCount={projects.length}
               />
               <TableBody>
-                {rows
+                {projects
                   .slice()
                   .sort(getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -424,10 +425,12 @@ export default function ProjectTable() {
                           {row.customer}
                         </TableCell>
                         <TableCell align="center">
-                          {row.departments.map((department, index) => (
-                            <p key={index}>{department.name}</p>
-                          ))}
-                        </TableCell>  
+                          {departments.map((department) => {
+                            if (department.id == row.departmentID) {
+                              return department.name;
+                            }
+                          })}
+                        </TableCell>
                         <TableCell align="center">
                           {moment(row.startDate).format("DD-MM-YYYY")}
                         </TableCell>
@@ -456,7 +459,7 @@ export default function ProjectTable() {
             labelRowsPerPage="Projects per page"
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={rows.length}
+            count={projects.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

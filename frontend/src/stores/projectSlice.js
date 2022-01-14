@@ -62,7 +62,7 @@ export const updateProjectAsync = createAsyncThunk(
   "project/updateProject",
   async (payload, thunkAPI) => {
     try {
-      const res = await projectService.updateProject(payload._id, payload);
+      const res = await projectService.updateProject(payload.id, payload);
 
       return res.data.projects;
     } catch (error) {
