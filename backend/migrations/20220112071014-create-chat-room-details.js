@@ -14,6 +14,7 @@ module.exports = {
           model: "ChatRooms",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
       memberID: {
         type: Sequelize.INTEGER,
@@ -21,14 +22,17 @@ module.exports = {
           model: "AuthAccounts",
           key: "id",
         },
+        onDelete: "SET NULL",
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("now"),
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("now"),
       },
     });
   },

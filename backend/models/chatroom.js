@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsToMany(models.AuthAccount, {
         through: models.ChatRoomDetails,
         foreignKey: "chatRoomID",
+        onDelete: "cascade",
       });
     }
   }

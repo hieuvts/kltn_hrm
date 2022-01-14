@@ -10,5 +10,6 @@ router.post("/signup", verifySignUp.checkExistedEmail, authController.signUp);
 
 router.post("/login", authController.login);
 router.post("/changePwd", authJwt.verifyToken, authController.changePassword);
+router.delete("/delete", authController.deleteAuthAccount);
 
 module.exports = router;

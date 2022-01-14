@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsToMany(models.ChatRoom, {
         through: models.ChatRoomDetails,
         foreignKey: "memberID",
+        onDelete: "cascade",
       });
       this.hasOne(models.Employee, {
         foreignKey: "authAccountID",
