@@ -13,6 +13,8 @@ const authRoute = require("./routes/auth.route");
 const companyRoute = require("./routes/company.route");
 const chatRoomDetailsRoute = require("./routes/chatRoomDetails.route");
 const chatRoom = require("./routes/chatRoom.route");
+const db = require("./models");
+const ChatMessage = db.ChatMessage;
 
 const app = express();
 app.use(cors({ credentials: true, origin: true }));
@@ -26,7 +28,7 @@ const io = require("socket.io")(http, {
     origin: "*",
   },
 });
-const db = require("./models");
+
 db.sequelize.sync();
 app.use((err, req, res, next) => {
   res.status(err.status || 404).json({
@@ -46,6 +48,79 @@ app.get("/testapi", (req, res) => {
   res.send("Hello World!!!");
 });
 
+// begin socketio
+io.use((socket, next) => {
+  if (socket.handshake.auth && socket.handshake.auth.token) {
+    jwt.verify(socket.handshake.auth.token, jwtSecret, (err, decoded) => {
+      if (err) {
+        console.log("Authentication failed ", err);
+        return next(new Error("Unauthorized!"));
+      }
+      console.log("Authenticated, next()");
+      socket.decoded = decoded;
+      next();
+    });
+  } else {
+    console.log("No token provided!");
+    next(new Error("Unauthorized!"));
+  }
+}).on("connection", (socket) => {
+  console.log(`[NewClient]id=${socket.id} joint`);
+
+  socket.on("joinRoom", ({ email, chatRoomId }) => {
+    socket.join(chatRoomId);
+    console.log("New user Join ", email, chatRoomId);
+    // io.to(socket.id).emit("message", {
+    //   message: `${email} Connected to SocketIO server`,
+    //   createdAt: new Date(),
+    //   isBroadcast: true,
+    // });
+    socket.broadcast.to(chatRoomId).emit("message", {
+      message: `SYSTEM: ${email} has joint!`,
+      createdAt: new Date(),
+      isBroadcast: true,
+    });
+    // Listen new message
+    socket.on("message", (body) => {
+      body["email"] = email;
+      body["createdAt"] = new Date();
+      body["isBroadcast"] = false;
+      console.log("messageBody ", body);
+      saveMessagesToDB(chatRoomId, body);
+      io.to(chatRoomId).emit("message", body);
+    });
+
+    socket.on("disconnect", () => {
+      socket.leave(chatRoomId);
+      console.log("disconnected");
+      socket.broadcast.to(chatRoomId).emit("message", {
+        message: `SYSTEM: ${email} has left the chat!`,
+        createdAt: new Date(),
+        isBroadcast: true,
+      });
+    });
+  });
+});
+
+const saveMessagesToDB = (chatRoomId, messages) => {
+  ChatMessage.create(messages)
+    .then((message) => {
+      if (message) {
+        console.log("add msg ok");
+        return res.status(200).json({
+          message: "add msg ok",
+        });
+      }
+    })
+    .catch((error) => {
+      console.log(moment().format("hh:mm:ss"), "[ERROR] addMsg");
+      return res.status(500).json({
+        error: error,
+      });
+    });
+};
+
+// end socketio
 http.listen(port, () => {
   console.log("Listening on localhost:", port);
 });

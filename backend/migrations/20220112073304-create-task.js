@@ -47,9 +47,6 @@ module.exports = {
       status: {
         type: Sequelize.STRING,
       },
-      customer: {
-        type: Sequelize.STRING,
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
