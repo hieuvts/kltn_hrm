@@ -37,6 +37,14 @@ module.exports = {
           createdAt: "2022-01-05 16:20:48",
           updatedAt: new Date(),
         },
+        {
+          senderEmail: "hieu@gmail.com",
+          chatRoomID: "2",
+          message: "Hello room 2!",
+          isBroadcast: false,
+          createdAt: "2022-01-05 16:40:48",
+          updatedAt: new Date(),
+        },
       ],
       {}
     );

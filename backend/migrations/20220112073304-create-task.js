@@ -42,6 +42,12 @@ module.exports = {
         type: Sequelize.DATE,
       },
       progress: {
+        type: Sequelize.INTEGER,
+      },
+      status: {
+        type: Sequelize.STRING,
+      },
+      customer: {
         type: Sequelize.STRING,
       },
       createdAt: {

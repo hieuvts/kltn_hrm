@@ -29,6 +29,8 @@ module.exports = (sequelize, DataTypes) => {
       difficulty: DataTypes.INTEGER,
       dueDate: DataTypes.DATE,
       progress: DataTypes.INTEGER,
+      status: DataTypes.STRING,
+      customer: DataTypes.STRING,
     },
     {
       sequelize,

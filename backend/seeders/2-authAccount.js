@@ -6,12 +6,6 @@ module.exports = {
       "authAccounts",
       [
         {
-          email: "hieu@gmail.com",
-          password: "password",
-          privilege: "admin",
-          companyID: "1",
-        },
-        {
           email: "vinh@gmail.com",
           password: "password",
           privilege: "admin",
