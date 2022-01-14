@@ -20,7 +20,6 @@ export default function ChatPanel({
   roomMessages,
 }) {
   const user = JSON.parse(localStorage.getItem("user"));
-  const currentUser = useSelector((state) => state.user.currentUser);
   const roomId = chatRoomId; // Gets roomId from URL
   const [messageToSend, setMessageToSend] = useState("");
   // Creates a websocket and manages messaging
@@ -28,7 +27,7 @@ export default function ChatPanel({
   const dispatch = useDispatch();
   const handleSendMessage = (values) => {
     let messageBody = {
-      sender: currentUser.email,
+      sender: user.email,
       message: values.message,
       isBroadcast: false,
     };
@@ -63,7 +62,7 @@ export default function ChatPanel({
               <li
                 key={index}
                 className={`messageList ${
-                  message.sender === currentUser.email ? "sent" : "received"
+                  message.sender === user.email ? "sent" : "received"
                 }`}
               >
                 {message.isBroadcast ? (
@@ -71,7 +70,7 @@ export default function ChatPanel({
                 ) : (
                   <div
                     className={`message ${
-                      message.sender === currentUser.email ? "sent" : "received"
+                      message.sender === user.email ? "sent" : "received"
                     }`}
                   >
                     <div className="avatar">
@@ -89,12 +88,12 @@ export default function ChatPanel({
 
                     <div
                       className={`bubble ${
-                        message.sender === currentUser.email
+                        message.sender === user.email
                           ? "sent"
                           : "received"
                       }`}
                     >
-                      {message.sender !== currentUser.email && (
+                      {message.sender !== user.email && (
                         <div className="info">
                           <div className="username">{message.sender}</div>
                           <div className="role">admin</div>
@@ -120,7 +119,7 @@ export default function ChatPanel({
   );
 }
 ChatPanel.propTypes = {
-  chatRoomId: PropTypes.string,
+  chatRoomId: PropTypes.number,
   totalMember: PropTypes.number,
   roomName: PropTypes.string,
   roomMessages: PropTypes.array,

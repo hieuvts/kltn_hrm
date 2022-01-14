@@ -143,7 +143,16 @@ const getChatRooms = (req, res) => {
   console.log("invoked getChatRooms");
   AuthAccount.findOne({
     where: { id: req.query.id },
-    include: [ChatRoom],
+    include: [
+      {
+        model: ChatRoom,
+        include: [
+          {
+            model: ChatMessage,
+          },
+        ],
+      },
+    ],
   })
     .then((authAccount) => {
       if (!authAccount) {

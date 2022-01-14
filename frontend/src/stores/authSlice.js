@@ -2,12 +2,16 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setMessage } from "./messageSlice";
 import authService from "../services/auth.service";
 
-const user = JSON.parse(localStorage.getItem("user"));
+const userFromLocalStorage = JSON.parse(localStorage.getItem("user"));
 
-const initialState = user
-  ? { isLoggedIn: true, user }
-  : { isLoggedIn: false, user: null };
+const isLoggedIn = userFromLocalStorage ? true : false;
+const user = userFromLocalStorage ? userFromLocalStorage : null;
 
+const initialState = {
+  isLoggedIn: isLoggedIn,
+  user: user,
+  chatRooms: [],
+};
 export const signUp = createAsyncThunk(
   "auth/signup",
   async (payload, thunkAPI) => {

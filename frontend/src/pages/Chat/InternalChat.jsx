@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import PropTypes from "prop-types";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -35,6 +35,9 @@ export default function InternalChat() {
     dispatch(getChatRoomByAuthAccount({ id: user.id }));
   };
 
+  useLayoutEffect(() => {
+    handleGetAllChatRoom();
+  }, []);
   useEffect(() => {
     console.log("Get all room message");
     handleGetAllChatRoom();
@@ -63,37 +66,41 @@ export default function InternalChat() {
                       <Typography variant="body1">{room.name}</Typography>
                     </React.Fragment>
                   }
-                  // secondary={
-                  //   <React.Fragment>
-                  //     {(typeof room.messages !== "undefined") &
-                  //       (room.messages.length >= 1) && (
-                  //       <Typography component={"span"} variant="body2">
-                  //         {room.messages.slice(-1)[0].sender === user.email
-                  //           ? "You"
-                  //           : room.messages.slice(-1)[0].sender}
-                  //         {": "}
-                  //         {room.messages.slice(-1)[0].message.slice(-30)}
-                  //       </Typography>
-                  //     )}
-                  //   </React.Fragment>
-                  // }
+                  secondary={
+                    <React.Fragment>
+                      {(typeof room.ChatMessages !== "undefined") &
+                        (room.ChatMessages.length >= 1) && (
+                        <Typography
+                          component={"span"}
+                          variant="body2"
+                          sx={{ color: "white" }}
+                        >
+                          {room.ChatMessages.slice(-1)[0].sender === user.email
+                            ? "You"
+                            : room.ChatMessages.slice(-1)[0].sender}
+
+                          {room.ChatMessages.slice(-1)[0].message.slice(-30)}
+                        </Typography>
+                      )}
+                    </React.Fragment>
+                  }
                 />
               </ListItem>
             </Tab>
           ))}
         </TabList>
 
-        {/* {chatRooms.map((room, index) => (
+        {chatRooms.map((room, index) => (
           <TabPanel key={index} value={value} index={index}>
             <ChatPanel
               chatRoomId={room.id}
               roomName={room.name}
-              totalMember={4}
-              roomMessages={room.messages}
+              totalMember={3}
+              roomMessages={room.ChatMessages}
               sx={{ m: 0, p: 0 }}
             />
           </TabPanel>
-        ))} */}
+        ))}
       </Tabs>
     </div>
   );
