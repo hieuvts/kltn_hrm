@@ -45,6 +45,7 @@ export default function EmploymentHistory() {
                 <TimelineItem key={index}>
                   <TimelineOppositeContent
                     sx={{ m: "auto 0" }}
+                    style={{ flex: 0.1 }}
                     align="right"
                     variant="body2"
                     color="text.secondary"
