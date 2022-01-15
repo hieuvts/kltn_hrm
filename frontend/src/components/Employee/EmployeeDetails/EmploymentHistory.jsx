@@ -18,42 +18,11 @@ import FastfoodIcon from "@mui/icons-material/Fastfood";
 import BadgeIcon from "@mui/icons-material/Badge";
 import PersonIcon from "@mui/icons-material/Person";
 export default function EmploymentHistory() {
+  const employee = useSelector(
+    (state) => state.employee.currentSelectedEmployee
+  );
   const [isDialogUpdateEmployeeOpen, setDialogUpdateEmployee] = useState(false);
 
-  const testData = [
-    {
-      role: "Staff",
-      date: "20/12/2021",
-      describe:
-        "lorem ipsum dolor sit amet, consectertur adisplaing elit, spduedo a euismod tepor",
-    },
-    {
-      role: "Manager",
-      date: "01/01/2019",
-      describe:
-        "lorem ipsum dolor sit amet, consectertur adisplaing elit, spduedo a euismod tepor",
-    },
-    {
-      role: "CEO",
-      date: "01/01/2019",
-      describe:
-        "lorem ipsum dolor sit amet, consectertur adisplaing elit, spduedo a euismod tepor",
-    },
-    {
-      role: "CEO",
-      date: "01/01/2019",
-      describe:
-        "lorem ipsum dolor sit amet, consectertur adisplaing elit, spduedo a euismod tepor",
-    },
-  ];
-  let joinedDate = moment(testData[0].date, "DD-MM-YYYY");
-  let currentDate = moment(new Date());
-  console.log("joinedDate ", joinedDate);
-  console.log("currentDate ", currentDate);
-  console.log(
-    "duration: ",
-    Math.ceil(moment.duration(currentDate.diff(joinedDate)).asDays())
-  );
   return (
     <Paper elevation={3} sx={({ ...rowDirection }, { p: 3 })}>
       <Typography variant="h6" sx={{ alignSelf: "center" }}>
@@ -69,7 +38,7 @@ export default function EmploymentHistory() {
         }}
       >
         <Timeline position="right">
-          {testData.map((data, index) => {
+          {employee.EmploymentHistories.map((data, index) => {
             return (
               <TimelineItem key={index}>
                 <TimelineOppositeContent
@@ -78,7 +47,7 @@ export default function EmploymentHistory() {
                   variant="body2"
                   color="text.secondary"
                 >
-                  {data.date}
+                  {moment(data.date).format("DD/MM/YYYY")}
                 </TimelineOppositeContent>
                 <TimelineSeparator>
                   <TimelineConnector />
@@ -89,9 +58,9 @@ export default function EmploymentHistory() {
                 </TimelineSeparator>
                 <TimelineContent sx={{ py: "12px", px: 2 }}>
                   <Typography variant="h6" component="span">
-                    {data.role}
+                    Placeholder
                   </Typography>
-                  <Typography>{data.describe}</Typography>
+                  <Typography>{data.event}</Typography>
                 </TimelineContent>
               </TimelineItem>
             );

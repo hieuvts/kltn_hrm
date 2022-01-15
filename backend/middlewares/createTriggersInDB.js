@@ -7,7 +7,7 @@ const createTriggersInDB = async (req, res) => {
     await db.sequelize.query(
       `create trigger employment_change 
       after update on employees for each row 
-      insert into employmenthistory 
+      insert into employmenthistories 
       set date=now(), employeeID = OLD.id, 
       event=CONCAT('Change from ', 
       (select name from departments where departments.id=OLD.departmentID), 
