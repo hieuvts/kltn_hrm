@@ -14,6 +14,7 @@ const companyRoute = require("./routes/company.route");
 const chatRoomDetailsRoute = require("./routes/chatRoomDetails.route");
 const chatRoom = require("./routes/chatRoom.route");
 const db = require("./models");
+const createTriggersInDB = require("./middlewares/createTriggersInDB");
 const ChatMessage = db.ChatMessage;
 
 const app = express();
@@ -30,7 +31,7 @@ const io = require("socket.io")(http, {
 });
 
 db.sequelize.sync();
-
+createTriggersInDB();
 app.use((err, req, res, next) => {
   res.status(err.status || 404).json({
     message: "[ERROR] No such route exists!",

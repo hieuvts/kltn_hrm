@@ -5,10 +5,10 @@ const ChatMessage = db.ChatMessage;
 const ChatRoom = db.ChatRoom;
 const ChatRoomDetails = db.ChatRoomDetails;
 const Company = db.Company;
+const Employee = db.Employee;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
-const authaccount = require("../models/authaccount");
 const jwtSecret = process.env.JWT_SECRET;
 
 const signUp = (req, res, next) => {
@@ -33,6 +33,7 @@ const signUp = (req, res, next) => {
 const login = (req, res) => {
   AuthAccount.findOne({
     where: { email: req.body.email },
+    include: Employee,
   })
     .then((authAccount) => {
       if (!authAccount) {
@@ -56,12 +57,15 @@ const login = (req, res) => {
       var token = jwt.sign({ email: authAccount.email }, jwtSecret, {
         expiresIn: 86400, // 24 hours
       });
+      // res.status(200).send({
+      //   id: authAccount.id,
+      //   email: authAccount.email,
+      //   privilege: authAccount.privilege,
+      //   companyID: authAccount.companyID,
+      //   accessToken: token,
+      // });
       res.status(200).send({
-        id: authAccount.id,
-        email: authAccount.email,
-        privilege: authAccount.privilege,
-        companyID: authAccount.companyID,
-        accessToken: token,
+        authAccount,
       });
     })
     .catch((error) => {
