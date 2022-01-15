@@ -18,7 +18,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import { addTaskAsync, getTaskAsync } from "../../stores/taskSlice";
 import { taskInformationValidationSchema } from "../../utilities/validationSchema";
-import { Box } from "@mui/material";
 export default function FormAddTask({
   handleCloseDialog,
   submitButtonText,

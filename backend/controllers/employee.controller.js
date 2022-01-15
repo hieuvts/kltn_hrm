@@ -1,10 +1,23 @@
 const db = require("../models");
+
+const { Op } = require("sequelize");
 const Employee = db.Employee;
 const Department = db.Department;
 const moment = require("moment");
+const { sequelize } = require("../models");
 
 const getAllEmployee = async (req, res) => {
-  Employee.findAll()
+  const searchQuery = req.query.search;
+  console.log("invoke 7", searchQuery);
+  Employee.findAll({
+    where: {
+      [Op.or]: [
+        { fname: { [Op.like]: `%${searchQuery}%` } },
+        { lname: { [Op.like]: `%${searchQuery}%` } },
+        { phoneNumber: { [Op.like]: `%${searchQuery}%` } },
+      ],
+    },
+  })
     .then((employees) => {
       if (employees) {
         res.status(200).json(employees);
