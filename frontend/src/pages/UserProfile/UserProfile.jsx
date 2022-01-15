@@ -18,8 +18,6 @@ import DialogUpdateEmployee from "../../components/Employee/DialogUpdateEmployee
 import { setCurrentSelectedEmployee } from "../../stores/employeeSlice";
 
 export default function UserProfile() {
-  // const user = useSelector((state) => state.auth);
-  // const currentUser = user.currentUser;
   const [isDialogChangeUserPwdOpen, setDialogChangeUserPwd] = useState(false);
   const [isDialogUpdateEmployeeOpen, setDialogUpdateEmployee] = useState(false);
   const [currentEmployee, setCurrentEmployee] = useState({});
@@ -84,9 +82,7 @@ export default function UserProfile() {
               </Box>
               <Box sx={rowDirection}>
                 <Typography>Roles:</Typography>
-                {user.roles.map((role, index) => (
-                  <Typography key={index}>{role.name}</Typography>
-                ))}
+                {user.privilege}
               </Box>
               <Box sx={{ mt: 3, textAlign: "right" }}>
                 <Button

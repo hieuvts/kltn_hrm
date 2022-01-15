@@ -73,7 +73,7 @@ const titleCells = [
   {
     id: "actions",
     numeric: false,
-    disablePadding: true,
+    disablePadding: false,
     label: "Actions",
   },
 ];
@@ -107,7 +107,7 @@ function DepartmentTableHead(props) {
         {titleCells.map((titleCell) => (
           <TableCell
             key={titleCell.id}
-            align={"center"}
+            align={"right"}
             padding={titleCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === titleCell.id ? order : false}
           >
@@ -399,7 +399,7 @@ export default function DepartmentTable() {
                           id={labelId}
                           scope="row"
                           padding="none"
-                          align="center"
+                          align="right"
                           onClick={() => {
                             dispatch(
                               setCurrentSelectedDepartment({
@@ -411,10 +411,10 @@ export default function DepartmentTable() {
                         >
                           {row.name}
                         </TableCell>
-                        <TableCell align="center">
+                        <TableCell align="right">
                           {row.Employees.length}
                         </TableCell>
-                        <TableCell align="center">{row.manager}</TableCell>
+                        <TableCell align="right">{row.manager}</TableCell>
                         <TableCell align="right">
                           <RowActions currentSelectedDepartment={row} />
                         </TableCell>

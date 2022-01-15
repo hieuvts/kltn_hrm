@@ -68,9 +68,10 @@ export default function Employee() {
   );
   useEffect(() => {
     debounceFetchAPI(searchQuery);
-    dispatch(getDepartmentAsync());
   }, [handleSearchQueryChange]);
-
+  useEffect(() => {
+    dispatch(getDepartmentAsync());
+  }, []);
   return (
     <>
       <DialogExportToExcel
@@ -139,7 +140,7 @@ export default function Employee() {
 
       <Paper elevation={1} sx={{ my: 3, p: 3 }}>
         <MySearchBox
-          placeholder="Search for customer..."
+          placeholder="Search for employee..."
           handleSearchQueryChange={handleSearchQueryChange}
         />
       </Paper>

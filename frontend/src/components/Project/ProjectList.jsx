@@ -122,7 +122,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={"center"}
+            align={"right"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -411,7 +411,7 @@ export default function ProjectTable() {
                           id={labelId}
                           scope="row"
                           padding="none"
-                          align="center"
+                          align="right"
                         >
                           {row.name}
                         </TableCell>
@@ -420,24 +420,24 @@ export default function ProjectTable() {
                           id={labelId}
                           scope="row"
                           padding="none"
-                          align="center"
+                          align="right"
                         >
                           {row.customer}
                         </TableCell>
-                        <TableCell align="center">
+                        <TableCell align="right">
                           {departments.map((department) => {
                             if (department.id == row.departmentID) {
                               return department.name;
                             }
                           })}
                         </TableCell>
-                        <TableCell align="center">
+                        <TableCell align="right">
                           {moment(row.startDate).format("DD-MM-YYYY")}
                         </TableCell>
-                        <TableCell align="center">
+                        <TableCell align="right">
                           {moment(row.endDate).format("DD-MM-YYYY")}
                         </TableCell>
-                        <TableCell align="center">
+                        <TableCell align="right">
                           <RowActions currentSelectedProject={row} />
                         </TableCell>
                       </TableRow>

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
@@ -13,35 +15,28 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
-import Slider from "@mui/material/Slider";
-
+import { Slider } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  updateProjectAsync,
-  getProjectAsync,
-  setCurrentSelectedProject,
-} from "../../stores/projectSlice";
-import { projectInformationValidationSchema } from "../../utilities/validationSchema";
+  updateTaskAsync,
+  getTaskAsync,
+  setCurrentSelectedTask,
+} from "../../stores/taskSlice";
+import { taskInformationValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
 
-export default function FormUpdateProject({
-  handleCloseDialog,
-  initialValues,
-}) {
+export default function FormUpdateTask({ handleCloseDialog, initialValues }) {
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
-  const [progressSliderValue, setProgressSliderValue] = useState(0);
-  const projects = useSelector((state) => state.project.projectList);
+  const tasks = useSelector((state) => state.task.taskList);
   const employees = useSelector((state) => state.employee.employeeList);
+  const projects = useSelector((state) => state.project.projectList);
+  var formikInitialValues = { ...initialValues };
 
-  const handleSbSuccessClose = () => {
-    setSbSuccessOpen(false);
-  };
-  const handleSbFailedClose = () => {
-    setSbFailedOpen(false);
-  };
-
-  const dispatch = useDispatch();
+// delete formikInitialValues.assignFrom;
+// delete formikInitialValues.assignTo;
+// formikInitialValues["assignFrom"] =  assignFromNameArr;
+// formikInitialValues["assignTo"] =  assignToNameArr;
 
   const progressSliderMarks = [
     {
@@ -68,24 +63,29 @@ export default function FormUpdateProject({
   const getProgressSliderValue = (value) => {
     return `${value}`;
   };
+  const handleSbSuccessClose = () => {
+    setSbSuccessOpen(false);
+  };
+  const handleSbFailedClose = () => {
+    setSbFailedOpen(false);
+  };
 
-  var formikInitialValues = { ...initialValues };
+  const dispatch = useDispatch();
 
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: formikInitialValues,
-      validationSchema: projectInformationValidationSchema,
+      validationSchema: taskInformationValidationSchema,
       onSubmit: (values) => {
-        values.id = formikInitialValues.id;
-        dispatch(updateProjectAsync(values))
+        dispatch(updateTaskAsync(values))
           .unwrap()
           .then(() => {
             dispatch(
-              setCurrentSelectedProject({
-                currentSelectedProject: values,
+              setCurrentSelectedTask({
+                currentSelectedTask: values,
               })
             );
-            dispatch(getProjectAsync());
+            dispatch(getTaskAsync());
             setSbSuccessOpen(true);
             setTimeout(() => {
               handleCloseDialog();
@@ -99,6 +99,22 @@ export default function FormUpdateProject({
     return (
       <div style={{ marginTop: "30px" }}>
         <form onSubmit={formik.handleSubmit}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "40px",
+            }}
+          >
+            <Slider
+              aria-label="progessSlider"
+              defaultValue={0}
+              getAriaValueText={getProgressSliderValue}
+              step={10}
+              valueLabelDisplay="on"
+              marks={progressSliderMarks}
+            />
+          </Box>
           <Grid container rowSpacing={3} columnSpacing={3}>
             <Grid item sm={12} md={6}>
               <TextField
@@ -149,7 +165,7 @@ export default function FormUpdateProject({
                 </Select>
               </FormControl>
 
-              <FormControl fullWidth>
+               <FormControl fullWidth>
                 <InputLabel id="project-label">Project</InputLabel>
                 <Select
                   labelId="project-label"
@@ -170,7 +186,7 @@ export default function FormUpdateProject({
             </Grid>
 
             <Grid item sm={12} md={6}>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DateTimePicker
                   id="dueDate"
                   name="dueDate"
@@ -233,28 +249,6 @@ export default function FormUpdateProject({
                   ))}
                 </Select>
               </FormControl>
-
-              <TextField
-                fullWidth
-                id="progress"
-                name="progress"
-                label="Progress"
-                value={formik.values.progress}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.progress && Boolean(formik.errors.progress)
-                }
-                helperText={formik.touched.name && formik.errors.progress}
-                sx={{ mb: 3 }}
-              />
-              <Slider
-                aria-label="progessSlider"
-                defaultValue={0}
-                getAriaValueText={getProgressSliderValue}
-                step={10}
-                valueLabelDisplay="auto"
-                marks={progressSliderMarks}
-              />
               <FormControl fullWidth>
                 <InputLabel id="p-label">Priority</InputLabel>
                 <Select
@@ -267,16 +261,17 @@ export default function FormUpdateProject({
                   fullWidth
                   sx={{ mb: 3 }}
                 >
-                  <MenuItem value={"1"}>Pending</MenuItem>
-                  <MenuItem value={"2"}>In Progress</MenuItem>
-                  <MenuItem value={"3"}>Finish</MenuItem>
+                  <MenuItem value={"1"}>1</MenuItem>
+                  <MenuItem value={"2"}>2</MenuItem>
+                  <MenuItem value={"3"}>3</MenuItem>
                   <MenuItem value={"Extra"}>Extra</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
           </Grid>
-          <Button variant="contained" color="primary" fullWidth type="submit">
-            SUBMIT
+
+          <Button variant="contained" color="primary" fullWidth type="Update">
+            Update
           </Button>
         </form>
       </div>
@@ -300,18 +295,24 @@ export default function FormUpdateProject({
   );
 }
 
-FormUpdateProject.propTypes = {
+FormUpdateTask.propTypes = {
   handleCloseDialog: PropTypes.func,
   initialValues: PropTypes.object,
 };
-FormUpdateProject.defaultProps = {
+FormUpdateTask.defaultProps = {
   initialValues: {
     name: "",
-    employee: [],
-    customer: "",
-    startDate: new Date(),
-    endDate: new Date(),
-    departments: [],
+    assignFrom: [],
+    assignTo: [],
+    procedureID: [],
+    priority: "",
+    difficulty: "",
+    status: "",
+    progress: 0,
+    deadline: new Date(),
     isDeleted: false,
+    employees: [],
+    project: [],
   },
+  submitButtonText: "SUBMIT",
 };

@@ -4,8 +4,8 @@ import { apiBaseUrl } from "../config/apiBaseUrl";
 
 const API_URL = `${apiBaseUrl}/department/`;
 
-const getAllDepartmentEmployee = () => {
-  return axios.get(API_URL + "getDeptEmp", {
+const getAllDepartmentEmployee = (searchQuery) => {
+  return axios.get(API_URL + "getDeptEmp?search=" + searchQuery, {
     headers: authHeader(),
   });
 };

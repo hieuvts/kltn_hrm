@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
@@ -15,9 +16,8 @@ import SnackbarFailed from "../Snackbar/SnackbarFailed";
 import Slider from "@mui/material/Slider";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
-import { addTaskAsync } from "../../stores/taskSlice";
+import { addTaskAsync, getTaskAsync } from "../../stores/taskSlice";
 import { taskInformationValidationSchema } from "../../utilities/validationSchema";
-
 export default function FormAddTask({
   handleCloseDialog,
   submitButtonText,
@@ -26,7 +26,7 @@ export default function FormAddTask({
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
   const [progressSliderValue, setProgressSliderValue] = useState(0);
- 
+
   const employees = useSelector((state) => state.employee.employeeList);
   const projects = useSelector((state) => state.project.projectList);
   const handleSbSuccessClose = () => {
@@ -61,7 +61,7 @@ export default function FormAddTask({
   const getProgressSliderValue = (value) => {
     return `${value}`;
   };
-  
+
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
@@ -70,6 +70,7 @@ export default function FormAddTask({
         dispatch(addTaskAsync(values))
           .unwrap()
           .then((originalPromiseResult) => {
+            dispatch(getTaskAsync());
             setSbSuccessOpen(true);
             setTimeout(() => {
               handleCloseDialog();
@@ -83,6 +84,22 @@ export default function FormAddTask({
     return (
       <div style={{ marginTop: "30px" }}>
         <form onSubmit={formik.handleSubmit}>
+        <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "40px",
+            }}
+          >
+            <Slider
+              aria-label="progessSlider"
+              defaultValue={0}
+              getAriaValueText={getProgressSliderValue}
+              step={10}
+              valueLabelDisplay="on"
+              marks={progressSliderMarks}
+            />
+          </Box>
           <Grid container rowSpacing={3} columnSpacing={3}>
             <Grid item sm={12} md={6}>
               <TextField
@@ -114,7 +131,7 @@ export default function FormAddTask({
                 </Select>
               </FormControl>
               <FormControl fullWidth>
-                <InputLabel id="asignFrom-label">Assign from</InputLabel>
+                <InputLabel id="assignFrom-label">Assign from</InputLabel>
                 <Select
                   labelId="asignFrom-label"
                   id="assignerID"
@@ -174,7 +191,6 @@ export default function FormAddTask({
                       helperText={
                         formik.touched.endDate && formik.errors.dueDate
                       }
-                      dueDate
                       sx={{ mb: 3 }}
                     />
                   )}
@@ -199,7 +215,7 @@ export default function FormAddTask({
                 </Select>
               </FormControl>
               <FormControl fullWidth>
-                <InputLabel id="asignTo-label">Asign To</InputLabel>
+                <InputLabel id="assignTo-label">Asign To</InputLabel>
                 <Select
                   labelId="asignFrom-label"
                   id="assigneeID"
@@ -217,28 +233,7 @@ export default function FormAddTask({
                   ))}
                 </Select>
               </FormControl>
-
-              <TextField
-                fullWidth
-                id="progress"
-                name="progress"
-                label="Progress"
-                value={formik.values.progress}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.progress && Boolean(formik.errors.progress)
-                }
-                helperText={formik.touched.name && formik.errors.progress}
-                sx={{ mb: 3 }}
-              />
-              <Slider
-                aria-label="progessSlider"
-                defaultValue={0}
-                getAriaValueText={getProgressSliderValue}
-                step={10}
-                valueLabelDisplay="auto"
-                marks={progressSliderMarks}
-              />
+              
               <FormControl fullWidth>
                 <InputLabel id="p-label">Priority</InputLabel>
                 <Select
@@ -251,9 +246,9 @@ export default function FormAddTask({
                   fullWidth
                   sx={{ mb: 3 }}
                 >
-                  <MenuItem value={"1"}>Pending</MenuItem>
-                  <MenuItem value={"2"}>In Progress</MenuItem>
-                  <MenuItem value={"3"}>Finish</MenuItem>
+                  <MenuItem value={"1"}>1</MenuItem>
+                  <MenuItem value={"2"}>2</MenuItem>
+                  <MenuItem value={"3"}>3</MenuItem>
                   <MenuItem value={"Extra"}>Extra</MenuItem>
                 </Select>
               </FormControl>
