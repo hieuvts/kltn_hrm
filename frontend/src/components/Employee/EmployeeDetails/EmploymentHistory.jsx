@@ -11,13 +11,15 @@ import TimelineConnector from "@mui/lab/TimelineConnector";
 import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
 import TimelineDot from "@mui/lab/TimelineDot";
+import RepeatIcon from "@mui/icons-material/Repeat";
+import BadgeIcon from "@mui/icons-material/Badge";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
 import gauge from "../../../assets/icons/gauge.png";
 import { rowDirection, colDirection } from "../../../utilities/flexBoxStyle";
 import FastfoodIcon from "@mui/icons-material/Fastfood";
-import BadgeIcon from "@mui/icons-material/Badge";
-import PersonIcon from "@mui/icons-material/Person";
 export default function EmploymentHistory() {
   const employee = useSelector(
     (state) => state.employee.currentSelectedEmployee
@@ -54,8 +56,14 @@ export default function EmploymentHistory() {
                   </TimelineOppositeContent>
                   <TimelineSeparator>
                     <TimelineConnector />
-                    <TimelineDot color="primary" variant="outlined">
-                      <PersonIcon />
+                    <TimelineDot color="primary">
+                      {data.eventType === "Department changed" ? (
+                        <RepeatIcon />
+                      ) : data.eventType === "Position changed" ? (
+                        <StarOutlineIcon />
+                      ) : (
+                        <ModeEditIcon />
+                      )}
                     </TimelineDot>
                     <TimelineConnector />
                   </TimelineSeparator>
