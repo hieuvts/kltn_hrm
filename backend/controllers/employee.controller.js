@@ -3,6 +3,7 @@ const { Op } = require("sequelize");
 const Employee = db.Employee;
 const Department = db.Department;
 const EmploymentHistory = db.EmploymentHistory;
+const EmployeeAchievement = db.EmployeeAchievement;
 const moment = require("moment");
 const { sequelize } = require("../models");
 
@@ -10,7 +11,8 @@ const getAllEmployee = async (req, res) => {
   const searchQuery = req.query.search;
   console.log("invoke 7", searchQuery);
   Employee.findAll({
-    include: [EmploymentHistory],
+    include: [EmploymentHistory, EmployeeAchievement],
+    order: [[EmploymentHistory, "date", "DESC"]],
     where: {
       [Op.or]: [
         { fname: { [Op.like]: `%${searchQuery}%` } },
@@ -18,6 +20,7 @@ const getAllEmployee = async (req, res) => {
         { phoneNumber: { [Op.like]: `%${searchQuery}%` } },
       ],
     },
+    logging: console.log,
   })
     .then((employees) => {
       if (employees) {

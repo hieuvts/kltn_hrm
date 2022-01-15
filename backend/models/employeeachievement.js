@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class EmploymentHistory extends Model {
+  class EmployeeAchievement extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,17 +13,16 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  EmploymentHistory.init(
+  EmployeeAchievement.init(
     {
       employeeID: DataTypes.INTEGER,
       date: DataTypes.DATE,
-      eventType: DataTypes.STRING,
-      event: DataTypes.STRING,
+      achievement: DataTypes.STRING,
     },
     {
       sequelize,
-      modelName: "EmploymentHistory",
+      modelName: "EmployeeAchievement",
     }
   );
-  return EmploymentHistory;
+  return EmployeeAchievement;
 };

@@ -168,6 +168,19 @@ export default function FormUpdateEmployeeInformation({
               </FormControl>
               <TextField
                 fullWidth
+                id="position"
+                name="position"
+                label="Position"
+                value={formik.values.position}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.position && Boolean(formik.errors.position)
+                }
+                helperText={formik.touched.position && formik.errors.position}
+                sx={{ mb: 3 }}
+              />
+              <TextField
+                fullWidth
                 id="phoneNumber"
                 name="phoneNumber"
                 label="Phone number"

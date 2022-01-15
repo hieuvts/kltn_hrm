@@ -13,6 +13,7 @@ const authRoute = require("./routes/auth.route");
 const companyRoute = require("./routes/company.route");
 const chatRoomDetailsRoute = require("./routes/chatRoomDetails.route");
 const chatRoom = require("./routes/chatRoom.route");
+const employeeAchievement = require("./routes/employeeAchievement.route");
 const db = require("./models");
 const createTriggersInDB = require("./middlewares/createTriggersInDB");
 const ChatMessage = db.ChatMessage;
@@ -46,6 +47,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/company", companyRoute);
 app.use("/api/chatRoomDetails", chatRoomDetailsRoute);
 app.use("/api/chat", chatRoom);
+app.use("/api/empAchv", employeeAchievement);
 app.get("/testapi", (req, res) => {
   res.send("Hello World!!!");
 });

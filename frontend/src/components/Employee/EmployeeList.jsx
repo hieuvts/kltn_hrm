@@ -19,6 +19,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ModeIcon from "@mui/icons-material/Mode";
 import Avatar from "@mui/material/Avatar";
 import { visuallyHidden } from "@mui/utils";
@@ -29,7 +30,7 @@ import DialogDeleteEmployee from "./DialogDeleteEmployee";
 import DialogDeleteMultipleEmployee from "./DialogDeleteMultipleEmployee";
 import DialogUpdateEmployee from "./DialogUpdateEmployee";
 import DialogEmployeeDetails from "./DialogEmployeeDetails";
-
+import DialogAddEmployeeArchievement from "./EmployeeArchievement/DialogAddEmployeeArchievement";
 import moment from "moment";
 
 import {
@@ -82,10 +83,10 @@ const headCells = [
     label: "Phone number",
   },
   {
-    id: "role",
+    id: "position",
     numeric: false,
     disablePadding: false,
-    label: "Role",
+    label: "Position",
   },
   {
     id: "department",
@@ -247,6 +248,10 @@ export default function EmployeeTable() {
     React.useState(false);
   const [isDialogEmployeeDetailsOpen, setDialogEmployeeDetailsOpen] =
     React.useState(false);
+  const [
+    isDialogAddEmployeeArchievmentOpen,
+    setDialogAddEmployeeArchievementOpen,
+  ] = React.useState(false);
   const dispatch = useDispatch();
   var rows = useSelector((state) => state.employee.employeeList);
   const departments = useSelector((state) => state.department.departmentList);
@@ -322,6 +327,9 @@ export default function EmployeeTable() {
   const handleCloseDialogEmployeeDetails = () => {
     setDialogEmployeeDetailsOpen(false);
   };
+  const handleCloseDialogAddEmployeeArchievement = () => {
+    setDialogAddEmployeeArchievementOpen(false);
+  };
   const RowActions = (currentSelectedEmployee) => {
     return (
       <Box>
@@ -342,6 +350,15 @@ export default function EmployeeTable() {
           }}
         >
           <DeleteIcon color="primary" />
+        </Button>
+        <Button
+          variant="link"
+          onClick={() => {
+            dispatch(setCurrentSelectedEmployee(currentSelectedEmployee));
+            setDialogAddEmployeeArchievementOpen(true);
+          }}
+        >
+          <ThumbUpAltIcon color="primary" />
         </Button>
       </Box>
     );
@@ -364,6 +381,10 @@ export default function EmployeeTable() {
       <DialogEmployeeDetails
         isDialogOpen={isDialogEmployeeDetailsOpen}
         handleCloseDialog={handleCloseDialogEmployeeDetails}
+      />
+      <DialogAddEmployeeArchievement
+        isDialogOpen={isDialogAddEmployeeArchievmentOpen}
+        handleCloseDialog={handleCloseDialogAddEmployeeArchievement}
       />
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2 }}>

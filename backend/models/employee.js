@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.EmploymentHistory, {
         foreignKey: "employeeID",
       });
+      this.hasMany(models.EmployeeAchievement, {
+        foreignKey: "employeeID",
+      });
     }
   }
   Employee.init(

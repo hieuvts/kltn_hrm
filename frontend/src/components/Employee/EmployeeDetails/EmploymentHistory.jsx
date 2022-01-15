@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Timeline from "@mui/lab/Timeline";
@@ -37,35 +38,39 @@ export default function EmploymentHistory() {
           textAlign: "left",
         }}
       >
-        <Timeline position="right">
-          {employee.EmploymentHistories.map((data, index) => {
-            return (
-              <TimelineItem key={index}>
-                <TimelineOppositeContent
-                  sx={{ m: "auto 0" }}
-                  align="right"
-                  variant="body2"
-                  color="text.secondary"
-                >
-                  {moment(data.date).format("DD/MM/YYYY")}
-                </TimelineOppositeContent>
-                <TimelineSeparator>
-                  <TimelineConnector />
-                  <TimelineDot color="primary" variant="outlined">
-                    <PersonIcon />
-                  </TimelineDot>
-                  <TimelineConnector />
-                </TimelineSeparator>
-                <TimelineContent sx={{ py: "12px", px: 2 }}>
-                  <Typography variant="h6" component="span">
-                    Placeholder
-                  </Typography>
-                  <Typography>{data.event}</Typography>
-                </TimelineContent>
-              </TimelineItem>
-            );
-          })}
-        </Timeline>
+        {employee.EmploymentHistories.length > 0 ? (
+          <Timeline position="right">
+            {employee.EmploymentHistories.map((data, index) => {
+              return (
+                <TimelineItem key={index}>
+                  <TimelineOppositeContent
+                    sx={{ m: "auto 0" }}
+                    align="right"
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    {moment(data.date).format("DD/MM/YYYY")}
+                  </TimelineOppositeContent>
+                  <TimelineSeparator>
+                    <TimelineConnector />
+                    <TimelineDot color="primary" variant="outlined">
+                      <PersonIcon />
+                    </TimelineDot>
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent sx={{ py: "12px", px: 2 }}>
+                    <Typography variant="h6" component="span">
+                      {data.eventType}
+                    </Typography>
+                    <Typography>{data.event}</Typography>
+                  </TimelineContent>
+                </TimelineItem>
+              );
+            })}
+          </Timeline>
+        ) : (
+          <CircularProgress color="secondary" />
+        )}
       </Box>
     </Paper>
   );
