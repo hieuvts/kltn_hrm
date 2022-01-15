@@ -61,8 +61,11 @@ export default function Department() {
 
   useEffect(() => {
     debounceFetchAPI(searchQuery);
-    dispatch(getEmployeeAsync());
   }, [handleSearchQueryChange]);
+  
+  useEffect(() => {
+    dispatch(getEmployeeAsync());
+  }, []);
 
   return (
     <>

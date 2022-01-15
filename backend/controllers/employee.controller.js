@@ -1,5 +1,4 @@
 const db = require("../models");
-
 const { Op } = require("sequelize");
 const Employee = db.Employee;
 const Department = db.Department;

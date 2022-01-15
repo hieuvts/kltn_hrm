@@ -68,9 +68,10 @@ export default function Employee() {
   );
   useEffect(() => {
     debounceFetchAPI(searchQuery);
-    dispatch(getDepartmentAsync());
   }, [handleSearchQueryChange]);
-
+  useEffect(() => {
+    dispatch(getDepartmentAsync());
+  }, []);
   return (
     <>
       <DialogExportToExcel

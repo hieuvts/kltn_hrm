@@ -66,7 +66,6 @@ export default function Project() {
   );
   useEffect(() => {
     debounceFetchAPI(searchQuery);
-    dispatch(getProjectAsync());
   }, [handleSearchQueryChange]);
 
   return (

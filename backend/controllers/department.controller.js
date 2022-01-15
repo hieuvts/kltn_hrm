@@ -1,5 +1,6 @@
 const db = require("../models");
 const { QueryTypes } = require("sequelize");
+const { Op } = require("sequelize");
 const Department = db.Department;
 const Employee = db.Employee;
 const moment = require("moment");
@@ -8,7 +9,10 @@ const moment = require("moment");
 const getAllDepartment = async (req, res) => {
   const companyID = req.query.companyID || 1;
   Department.findAll({
-    where: { companyID: companyID },
+    where: {
+      companyID: companyID,
+      [Op.or]: [{ name: { [Op.like]: `%${searchQuery}%` } }],
+    },
   })
     .then((departments) => {
       if (departments) {
@@ -35,7 +39,11 @@ const getAllDepartment = async (req, res) => {
 };
 
 const getAllDeptAndEmp = async (req, res) => {
+  const searchQuery = req.query.search;
   Department.findAll({
+    where: {
+      [Op.or]: [{ name: { [Op.like]: `%${searchQuery}%` } }],
+    },
     include: [Employee],
   })
     .then((departments) => {
