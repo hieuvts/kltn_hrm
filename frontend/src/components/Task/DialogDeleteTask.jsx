@@ -28,7 +28,7 @@ export default function DialogDeleteTask({
 
   const dispatch = useDispatch();
   const selectedTaskID = useSelector(
-    (state) => state.task.currentSelectedTask._id
+    (state) => state.task.currentSelectedTask.id
   );
   const handleDeleteTask = () => {
     dispatch(deleteTaskAsync({ selectedTaskID: selectedTaskID }))
