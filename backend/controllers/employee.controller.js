@@ -20,7 +20,6 @@ const getAllEmployee = async (req, res) => {
         { phoneNumber: { [Op.like]: `%${searchQuery}%` } },
       ],
     },
-    logging: console.log,
   })
     .then((employees) => {
       if (employees) {

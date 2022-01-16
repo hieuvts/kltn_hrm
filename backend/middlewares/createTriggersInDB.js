@@ -53,8 +53,7 @@ const createTriggersInDB = async (req, res) => {
       after insert on authAccounts for each row 
       insert into employees 
       set email=NEW.email,
-      id=NEW.id,
-      companyID=NEW.companyID;
+      id=NEW.id;
       `
     );
   } catch (error) {
