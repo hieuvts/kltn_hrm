@@ -161,4 +161,4 @@ dist
 # dotenv
 .env
 /frontend/src/config
-/backend/config/config.json
+/backend/config/*
