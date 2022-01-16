@@ -16,7 +16,12 @@ export const signUp = createAsyncThunk(
   "auth/signup",
   async (payload, thunkAPI) => {
     try {
-      const res = await authService.signUp(payload.email, payload.password);
+      const res = await authService.signUp(
+        payload.email,
+        payload.password,
+        payload.privilege,
+        payload.companyID
+      );
       thunkAPI.dispatch(setMessage(res.data.message));
       return res.data;
     } catch (error) {

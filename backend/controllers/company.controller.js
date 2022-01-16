@@ -42,6 +42,7 @@ const createCompany = async (req, res) => {
     .then((company) => {
       res.status(200).json({
         message: "Create company successfully!",
+        company: company,
       });
       console.log(moment().format("hh:mm:ss"), "[SUCCESS] createCompany");
     })
