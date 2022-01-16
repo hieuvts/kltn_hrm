@@ -13,6 +13,7 @@ import PropTypes from "prop-types";
 import MuiAlert from "@mui/material/Alert";
 import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
+import debounce from "lodash.debounce";
 
 import { useDispatch } from "react-redux";
 import { addCompanyAsync } from "../../stores/companySlice";
@@ -35,6 +36,7 @@ export default function FormRegisterCompany({
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
   const handleSbSuccessClose = () => {
     setSbSuccessOpen(false);
+    nextStep();
   };
   const handleSbFailedClose = () => {
     setSbFailedOpen(false);
@@ -61,9 +63,8 @@ export default function FormRegisterCompany({
       onSubmit: (values) => {
         dispatch(addCompanyAsync(values))
           .unwrap()
-          .then(() => {
+          .then((originPromise) => {
             setSbSuccessOpen(true);
-            nextStep();
           })
           .catch((error) => {
             setSbFailedOpen(true);

@@ -12,6 +12,7 @@ import PropTypes from "prop-types";
 import MuiAlert from "@mui/material/Alert";
 import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
+import debounce from "lodash.debounce";
 import { useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -33,6 +34,7 @@ export default function FormSignUpAccount({ setFormData, nextStep, prevStep }) {
   const company = useSelector((state) => state.company);
   const handleSbSuccessClose = () => {
     setSbSuccessOpen(false);
+    navigate("/login");
   };
   const handleSbFailedClose = () => {
     setSbFailedOpen(false);
@@ -55,8 +57,6 @@ export default function FormSignUpAccount({ setFormData, nextStep, prevStep }) {
           .unwrap()
           .then(() => {
             setSbSuccessOpen(true);
-            nextStep();
-            navigate("/login");
           })
           .catch((error) => {
             setSbFailedOpen(true);
