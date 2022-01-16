@@ -1,33 +1,38 @@
-'use strict';
+"use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('EmployeeAchievements', {
+    await queryInterface.createTable("EmployeeAchievements", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       employeeID: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Employees",
+          key: "id",
+        },
+        onDelete: "CASCADE",
       },
       date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       achievement: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('EmployeeAchievements');
-  }
+    await queryInterface.dropTable("EmployeeAchievements");
+  },
 };

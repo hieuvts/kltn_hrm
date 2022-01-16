@@ -23,6 +23,7 @@ module.exports = {
           model: "Companies",
           key: "id",
         },
+        onDelete: "SET NULL",
       },
       createdAt: {
         allowNull: false,

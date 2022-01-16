@@ -17,6 +17,7 @@ module.exports = {
           model: "ChatRooms",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
       message: {
         type: Sequelize.STRING,
