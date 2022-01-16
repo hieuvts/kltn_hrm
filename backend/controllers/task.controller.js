@@ -34,9 +34,9 @@ const createTask = async (req, res) => {
       console.log(moment().format("hh:mm:ss"), "[SUCCESS] createTask");
     })
     .catch((error) => {
-      console.log(moment().format("hh:mm:ss"), "[ERROR] getAllTask");
+      console.log(moment().format("hh:mm:ss"), "[ERROR] createTask");
       res.status(500).json({
-        message: "[ERROR] [getAll] Something went wrong",
+        message: "[ERROR] [create] Something went wrong",
         error: error,
       });
     });

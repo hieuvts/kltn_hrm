@@ -14,6 +14,12 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.AuthAccount, {
         foreignKey: "authAccountID",
       });
+      this.hasMany(models.EmploymentHistory, {
+        foreignKey: "employeeID",
+      });
+      this.hasMany(models.EmployeeAchievement, {
+        foreignKey: "employeeID",
+      });
     }
   }
   Employee.init(

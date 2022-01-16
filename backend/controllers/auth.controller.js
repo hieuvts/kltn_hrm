@@ -5,34 +5,35 @@ const ChatMessage = db.ChatMessage;
 const ChatRoom = db.ChatRoom;
 const ChatRoomDetails = db.ChatRoomDetails;
 const Company = db.Company;
+const Employee = db.Employee;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
-const authaccount = require("../models/authaccount");
 const jwtSecret = process.env.JWT_SECRET;
 
 const signUp = (req, res, next) => {
-  console.log("invoke signUp");
+  console.log("invoke signUp", req.body);
   const dataToInsert = {
     email: req.body.email,
     password: bcrypt.hashSync(req.body.password, 8),
     privilege: req.body.privilege ? req.body.privilege : "user",
-    companyID: req.body.companyID,
+    companyID: req.body.companyID ? req.body.companyID : "1",
   };
   AuthAccount.create(dataToInsert)
     .then((data) => {
       res.send(data);
     })
     .catch((error) => {
-      res.status(500).send({
-        message: "Error when trying to create new account",
-      });
+      res
+        .status(500)
+        .send({ message: "Sign up not successfully!", error: error });
     });
 };
 
 const login = (req, res) => {
   AuthAccount.findOne({
     where: { email: req.body.email },
+    include: Employee,
   })
     .then((authAccount) => {
       if (!authAccount) {
@@ -56,12 +57,21 @@ const login = (req, res) => {
       var token = jwt.sign({ email: authAccount.email }, jwtSecret, {
         expiresIn: 86400, // 24 hours
       });
+      // res.status(200).send({
+      //   id: authAccount.id,
+      //   email: authAccount.email,
+      //   privilege: authAccount.privilege,
+      //   companyID: authAccount.companyID,
+      //   accessToken: token,
+      // });
+      console.log("authaccounts ", authAccount);
       res.status(200).send({
         id: authAccount.id,
         email: authAccount.email,
         privilege: authAccount.privilege,
         companyID: authAccount.companyID,
         accessToken: token,
+        employee: authAccount.employee,
       });
     })
     .catch((error) => {

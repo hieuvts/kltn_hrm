@@ -8,7 +8,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.Company);
+      this.belongsTo(models.Company, {
+        foreignKey: "companyID",
+      });
       this.belongsToMany(models.ChatRoom, {
         through: models.ChatRoomDetails,
         foreignKey: "memberID",
@@ -24,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       email: DataTypes.STRING,
       password: DataTypes.STRING,
       privilege: DataTypes.STRING,
+      companyID: DataTypes.INTEGER,
     },
     {
       sequelize,
