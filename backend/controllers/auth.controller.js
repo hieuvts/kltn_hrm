@@ -34,7 +34,7 @@ const signUp = (req, res, next) => {
 const login = (req, res) => {
   AuthAccount.findOne({
     where: { email: req.body.email },
-    include: Employee,
+    include: [Employee],
   })
     .then((authAccount) => {
       if (!authAccount) {
@@ -65,13 +65,14 @@ const login = (req, res) => {
       //   companyID: authAccount.companyID,
       //   accessToken: token,
       // });
+      console.log("emp ", authAccount.Employee);
       res.status(200).send({
         id: authAccount.id,
         email: authAccount.email,
         privilege: authAccount.privilege,
         companyID: authAccount.companyID,
         accessToken: token,
-        employee: authAccount.employee,
+        employee: authAccount.Employee,
       });
     })
     .catch((error) => {
@@ -80,7 +81,8 @@ const login = (req, res) => {
     });
 };
 
-const changePassword = async (req, res, next) => {
+const changePassword = async (req, res) => {
+  console.log("changePassword", req.body);
   AuthAccount.findOne({
     where: { email: req.body.email },
   })
@@ -161,8 +163,6 @@ const getChatRooms = (req, res) => {
         model: ChatRoom,
         where: { name: { [Op.like]: `%${req.query.search}%` } },
         through: {
-          // don't want anything from
-          // the junction table
           attributes: [],
         },
         include: [

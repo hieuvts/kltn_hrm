@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import CapitalizeFirstLetter from "../../utilities/captitalizeFirstLetter";
+import MyBreadcrumbs from "../../components/CustomizedMUIComponents/MyBreadcrumbs";
 import { useSelector, useDispatch } from "react-redux";
 import DialogChangeUserPwd from "../../components/UserProfile/DialogChangeUserPwd";
 import DialogUpdateEmployee from "../../components/Employee/DialogUpdateEmployee";
@@ -42,24 +43,7 @@ export default function UserProfile() {
         isDialogOpen={isDialogUpdateEmployeeOpen}
         handleCloseDialog={handleDialogUpdateEmployeeClose}
       />
-      <Breadcrumbs aria-label="breadcrumb">
-        <Link underline="hover" color="inherit" href="/">
-          Home
-        </Link>
-
-        {pathnames.map((pathName, idx) => (
-          <Link
-            underline="hover"
-            color="text.primary"
-            href={pathName}
-            aria-current="page"
-            key={idx}
-          >
-            {CapitalizeFirstLetter(pathName)}
-          </Link>
-        ))}
-      </Breadcrumbs>
-
+      <MyBreadcrumbs pathnames={pathnames} />
       <Grid
         container
         justifyContent="space-between"
