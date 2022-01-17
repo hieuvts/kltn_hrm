@@ -304,24 +304,29 @@ export default function DepartmentTable() {
   const RowActions = (currentSelectedDepartment) => {
     return (
       <Box>
-        <Button
-          variant="link"
-          onClick={() => {
-            dispatch(setCurrentSelectedDepartment(currentSelectedDepartment));
-            setDialogUpdateDepartmentOpen(true);
-          }}
-        >
-          <ModeIcon color="primary" />
-        </Button>
-        <Button
-          variant="link"
-          onClick={() => {
-            dispatch(setCurrentSelectedDepartment(currentSelectedDepartment));
-            setDialogDeleteDepartmentOpen(true);
-          }}
-        >
-          <DeleteIcon color="primary" />
-        </Button>
+        <Tooltip title="Update">
+          <Button
+            variant="link"
+            onClick={() => {
+              dispatch(setCurrentSelectedDepartment(currentSelectedDepartment));
+              setDialogUpdateDepartmentOpen(true);
+            }}
+          >
+            <ModeIcon color="primary" />
+          </Button>
+        </Tooltip>
+        
+        <Tooltip title="Delete">
+          <Button
+            variant="link"
+            onClick={() => {
+              dispatch(setCurrentSelectedDepartment(currentSelectedDepartment));
+              setDialogDeleteDepartmentOpen(true);
+            }}
+          >
+            <DeleteIcon color="primary" />
+          </Button>
+        </Tooltip>
       </Box>
     );
   };
