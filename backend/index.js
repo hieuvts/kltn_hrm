@@ -5,6 +5,7 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const moment = require("moment");
 const port = process.env.PORT || 8000;
+const pythonPort = 8001;
 const employeeRoute = require("./routes/employee.route");
 const departmentRoute = require("./routes/department.route");
 const projectRoute = require("./routes/project.route");
@@ -14,6 +15,7 @@ const companyRoute = require("./routes/company.route");
 const chatRoomDetailsRoute = require("./routes/chatRoomDetails.route");
 const chatRoom = require("./routes/chatRoom.route");
 const employeeAchievement = require("./routes/employeeAchievement.route");
+const employeekpicluster = require("./routes/employeekpicluster.route");
 const db = require("./models");
 const createTriggersInDB = require("./middlewares/createTriggersInDB");
 const ChatMessage = db.ChatMessage;
@@ -48,10 +50,7 @@ app.use("/api/company", companyRoute);
 app.use("/api/chatRoomDetails", chatRoomDetailsRoute);
 app.use("/api/chat", chatRoom);
 app.use("/api/empAchv", employeeAchievement);
-app.get("/testapi", (req, res) => {
-  res.send("Hello World!!!");
-});
-
+app.use("/api/empKpiCluster", employeekpicluster);
 // begin socketio
 io.use((socket, next) => {
   // if (socket.handshake.auth && socket.handshake.auth.token) {
