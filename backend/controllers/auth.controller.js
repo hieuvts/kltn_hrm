@@ -1,4 +1,5 @@
 require("dotenv").config({ path: "./config/.env" });
+const { Op } = require("sequelize");
 const db = require("../models");
 const AuthAccount = db.AuthAccount;
 const ChatMessage = db.ChatMessage;
@@ -64,7 +65,6 @@ const login = (req, res) => {
       //   companyID: authAccount.companyID,
       //   accessToken: token,
       // });
-      console.log("authaccounts ", authAccount);
       res.status(200).send({
         id: authAccount.id,
         email: authAccount.email,
@@ -151,12 +151,15 @@ const deleteAuthAccount = async (req, res) => {
 };
 
 const getChatRooms = (req, res) => {
-  console.log("invoked getChatRooms");
+  console.log("invoked getChatRooms", req.query);
   AuthAccount.findOne({
-    where: { id: req.query.id },
+    where: {
+      id: req.query.id,
+    },
     include: [
       {
         model: ChatRoom,
+        where: { name: { [Op.like]: `%${req.query.search}%` } },
         through: {
           // don't want anything from
           // the junction table
@@ -175,9 +178,10 @@ const getChatRooms = (req, res) => {
     ],
   })
     .then((authAccount) => {
+      console.log("authAccount chat", authAccount);
       if (!authAccount) {
         return res.status(404).send({
-          message: `Account with email ${req.body.email} not found`,
+          message: `Not found any chatrooms`,
         });
       }
       res.status(200).send(authAccount);

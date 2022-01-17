@@ -4,8 +4,8 @@ import { apiBaseUrl } from "../config/apiBaseUrl";
 
 const API_URL = `${apiBaseUrl}/chat/`;
 
-const getAllChatRoom = () => {
-  return axios.get(API_URL + "getAll", {
+const getAllChatRoom = (searchQuery) => {
+  return axios.get(API_URL + "getAll?search=" + searchQuery, {
     headers: authHeader(),
   });
 };

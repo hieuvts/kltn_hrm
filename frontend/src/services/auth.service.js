@@ -28,8 +28,10 @@ const changePassword = (body) => {
   return axios.post(API_URL + "changePwd", body, { headers: authHeader() });
 };
 
-const getChatRoomByAuthAccount = (authAccountID) => {
-  return axios.get(API_URL + "getChatRooms?id=" + authAccountID);
+const getChatRoomByAuthAccount = (authAccountID, searchQuery) => {
+  return axios.get(
+    API_URL + "getChatRooms?id=" + authAccountID + "&search=" + searchQuery
+  );
 };
 const authService = {
   signUp,

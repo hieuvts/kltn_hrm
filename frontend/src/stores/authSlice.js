@@ -64,7 +64,10 @@ export const getChatRoomByAuthAccount = createAsyncThunk(
   "auth/getChatRoomByAuthAccount",
   async (payload, thunkAPI) => {
     try {
-      const res = await authService.getChatRoomByAuthAccount(payload.id);
+      const res = await authService.getChatRoomByAuthAccount(
+        payload.id,
+        payload.searchQuery
+      );
       return res.data.ChatRooms;
     } catch (error) {
       const message =
