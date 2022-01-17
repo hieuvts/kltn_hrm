@@ -67,8 +67,8 @@ export default function FormAddEmployeeArchievement({
         <form onSubmit={formik.handleSubmit}>
           <Grid container rowSpacing={3} columnSpacing={3}>
             <Grid item sm={12} md={6}>
-              <Typography variant="h5">Employee:</Typography>
-              <Typography sx={{ mt: 3 }}>
+              <Typography variant="h5">Employee</Typography>
+              <Typography sx={{ mt: 3 }} variant="h6">
                 {formik.values.fname + " " + formik.values.lname}
               </Typography>
             </Grid>

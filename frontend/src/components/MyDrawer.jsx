@@ -247,7 +247,7 @@ export default function AppBarComponent() {
               "&& .Mui-selected, && .Mui-selected:hover": {
                 backgroundColor: "#fff",
                 "&, & .css-10hburv-MuiTypography-root": {
-                  fontWeight: "800",
+                  fontWeight: "750",
                 },
                 "&, & .MuiListItemIcon-root": {
                   color: "#1976D2",
