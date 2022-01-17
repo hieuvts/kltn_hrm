@@ -23,22 +23,11 @@ import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ModeIcon from "@mui/icons-material/Mode";
 import Avatar from "@mui/material/Avatar";
 import { visuallyHidden } from "@mui/utils";
-import avatarMale from "../../assets/icons/avatarMale.png";
-import avatarFemale from "../../assets/icons/avatarFemale.png";
 
-import DialogDeleteEmployee from "./DialogDeleteEmployee";
-import DialogDeleteMultipleEmployee from "./DialogDeleteMultipleEmployee";
-import DialogUpdateEmployee from "./DialogUpdateEmployee";
-import DialogEmployeeDetails from "./DialogEmployeeDetails";
-import DialogAddEmployeeArchievement from "./EmployeeArchievement/DialogAddEmployeeArchievement";
+import DialogEmployeeDetails from "../DialogEmployeeDetails";
 import moment from "moment";
 
-import {
-  setCurrentSelectedEmployee,
-  addToSelectedEmployeeList,
-  removeFromSelectedEmployeeList,
-  setMultiSelectedEmployeeList,
-} from "../../stores/employeeSlice";
+import { setCurrentSelectedEmployee } from "../../../stores/employeeSlice"; 
 import { useDispatch, useSelector } from "react-redux";
 
 function descendingComparator(a, b, orderBy) {
@@ -76,6 +65,18 @@ const headCells = [
     disablePadding: false,
     label: "Department",
   },
+  {
+    id: "lables",
+    numeric: false,
+    disablePadding: false,
+    label: "Label",
+  },
+  {
+    id: "centoroid",
+    numeric: false,
+    disablePadding: false,
+    label: "Centoroid",
+  },
 ];
 
 function EnhancedTableHead(props) {
@@ -108,7 +109,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={"right"}
+            align={"left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -141,16 +142,13 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected, setSelected, setDialogDeleteMultipleEmployeeOpen } =
+  const { numSelected, setSelected,  } =
     props;
   const dispatch = useDispatch();
   // Get selectedEmployeeList to delete multiple, delete all
   const selectedEmployeeList = useSelector((state) => state.employee);
   const auth = useSelector((state) => state.auth);
 
-  const handleDeleteMultipleEmployee = () => {
-    setDialogDeleteMultipleEmployeeOpen(true);
-  };
   return (
     <Toolbar
       sx={{
@@ -181,7 +179,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Employee List
+          Employee KPI Clustering
         </Typography>
       )}
     </Toolbar>
@@ -191,31 +189,18 @@ const EnhancedTableToolbar = (props) => {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
   setSelected: PropTypes.func.isRequired,
-  setDialogDeleteMultipleEmployeeOpen: PropTypes.func.isRequired,
 };
 
-export default function employeeKpiClusterList() {
+export default function EmployeeKpiClusterList() {
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("name");
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [isDialogDeleteEmployeeOpen, setDialogDeleteEmployeeOpen] =
-      React.useState(false);
-    const [
-      isDialogDeleteMultipleEmployeeOpen,
-      setDialogDeleteMultipleEmployeeOpen,
-    ] = React.useState(false);
-    const [isDialogUpdateEmployeeOpen, setDialogUpdateEmployeeOpen] =
-      React.useState(false);
     const [isDialogEmployeeDetailsOpen, setDialogEmployeeDetailsOpen] =
       React.useState(false);
-    const [
-      isDialogAddEmployeeArchievmentOpen,
-      setDialogAddEmployeeArchievementOpen,
-    ] = React.useState(false);
     const dispatch = useDispatch();
-    var rows = useSelector((state) => state.employee.employeeList);
+    var rows = useSelector((state) => state.employeeKpiCluster.employeeKpiClusterList);
     const departments = useSelector((state) => state.department.departmentList);
     const handleRequestSort = (event, property) => {
       const isAsc = orderBy === property && order === "asc";
@@ -361,37 +346,35 @@ export default function employeeKpiClusterList() {
                                   alignItems: "center",
                                 }}
                               >
-                                <Avatar
-                                  alt={row.fname}
-                                  src={
-                                    row.gender === "Male"
-                                      ? avatarMale
-                                      : avatarFemale
-                                  }
-                                  sx={{
-                                    alignSelf: "center",
-                                    mx: 1,
-                                  }}
-                                />
+                                {/* <Avatar
+                              alt={row.Employee.fname}
+                              src={
+                                row.Employee.gender === "Male"
+                                  ? avatarMale
+                                  : avatarFemale
+                              }
+                              sx={{
+                                alignSelf: "center",
+                                mx: 1,
+                              }}
+                            /> */}
                                 <p style={{ paddingLeft: "15px" }}>
-                                  {row.fname} {row.lname}
+                                  {row.Employee.fname} {row.Employee.lname}
                                 </p>
                               </Box>
                             </TableCell>
-                            <TableCell align="right">
-                              {moment(row.dateOfBirth).format("DD-MM-YYYY")}
-                            </TableCell>
-                            <TableCell align="right">{row.email}</TableCell>
-                            <TableCell align="right">
+                            <TableCell align="left">{row.kpi}</TableCell>
+                            <TableCell align="left">
                               {departments.map((department) => {
-                                if (department.id == row.departmentID) {
+                                if (
+                                  department.id == row.Employee.departmentID
+                                ) {
                                   return department.name;
                                 }
                               })}
                             </TableCell>
-                            <TableCell align="right">
-                              <RowActions currentSelectedEmployee={row} />
-                            </TableCell>
+                            <TableCell align="left">{row.lables}</TableCell>
+                            <TableCell align="left">{row.centoroid}</TableCell>
                           </TableRow>
                         );
                       })}
