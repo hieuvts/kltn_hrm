@@ -196,7 +196,7 @@ export default function EmployeeKpiClusterList() {
     const [orderBy, setOrderBy] = React.useState("name");
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [rowsPerPage, setRowsPerPage] = React.useState(15);
     const [isDialogEmployeeDetailsOpen, setDialogEmployeeDetailsOpen] =
       React.useState(false);
     const dispatch = useDispatch();
