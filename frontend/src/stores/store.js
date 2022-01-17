@@ -7,7 +7,9 @@ import chatRoomReducer from "./chatRoomSlice";
 import taskReducer from "./taskSlice";
 import projectReducer from "./projectSlice";
 import employeeKpiClusterReducer from "./employeeKpiClusterSlice";
+import companyReducer from "./companySlice";
 const reducers = {
+  company: companyReducer,
   auth: authReducer,
   employee: employeeReducer,
   message: messageReducer,

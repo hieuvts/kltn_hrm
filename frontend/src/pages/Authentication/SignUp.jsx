@@ -2,154 +2,150 @@ import React, { useState, useEffect } from "react";
 import { Grid, Box, TextField, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
 import { PropTypes } from "prop-types";
-import Link from "@mui/material/Link";
-import { useFormik } from "formik";
-import { accountSignUpValidationSchema } from "../../utilities/validationSchema";
 
+import FormRegisterCompany from "../../components/Company/FormRegisterCompany";
+import FormSignUpAccount from "../../components/Authentication/FormSignUpAccount";
 import SnackbarInfo from "../../components/Snackbar/SnackbarInfo";
 import { useDispatch, useSelector } from "react-redux";
 import { signUp } from "../../stores/authSlice";
 import { clearMessage } from "../../stores/messageSlice";
 
-const initialValues = {
-  email: "",
-  password: "",
-  verifyPassword: "",
-};
+const steps = [
+  "Register new company",
+  "Register super admin account",
+];
+export default function SignUp() {
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set());
+  const [formCompanyData, setFormCompanyData] = useState([]);
+  const [formAccountData, setFormAccountData] = useState([]);
 
-export default function SignUp({ handleChange }) {
-  const [isRegSuccessful, setRegSuccessful] = useState(false);
-  const [isSbInfoOpen, setSbInfoOpen] = useState(false);
-  const dispatch = useDispatch();
-  const { message } = useSelector((state) => state.message);
-  // const [isChecked, setChecked] = useState(false);
-
-  useEffect(() => {
-    dispatch(clearMessage());
-  }, [dispatch]);
-
-  const handleSbInfoClose = () => {
-    setSbInfoOpen(false);
+  const isStepOptional = (step) => {
+    return step === 1;
   };
-  const navigate = useNavigate();
-  const handleRegister = (values) => {
-    const { email, password } = values;
-    setRegSuccessful(false);
-    dispatch(signUp({ email, password }))
-      .unwrap()
-      .then(() => {
-        setRegSuccessful(true);
-        setSbInfoOpen(true);
-        navigate("/login");
-      })
-      .catch(() => {
-        setRegSuccessful(false);
-        setSbInfoOpen(true);
-      });
+
+  const isStepSkipped = (step) => {
+    return skipped.has(step);
   };
-  const FormikWithMUI = () => {
-    const formik = useFormik({
-      initialValues: initialValues,
-      validationSchema: accountSignUpValidationSchema,
-      onSubmit: (values) => handleRegister(values),
+
+  const handleNext = () => {
+    console.log("next fired");
+    let newSkipped = skipped;
+    if (isStepSkipped(activeStep)) {
+      newSkipped = new Set(newSkipped.values());
+      newSkipped.delete(activeStep);
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped(newSkipped);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleSkip = () => {
+    if (!isStepOptional(activeStep)) {
+      // Prevent skip
+      throw new Error("You can't skip a step that isn't optional.");
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped((prevSkipped) => {
+      const newSkipped = new Set(prevSkipped.values());
+      newSkipped.add(activeStep);
+      return newSkipped;
     });
-    return (
-      <form onSubmit={formik.handleSubmit}>
-        <Grid container>
-          <TextField
-            fullWidth
-            id="email"
-            name="email"
-            label="Email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
-            sx={{ mb: 3 }}
-          />
+  };
 
-          <TextField
-            fullWidth
-            id="password"
-            name="password"
-            label="Password"
-            type="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
-            sx={{ mb: 3 }}
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+  const getStepContent = (activeStep) => {
+    switch (activeStep) {
+      case 0:
+        return (
+          <FormRegisterCompany
+            setFormData={setFormCompanyData}
+            prevStep={handleBack}
+            nextStep={handleNext}
           />
-
-          <TextField
-            fullWidth
-            id="verifyPassword"
-            name="verifyPassword"
-            label="Verify password"
-            type="password"
-            value={formik.values.verifyPassword}
-            onChange={formik.handleChange}
-            error={
-              formik.touched.verifyPassword &&
-              Boolean(formik.errors.verifyPassword)
-            }
-            helperText={
-              formik.touched.verifyPassword && formik.errors.verifyPassword
-            }
-            sx={{ mb: 3 }}
+        );
+      case 1:
+        return (
+          <FormSignUpAccount
+            setFormData={setFormAccountData}
+            prevStep={handleBack}
+            nextStep={handleNext}
           />
-        </Grid>
-        {/* <FormControlLabel
-          control={
-            <Checkbox
-              checked={isChecked}
-              onChange={() => setChecked(!isChecked)}
-              inputProps={{ "aria-label": "controlled" }}
-            />
-          }
-          label="Agree with terms of services and policy"
-        /> */}
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          type="submit"
-          sx={{ mt: 3 }}
-        >
-          Signup
-        </Button>
-      </form>
-    );
+        );
+      case 2:
+        return "Verify information";
+      default:
+        return "Undefined step";
+    }
   };
   return (
-    <Box sx={{ marginX: { xs: 10, lg: 50 }, marginTop: { xs: 5, lg: 20 } }}>
-      {message && (
-        <SnackbarInfo
-          isOpen={isSbInfoOpen}
-          handleClose={handleSbInfoClose}
-          text={message}
-        />
-      )}
-      <Box sx={{ textAlign: "center" }}>
-        <Box sx={{ mt: 3, mb: 5 }}>
-          <LockOutlinedIcon />
-          <Typography variant="h4"> Sign up</Typography>
-        </Box>
-      </Box>
+    <Box sx={{ mt: 3, mx: 3 }}>
+      <Stepper activeStep={activeStep}>
+        {steps.map((label, index) => {
+          const stepProps = {};
+          const labelProps = {};
+          if (isStepOptional(index)) {
+            labelProps.optional = (
+              <Typography variant="caption">Optional</Typography>
+            );
+          }
+          if (isStepSkipped(index)) {
+            stepProps.completed = false;
+          }
+          return (
+            <Step key={label} {...stepProps}>
+              <StepLabel {...labelProps}>{label}</StepLabel>
+            </Step>
+          );
+        })}
+      </Stepper>
+      {activeStep === steps.length ? (
+        <React.Fragment>
+          <Typography sx={{ mt: 2, mb: 1 }}>
+            All steps completed - you&apos;re finished
+          </Typography>
+          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+            <Box sx={{ flex: "1 1 auto" }} />
+            <Button onClick={handleReset}>Reset</Button>
+          </Box>
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          {getStepContent(activeStep)}
 
-      <FormikWithMUI />
-      <Box sx={{ textAlign: "right", mt: 3 }}>
-        <Button onClick={() => navigate("/login")}>
-          Already have an account? Login
-        </Button>
-      </Box>
+          {/* <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+            <Button
+              color="inherit"
+              disabled={activeStep === 0}
+              onClick={handleBack}
+              sx={{ mr: 1 }}
+            >
+              Back
+            </Button>
+            <Box sx={{ flex: "1 1 auto" }} />
+            {isStepOptional(activeStep) && (
+              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+                Skip
+              </Button>
+            )}
+
+            <Button onClick={handleNext}>
+              {activeStep === steps.length - 1 ? "Finish" : "Next"}
+            </Button>
+          </Box> */}
+        </React.Fragment>
+      )}
     </Box>
   );
 }
-
-SignUp.propTypes = {
-  handleChange: PropTypes.func,
-};

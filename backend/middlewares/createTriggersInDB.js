@@ -52,8 +52,15 @@ const createTriggersInDB = async (req, res) => {
       `create trigger mergeAccountToEmp 
       after insert on authAccounts for each row 
       insert into employees 
-      set email=NEW.email,
-      id=NEW.id;
+      set fname='Fisrt name',
+      lname='Last name',
+      gender='Male',
+      dateOfBirth=now(),
+      phoneNumber='',
+      address='Address',
+      position='',
+      email=NEW.email,
+      authAccountID=NEW.id;
       `
     );
   } catch (error) {

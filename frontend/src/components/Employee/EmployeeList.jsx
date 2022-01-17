@@ -12,6 +12,7 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
@@ -333,33 +334,41 @@ export default function EmployeeTable() {
   const RowActions = (currentSelectedEmployee) => {
     return (
       <Box>
-        <Button
-          variant="link"
-          onClick={() => {
-            dispatch(setCurrentSelectedEmployee(currentSelectedEmployee));
-            setDialogUpdateEmployeeOpen(true);
-          }}
-        >
-          <ModeIcon color="primary" />
-        </Button>
-        <Button
-          variant="link"
-          onClick={() => {
-            dispatch(setCurrentSelectedEmployee(currentSelectedEmployee));
-            setDialogDeleteEmployeeOpen(true);
-          }}
-        >
-          <DeleteIcon color="primary" />
-        </Button>
-        <Button
-          variant="link"
-          onClick={() => {
-            dispatch(setCurrentSelectedEmployee(currentSelectedEmployee));
-            setDialogAddEmployeeArchievementOpen(true);
-          }}
-        >
-          <ThumbUpAltIcon color="primary" />
-        </Button>
+        <Tooltip title="Update">
+          <Button
+            variant="link"
+            onClick={() => {
+              dispatch(setCurrentSelectedEmployee(currentSelectedEmployee));
+              setDialogUpdateEmployeeOpen(true);
+            }}
+          >
+            <ModeIcon color="primary" />
+          </Button>
+        </Tooltip>
+
+        <Tooltip title="Compliment">
+          <Button
+            variant="link"
+            onClick={() => {
+              dispatch(setCurrentSelectedEmployee(currentSelectedEmployee));
+              setDialogAddEmployeeArchievementOpen(true);
+            }}
+          >
+            <ThumbUpAltIcon color="primary" />
+          </Button>
+        </Tooltip>
+        
+        <Tooltip title="Delete">
+          <Button
+            variant="link"
+            onClick={() => {
+              dispatch(setCurrentSelectedEmployee(currentSelectedEmployee));
+              setDialogDeleteEmployeeOpen(true);
+            }}
+          >
+            <DeleteIcon color="primary" />
+          </Button>
+        </Tooltip>
       </Box>
     );
   };
@@ -473,6 +482,17 @@ export default function EmployeeTable() {
                             />
                             <p style={{ paddingLeft: "15px" }}>
                               {row.fname} {row.lname}
+                              {row.position === "Manager" && (
+                                <Tooltip title="Key person">
+                                  <Chip
+                                    label="KP"
+                                    color="primary"
+                                    variant="outlined"
+                                    size="small"
+                                    sx={{ mx: 1 }}
+                                  />
+                                </Tooltip>
+                              )}
                             </p>
                           </Box>
                         </TableCell>

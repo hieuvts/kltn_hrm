@@ -26,6 +26,7 @@ module.exports = {
           model: "Departments",
           key: "id",
         },
+        onDelete: "SET NULL",
       },
       createdAt: {
         allowNull: false,

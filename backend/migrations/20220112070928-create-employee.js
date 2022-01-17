@@ -38,6 +38,7 @@ module.exports = {
           model: "Departments",
           key: "id",
         },
+        onDelete: "SET NULL",
       },
       authAccountID: {
         type: Sequelize.INTEGER,
@@ -45,6 +46,7 @@ module.exports = {
           model: "AuthAccounts",
           key: "id",
         },
+        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,

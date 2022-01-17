@@ -12,10 +12,8 @@ var Header = [
     "Phone number",
     "Email",
     "Address",
-    "roleID",
+    "Position",
     "departmentID",
-    "projectID",
-    "isDeleted",
   ],
 ];
 export default function ExportToExcel(
@@ -34,10 +32,8 @@ export default function ExportToExcel(
       phoneNumber,
       email,
       address,
-      roleID,
+      position,
       departmentID,
-      projectID,
-      isDeleted,
     }) => ({
       fname,
       lname,
@@ -46,10 +42,8 @@ export default function ExportToExcel(
       phoneNumber,
       email,
       address,
-      roleID,
+      position,
       departmentID,
-      projectID,
-      isDeleted,
     })
   );
 

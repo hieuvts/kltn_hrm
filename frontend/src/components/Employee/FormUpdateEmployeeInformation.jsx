@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Autocomplete from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
 import DatePicker from "@mui/lab/DatePicker";
 import FormControl from "@mui/material/FormControl";
@@ -16,6 +17,7 @@ import TextField from "@mui/material/TextField";
 import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
+import { commonPositionInCompany } from "../../utilities/commonPositionInCompany";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateEmployeeAsync,
@@ -166,18 +168,32 @@ export default function FormUpdateEmployeeInformation({
                   ))}
                 </Select>
               </FormControl>
-              <TextField
-                fullWidth
-                id="position"
-                name="position"
-                label="Position"
+              <Autocomplete
+                id="positionAC"
+                freeSolo
                 value={formik.values.position}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.position && Boolean(formik.errors.position)
-                }
-                helperText={formik.touched.position && formik.errors.position}
-                sx={{ mb: 3 }}
+                onChange={(event, value) => {
+                  formik.setFieldValue("position", value);
+                }}
+                options={commonPositionInCompany.map((option) => option)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    id="position"
+                    name="position"
+                    label="Position"
+                    value={formik.values.position}
+                    onChange={formik.handleChange}
+                    error={
+                      formik.touched.position && Boolean(formik.errors.position)
+                    }
+                    helperText={
+                      formik.touched.position && formik.errors.position
+                    }
+                    sx={{ mb: 3 }}
+                  />
+                )}
               />
               <TextField
                 fullWidth
@@ -256,6 +272,7 @@ FormUpdateEmployeeInformation.defaultProps = {
     gender: "Male",
     dateOfBirth: new Date(),
     phoneNumber: "",
+    position: "",
     email: "",
     address: "",
   },

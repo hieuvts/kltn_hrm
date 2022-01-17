@@ -315,24 +315,29 @@ export default function ProjectTable() {
   const RowActions = (currentSelectedProject) => {
     return (
       <Box>
-        <Button
-          variant="link"
-          onClick={() => {
-            dispatch(setCurrentSelectedProject(currentSelectedProject));
-            setDialogUpdateProjectOpen(true);
-          }}
-        >
-          <ModeIcon color="primary" />
-        </Button>
-        <Button
-          variant="link"
-          onClick={() => {
-            dispatch(setCurrentSelectedProject(currentSelectedProject));
-            setDialogDeleteProjectOpen(true);
-          }}
-        >
-          <DeleteIcon color="primary" />
-        </Button>
+        <Tooltip title="Update">
+          <Button
+            variant="link"
+            onClick={() => {
+              dispatch(setCurrentSelectedProject(currentSelectedProject));
+              setDialogUpdateProjectOpen(true);
+            }}
+          >
+            <ModeIcon color="primary" />
+          </Button>
+        </Tooltip>
+
+        <Tooltip title="Delete">
+          <Button
+            variant="link"
+            onClick={() => {
+              dispatch(setCurrentSelectedProject(currentSelectedProject));
+              setDialogDeleteProjectOpen(true);
+            }}
+          >
+            <DeleteIcon color="primary" />
+          </Button>
+        </Tooltip>
       </Box>
     );
   };

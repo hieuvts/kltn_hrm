@@ -24,6 +24,7 @@ module.exports = {
           model: "Employees",
           key: "id",
         },
+        onDelete: "SET NULL",
       },
       assigneeID: {
         type: Sequelize.INTEGER,
@@ -31,6 +32,7 @@ module.exports = {
           model: "Employees",
           key: "id",
         },
+        onDelete: "SET NULL",
       },
       priority: {
         type: Sequelize.INTEGER,

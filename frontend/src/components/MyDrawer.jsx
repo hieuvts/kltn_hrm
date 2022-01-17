@@ -35,7 +35,7 @@ import Divider from "@mui/material/Divider";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-
+import Tooltip from "@mui/material/Tooltip";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -133,16 +133,19 @@ export default function AppBarComponent() {
                       marginRight: "2rem",
                     }}
                   >
-                    <IconButton
-                      size="large"
-                      aria-label="account of current user"
-                      aria-controls="menu-appbar"
-                      aria-haspopup="true"
-                      onClick={handleMenu}
-                      color="inherit"
-                    >
-                      <AccountCircle />
-                    </IconButton>
+                    <Tooltip title={currentUser.email}>
+                      <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={handleMenu}
+                        color="inherit"
+                      >
+                        <AccountCircle />
+                      </IconButton>
+                    </Tooltip>
+
                     <NotificationBadget notificationCount={3} />
                     <Menu
                       id="menu-appbar"
@@ -244,7 +247,7 @@ export default function AppBarComponent() {
               "&& .Mui-selected, && .Mui-selected:hover": {
                 backgroundColor: "#fff",
                 "&, & .css-10hburv-MuiTypography-root": {
-                  fontWeight: "800",
+                  fontWeight: "750",
                 },
                 "&, & .MuiListItemIcon-root": {
                   color: "#1976D2",

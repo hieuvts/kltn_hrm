@@ -10,6 +10,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { Paper, Box, Pagination, Typography } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 import Card from "@mui/material/Card";
 import { Chip } from "@mui/material";
 import Divider from "@mui/material/Divider";
@@ -161,28 +162,33 @@ export default function TaskList() {
     const dispatch = useDispatch();
     return (
       <Box>
-        <Button
-          variant="link"
-          onClick={() => {
-            dispatch(setCurrentSelectedTask(currentSelectedTask));
-            setDialogUpdateTaskOpen(true);
-          }}
-        >
-          <ModeIcon color="text" size="small" />
-        </Button>
-        <Button
-          variant="link"
-          onClick={() => {
-            dispatch(setCurrentSelectedTask(currentSelectedTask));
-            setDialogDeleteTaskOpen(true);
-          }}
-        >
-          <DeleteIcon color="text" size="small" />
-        </Button>
+        <Tooltip title="Update">
+          <Button
+            variant="link"
+            onClick={() => {
+              dispatch(setCurrentSelectedTask(currentSelectedTask));
+              setDialogUpdateTaskOpen(true);
+            }}
+          >
+            <ModeIcon color="text" size="small" />
+          </Button>
+        </Tooltip>
+
+        <Tooltip title="Delete">
+          <Button
+            variant="link"
+            onClick={() => {
+              dispatch(setCurrentSelectedTask(currentSelectedTask));
+              setDialogDeleteTaskOpen(true);
+            }}
+          >
+            <DeleteIcon color="text" size="small" />
+          </Button>
+        </Tooltip>
       </Box>
     );
   };
-  
+
   return (
     <div style={{ display: "flex", justifyContent: "center", height: "100%" }}>
       <DialogDeleteTask
@@ -223,6 +229,7 @@ export default function TaskList() {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                margin: "5px",
               }}
               key={columnId}
             >
@@ -388,7 +395,9 @@ export default function TaskList() {
                                           justifyContent: "flex-end",
                                         }}
                                       >
-                                        <CardAction currentSelectedTask={item} />
+                                        <CardAction
+                                          currentSelectedTask={item}
+                                        />
                                       </Box>
                                     </Card>
                                   );
