@@ -17,7 +17,7 @@ export default function DialogAddDepartment({
       <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <h3>Create new employee</h3>
+            <h3>Create new department</h3>
             <Button onClick={handleCloseDialog}>
               <CloseIcon fontSize="large" />
             </Button>
@@ -35,5 +35,4 @@ export default function DialogAddDepartment({
 DialogAddDepartment.propTypes = {
   isDialogOpen: PropTypes.bool,
   handleCloseDialog: PropTypes.func,
-  handleSnackbarOpen: PropTypes.func,
 };

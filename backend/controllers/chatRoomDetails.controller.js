@@ -49,7 +49,8 @@ const getQtyMemberInRoomID = async (req, res) => {
         });
         console.log(
           moment().format("hh:mm:ss"),
-          "[ERROR] getQtyMemberInRoomID"
+          "[ERROR] getQtyMemberInRoomID \nchatRoomDetails.count ",
+          chatRoomDetails.count
         );
       }
     })
@@ -57,7 +58,7 @@ const getQtyMemberInRoomID = async (req, res) => {
       console.log(
         moment().format("hh:mm:ss"),
         "[ERROR] getQtyMemberInRoomID",
-        error.message
+        error
       );
       res.status(500).json({
         message: "[ERROR] [getQtyMemberInRoomID] Something went wrong",

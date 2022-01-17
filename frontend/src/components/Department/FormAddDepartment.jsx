@@ -39,7 +39,7 @@ export default function FormAddDepartmentInformation({
   const FormikWithMUI = () => {
     const formik = useFormik({
       initialValues: initialValues,
-      validationSchema: departmentInformationValidationSchema,
+      // validationSchema: departmentInformationValidationSchema,
       onSubmit: (values) => {
         dispatch(addDepartmentAsync(values))
           .unwrap()

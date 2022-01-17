@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import DatePicker from "@mui/lab/DatePicker";
 import FormControl from "@mui/material/FormControl";
+import Autocomplete from "@mui/material/Autocomplete";
 import Grid from "@mui/material/Grid";
 import InputLabel from "@mui/material/InputLabel";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -12,11 +14,13 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
-
+import AddIcon from "@mui/icons-material/Add";
+import { commonPositionInCompany } from "../../utilities/commonPositionInCompany";
 import { useDispatch, useSelector } from "react-redux";
 import { addEmployeeAsync } from "../../stores/employeeSlice";
 import { employeeInfoValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
+import DialogAddDepartment from "../Department/DialogAddDepartment";
 
 export default function FormAddEmployeeInformation({
   handleCloseDialog,
@@ -25,14 +29,16 @@ export default function FormAddEmployeeInformation({
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
   const departments = useSelector((state) => state.department.departmentList);
-
+  const [isDialogAddDeptOpen, setDialogAddDeptOpen] = useState(false);
   const handleSbSuccessClose = () => {
     setSbSuccessOpen(false);
   };
   const handleSbFailedClose = () => {
     setSbFailedOpen(false);
   };
-
+  const handleDialogAddDeptClose = () => {
+    setDialogAddDeptOpen(false);
+  };
   const dispatch = useDispatch();
 
   const FormikWithMUI = () => {
@@ -128,39 +134,63 @@ export default function FormAddEmployeeInformation({
             </Grid>
 
             <Grid item sm={12} md={6}>
-              <FormControl fullWidth>
-                <InputLabel id="departments-label">Department</InputLabel>
-                <Select
-                  labelId="departments-label"
-                  id="departmentID"
-                  name="departmentID"
-                  label="Department"
-                  fullWidth
-                  value={formik.values.departmentID}
-                  onChange={formik.handleChange}
-                  sx={{ mb: 3 }}
+              <Box sx={{ display: "flex", flexDirection: "row" }}>
+                <FormControl fullWidth>
+                  <InputLabel id="departments-label">Department</InputLabel>
+                  <Select
+                    labelId="departments-label"
+                    id="departmentID"
+                    name="departmentID"
+                    label="Department"
+                    fullWidth
+                    value={formik.values.departmentID}
+                    onChange={formik.handleChange}
+                    sx={{ mb: 3 }}
+                  >
+                    {departments.map((department, index) => (
+                      <MenuItem key={index} value={department.id}>
+                        {department.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <Button
+                  type="button"
+                  variant="outlined"
+                  sx={{ ml: 1, height: "3.5rem" }}
+                  onClick={() => setDialogAddDeptOpen(true)}
                 >
-                  {departments.map((department, index) => (
-                    <MenuItem key={index} value={department.id}>
-                      {department.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                  <AddIcon />
+                </Button>
+              </Box>
 
-              <TextField
-                fullWidth
-                id="position"
-                name="position"
-                label="Position"
-                value={formik.values.position}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.position && Boolean(formik.errors.position)
-                }
-                helperText={formik.touched.position && formik.errors.position}
-                sx={{ mb: 3 }}
+              <Autocomplete
+                id="positionAC"
+                freeSolo
+                onChange={(event, value) => {
+                  formik.setFieldValue("position", value);
+                }}
+                options={commonPositionInCompany.map((option) => option)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    fullWidth
+                    id="position"
+                    name="position"
+                    label="Position"
+                    value={formik.values.position}
+                    onChange={formik.handleChange}
+                    error={
+                      formik.touched.position && Boolean(formik.errors.position)
+                    }
+                    helperText={
+                      formik.touched.position && formik.errors.position
+                    }
+                    sx={{ mb: 3 }}
+                  />
+                )}
               />
+
               <TextField
                 fullWidth
                 id="phoneNumber"
@@ -221,6 +251,10 @@ export default function FormAddEmployeeInformation({
         isOpen={isSbFailedOpen}
         handleClose={handleSbFailedClose}
         text={"Add employee failed!"}
+      />
+      <DialogAddDepartment
+        isDialogOpen={isDialogAddDeptOpen}
+        handleCloseDialog={handleDialogAddDeptClose}
       />
       <FormikWithMUI />
     </div>

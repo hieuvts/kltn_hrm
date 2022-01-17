@@ -13,7 +13,6 @@ import PropTypes from "prop-types";
 import MuiAlert from "@mui/material/Alert";
 import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
-import debounce from "lodash.debounce";
 
 import { useDispatch } from "react-redux";
 import { addCompanyAsync } from "../../stores/companySlice";
