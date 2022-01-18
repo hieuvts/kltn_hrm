@@ -186,7 +186,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          AuthAccount List
+          Authentication account
         </Typography>
       )}
 
@@ -402,10 +402,10 @@ export default function AuthAccountTable() {
                         >
                           {row.email}
                         </TableCell>
+                        <TableCell align="right">{row.privilege}</TableCell>
                         <TableCell align="right">
                           {moment(row.createdAt).format("DD-MM-YYYY")}
                         </TableCell>
-                        <TableCell align="right">{row.privilege}</TableCell>
 
                         <TableCell align="right">
                           <RowActions currentSelectedAuthAccount={row} />

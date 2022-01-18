@@ -112,7 +112,7 @@ export default function AuthAccount() {
 
       <Paper elevation={1} sx={{ my: 3, p: 3 }}>
         <MySearchBox
-          placeholder="Search for AuthAccount..."
+          placeholder="Search for accounts..."
           handleSearchQueryChange={handleSearchQueryChange}
         />
       </Paper>
