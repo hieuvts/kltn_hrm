@@ -82,7 +82,7 @@ export const deleteAccount = createAsyncThunk(
   "auth/deleteAccount",
   async (payload, thunkAPI) => {
     try {
-      const res = await authService.deleteAccount(payload);
+      const res = await authService.deleteAccount(payload.selectedAuthAccountId);
       return res.data.message;
     } catch (error) {
       const message =
@@ -182,7 +182,7 @@ export const authSlice = createSlice({
     removeFromSelectedAuthAccountList: (state, action) => {
       state.selectedAuthAccountList = state.selectedAuthAccountList.filter(
         (AuthAccount) =>
-          AuthAccount._id !== action.payload.selectedAuthAccount._id
+          AuthAccount.id !== action.payload.selectedAuthAccount.id
       );
     },
     setMultiSelectedAuthAccountList: (state, action) => {

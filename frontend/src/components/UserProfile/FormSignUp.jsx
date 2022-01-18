@@ -7,10 +7,9 @@ import SnackbarFailed from "../Snackbar/SnackbarFailed";
 import { useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
-import { signUp } from "../../stores/authSlice";
+import { getAllAccount, signUp } from "../../stores/authSlice";
 import { accountSignUpValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
-
 
 const initialValues = {
   email: "",
@@ -23,7 +22,6 @@ export default function FormSignUp() {
   const company = useSelector((state) => state.company);
   const handleSbSuccessClose = () => {
     setSbSuccessOpen(false);
-    navigate("/login");
   };
   const handleSbFailedClose = () => {
     setSbFailedOpen(false);
@@ -46,6 +44,7 @@ export default function FormSignUp() {
           .unwrap()
           .then(() => {
             setSbSuccessOpen(true);
+            dispatch(getAllAccount({ searchQuery: "" }));
           })
           .catch((error) => {
             setSbFailedOpen(true);
@@ -122,4 +121,3 @@ export default function FormSignUp() {
     </div>
   );
 }
-

@@ -10,7 +10,7 @@ import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
 import PropTypes from "prop-types";
-import {getAllAccount, deleteAccount} from "../../stores/authSlice";
+import { getAllAccount, deleteAccount } from "../../stores/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 export default function DialogDeleteMultipleAuthAccount({
@@ -36,7 +36,7 @@ export default function DialogDeleteMultipleAuthAccount({
         .unwrap()
         .then(() => {
           setSelected([]);
-          dispatch(getAllAccount());
+          dispatch(getAllAccount({ searchQuery: "" }));
           setSbSuccessOpen(true);
           setTimeout(() => {
             handleCloseDialog();

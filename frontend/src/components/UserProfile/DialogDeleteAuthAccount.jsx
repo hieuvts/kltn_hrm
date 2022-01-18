@@ -38,7 +38,7 @@ export default function DialogDeleteAuthAccount({
     dispatch(deleteAccount({ selectedAuthAccountId: selectedAuthAccountId }))
       .unwrap()
       .then(() => {
-        dispatch(getAllAccount());
+        dispatch(getAllAccount({ searchQuery: "" }));
         setSbSuccessOpen(true);
         setTimeout(() => {
           handleCloseDialog();
