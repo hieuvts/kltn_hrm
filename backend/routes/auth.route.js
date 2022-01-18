@@ -12,6 +12,7 @@ router.post("/login", authController.login);
 router.post("/changePwd", authJwt.verifyToken, authController.changePassword);
 router.get("/getChatRooms", authController.getChatRooms);
 router.get("/getAccountInfoByID", authController.getAccountInfoByID);
+router.get("/getAllAccount", authController.getAllAccount);
 router.delete("/delete", authController.deleteAuthAccount);
 
 module.exports = router;

@@ -10,20 +10,17 @@ import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
 import PropTypes from "prop-types";
-import {
-  deleteEmployeeAsync,
-  getEmployeeAsync,
-} from "../../stores/employeeSlice";
+import {getAllAccount, deleteAccount} from "../../stores/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 
-export default function DialogDeleteMultipleEmployee({
+export default function DialogDeleteMultipleAuthAccount({
   isDialogOpen,
   handleCloseDialog,
   setSelected,
 }) {
   const dispatch = useDispatch();
-  const selectedEmployeeList = useSelector(
-    (state) => state.employee.selectedEmployeeList
+  const selectedAuthAccountList = useSelector(
+    (state) => state.auth.selectedAuthAccountList
   );
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
@@ -33,15 +30,13 @@ export default function DialogDeleteMultipleEmployee({
   const handleSbFailedClose = () => {
     setSbFailedOpen(false);
   };
-  const handleDeleteEmployee = () => {
-    // Loop through selectedEmployeeList and call delete func on each one
-    // TODO: implement delete many, by sending list of employee id
-    selectedEmployeeList.forEach((employee, index) => {
-      dispatch(deleteEmployeeAsync({ selectedEmployeeId: employee.id }))
+  const handleDeleteAuthAccount = () => {
+    selectedAuthAccountList.forEach((account) => {
+      dispatch(deleteAccount({ selectedAuthAccountId: account.id }))
         .unwrap()
         .then(() => {
           setSelected([]);
-          dispatch(getEmployeeAsync());
+          dispatch(getAllAccount());
           setSbSuccessOpen(true);
           setTimeout(() => {
             handleCloseDialog();
@@ -62,14 +57,14 @@ export default function DialogDeleteMultipleEmployee({
       <SnackbarFailed
         isOpen={isSbFailedOpen}
         handleClose={handleSbFailedClose}
-        text={"Delete multiple employees failed!"}
+        text={"Delete multiple accounts failed!"}
       />
       <Dialog open={isDialogOpen} onClose={handleCloseDialog} maxWidth="md">
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography variant="h4">
-              Are you sure you want to delete {selectedEmployeeList.length}{" "}
-              employee?
+              Are you sure you want to delete {selectedAuthAccountList.length}{" "}
+              accounts?
             </Typography>
             <Button onClick={handleCloseDialog}>
               <CloseIcon fontSize="large" />
@@ -87,7 +82,7 @@ export default function DialogDeleteMultipleEmployee({
           <Button
             variant="outlined"
             color="primary"
-            onClick={() => handleDeleteEmployee()}
+            onClick={() => handleDeleteAuthAccount()}
           >
             Yes
           </Button>
@@ -96,7 +91,7 @@ export default function DialogDeleteMultipleEmployee({
     </div>
   );
 }
-DialogDeleteMultipleEmployee.propTypes = {
+DialogDeleteMultipleAuthAccount.propTypes = {
   isDialogOpen: PropTypes.bool,
   handleCloseDialog: PropTypes.func,
   setSelected: PropTypes.func,

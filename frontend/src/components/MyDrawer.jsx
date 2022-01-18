@@ -49,6 +49,7 @@ import CurrentClock from "../components/CustomizedMUIComponents/CurrentClock";
 import NotificationBadget from "../components/CustomizedMUIComponents/NotificationsBadget";
 import { pageList } from "../utilities/appPageList";
 import jwtParser from "../utilities/jwtParser";
+import AuthAccount from "../pages/UserProfile/AuthAccount";
 // Mini variant drawer
 import {
   AppBar,
@@ -199,6 +200,19 @@ export default function AppBarComponent() {
                           Logout
                         </MenuItem>
                       </Link>
+
+                      <Link
+                        to="/accountManage"
+                        style={{ textDecoration: "none", color: "black" }}
+                      >
+                        <MenuItem
+                          onClick={() => {
+                            handleClose();
+                          }}
+                        >
+                          Account Manage
+                        </MenuItem>
+                      </Link>
                     </Menu>
                   </div>
                 )}
@@ -299,6 +313,7 @@ export default function AppBarComponent() {
           <Route path="Task" element={<Task />} />
           <Route path="others" element={<Others />} />
           <Route path="setting" element={<Company />} />
+          <Route path="accountManage" element={<AuthAccount />} />
           <Route path="profile" element={<UserProfile />} />
           <Route path="about" element={<AboutUs />} />
           <Route path="chat" element={<InternalChat />} />

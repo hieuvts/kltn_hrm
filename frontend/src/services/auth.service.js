@@ -34,10 +34,14 @@ const getChatRoomByAuthAccount = (authAccountID, searchQuery) => {
   );
 };
 
+const getAllAccount = (searchQuery) => {
+  return axios.get(API_URL + "getAllAccount?search=" + searchQuery);
+};
 const getAccountInfoByID = (authAccountID) => {
-  return axios.get(
-    API_URL + "getAccountInfoByID?id=" + authAccountID
-  );
+  return axios.get(API_URL + "getAccountInfoByID?id=" + authAccountID);
+};
+const deleteAccount = (authAccountID) => {
+  return axios.delete(API_URL + "delete?id=" + authAccountID);
 };
 const authService = {
   signUp,
@@ -45,6 +49,8 @@ const authService = {
   logout,
   getChatRoomByAuthAccount,
   getAccountInfoByID,
+  getAllAccount,
+  deleteAccount,
   changePassword,
 };
 

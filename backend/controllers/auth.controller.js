@@ -81,6 +81,52 @@ const login = (req, res) => {
     });
 };
 
+const getAllAccount = (req, res) => {
+  const searchQuery = req.query.search || '';
+  console.log("invoke getAllAccount", searchQuery);
+
+  AuthAccount.findAll({
+    where: { email: { [Op.like]: `%${searchQuery}%` } },
+    include: [Employee],
+  })
+    .then((authAccounts) => {
+      if (!authAccounts || authAccounts.length === 0) {
+        return res.status(404).send({
+          message: `Find all account failed!`,
+        });
+      }
+
+      res.status(200).send(authAccounts);
+    })
+    .catch((error) => {
+      console.log("error when get all account", error);
+      return res.status(401).send({ error: error.message });
+    });
+};
+
+const deleteAccount = (req, res) => {
+  const searchQuery = req.query.search || '';
+  console.log("invoke getAllAccount", searchQuery);
+
+  AuthAccount.findAll({
+    where: { email: { [Op.like]: `%${searchQuery}%` } },
+    include: [Employee],
+  })
+    .then((authAccounts) => {
+      if (!authAccounts || authAccounts.length === 0) {
+        return res.status(404).send({
+          message: `Find all account failed!`,
+        });
+      }
+
+      res.status(200).send(authAccounts);
+    })
+    .catch((error) => {
+      console.log("error when get all account", error);
+      return res.status(401).send({ error: error.message });
+    });
+};
+
 const getAccountInfoByID = (req, res) => {
   console.log("invoke getinfo id", req.body.id);
   AuthAccount.findOne({
@@ -205,7 +251,6 @@ const getChatRooms = (req, res) => {
     ],
   })
     .then((authAccount) => {
-      console.log("authAccount chat", authAccount);
       if (!authAccount) {
         return res.status(404).send({
           message: `Not found any chatrooms`,
@@ -223,6 +268,7 @@ module.exports = {
   login,
   getChatRooms,
   changePassword,
+  getAllAccount,
   deleteAuthAccount,
   getAccountInfoByID,
 };

@@ -11,6 +11,9 @@ const initialState = {
   isLoggedIn: isLoggedIn,
   user: user,
   chatRooms: [],
+  authAccountList: [],
+  currentSelectedAuthAccount: {},
+  selectedAuthAccountList: [],
 };
 export const signUp = createAsyncThunk(
   "auth/signup",
@@ -74,6 +77,25 @@ export const changePassword = createAsyncThunk(
     }
   }
 );
+
+export const deleteAccount = createAsyncThunk(
+  "auth/deleteAccount",
+  async (payload, thunkAPI) => {
+    try {
+      const res = await authService.deleteAccount(payload);
+      return res.data.message;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const logout = createAsyncThunk("auth/logout", async () => {
   await authService.logout();
 });
@@ -123,9 +145,53 @@ export const getAccountInfoByID = createAsyncThunk(
   }
 );
 
+export const getAllAccount = createAsyncThunk(
+  "auth/getAllAccount",
+  async (payload, thunkAPI) => {
+    try {
+      const res = await authService.getAllAccount(payload.searchQuery);
+      return res.data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
+  reducers: {
+    setCurrentSelectedAuthAccount: (state, action) => {
+      return {
+        ...state,
+        currentSelectedAuthAccount: action.payload.currentSelectedAuthAccount,
+      };
+    },
+    addToSelectedAuthAccountList: (state, action) => {
+      state.selectedAuthAccountList.push(action.payload.selectedAuthAccount);
+    },
+    removeFromSelectedAuthAccountList: (state, action) => {
+      state.selectedAuthAccountList = state.selectedAuthAccountList.filter(
+        (AuthAccount) =>
+          AuthAccount._id !== action.payload.selectedAuthAccount._id
+      );
+    },
+    setMultiSelectedAuthAccountList: (state, action) => {
+      const selectedAuthAccountList = action.payload;
+      selectedAuthAccountList.forEach((AuthAccount) =>
+        state.selectedAuthAccountList.push(AuthAccount)
+      );
+    },
+  },
   extraReducers: {
     [signUp.pending]: (state, actions) => {
       console.log("[Rejected] signup actions= ", actions);
@@ -169,8 +235,8 @@ export const authSlice = createSlice({
       console.log("[Rejected] getChatRoomByAuthAccount ", actions.payload);
     },
     [getChatRoomByAuthAccount.fulfilled]: (state, actions) => {
-      return { ...state, chatRooms: actions.payload };
       console.log("[Fulfilled] getChatRoomByAuthAccount");
+      return { ...state, chatRooms: actions.payload };
     },
 
     [getAccountInfoByID.rejected]: (state, actions) => {
@@ -180,7 +246,30 @@ export const authSlice = createSlice({
       console.log("[Fulfilled] getAccountInfoByID");
       return { ...state, user: actions.payload };
     },
+
+    [getAllAccount.rejected]: (state, actions) => {
+      console.log("[Rejected] getAllAccount");
+    },
+    [getAllAccount.fulfilled]: (state, actions) => {
+      console.log("[Fulfilled] getAllAccount");
+      return { ...state, authAccountList: actions.payload };
+    },
+
+    [deleteAccount.rejected]: (state, actions) => {
+      console.log("[Rejected] deleteAccount");
+    },
+    [deleteAccount.fulfilled]: (state, actions) => {
+      console.log("[Fulfilled] deleteAccount");
+      return;
+    },
   },
 });
+
+export const {
+  setCurrentSelectedAuthAccount,
+  addToSelectedAuthAccountList,
+  removeFromSelectedAuthAccountList,
+  setMultiSelectedAuthAccountList,
+} = authSlice.actions;
 
 export default authSlice.reducer;

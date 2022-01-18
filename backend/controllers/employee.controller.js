@@ -8,7 +8,7 @@ const moment = require("moment");
 const { sequelize } = require("../models");
 
 const getAllEmployee = async (req, res) => {
-  const searchQuery = req.query.search;
+  const searchQuery = req.query.search || '';
   console.log("invoke 7", searchQuery);
   Employee.findAll({
     include: [EmploymentHistory, EmployeeAchievement],
