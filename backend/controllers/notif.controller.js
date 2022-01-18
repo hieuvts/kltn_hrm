@@ -3,7 +3,7 @@ const Notification = db.Notification;
 const moment = require("moment");
 
 const getNotif = async (req, res) => {
-  console.log("get notif");
+  console.log("get notif ", req.query.id);
   Notification.findAll({
     where: { authAccountID: req.query.id },
   })
@@ -30,7 +30,7 @@ const getNotif = async (req, res) => {
 const markNotifAsRead = async (req, res) => {
   console.log("invoked update Notifications");
   Notification.update(req.body, {
-    where: { id: req.query.id },
+    where: { authAccountID: req.query.id },
   })
     .then((affectedRows) => {
       if (affectedRows == 1) {
@@ -58,7 +58,7 @@ const markNotifAsRead = async (req, res) => {
 };
 
 const deleteNotif = async (req, res) => {
-  Notifications.destroy({ where: { id: req.query.id } })
+  Notification.destroy({ where: { id: req.query.id } })
     .then((affectedRows) => {
       if (affectedRows == 1) {
         console.log(moment().format("hh:mm:ss"), "[SUCCESS] deleteNotif");

@@ -56,10 +56,12 @@ import {
   MyDrawer,
   DrawerHeader,
 } from "./CustomizedMUIComponents/MyDrawer";
+import { getNotif } from "../stores/notifSlice";
 export default function AppBarComponent() {
   const location = useLocation();
   const theme = useTheme();
   const { user: currentUser } = useSelector((state) => state.auth);
+  const notif = useSelector((state) => state.notif);
   const pathnames = location.pathname.split("/").filter((x) => x);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -83,6 +85,10 @@ export default function AppBarComponent() {
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
+
+  useEffect(() => {
+    dispatch(getNotif({ authAccountID: currentUser.id }));
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -147,7 +153,7 @@ export default function AppBarComponent() {
                       </IconButton>
                     </Tooltip>
 
-                    <NotificationBadget notificationCount={3} />
+                    <NotificationBadget notificationCount={notif.length} />
                     <Menu
                       id="menu-appbar"
                       anchorEl={anchorEl}
@@ -212,8 +218,6 @@ export default function AppBarComponent() {
                           Logout
                         </MenuItem>
                       </Link>
-
-                     
                     </Menu>
                   </div>
                 )}
