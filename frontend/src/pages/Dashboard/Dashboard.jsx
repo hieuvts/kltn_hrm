@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Typography from "@mui/material/Typography";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
 import Paper from "@mui/material/Paper";
 import Tab from "@mui/material/Tab";
 import CloseIcon from "@mui/icons-material/Close";
 import Grid from "@mui/material/Grid";
+import debounce from "lodash.debounce"
 import {
   LineChart,
   Line,
@@ -41,6 +42,47 @@ const testData = {
   ],
 };
 export default function Dashboard() {
+ 
+  const debounceFetchAPI = useCallback(
+    debounce((searchQuery) => {
+      dispatch(getEmployeeKpiCluster());
+    }, 350),
+    []
+  );
+  useEffect(() => {
+    debounceFetchAPI();
+  });
+
+  const dispatch = useDispatch();
+  var items = useSelector((state) => state.employeeKpiCluster.employeeKpiClusterList);
+
+  var listItemLabel0 = [];
+  var listItemLabel1 = [];
+  var listItemLabel2 = [];
+  var listItemLabel3 = [];
+  
+  const addItemToLableList = (items) => {
+    items.map((item) => {
+      let index = 0;
+      switch (item.labels) {
+        case 0:
+          listItemLabel0.push(item);
+          break;
+        case 1:
+          listItemLabel1.push(item);
+          break;
+        case 2:
+          listItemLabel2.push(item);
+          break;
+        case 3:
+          listItemLabel3.push(item);
+          break;
+      }
+    });
+    console.log("done")
+  };
+  addItemToLableList(items);
+
   return (
     <div>
       <div className="dbQty">

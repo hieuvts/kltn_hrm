@@ -23,26 +23,8 @@ def extractIDInfo(data):
 features = np.array(extractKPIInfo(dataFromCSV))
 ids = np.array(extractIDInfo(dataFromCSV))
 
-distortions = []
-K = range(1,10)
-for k in K:
-    kmeanModel = KMeans(n_clusters= k)
-    kmeanModel.fit(features)
-    distortions.append(kmeanModel.inertia_)
-
-plt.figure(figsize=(16,8))
-plt.plot(K, distortions, 'bx-')
-plt.xlabel('k')
-plt.ylabel('Distortion')
-plt.title('The Elbow Method Clustering')
-plt.show()
-
 kmeans = KMeans(n_clusters = 4).fit(features)
 
-firstGroup = [];
-secondGroup = [];
-thirdGroup = [];
-fourthGroup = [];
 outcomeDictArr = [];
 for i in range(len(kmeans.labels_)):
     outcomeDict = {
