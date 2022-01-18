@@ -30,7 +30,7 @@ export default function Dashboard() {
   );
   useEffect(() => {
     debounceFetchAPI();
-  });
+  }, []);
 
   const dispatch = useDispatch();
   var items = useSelector(
@@ -202,7 +202,10 @@ export default function Dashboard() {
           </Grid>
         </Grid>
       </div>
-      <div className="dbChart" style={{display: "flex", justifyContent: "center"}}>
+      <div
+        className="dbChart"
+        style={{ display: "flex", justifyContent: "center" }}
+      >
         <Paper>
           <BarChart
             width={1200}
@@ -216,11 +219,11 @@ export default function Dashboard() {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="centoroid" label= "KPI Center" />
+            <XAxis dataKey="centoroid" label="KPI Center" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="items.length" fill="#8884d8" name="Amount"/>
+            <Bar dataKey="items.length" fill="#8884d8" name="Amount" />
           </BarChart>
         </Paper>
       </div>

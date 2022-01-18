@@ -102,6 +102,27 @@ export const getChatRoomByAuthAccount = createAsyncThunk(
   }
 );
 
+export const getAccountInfoByID = createAsyncThunk(
+  "auth/getAccountInfoByID",
+  async (payload, thunkAPI) => {
+    try {
+      const res = await authService.getAccountInfoByID(payload.id);
+      return res.data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -150,6 +171,14 @@ export const authSlice = createSlice({
     [getChatRoomByAuthAccount.fulfilled]: (state, actions) => {
       return { ...state, chatRooms: actions.payload };
       console.log("[Fulfilled] getChatRoomByAuthAccount");
+    },
+
+    [getAccountInfoByID.rejected]: (state, actions) => {
+      console.log("[Rejected] getAccountInfoByID");
+    },
+    [getAccountInfoByID.fulfilled]: (state, actions) => {
+      console.log("[Fulfilled] getAccountInfoByID");
+      return { ...state, user: actions.payload };
     },
   },
 });

@@ -33,11 +33,18 @@ const getChatRoomByAuthAccount = (authAccountID, searchQuery) => {
     API_URL + "getChatRooms?id=" + authAccountID + "&search=" + searchQuery
   );
 };
+
+const getAccountInfoByID = (authAccountID) => {
+  return axios.get(
+    API_URL + "getAccountInfoByID?id=" + authAccountID
+  );
+};
 const authService = {
   signUp,
   login,
   logout,
   getChatRoomByAuthAccount,
+  getAccountInfoByID,
   changePassword,
 };
 

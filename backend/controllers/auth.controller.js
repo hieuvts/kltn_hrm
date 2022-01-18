@@ -81,6 +81,33 @@ const login = (req, res) => {
     });
 };
 
+const getAccountInfoByID = (req, res) => {
+  console.log("invoke getinfo id", req.body.id);
+  AuthAccount.findOne({
+    where: { id: req.query.id },
+    include: [Employee],
+  })
+    .then((authAccount) => {
+      if (!authAccount) {
+        return res.status(404).send({
+          message: `Find account ${req.query.id} failed!`,
+        });
+      }
+
+      res.status(200).send({
+        id: authAccount.id,
+        email: authAccount.email,
+        privilege: authAccount.privilege,
+        companyID: authAccount.companyID,
+        employee: authAccount.Employee,
+      });
+    })
+    .catch((error) => {
+      console.log("error when get account", error);
+      return res.status(401).send({ error: error.message });
+    });
+};
+
 const changePassword = async (req, res) => {
   console.log("changePassword", req.body);
   AuthAccount.findOne({
@@ -197,4 +224,5 @@ module.exports = {
   getChatRooms,
   changePassword,
   deleteAuthAccount,
+  getAccountInfoByID,
 };

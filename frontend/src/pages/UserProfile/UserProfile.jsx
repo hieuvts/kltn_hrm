@@ -1,5 +1,5 @@
 // Testing authorization services
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Button,
@@ -11,17 +11,18 @@ import {
   Paper,
 } from "@mui/material";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
-import CapitalizeFirstLetter from "../../utilities/captitalizeFirstLetter";
 import MyBreadcrumbs from "../../components/CustomizedMUIComponents/MyBreadcrumbs";
 import { useSelector, useDispatch } from "react-redux";
 import DialogChangeUserPwd from "../../components/UserProfile/DialogChangeUserPwd";
 import DialogUpdateEmployee from "../../components/Employee/DialogUpdateEmployee";
 import { setCurrentSelectedEmployee } from "../../stores/employeeSlice";
+import { getAccountInfoByID } from "../../stores/authSlice";
+import { getDepartmentAsync } from "../../stores/departmentSlice";
 
 export default function UserProfile() {
   const [isDialogChangeUserPwdOpen, setDialogChangeUserPwd] = useState(false);
   const [isDialogUpdateEmployeeOpen, setDialogUpdateEmployee] = useState(false);
-  const [currentEmployee, setCurrentEmployee] = useState({});
+
 
   const handleDialogChangeUserPwdClose = () => {
     setDialogChangeUserPwd(false);
@@ -30,7 +31,14 @@ export default function UserProfile() {
     setDialogUpdateEmployee(false);
   };
   const dispatch = useDispatch();
+  const currentUser = JSON.parse(localStorage.getItem("user"));
   const user = useSelector((state) => state.auth.user);
+  const departments = useSelector((state) => state.department.departmentList);
+
+  useEffect(() => {
+    dispatch(getAccountInfoByID({ id: currentUser.id }));
+    dispatch(getDepartmentAsync());
+  }, []);
 
   const pathnames = location.pathname.split("/").filter((x) => x);
   return (
@@ -56,16 +64,16 @@ export default function UserProfile() {
         <Grid item sm={12} md={6} sx={{ alignSelf: "start" }}>
           <Box sx={colDirection}>
             <Paper elevation={2} sx={{ m: 1, p: 3 }}>
-              <Typography variant="h6" sx={{ textAlign: "left" }}>
+              <Typography variant="h5" sx={{ textAlign: "left" }}>
                 User profile
               </Typography>
               <Divider sx={{ my: 1 }} />
               <Box sx={rowDirection}>
-                <Typography>Email:</Typography>
+                <Typography variant="h6">Email</Typography>
                 <Typography>{user.email}</Typography>
               </Box>
               <Box sx={rowDirection}>
-                <Typography>Roles:</Typography>
+                <Typography variant="h6">Privilege</Typography>
                 {user.privilege}
               </Box>
               <Box sx={{ mt: 3, textAlign: "right" }}>
@@ -82,28 +90,32 @@ export default function UserProfile() {
 
         <Grid item sm={12} md={6} sx={{ alignSelf: "start" }}>
           <Paper elevation={2} sx={{ m: 1, p: 3 }}>
-            <Typography variant="h6" sx={{ textAlign: "left" }}>
+            <Typography variant="h5" sx={{ textAlign: "left" }}>
               Employee information
             </Typography>
             <Divider sx={{ my: 1 }} />
             <Box sx={rowDirection}>
-              <Typography>Full name: </Typography>
+              <Typography variant="h6">Full name </Typography>
               <Typography>
                 {user.employee.fname} {user.employee.lname}
               </Typography>
             </Box>
             <Box sx={rowDirection}>
-              <Typography>Gender: </Typography>
+              <Typography variant="h6">Gender </Typography>
               <Typography>{user.employee.gender}</Typography>
             </Box>
             <Box sx={rowDirection}>
-              <Typography>Departments: </Typography>
-              <Typography>{user.employee.departments}</Typography>
+              <Typography variant="h6">Departments </Typography>
+
+              <Typography>
+                {departments.map((department) => {
+                  if (department.id === user.employee.departmentID) {
+                    return department.name;
+                  }
+                })}
+              </Typography>
             </Box>
-            <Box sx={rowDirection}>
-              <Typography>Project: </Typography>
-              <Typography>{user.employee.project}</Typography>
-            </Box>
+
             <Box sx={{ mt: 3, textAlign: "right" }}>
               <Button
                 variant="contained"
