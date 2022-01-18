@@ -74,6 +74,35 @@ const createTriggersInDB = async (req, res) => {
       manager='HR Leader';
       `
     );
+
+    // Trigger insert task
+    await db.sequelize.query(`drop trigger if exists taskThenAddNoti;`);
+
+    await db.sequelize.query(
+      `create trigger taskThenAddNoti 
+      after insert on Tasks for each row 
+      insert into Notifications
+      set eventType='task',
+      authAccountID=NEW.assigneeID,
+      event=CONCAT("Your're assigned a new task: ", NEW.name, ". Check it at");
+      `
+    );
+
+    // Trigger update task
+    await db.sequelize.query(`drop trigger if exists updateTaskThenAddNoti;`);
+
+    await db.sequelize.query(
+      `create trigger updateTaskThenAddNoti 
+      after update on Tasks for each row 
+      if OLD.assigneeID != NEW.assigneeID
+      then
+        insert into Notifications 
+        set eventType='task',
+        authAccountID=NEW.assigneeID,
+        event=CONCAT("Your're assigned a new task: ", NEW.name, ". Check it at");
+      end if;
+      `
+    );
   } catch (error) {
     console.log("createTriggersInDB: ", error);
   }

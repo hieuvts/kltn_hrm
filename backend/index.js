@@ -10,6 +10,7 @@ const employeeRoute = require("./routes/employee.route");
 const departmentRoute = require("./routes/department.route");
 const projectRoute = require("./routes/project.route");
 const taskRoute = require("./routes/task.route");
+const notifRoute = require("./routes/notif.route");
 const authRoute = require("./routes/auth.route");
 const companyRoute = require("./routes/company.route");
 const chatRoomDetailsRoute = require("./routes/chatRoomDetails.route");
@@ -51,6 +52,7 @@ app.use("/api/chatRoomDetails", chatRoomDetailsRoute);
 app.use("/api/chat", chatRoom);
 app.use("/api/empAchv", employeeAchievement);
 app.use("/api/empKpiCluster", employeekpicluster);
+app.use("/api/notif", notifRoute);
 // begin socketio
 io.use((socket, next) => {
   // if (socket.handshake.auth && socket.handshake.auth.token) {
