@@ -13,6 +13,7 @@ var con = mysql.createConnection({
   user: mysql_user,
   password: mysql_password,
   database: mysql_database,
+  timeout: 60000,
 });
 
 con.connect((error) => {

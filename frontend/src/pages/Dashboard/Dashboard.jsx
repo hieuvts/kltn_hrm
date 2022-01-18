@@ -45,7 +45,7 @@ export default function Dashboard() {
     <div>
       <div className="dbQty">
         <Grid container columnSpacing={3}>
-          <Grid item xs={6} md={3}>
+          <Grid item xs={12} md={3}>
             <Paper>
               <Box sx={{ pt: 1, pl: 1 }}>
                 <Typography variant="h5">38</Typography>
@@ -53,7 +53,7 @@ export default function Dashboard() {
               </Box>
             </Paper>
           </Grid>
-          <Grid item xs={6} md={3}>
+          <Grid item xs={12} md={3}>
             <Paper>
               <Box sx={{ pt: 1, pl: 1 }}>
                 <Typography variant="h5">38</Typography>
@@ -61,7 +61,7 @@ export default function Dashboard() {
               </Box>
             </Paper>
           </Grid>
-          <Grid item xs={6} md={3}>
+          <Grid item xs={12} md={3}>
             <Paper>
               <Box sx={{ pt: 1, pl: 1 }}>
                 <Typography variant="h5">38</Typography>
@@ -69,7 +69,7 @@ export default function Dashboard() {
               </Box>
             </Paper>
           </Grid>
-          <Grid item xs={6} md={3}>
+          <Grid item xs={12} md={3}>
             <Paper>
               <Box sx={{ pt: 1, pl: 1 }}>
                 <Typography variant="h5">38</Typography>
@@ -82,12 +82,12 @@ export default function Dashboard() {
       <div className="dbChart">
         <Paper>
           <LineChart
-            width={1000}
+            width={1100}
             height={400}
             data={testData}
             margin={{
               top: 10,
-              right: 30,
+              right: 10,
               left: 0,
               bottom: 0,
             }}

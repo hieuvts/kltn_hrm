@@ -1,22 +1,30 @@
 {
   "development": {
     "username": "root",
-    "password": "Admind_1147",
+    "password": "admin",
     "database": "kltn",
-    "host": "127.0.0.1",
+    "host": "mysql",
     "dialect": "mysql",
+    "port": "3316",
+    "pool": {
+      "max": 15,
+      "min": 5,
+      "idle": 20000,
+      "evict": 15000,
+      "acquire": 30000
+    },
     "logging": false
   },
   "test": {
     "username": "root",
-    "password": "Admind_1147",
+    "password": "admin",
     "database": "kltn",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
-    "password": "Admind_1147",
+    "password": "admin",
     "database": "kltn",
     "host": "127.0.0.1",
     "dialect": "mysql"
