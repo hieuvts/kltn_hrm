@@ -59,24 +59,6 @@ const headCells = [
     disablePadding: false,
     label: "KPI",
   },
-  {
-    id: "department",
-    numeric: false,
-    disablePadding: false,
-    label: "Department",
-  },
-  {
-    id: "lables",
-    numeric: false,
-    disablePadding: false,
-    label: "Label",
-  },
-  {
-    id: "centoroid",
-    numeric: false,
-    disablePadding: false,
-    label: "Centoroid",
-  },
 ];
 
 function EnhancedTableHead(props) {
@@ -179,7 +161,6 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Employee KPI Clustering
         </Typography>
       )}
     </Toolbar>
@@ -191,17 +172,14 @@ EnhancedTableToolbar.propTypes = {
   setSelected: PropTypes.func.isRequired,
 };
 
-export default function EmployeeKpiClusterList() {
+export default function EmployeeKpiClusterList({initialValues}) {
     const [order, setOrder] = React.useState("asc");
     const [orderBy, setOrderBy] = React.useState("name");
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(15);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [isDialogEmployeeDetailsOpen, setDialogEmployeeDetailsOpen] =
       React.useState(false);
-    const dispatch = useDispatch();
-    var rows = useSelector((state) => state.employeeKpiCluster.employeeKpiClusterList);
-    const departments = useSelector((state) => state.department.departmentList);
     const handleRequestSort = (event, property) => {
       const isAsc = orderBy === property && order === "asc";
       setOrder(isAsc ? "desc" : "asc");
@@ -209,15 +187,15 @@ export default function EmployeeKpiClusterList() {
     };
     const handleSelectAllClick = (event) => {
       if (event.target.checked) {
-        const newSelecteds = rows.map((n) => n.id);
-        // Select all -> add all employee (equals to 'rows') to the selectedEmployeeList
-        dispatch(setMultiSelectedEmployeeList(rows));
+        const newSelecteds = items.map((n) => n.id);
+        // Select all -> add all employee (equals to 'items') to the selectedEmployeeList
+        dispatch(setMultiSelectedEmployeeList(items));
         setSelected(newSelecteds);
         return;
       }
       setSelected([]);
     };
-
+    var items = initialValues;
     const handleClick = (event, employee) => {
       const id = employee.id;
       const selectedIndex = selected.indexOf(id);
@@ -263,20 +241,40 @@ export default function EmployeeKpiClusterList() {
 
     const isSelected = (id) => selected.indexOf(id) !== -1;
 
-    // Avoid a layout jump when reaching the last page with empty rows.
+    // Avoid a layout jump when reaching the last page with empty items.
     const emptyRows =
-      page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+      page > 0 ? Math.max(0, (1 + page) * rowsPerPage - items.length) : 0;
 
     const handleCloseDialogEmployeeDetails = () => {
       setDialogEmployeeDetailsOpen(false);
     };
+
+    const setBackGroundColor = (labels) => {
+      let backgroundColor;
+      switch (labels) {
+        case 0:
+          backgroundColor = "#EB5A46";
+          break;
+        case 1:
+          backgroundColor = "#5b4496";
+          break;
+        case 2:
+          backgroundColor = "#0079BF";
+          break;
+        case 3:
+          backgroundColor = "#61BD4F";
+          break;
+      }
+      return backgroundColor;
+    };
+
     return (
         <>
           <DialogEmployeeDetails
             isDialogOpen={isDialogEmployeeDetailsOpen}
             handleCloseDialog={handleCloseDialogEmployeeDetails}
           />
-          <Box sx={{ width: "100%" }}>
+          <Box sx={{ width: "100%"}}>
             <Paper sx={{ width: "100%", mb: 2 }}>
               <EnhancedTableToolbar
                 numSelected={selected.length}
@@ -284,7 +282,7 @@ export default function EmployeeKpiClusterList() {
               />
               <TableContainer>
                 <Table
-                  sx={{ minWidth: 750 }}
+                  sx={{ minWidth: 300 }}
                   aria-labelledby="tableTitle"
                   size="medium"
                 >
@@ -294,17 +292,16 @@ export default function EmployeeKpiClusterList() {
                     orderBy={orderBy}
                     onSelectAllClick={() => handleSelectAllClick(event)}
                     onRequestSort={handleRequestSort}
-                    rowCount={rows.length}
+                    rowCount={items.length}
                   />
                   <TableBody>
-                    {rows
+                    {items
                       .slice()
                       .sort(getComparator(order, orderBy))
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row, index) => {
-                        const isItemSelected = isSelected(row.id);
+                      .map((item, index) => {
+                        const isItemSelected = isSelected(item.id);
                         const labelId = `enhanced-table-checkbox-${index}`;
-    
                         return (
                           <TableRow
                             hover
@@ -333,7 +330,7 @@ export default function EmployeeKpiClusterList() {
                               onClick={() => {
                                 dispatch(
                                   setCurrentSelectedEmployee({
-                                    currentSelectedEmployee: row,
+                                    currentSelectedEmployeeKpi: item,
                                   })
                                 );
                                 setDialogEmployeeDetailsOpen(true);
@@ -346,35 +343,25 @@ export default function EmployeeKpiClusterList() {
                                   alignItems: "center",
                                 }}
                               >
-                                {/* <Avatar
-                              alt={row.Employee.fname}
-                              src={
-                                row.Employee.gender === "Male"
-                                  ? avatarMale
-                                  : avatarFemale
-                              }
-                              sx={{
-                                alignSelf: "center",
-                                mx: 1,
-                              }}
-                            /> */}
-                                <p style={{ paddingLeft: "15px" }}>
-                                  {row.Employee.fname} {row.Employee.lname}
+                                <p
+                                  style={{
+                                    paddingLeft: "15px",
+                                    color: setBackGroundColor(item.lables),
+                                  }}
+                                >
+                                  {item.Employee.fname} {item.Employee.lname}
                                 </p>
                               </Box>
                             </TableCell>
-                            <TableCell align="left">{row.kpi}</TableCell>
                             <TableCell align="left">
-                              {departments.map((department) => {
-                                if (
-                                  department.id == row.Employee.departmentID
-                                ) {
-                                  return department.name;
-                                }
-                              })}
+                              <p
+                                style={{
+                                  color: setBackGroundColor(item.lables),
+                                }}
+                              >
+                                {item.kpi}
+                              </p>
                             </TableCell>
-                            <TableCell align="left">{row.lables}</TableCell>
-                            <TableCell align="left">{row.centoroid}</TableCell>
                           </TableRow>
                         );
                       })}
@@ -394,7 +381,7 @@ export default function EmployeeKpiClusterList() {
                 labelRowsPerPage="Employees per page"
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={rows.length}
+                count={items.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
@@ -404,4 +391,10 @@ export default function EmployeeKpiClusterList() {
           </Box>
         </>
       );
+}
+EmployeeKpiClusterList.propTypes = {
+  initialValues: PropTypes.object,
+}
+EmployeeKpiClusterList.defaultProps = {
+  initialValues: []
 }
