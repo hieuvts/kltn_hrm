@@ -56,6 +56,24 @@ export const login = createAsyncThunk(
   }
 );
 
+export const changePassword = createAsyncThunk(
+  "auth/changePassword",
+  async (payload, thunkAPI) => {
+    try {
+      const res = await authService.changePassword(payload);
+      return res.data.message;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const logout = createAsyncThunk("auth/logout", async () => {
   await authService.logout();
 });
@@ -64,7 +82,10 @@ export const getChatRoomByAuthAccount = createAsyncThunk(
   "auth/getChatRoomByAuthAccount",
   async (payload, thunkAPI) => {
     try {
-      const res = await authService.getChatRoomByAuthAccount(payload.id);
+      const res = await authService.getChatRoomByAuthAccount(
+        payload.id,
+        payload.searchQuery
+      );
       return res.data.ChatRooms;
     } catch (error) {
       const message =
@@ -115,6 +136,12 @@ export const authSlice = createSlice({
       state.isLoggedIn = false;
       state.user = null;
       console.log("[Fulfilled] logout success");
+    },
+
+    [changePassword.fulfilled]: (state, actions) => {
+      // state.isLoggedIn = false;
+      // state.user = null;
+      console.log("[Fulfilled] changePassword success");
     },
 
     [getChatRoomByAuthAccount.rejected]: (state, actions) => {

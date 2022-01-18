@@ -1,4 +1,5 @@
 const db = require("../models");
+const { Op } = require("sequelize");
 const { QueryTypes } = require("sequelize");
 const ChatRoom = db.ChatRoom;
 const ChatMessage = db.ChatMessage;
@@ -7,6 +8,7 @@ const moment = require("moment");
 
 // get departmens of selected company
 const getAllChatRoom = async (req, res) => {
+  const searchQuery = req.query.search;
   ChatRoom.findAll({
     include: [AuthAccount, ChatMessage],
   })

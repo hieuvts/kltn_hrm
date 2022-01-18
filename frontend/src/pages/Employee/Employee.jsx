@@ -69,6 +69,7 @@ export default function Employee() {
   useEffect(() => {
     debounceFetchAPI(searchQuery);
   }, [handleSearchQueryChange]);
+  
   useEffect(() => {
     dispatch(getDepartmentAsync());
   }, []);
