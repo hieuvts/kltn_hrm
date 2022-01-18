@@ -31,7 +31,6 @@ services:
       - DB_PORT=$MYSQLDB_PORT
     stdin_open: true
     tty: true
-    entrypoint: ["./wait-for-db.sh"]
 
 volumes:
   db:

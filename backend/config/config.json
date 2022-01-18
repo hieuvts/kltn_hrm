@@ -3,9 +3,9 @@
     "username": "root",
     "password": "admin",
     "database": "kltn",
-    "host": "127.0.0.1",
+    "host": "mysql",
     "dialect": "mysql",
-    "port": "3316",
+    "port": "3306",
     "pool": {
       "max": 15,
       "min": 5,
