@@ -188,6 +188,18 @@ export default function AppBarComponent() {
                         </MenuItem>
                       </Link>
                       <Link
+                        to="/accountManage"
+                        style={{ textDecoration: "none", color: "black" }}
+                      >
+                        <MenuItem
+                          onClick={() => {
+                            handleClose();
+                          }}
+                        >
+                          Accounts Manage
+                        </MenuItem>
+                      </Link>
+                      <Link
                         to="/login"
                         style={{ textDecoration: "none", color: "black" }}
                       >
@@ -201,18 +213,7 @@ export default function AppBarComponent() {
                         </MenuItem>
                       </Link>
 
-                      <Link
-                        to="/accountManage"
-                        style={{ textDecoration: "none", color: "black" }}
-                      >
-                        <MenuItem
-                          onClick={() => {
-                            handleClose();
-                          }}
-                        >
-                          Account Manage
-                        </MenuItem>
-                      </Link>
+                     
                     </Menu>
                   </div>
                 )}
