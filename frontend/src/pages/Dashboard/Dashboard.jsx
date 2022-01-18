@@ -216,7 +216,7 @@ export default function Dashboard() {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="centoroid" />
+            <XAxis dataKey="centoroid" label= "KPI Center" />
             <YAxis />
             <Tooltip />
             <Legend />
