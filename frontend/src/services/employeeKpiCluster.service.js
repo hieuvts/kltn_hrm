@@ -11,7 +11,15 @@ const importCSVData = () => {
       });
 }
 
+const getAllEmployeeKpiCluster = (searchQuery) => {
+    return axios.get(API_URL + "/get" , {
+        headers: authHeader(),
+    });
+};
+
 const employeeKpiClusterService = {
     importCSVData,
+    getAllEmployeeKpiCluster
 };
+
 export default employeeKpiClusterService;

@@ -226,7 +226,7 @@ export default function ProjectTable() {
   const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(7);
   const [isDialogDeleteProjectOpen, setDialogDeleteProjectOpen] =
     React.useState(false);
   const [

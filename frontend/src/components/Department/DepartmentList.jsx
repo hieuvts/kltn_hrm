@@ -216,7 +216,7 @@ export default function DepartmentTable() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(7);
   const [isDialogDeleteDepartmentOpen, setDialogDeleteDepartmentOpen] =
     React.useState(false);
   const [

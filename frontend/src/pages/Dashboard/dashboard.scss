@@ -1,16 +1,17 @@
 .dbQty {
-    min-height: 10vh;
-    max-height: 10vh;
+    min-height: 8vh;
+    max-height: 8vh;
     margin: 8px;
 }
 
 .dbChart {
-    min-height: 50vh;
-    max-height: 50vh;
+    min-height: 38vh;
+    max-height: 38vh;
     margin: 8px;
 }
 
 .dbEmpList {
+    padding-top: 0px;
     min-height: 30vh;
     max-height: 30vh;
     display: flex;

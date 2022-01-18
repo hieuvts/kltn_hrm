@@ -7,10 +7,10 @@ import Paper from "@mui/material/Paper";
 import Tab from "@mui/material/Tab";
 import CloseIcon from "@mui/icons-material/Close";
 import Grid from "@mui/material/Grid";
-import debounce from "lodash.debounce"
+import debounce from "lodash.debounce";
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -18,31 +18,10 @@ import {
   Legend,
 } from "recharts";
 import "./dashboard.scss";
+import { getEmployeeKpiCluster } from "../../stores/employeeKpiClusterSlice";
+import EmployeeKpiClusterList from "../../components/Employee/EmployeeKpiCluster/EmployeKpiClusterList";
 
-const testData = {
-  name: "covid",
-  type: "document",
-  title: "Covid19Data",
-  fields: [
-    {
-      name: "title",
-      type: "string",
-      title: "States",
-    },
-    {
-      name: "confirmed",
-      type: "number",
-      title: "Confirmed",
-    },
-    {
-      name: "death",
-      type: "number",
-      title: "Death",
-    },
-  ],
-};
 export default function Dashboard() {
- 
   const debounceFetchAPI = useCallback(
     debounce((searchQuery) => {
       dispatch(getEmployeeKpiCluster());
@@ -54,118 +33,217 @@ export default function Dashboard() {
   });
 
   const dispatch = useDispatch();
-  var items = useSelector((state) => state.employeeKpiCluster.employeeKpiClusterList);
+  var items = useSelector(
+    (state) => state.employeeKpiCluster.employeeKpiClusterList
+  );
 
-  var listItemLabel0 = [];
-  var listItemLabel1 = [];
-  var listItemLabel2 = [];
-  var listItemLabel3 = [];
-  
+  const listItem = {
+    ["label0"]: {
+      centoroid: 0,
+      label: 0,
+      items: [],
+    },
+    ["label1"]: {
+      name: 0,
+      label: 1,
+      items: [],
+    },
+    ["label2"]: {
+      name: 0,
+      label: 2,
+      items: [],
+    },
+    ["label3"]: {
+      name: 0,
+      label: 3,
+      items: [],
+    },
+  };
+
+  const setBackGroundColor = (labels) => {
+    let backgroundColor;
+    switch (labels) {
+      case 0:
+        backgroundColor = "#EB5A46";
+        break;
+      case 1:
+        backgroundColor = "#5b4496";
+        break;
+      case 2:
+        backgroundColor = "#0079BF";
+        break;
+      case 3:
+        backgroundColor = "#61BD4F";
+        break;
+    }
+    return backgroundColor;
+  };
+
   const addItemToLableList = (items) => {
     items.map((item) => {
-      let index = 0;
-      switch (item.labels) {
+      switch (item.lables) {
         case 0:
-          listItemLabel0.push(item);
+          listItem.label0.centoroid = item.centoroid.toFixed(4);
+          listItem.label0.items.push(item);
           break;
         case 1:
-          listItemLabel1.push(item);
+          listItem.label1.centoroid = item.centoroid.toFixed(4);
+          listItem.label1.items.push(item);
           break;
         case 2:
-          listItemLabel2.push(item);
+          listItem.label2.centoroid = item.centoroid.toFixed(4);
+          listItem.label2.items.push(item);
           break;
         case 3:
-          listItemLabel3.push(item);
+          listItem.label3.centoroid = item.centoroid.toFixed(4);
+          listItem.label3.items.push(item);
           break;
       }
     });
-    console.log("done")
   };
-  addItemToLableList(items);
 
+  addItemToLableList(items);
+  var data = [];
+  data.push(listItem.label0);
+  data.push(listItem.label1);
+  data.push(listItem.label2);
+  data.push(listItem.label3);
   return (
     <div>
       <div className="dbQty">
         <Grid container columnSpacing={3}>
           <Grid item xs={12} md={3}>
             <Paper>
-              <Box sx={{ pt: 1, pl: 1 }}>
-                <Typography variant="h5">38</Typography>
-                <Typography variant="caption">Quantity group 2</Typography>
+              <Box sx={{ pt: 1, pl: 1, textAlign: "center" }}>
+                <Typography
+                  variant="caption"
+                  style={{
+                    color: setBackGroundColor(listItem.label0.label),
+                  }}
+                >
+                  KPI Center {listItem.label0.centoroid}{" "}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  style={{
+                    color: setBackGroundColor(listItem.label0.label),
+                  }}
+                >
+                  Quantity: {listItem.label0.items.length}
+                </Typography>
               </Box>
             </Paper>
           </Grid>
           <Grid item xs={12} md={3}>
             <Paper>
-              <Box sx={{ pt: 1, pl: 1 }}>
-                <Typography variant="h5">38</Typography>
-                <Typography variant="caption">Quantity group 2</Typography>
+              <Box sx={{ pt: 1, pl: 1, textAlign: "center" }}>
+                <Typography
+                  variant="caption"
+                  style={{
+                    color: setBackGroundColor(listItem.label1.label),
+                  }}
+                >
+                  KPI Center {listItem.label1.centoroid}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  style={{
+                    color: setBackGroundColor(listItem.label1.label),
+                  }}
+                >
+                  Quantity: {listItem.label1.items.length}
+                </Typography>
               </Box>
             </Paper>
           </Grid>
           <Grid item xs={12} md={3}>
             <Paper>
-              <Box sx={{ pt: 1, pl: 1 }}>
-                <Typography variant="h5">38</Typography>
-                <Typography variant="caption">Quantity group 3</Typography>
+              <Box sx={{ pt: 1, pl: 1, textAlign: "center" }}>
+                <Typography
+                  variant="caption"
+                  style={{
+                    color: setBackGroundColor(listItem.label2.label),
+                  }}
+                >
+                  KPI Center {listItem.label2.centoroid}{" "}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  style={{
+                    color: setBackGroundColor(listItem.label2.label),
+                  }}
+                >
+                  Quantity: {listItem.label2.items.length}
+                </Typography>
               </Box>
             </Paper>
           </Grid>
           <Grid item xs={12} md={3}>
             <Paper>
-              <Box sx={{ pt: 1, pl: 1 }}>
-                <Typography variant="h5">38</Typography>
-                <Typography variant="caption">Quantity group 4</Typography>
+              <Box sx={{ pt: 1, pl: 1, textAlign: "center" }}>
+                <Typography
+                  variant="caption"
+                  style={{
+                    color: setBackGroundColor(listItem.label3.label),
+                  }}
+                >
+                  KPI Center {listItem.label3.centoroid}{" "}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  style={{
+                    color: setBackGroundColor(listItem.label3.label),
+                  }}
+                >
+                  Quantity: {listItem.label3.items.length}
+                </Typography>
               </Box>
             </Paper>
           </Grid>
         </Grid>
       </div>
-      <div className="dbChart">
+      <div className="dbChart" style={{display: "flex", justifyContent: "center"}}>
         <Paper>
-          <LineChart
-            width={1100}
-            height={400}
-            data={testData}
+          <BarChart
+            width={1200}
+            height={390}
+            data={data}
             margin={{
-              top: 10,
-              right: 10,
-              left: 0,
-              bottom: 0,
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="title" />
+            <XAxis dataKey="centoroid" label= "KPI Center" />
             <YAxis />
             <Tooltip />
             <Legend />
-            <Line
-              type="monotone"
-              dataKey="death"
-              stroke="#8884d8"
-              fill="#8884d8"
-            />
-            <Line
-              type="monotone"
-              dataKey="confirmed"
-              stroke="#8884d8"
-              fill="#8884d8"
-            />
-          </LineChart>
+            <Bar dataKey="items.length" fill="#8884d8" name="Amount"/>
+          </BarChart>
         </Paper>
       </div>
       <div className="dbEmpList">
         <div className="col1">
-          <Paper>EmpList 1</Paper>
+          <Paper>
+            <EmployeeKpiClusterList initialValues={listItem.label0.items} />
+          </Paper>
         </div>
         <div className="col2">
-          <Paper>EmpList 2</Paper>
+          <Paper>
+            <EmployeeKpiClusterList initialValues={listItem.label1.items} />
+          </Paper>
         </div>
         <div className="col3">
-          <Paper>EmpList 3</Paper>
+          <Paper>
+            <EmployeeKpiClusterList initialValues={listItem.label2.items} />
+          </Paper>
         </div>
         <div className="col4">
-          <Paper>EmpList 4</Paper>
+          <Paper>
+            <EmployeeKpiClusterList initialValues={listItem.label3.items} />
+          </Paper>
         </div>
       </div>
     </div>
