@@ -9,10 +9,17 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
+import Divider from "@mui/material/Divider";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 
 import PropTypes from "prop-types";
+import { Typography } from "@mui/material";
 
-export default function NotificationBadget({ notificationCount }) {
+export default function NotificationBadget({
+  notificationCount,
+  notificationList,
+}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -47,15 +54,27 @@ export default function NotificationBadget({ notificationCount }) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <Link to="/" style={{ textDecoration: "none", color: "black" }}>
-          <MenuItem
-            onClick={() => {
-              handleClose();
-            }}
-          >
-            Show all
-          </MenuItem>
-        </Link>
+        {notificationList.map((notif, index) => {
+          return (
+            <>
+              <MenuItem
+                key={index}
+                onClick={() => {
+                  handleClose();
+                }}
+                sx={{ pb: 1 }}
+              >
+                <Typography variant="body1">{notif.event}</Typography>
+              </MenuItem>
+              {index < notificationList.length - 1 && <Divider />}
+            </>
+          );
+        })}
+        <Box sx={{ display: "flex", justifyContent: "end", mt: 1 }}>
+          <Button variant="link" sx={{ fontSize: "0.6rem" }}>
+            Mark all as read
+          </Button>
+        </Box>
       </Menu>
     </>
   );
@@ -63,6 +82,7 @@ export default function NotificationBadget({ notificationCount }) {
 
 NotificationBadget.propTypes = {
   notificationCount: PropTypes.number,
+  notificationList: PropTypes.arr,
 };
 NotificationBadget.defaultProps = {
   notificationCount: 1,

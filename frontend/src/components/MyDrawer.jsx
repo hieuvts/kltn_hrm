@@ -153,7 +153,10 @@ export default function AppBarComponent() {
                       </IconButton>
                     </Tooltip>
 
-                    <NotificationBadget notificationCount={notif.length} />
+                    <NotificationBadget
+                      notificationCount={notif.length}
+                      notificationList={notif}
+                    />
                     <Menu
                       id="menu-appbar"
                       anchorEl={anchorEl}
