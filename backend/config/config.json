@@ -3,7 +3,7 @@
     "username": "root",
     "password": "admin",
     "database": "kltn",
-    "host": "mysql",
+    "host": "127.0.0.1",
     "dialect": "mysql",
     "port": "3316",
     "pool": {
