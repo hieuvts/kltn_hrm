@@ -5,17 +5,10 @@ import { logout } from "./authSlice";
 const initialState = {};
 
 export const getCompanyAsync = createAsyncThunk(
-  "company/getAllCompany",
+  "company/getOneCompany",
   async (payload, thunkAPI) => {
-    let searchQuery = "";
-    if (typeof payload === "undefined") {
-      console.log("search is undefined");
-    } else {
-      console.log("typeof payload.Searchquery", typeof payload.searchQuery);
-      searchQuery = payload.searchQuery;
-    }
     try {
-      const res = await companyService.getAllCompany(searchQuery);
+      const res = await companyService.getAllCompany(payload.id);
 
       return res.data;
     } catch (error) {
@@ -100,6 +93,14 @@ export const deleteCompanyAsync = createAsyncThunk(
 export const companySlice = createSlice({
   name: "company",
   initialState,
+  reducers: {
+    setCurrentSelectedCompany: (state, action) => {
+      return {
+        ...state,
+        currentSelectedCompany: action.payload.currentSelectedCompany,
+      };
+    },
+  },
   extraReducers: {
     // Get Company from server
     [getCompanyAsync.pending]: (state, actions) => {
@@ -131,8 +132,6 @@ export const companySlice = createSlice({
         "[Fulfilled] updateCompanyAsync actions.payload.Companys= ",
         actions.payload
       );
-      // state.push(actions.payload.Company);
-      return;
     },
 
     // Delete Company from server
@@ -148,12 +147,6 @@ export const companySlice = createSlice({
     },
   },
 });
-export const {
-  getCompanyInfo,
-  setCurrentSelectedCompany,
-  addToSelectedCompanyList,
-  removeFromSelectedCompanyList,
-  setMultiSelectedCompanyList,
-} = companySlice.actions;
+export const { setCurrentSelectedCompany } = companySlice.actions;
 
 export default companySlice.reducer;

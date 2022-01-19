@@ -3,16 +3,17 @@ const Company = db.Company;
 const moment = require("moment");
 
 const getCompany = async (req, res) => {
-  Company.findAll()
+  const compID = req.query.id || 1;
+  Company.findOne({ where: { id: compID } })
     .then((companies) => {
       if (companies) {
         res.status(200).json(companies);
-        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getAllcompany");
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getOnecompany");
       } else {
         res.status(400).json({
-          message: "[ERROR] [getAll] Something went wrong",
+          message: "[ERROR] [getOne] Something went wrong",
         });
-        console.log(moment().format("hh:mm:ss"), "[ERROR] getAllcompany");
+        console.log(moment().format("hh:mm:ss"), "[ERROR] getOnecompany");
       }
     })
     .catch((error) => {
@@ -56,6 +57,7 @@ const createCompany = async (req, res) => {
 };
 
 const updateCompany = async (req, res) => {
+  console.log(req.body);
   Company.update(req.body, {
     where: { id: req.query.id },
   })
