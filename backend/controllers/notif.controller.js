@@ -28,12 +28,12 @@ const getNotif = async (req, res) => {
 };
 
 const markNotifAsRead = async (req, res) => {
-  console.log("invoked update Notifications ", req.query.id);
-  console.log("invoked update Notifications ", req.body);
-  Notification.update(req.body, {
-    where: { authAccountID: req.query.id },
-    logging: console.log,
-  })
+  Notification.update(
+    { isRead: true },
+    {
+      where: { id: req.query.id },
+    }
+  )
     .then((affectedRows) => {
       console.log("affectedRows ", affectedRows);
       if (affectedRows == 1) {

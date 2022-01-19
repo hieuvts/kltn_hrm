@@ -98,7 +98,7 @@ const createTriggersInDB = async (req, res) => {
       then
         insert into Notifications 
         set eventType='task',
-        authAccountID=(select name from AuthAccounts where AuthAccounts.id=NEW.assigneeID),
+        authAccountID=(select id from AuthAccounts where AuthAccounts.id=NEW.assigneeID),
         event=CONCAT("Your're assigned a new task: ", NEW.name, ". Check it at");
       end if;
       `

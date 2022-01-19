@@ -42,7 +42,9 @@ export default function NotificationBadget({
     dispatch();
   };
   const handleMarkOneAsRead = (notifID) => {
-    dispatch(markNotifAsRead({ id: notifID }));
+    dispatch(markNotifAsRead({ id: notifID }))
+      .unwrap()
+      .then(() => dispatch(getNotif({ authAccountID: currentUser.id })));
   };
   const handleDeleteAllNotif = () => {
     dispatch(deleteAllNotif({ authAccountID: currentUser.id }))
