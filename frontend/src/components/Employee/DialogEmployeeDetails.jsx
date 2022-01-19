@@ -126,22 +126,15 @@ export default function DialogEmployeeDetails({
                   minHeight: "70vh",
                 }}
               >
-                {employee.Tasks.length > 0 ? (
-                  <Grid item sm={12} lg={12}>
-                    <Typography variant="h6" sx={{ ml: 3 }}>
-                      {employee.fname + " " + employee.lname}{" "}
-                      {" is working on these projects"}
-                    </Typography>
-                    <Box sx={{ m: 3 }}>
-                      <EmpTaskList />
-                    </Box>
-                  </Grid>
-                ) : (
+                <Grid item sm={12} lg={12}>
                   <Typography variant="h6" sx={{ ml: 3 }}>
                     {employee.fname + " " + employee.lname}{" "}
-                    {" is not working on any projects!!!"}
+                    {" is working on these projects"}
                   </Typography>
-                )}
+                  <Box sx={{ m: 3 }}>
+                    <EmpTaskList />
+                  </Box>
+                </Grid>
               </Grid>
             </TabPanel>
           </Grid>
