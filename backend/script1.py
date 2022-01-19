@@ -7,9 +7,14 @@ import pandas as pd
 from sklearn.decomposition import PCA
 from sklearn.metrics.pairwise import kernel_metrics
 import csv
-import json
-csv_path = "data/100_data_kpi_2017.csv"
-dataFromCSV = pd.read_csv(csv_path);
+import json as JSON
+import sys
+import pandas as pd
+
+
+dataFromCSV = sys.argv[1]
+input = pd.DataFrame(JSON.loads(dataFromCSV))
+
 # features = np.array(dataFromCSV.loc[:,['id','KPI']]).reshape(-1, 2)
 def extractKPIInfo(data):
     result = data[['id', 'KPI']]
@@ -20,12 +25,12 @@ def extractIDInfo(data):
     result = data[['id']]
     return result
 
-features = np.array(extractKPIInfo(dataFromCSV))
-ids = np.array(extractIDInfo(dataFromCSV))
+features = np.array(extractKPIInfo(input))
+ids = np.array(extractIDInfo(input))
 
 kmeans = KMeans(n_clusters = 4).fit(features)
 
-outcomeDictArr = [];
+outcomeDictArr = []
 for i in range(len(kmeans.labels_)):
     outcomeDict = {
     "employeeID":"",

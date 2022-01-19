@@ -5,7 +5,7 @@ const verifySignUp = require("../middlewares/verifySignUp");
 const employeeKpiClustersControllers = require("../controllers/employeeKpiCluster.controller");
 
 // Router-level middleware
-router.get('/getCSV', employeeKpiClustersControllers.getEmployeeKpiClusterFromCSV)
+router.put('/getCSV', employeeKpiClustersControllers.getEmployeeKpiClusterFromCSV)
 router.get("/get", employeeKpiClustersControllers.getEmployeeKpiCluster);
 router.post(
   "/create",
@@ -17,7 +17,6 @@ router.post(
   employeeKpiClustersControllers.importDataFromCSV
 );
 
-router.put("/update", employeeKpiClustersControllers.updateEmployeeKpiCluster);
 router.delete(
   "/delete",
   employeeKpiClustersControllers.deleteEmployeeKpiCluster
