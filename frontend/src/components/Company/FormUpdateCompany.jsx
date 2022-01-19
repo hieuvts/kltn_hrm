@@ -13,7 +13,7 @@ import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
 
 import { useDispatch } from "react-redux";
-import { addEmployeeAsync } from "../../stores/employeeSlice";
+import { updateCompanyAsync, getCompanyAsync } from "../../stores/companySlice";
 import { companyInfoValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -26,6 +26,7 @@ export default function FormUpdateCompany({
 }) {
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
+  const currentUserLocal = JSON.parse(localStorage.getItem("user"));
   const handleSbSuccessClose = () => {
     setSbSuccessOpen(false);
   };
@@ -39,10 +40,11 @@ export default function FormUpdateCompany({
       initialValues: initialValues,
       validationSchema: companyInfoValidationSchema,
       onSubmit: (values) => {
-        dispatch(addEmployeeAsync(values))
+        dispatch(updateCompanyAsync(values))
           .unwrap()
           .then((originalPromiseResult) => {
             setSbSuccessOpen(true);
+            dispatch(getCompanyAsync({ id: currentUserLocal.companyID }));
             setTimeout(() => {
               handleCloseDialog();
             }, 800);
@@ -174,15 +176,15 @@ export default function FormUpdateCompany({
               />
               <TextField
                 fullWidth
-                id="faxNumber"
-                name="faxNumber"
-                label="Fax number"
-                value={formik.values.faxNumber}
+                id="fax"
+                name="fax"
+                label="Fax"
+                value={formik.values.fax}
                 onChange={formik.handleChange}
                 error={
-                  formik.touched.faxNumber && Boolean(formik.errors.faxNumber)
+                  formik.touched.fax && Boolean(formik.errors.fax)
                 }
-                helperText={formik.touched.faxNumber && formik.errors.faxNumber}
+                helperText={formik.touched.fax && formik.errors.fax}
                 sx={{ mb: 3 }}
               />
               <TextField
@@ -234,12 +236,12 @@ export default function FormUpdateCompany({
       <SnackbarSuccess
         isOpen={isSbSuccessOpen}
         handleClose={handleSbSuccessClose}
-        text={"Added new employee"}
+        text={"Updated company"}
       />
       <SnackbarFailed
         isOpen={isSbFailedOpen}
         handleClose={handleSbFailedClose}
-        text={"Add employee failed!"}
+        text={"Update company failed!!"}
       />
       <FormikWithMUI />
     </div>
@@ -260,7 +262,7 @@ FormUpdateCompany.defaultProps = {
     address: "",
     address2: "",
     phoneNumber: "",
-    faxNumber: "",
+    fax: "",
     email: "",
     website: "",
     taxCode: "",

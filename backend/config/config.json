@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "Admind_1147",
+    "password": "admin",
     "database": "kltn",
     "host": "localhost",
     "dialect": "mysql",

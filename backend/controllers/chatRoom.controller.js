@@ -34,9 +34,6 @@ const getAllChatRoom = async (req, res) => {
 };
 
 const createChatRoom = async (req, res) => {
-  console.log("Create chatroom ", req.body.name);
-  console.log("Create chatroom ", req.body.thisMemberID);
-  console.log("Create chatroom ", req.body.thatMemberID);
   const chatRoom = await ChatRoom.create({ name: req.body.name });
 
   const thisMemberID = req.body.thisMemberID;
@@ -50,6 +47,11 @@ const createChatRoom = async (req, res) => {
     memberID: thatMemberID,
     chatRoomID: chatRoom.id,
   });
+  if (cdt2.memberID) {
+    return res.status(200).json({
+      message: "Create chat room successfully",
+    });
+  }
 };
 
 const updateChatRoom = async (req, res) => {

@@ -73,17 +73,7 @@ export default function FormAddDepartmentInformation({
             }
             sx={{ mb: 3 }}
           />
-          <TextField
-            fullWidth
-            id="amount"
-            name="amount"
-            label="Amount of Staff"
-            value={formik.values.amount}
-            onChange={formik.handleChange}
-            error={formik.touched.amount && Boolean(formik.errors.amount)}
-            helperText={formik.touched.amount && formik.errors.amount}
-            sx={{ mb: 3 }}
-          />
+
           <FormControl fullWidth>
             <InputLabel id="manager-label">Manager</InputLabel>
             <Select
@@ -140,7 +130,6 @@ FormAddDepartmentInformation.propTypes = {
 FormAddDepartmentInformation.defaultProps = {
   initialValues: {
     name: "",
-    amount: "",
     manager: "",
     companyID: 1,
   },

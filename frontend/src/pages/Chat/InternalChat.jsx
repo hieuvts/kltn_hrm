@@ -34,7 +34,7 @@ import {
   createChatRoom,
 } from "../../stores/chatRoomSlice";
 import debounce from "lodash.debounce";
-
+import SnackbarSuccess from "../../components/Snackbar/SnackbarSuccess";
 import "./InternalChat.scss";
 
 export default function InternalChat() {
@@ -44,8 +44,13 @@ export default function InternalChat() {
   const authAccountList = useSelector((state) => state.auth.authAccountList);
   const [searchQuery, setSearchQuery] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
+
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+  const handleSbSuccessClose = () => {
+    setSbSuccessOpen(false);
   };
   const dispatch = useDispatch();
 
@@ -67,6 +72,15 @@ export default function InternalChat() {
     setSearchQuery(e.target.value);
   };
 
+  const debounceFetchAPI = useCallback(
+    debounce((searchQuery) => {
+      dispatch(
+        getChatRoomByAuthAccount({ searchQuery: searchQuery, id: user.id })
+      );
+    }, 350),
+    []
+  );
+
   const handleCreateChatRoom = (userEmail, userID) => {
     dispatch(
       createChatRoom({
@@ -76,17 +90,15 @@ export default function InternalChat() {
       })
     )
       .unwrap()
-      .then(() => dispatch(debounceFetchAPI(searchQuery)))
+      .then(() => {
+        console.log("line 94", searchQuery);
+        setSbSuccessOpen(true);
+        handleClose();
+        dispatch(debounceFetchAPI(" "));
+      })
       .catch((error) => console.log(error));
   };
-  const debounceFetchAPI = useCallback(
-    debounce((searchQuery) => {
-      dispatch(
-        getChatRoomByAuthAccount({ searchQuery: searchQuery, id: user.id })
-      );
-    }, 350),
-    []
-  );
+
   useEffect(() => {
     debounceFetchAPI(searchQuery);
   }, [searchQuery]);
@@ -102,6 +114,11 @@ export default function InternalChat() {
 
   return (
     <div className="chatContainer">
+      <SnackbarSuccess
+        isOpen={isSbSuccessOpen}
+        handleClose={handleSbSuccessClose}
+        text={"Created new chatroom"}
+      />
       <Tabs>
         <TabList>
           <div className="friendSearch">

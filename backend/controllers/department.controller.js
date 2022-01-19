@@ -107,7 +107,7 @@ const getDeptAndEmpByID = async (req, res) => {
 const createDepartment = async (req, res) => {
   const dataToInsert = {
     name: req.body.name,
-    manager: req.body.managerID,
+    manager: req.body.managerID | "HR Admin",
     companyID: req.body.companyID || 1,
   };
   Department.create(dataToInsert)
@@ -118,7 +118,11 @@ const createDepartment = async (req, res) => {
       console.log(moment().format("hh:mm:ss"), "[SUCCESS] createDepartment");
     })
     .catch((error) => {
-      console.log(moment().format("hh:mm:ss"), "[ERROR] getAllDepartment");
+      console.log(
+        moment().format("hh:mm:ss"),
+        "[ERROR] createDepartment ",
+        error
+      );
       res.status(500).json({
         message: "[ERROR] [getAll] Something went wrong",
         error: error,

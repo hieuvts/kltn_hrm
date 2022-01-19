@@ -8,24 +8,31 @@ import DialogTitle from "@mui/material/DialogTitle";
 import PropTypes from "prop-types";
 import CloseIcon from "@mui/icons-material/Close";
 import FormUpdateCompany from "./FormUpdateCompany";
+import { useSelector } from "react-redux";
 
 export default function DialogUpdateCompany({
   isDialogOpen,
   handleCloseDialog,
 }) {
+  const selectedComp = useSelector((state) => state.company);
   return (
     <div>
-      <Dialog  open={isDialogOpen} onClose={handleCloseDialog} maxWidth="md">
+      <Dialog open={isDialogOpen} onClose={handleCloseDialog} maxWidth="md">
         <DialogTitle>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h5">Update your company information</Typography>
+            <Typography variant="h5">
+              Update your company information
+            </Typography>
             <Button onClick={handleCloseDialog}>
               <CloseIcon fontSize="large" />
             </Button>
           </Box>
         </DialogTitle>
         <DialogContent>
-          <FormUpdateCompany handleCloseDialog={handleCloseDialog} />
+          <FormUpdateCompany
+            initialValues={selectedComp}
+            handleCloseDialog={handleCloseDialog}
+          />
         </DialogContent>
       </Dialog>
     </div>

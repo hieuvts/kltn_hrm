@@ -1,25 +1,26 @@
 // Testing authorization services
-import React, { useState } from "react";
-import {
-  Typography,
-  Button,
-  Box,
-  Link,
-  Grid,
-} from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Typography, Button, Box, Link, Grid } from "@mui/material";
 import MyBreadcrumbs from "../../components/CustomizedMUIComponents/MyBreadcrumbs";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import DialogDeleteCompany from "../../components/Company/DialogDeleteCompany";
 import DialogUpdateCompany from "../../components/Company/DialogUpdateCompany";
+import {
+  getCompanyAsync,
+  setCurrentSelectedCompany,
+} from "../../stores/companySlice";
+import { useDispatch, useSelector } from "react-redux";
+import moment from "moment";
 
 export default function Company() {
   // const user = useSelector((state) => state.auth);
-  // const currentUser = user.currentUser;
+  const currentUserLocal = JSON.parse(localStorage.getItem("user"));
   const [isDialogDelCompanyOpen, setDialogDelCompanyOpen] = useState(false);
   const [isDialogUpdateCompanyOpen, setDialogUpdateCompanyOpen] =
     useState(false);
+  const [selectedComp, setSelectedComp] = useState({});
+  const dispatch = useDispatch();
   const handleDialogDelCompanyClose = () => {
     setDialogDelCompanyOpen(false);
   };
@@ -35,6 +36,10 @@ export default function Company() {
     console.log("currentUser", currentUser);
   }
   const pathnames = location.pathname.split("/").filter((x) => x);
+  const company = useSelector((state) => state.company);
+  useEffect(() => {
+    dispatch(getCompanyAsync({ id: currentUserLocal.companyID }));
+  }, []);
   return (
     <>
       <DialogDeleteCompany
@@ -46,7 +51,7 @@ export default function Company() {
         handleCloseDialog={handleDialogUpdateCompanyClose}
       />
       <MyBreadcrumbs pathnames={pathnames} />
-      
+
       <Grid
         container
         justifyContent="space-between"
@@ -56,71 +61,70 @@ export default function Company() {
         columnSpacing={3}
         sx={{ alignItems: "center" }}
       >
-        <Grid item xs={12}>
-          Company banner
-        </Grid>
         <Grid item sm={12} md={6} sx={{ alignSelf: "start" }}>
           <Box sx={colDirection}>
             <Box sx={rowDirection}>
-              <Typography>Company name:</Typography>
-              <Typography>HRM</Typography>
+              <Typography>Company name</Typography>
+              <Typography>{company.name}</Typography>
             </Box>
             <Box sx={rowDirection}>
-              <Typography>Established date:</Typography>
-              <Typography>01/01/2021</Typography>
+              <Typography>Established date</Typography>
+              <Typography>
+                {moment(company.establishedDate).format("DD-MM-YYYY")}
+              </Typography>
             </Box>
             <Box sx={rowDirection}>
-              <Typography>Type:</Typography>
-              <Typography>Joint-stock companies</Typography>
+              <Typography>Type</Typography>
+              <Typography>{company.typeOfCompany}</Typography>
             </Box>
             <Box sx={rowDirection}>
-              <Typography>Owners:</Typography>
-              <Typography>Joint-stock companies</Typography>
+              <Typography>Main business line</Typography>
+              <Typography>{company.mainBusinessLines}</Typography>
             </Box>
+
             <Box sx={rowDirection}>
-              <Typography>Main business lines:</Typography>
-              <Typography>Computer Development</Typography>
-            </Box>
-            <Box sx={rowDirection}>
-              <Typography>Tax code:</Typography>
-              <Typography>1234567890</Typography>
+              <Typography>Tax code</Typography>
+              <Typography>{company.taxCode}</Typography>
             </Box>
           </Box>
         </Grid>
 
-        <Grid item sm={12} md={6} sx={{ alignSelf: "start" }}>
+        <Grid item sm={12} md={6} sx={{ alignSelf: "start", pr: 5 }}>
           <Box sx={colDirection}>
             <Box sx={rowDirection}>
-              <Typography>Phone number:</Typography>
-              <Typography>0359545405</Typography>
+              <Typography>Phone number</Typography>
+              <Typography>{company.phoneNumber}</Typography>
             </Box>
             <Box sx={rowDirection}>
-              <Typography>Fax:</Typography>
-              <Typography>0359545405</Typography>
+              <Typography>Fax</Typography>
+              <Typography>{company.fax}</Typography>
             </Box>
             <Box sx={rowDirection}>
-              <Typography>Address 1:</Typography>
-              <Typography>Dong Nai, Viet Nam</Typography>
+              <Typography>Address 1</Typography>
+              <Typography>{company.address}</Typography>
             </Box>
             <Box sx={rowDirection}>
-              <Typography>Address 2:</Typography>
-              <Typography></Typography>
+              <Typography>Address 2</Typography>
+              <Typography>{company.address2}</Typography>
             </Box>
             <Box sx={rowDirection}>
-              <Typography>Email:</Typography>
-              <Typography>a@a.com</Typography>
+              <Typography>Email</Typography>
+              <Typography>{company.email}</Typography>
             </Box>
             <Box sx={rowDirection}>
-              <Typography>Website:</Typography>
-              <Typography>aa.com</Typography>
+              <Typography>Website</Typography>
+              <Typography>{company.website}</Typography>
             </Box>
           </Box>
         </Grid>
       </Grid>
-      <Box sx={{ width: "100%", textAlign: "right", mt: 5 }}>
+      <Box sx={{ width: "100%", textAlign: "right", mt: 5, pr: 5 }}>
         <Button
           variant="contained"
-          onClick={() => setDialogUpdateCompanyOpen(true)}
+          onClick={() => {
+            dispatch(setCurrentSelectedCompany(company));
+            setDialogUpdateCompanyOpen(true);
+          }}
           sx={{ mx: 3 }}
         >
           Update
