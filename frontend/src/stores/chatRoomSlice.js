@@ -4,18 +4,18 @@ import chatService from "../services/chat.service";
 import chatRoomDetailsService from "../services/chatRoomDetails.service";
 import { logout } from "./authSlice";
 
-const initialState = [];
+const initialState = {};
 
 export const createChatRoom = createAsyncThunk(
   "chatRoom/createChatRoom",
   async (payload, thunkAPI) => {
     try {
-      const data = await chatService.createChatRoom(
+      const res = await chatService.createChatRoom(
         payload.name,
         payload.thatMemberID,
         payload.thisMemberID
       );
-      return data.data;
+      return res.data;
     } catch (error) {
       const message =
         (error.response &&
@@ -176,8 +176,8 @@ export const chatRoomSlice = createSlice({
       console.log("[Rejected] createChatRoom", actions.payload);
     },
     [createChatRoom.fulfilled]: (state, actions) => {
-      state.push(actions.payload);
       console.log("[Fulfilled] createChatRoom  ");
+      return { ...state, newChatRoom: actions.payload };
     },
   },
 });

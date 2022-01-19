@@ -82,7 +82,9 @@ export const deleteAccount = createAsyncThunk(
   "auth/deleteAccount",
   async (payload, thunkAPI) => {
     try {
-      const res = await authService.deleteAccount(payload.selectedAuthAccountId);
+      const res = await authService.deleteAccount(
+        payload.selectedAuthAccountId
+      );
       return res.data.message;
     } catch (error) {
       const message =
@@ -103,6 +105,13 @@ export const logout = createAsyncThunk("auth/logout", async () => {
 export const getChatRoomByAuthAccount = createAsyncThunk(
   "auth/getChatRoomByAuthAccount",
   async (payload, thunkAPI) => {
+    let searchQuery = "";
+    if (typeof payload === "undefined") {
+      console.log("search is undefined");
+    } else {
+      console.log("typeof payload.Searchquery", typeof payload.searchQuery);
+      searchQuery = payload.searchQuery;
+    }
     try {
       const res = await authService.getChatRoomByAuthAccount(
         payload.id,
