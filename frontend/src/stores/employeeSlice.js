@@ -58,6 +58,27 @@ export const addEmployeeAsync = createAsyncThunk(
   }
 );
 
+export const addMultipleEmployeAsync = createAsyncThunk(
+  "employee/addMultipleEmployeAsync",
+  async (payload, thunkAPI) => {
+    try {
+      const res = await employeeService.addMultipleEmploye(payload);
+      return res.data.employees;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+); 
+
 export const updateEmployeeAsync = createAsyncThunk(
   "employee/updateEmployee",
   async (payload, thunkAPI) => {
@@ -182,6 +203,17 @@ export const employeeSlice = createSlice({
       console.log(
         "[Fulfilled] deleteEmployeeAsync actions.payload.employees= ",
         actions.payload
+      );
+      return;
+    },
+
+    // Add Multiple Employee
+    [addMultipleEmployeAsync.rejected]: (state, actions) => {
+      console.log("[Rejected] addMultipleEmployeAsync errorMsg ", actions.payload);
+    },
+    [addMultipleEmployeAsync.fulfilled]: (state, actions) => {
+      console.log(
+        "[Fulfilled] addMultipleEmployeAsync Successful",
       );
       return;
     },

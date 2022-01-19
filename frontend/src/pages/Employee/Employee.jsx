@@ -13,22 +13,92 @@ import { Snackbar } from "@mui/material";
 import MySearchBox from "../../components/CustomizedMUIComponents/StyledSearchBox";
 import EmployeeTable from "../../components/Employee/EmployeeList";
 import DialogAddEmployee from "../../components/Employee/DialogAddEmployee";
-
+import PropTypes from "prop-types";
 import debounce from "lodash.debounce";
 //Redux
 import { useDispatch } from "react-redux";
-import { getEmployeeAsync } from "../../stores/employeeSlice";
+import { getEmployeeAsync, addMultipleEmployeAsync } from "../../stores/employeeSlice";
 import { getDepartmentAsync } from "../../stores/departmentSlice";
 import DialogExportToExcel from "../../components/Employee/DialogExportToExcel";
-
+import * as XLSX from "xlsx";
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+import SnackbarFailed from "../../components/Snackbar/SnackbarFailed";
+import SnackbarSuccess from "../../components/Snackbar/SnackbarSuccess";
 
 export default function Employee() {
   const dispatch = useDispatch();
   const pathnames = location.pathname.split("/").filter((x) => x);
+  const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
+  const [isSbFailedOpen, setSbFailedOpen] = useState(false);
+  const handleSbSuccessClose = () => {
+    setSbSuccessOpen(false);
+  };
+  const handleSbFailedClose = () => {
+    setSbFailedOpen(false);
+  };
 
+  const FileUploader = (props) => {
+    const hiddenFileInput = React.useRef(null);
+
+    const handleClick = (event) => {
+      hiddenFileInput.current.click();
+    };
+    const handleChange = (event) => {
+      const fileUploaded = event.target.files[0];
+      props.handleFile(fileUploaded);
+    };
+
+    
+    FileUploader.propTypes = {
+      handleFile: PropTypes.any,
+    };
+
+    const handleFileUpload =  async (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      var jsonOut = {};
+      reader.onload = (evt) => {
+        /* Parse data */
+        const bstr = evt.target.result;
+        const wb = XLSX.read(bstr, { type: "binary" });
+        /* Get first worksheet */
+        const wsname = wb.SheetNames[0];
+        const ws = wb.Sheets[wsname];
+        /* Convert array of arrays */
+        jsonOut = XLSX.utils.sheet_to_json(ws,{raw:true});
+        dispatch(addMultipleEmployeAsync(jsonOut))
+        .unwrap()
+        .then(() => {
+          dispatch(getEmployeeAsync());
+          setSbSuccessOpen(true);
+        })
+        .catch((rejectedValueOrSerializedError) => {
+          setSbFailedOpen(true);
+        })
+      };
+      reader.readAsBinaryString(file);;
+    };
+
+    return (
+      <>
+        <Button variant="outlined" onClick={handleClick}>
+          <FileDownloadOutlinedIcon fontSize="medium" />
+          <Typography variant="h6" sx={{ pl: 1 }}>
+            Import
+          </Typography>
+        </Button>
+        <input
+          type="file"
+          accept=".csv,.xlsx,.xls"
+          ref={hiddenFileInput}
+          onChange={handleFileUpload}
+          style={{ display: "none" }}
+        />
+      </>
+    );
+  };
   // Add Employee Dialog
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isDialogExportEmployeeOpen, setDialogExportEmployeeOpen] =
@@ -112,12 +182,7 @@ export default function Employee() {
         sx={{ alignItems: "center" }}
       >
         <Grid item xs={12} sm={3} md={2} paddingTop={{ xs: 2, sm: 0 }}>
-          <Button variant="outlined">
-            <FileDownloadOutlinedIcon fontSize="medium" />
-            <Typography variant="h6" sx={{ pl: 1 }}>
-              Import
-            </Typography>
-          </Button>
+          <FileUploader />
         </Grid>
 
         <Grid item xs={12} sm={3} md={2}>
@@ -147,6 +212,16 @@ export default function Employee() {
       </Paper>
 
       <div>
+      <SnackbarSuccess
+        isOpen={isSbSuccessOpen}
+        handleClose={handleSbSuccessClose}
+        text={"Import Data Success"}
+      />
+      <SnackbarFailed
+        isOpen={isSbFailedOpen}
+        handleClose={handleSbFailedClose}
+        text={"Import Data Failed"}
+      />
         {/* {employeeList.length >= 1 ? (
           <EmployeeTable />
         ) : (
