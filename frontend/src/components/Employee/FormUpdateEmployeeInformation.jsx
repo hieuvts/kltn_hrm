@@ -24,6 +24,7 @@ import {
   getEmployeeAsync,
   setCurrentSelectedEmployee,
 } from "../../stores/employeeSlice";
+import { getAccountInfoByID } from "../../stores/authSlice";
 import { employeeInfoValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
 export default function FormUpdateEmployeeInformation({
@@ -33,7 +34,7 @@ export default function FormUpdateEmployeeInformation({
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
   const departments = useSelector((state) => state.department.departmentList);
-
+  const currentUser = JSON.parse(localStorage.getItem("user"));
   const handleSbSuccessClose = () => {
     setSbSuccessOpen(false);
   };
@@ -65,6 +66,7 @@ export default function FormUpdateEmployeeInformation({
               setCurrentSelectedEmployee({ currentSelectedEmployee: values })
             );
             dispatch(getEmployeeAsync());
+            dispatch(getAccountInfoByID({ id: currentUser.id }));
             setSbSuccessOpen(true);
             setTimeout(() => {
               handleCloseDialog();

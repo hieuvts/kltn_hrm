@@ -1,4 +1,5 @@
 require("dotenv").config({ path: "./config/.env" });
+const { Op } = require("sequelize");
 const db = require("../models");
 const AuthAccount = db.AuthAccount;
 const ChatMessage = db.ChatMessage;
@@ -33,7 +34,7 @@ const signUp = (req, res, next) => {
 const login = (req, res) => {
   AuthAccount.findOne({
     where: { email: req.body.email },
-    include: Employee,
+    include: [Employee],
   })
     .then((authAccount) => {
       if (!authAccount) {
@@ -64,14 +65,14 @@ const login = (req, res) => {
       //   companyID: authAccount.companyID,
       //   accessToken: token,
       // });
-      console.log("authaccounts ", authAccount);
+      console.log("emp ", authAccount.Employee);
       res.status(200).send({
         id: authAccount.id,
         email: authAccount.email,
         privilege: authAccount.privilege,
         companyID: authAccount.companyID,
         accessToken: token,
-        employee: authAccount.employee,
+        employee: authAccount.Employee,
       });
     })
     .catch((error) => {
@@ -80,7 +81,63 @@ const login = (req, res) => {
     });
 };
 
-const changePassword = async (req, res, next) => {
+const getAllAccount = (req, res) => {
+  const searchQuery = req.query.search || "";
+  console.log("invoke getAllAccount", searchQuery);
+
+  AuthAccount.findAll({
+    where: {
+      [Op.or]: [
+        { email: { [Op.like]: `%${searchQuery}%` } },
+        { privilege: { [Op.like]: `%${searchQuery}%` } },
+      ],
+    },
+    include: [Employee],
+  })
+    .then((authAccounts) => {
+      if (!authAccounts) {
+        return res.status(404).send({
+          message: `Find all account failed!`,
+        });
+      }
+
+      res.status(200).send(authAccounts);
+    })
+    .catch((error) => {
+      console.log("error when get all account", error);
+      return res.status(401).send({ error: error.message });
+    });
+};
+
+const getAccountInfoByID = (req, res) => {
+  console.log("invoke getinfo id", req.body.id);
+  AuthAccount.findOne({
+    where: { id: req.query.id },
+    include: [Employee],
+  })
+    .then((authAccount) => {
+      if (!authAccount) {
+        return res.status(404).send({
+          message: `Find account ${req.query.id} failed!`,
+        });
+      }
+
+      res.status(200).send({
+        id: authAccount.id,
+        email: authAccount.email,
+        privilege: authAccount.privilege,
+        companyID: authAccount.companyID,
+        employee: authAccount.Employee,
+      });
+    })
+    .catch((error) => {
+      console.log("error when get account", error);
+      return res.status(401).send({ error: error.message });
+    });
+};
+
+const changePassword = async (req, res) => {
+  console.log("changePassword", req.body);
   AuthAccount.findOne({
     where: { email: req.body.email },
   })
@@ -151,15 +208,16 @@ const deleteAuthAccount = async (req, res) => {
 };
 
 const getChatRooms = (req, res) => {
-  console.log("invoked getChatRooms");
+  console.log("invoked getChatRooms", req.query);
   AuthAccount.findOne({
-    where: { id: req.query.id },
+    where: {
+      id: req.query.id,
+    },
     include: [
       {
         model: ChatRoom,
+        where: { name: { [Op.like]: `%${req.query.search}%` } },
         through: {
-          // don't want anything from
-          // the junction table
           attributes: [],
         },
         include: [
@@ -177,7 +235,7 @@ const getChatRooms = (req, res) => {
     .then((authAccount) => {
       if (!authAccount) {
         return res.status(404).send({
-          message: `Account with email ${req.body.email} not found`,
+          message: `Not found any chatrooms`,
         });
       }
       res.status(200).send(authAccount);
@@ -192,5 +250,7 @@ module.exports = {
   login,
   getChatRooms,
   changePassword,
+  getAllAccount,
   deleteAuthAccount,
+  getAccountInfoByID,
 };

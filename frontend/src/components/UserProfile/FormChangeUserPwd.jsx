@@ -11,8 +11,8 @@ import PropTypes from "prop-types";
 import MuiAlert from "@mui/material/Alert";
 import SnackbarSuccess from "../Snackbar/SnackbarSuccess";
 import SnackbarFailed from "../Snackbar/SnackbarFailed";
-
-import { useDispatch } from "react-redux";
+import { changePassword } from "../../stores/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../stores/authSlice";
 import { changePwdValidationSchema } from "../../utilities/validationSchema";
 import { useFormik } from "formik";
@@ -27,6 +27,7 @@ export default function FormChangeUserPwd({
   const user = JSON.parse(localStorage.getItem("user"));
   const [isSbSuccessOpen, setSbSuccessOpen] = useState(false);
   const [isSbFailedOpen, setSbFailedOpen] = useState(false);
+  const { message } = useSelector((state) => state.message);
   const handleSbSuccessClose = () => {
     setSbSuccessOpen(false);
   };
@@ -40,18 +41,20 @@ export default function FormChangeUserPwd({
       initialValues: initialValues,
       validationSchema: changePwdValidationSchema,
       onSubmit: (values) => {
-        // dispatch(changePassword({ ...values, email: user.email }))
-        //   .unwrap()
-        //   .then((originalPromiseResult) => {
-        //     setSbSuccessOpen(true);
-        //     setTimeout(() => {
-        //       handleCloseDialog();
-        //       dispatch(logout());
-        //     }, 800);
-        //   })
-        //   .catch((rejectedValueOrSerializedError) => {
-        //     setSbFailedOpen(true);
-        //   });
+        values.email = user.email;
+        dispatch(changePassword(values))
+          .unwrap()
+          .then((originalPromiseResult) => {
+            setSbSuccessOpen(true);
+            setTimeout(() => {
+              handleCloseDialog();
+              // logout after change password
+              dispatch(logout());
+            }, 1000);
+          })
+          .catch((rejectedValueOrSerializedError) => {
+            setSbFailedOpen(true);
+          });
       },
     });
     return (
@@ -111,16 +114,18 @@ export default function FormChangeUserPwd({
 
   return (
     <div>
+      <SnackbarFailed
+        isOpen={isSbFailedOpen}
+        handleClose={handleSbFailedClose}
+        text={"Change password failed"}
+      />
+
       <SnackbarSuccess
         isOpen={isSbSuccessOpen}
         handleClose={handleSbSuccessClose}
         text={"Change password success"}
       />
-      <SnackbarFailed
-        isOpen={isSbFailedOpen}
-        handleClose={handleSbFailedClose}
-        text={"Change password failed!"}
-      />
+
       <FormikWithMUI />
     </div>
   );

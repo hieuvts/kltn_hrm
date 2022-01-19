@@ -37,7 +37,7 @@ export default function DialogDeleteMultipleEmployee({
     // Loop through selectedEmployeeList and call delete func on each one
     // TODO: implement delete many, by sending list of employee id
     selectedEmployeeList.forEach((employee, index) => {
-      dispatch(deleteEmployeeAsync({ selectedEmployeeId: employee._id }))
+      dispatch(deleteEmployeeAsync({ selectedEmployeeId: employee.id }))
         .unwrap()
         .then(() => {
           setSelected([]);

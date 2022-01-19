@@ -6,16 +6,16 @@ const createTriggersInDB = async (req, res) => {
 
     await db.sequelize.query(
       `create trigger department_change 
-      after update on employees for each row
+      after update on Employees for each row
       if NEW.departmentID != OLD.departmentID
       then
-        insert into employmenthistories 
+        insert into EmploymentHistories 
         set date=now(), employeeID = OLD.id,
         eventType='Department changed', 
         event=CONCAT('Change from ', 
-        (select name from departments where departments.id=OLD.departmentID), 
+        (select name from Departments where Departments.id=OLD.departmentID), 
          ' to ', 
-        (select name from departments where departments.id=NEW.departmentID));
+        (select name from Departments where Departments.id=NEW.departmentID));
       end if;
       `
     );
@@ -25,7 +25,7 @@ const createTriggersInDB = async (req, res) => {
     await db.sequelize.query(
       `create trigger achievement_change 
       after insert on EmployeeAchievements for each row 
-      insert into employmenthistories 
+      insert into EmploymentHistories 
       set date=NEW.date, employeeID = NEW.employeeID,
       eventType='Compliment', 
       event=NEW.achievement;`
@@ -35,10 +35,10 @@ const createTriggersInDB = async (req, res) => {
 
     await db.sequelize.query(
       `create trigger position_change 
-      after update on employees for each row
+      after update on Employees for each row
       if NEW.position != OLD.position
       then
-        insert into employmenthistories 
+        insert into EmploymentHistories 
         set date=now(), employeeID = OLD.id,
         eventType='Position changed', 
         event=CONCAT('Change from ', OLD.position,' to ', NEW.position);
@@ -50,17 +50,57 @@ const createTriggersInDB = async (req, res) => {
 
     await db.sequelize.query(
       `create trigger mergeAccountToEmp 
-      after insert on authAccounts for each row 
-      insert into employees 
+      after insert on AuthAccounts for each row 
+      insert into Employees 
       set fname='Fisrt name',
       lname='Last name',
       gender='Male',
       dateOfBirth=now(),
       phoneNumber='',
       address='Address',
-      position='',
+      position='NEW',
       email=NEW.email,
       authAccountID=NEW.id;
+      `
+    );
+
+    await db.sequelize.query(`drop trigger if exists defaultDepartment;`);
+
+    await db.sequelize.query(
+      `create trigger defaultDepartment 
+      after insert on Companies for each row 
+      insert into Departments 
+      set name='HR',
+      manager='HR Leader';
+      `
+    );
+
+    // Trigger insert task
+    await db.sequelize.query(`drop trigger if exists taskThenAddNoti;`);
+
+    await db.sequelize.query(
+      `create trigger taskThenAddNoti 
+      after insert on Tasks for each row 
+      insert into Notifications
+      set eventType='task',
+      authAccountID=(select id from AuthAccounts where AuthAccounts.id=NEW.assigneeID),
+      event=CONCAT("Your're assigned a new task: ", NEW.name);
+      `
+    );
+
+    // Trigger update task
+    await db.sequelize.query(`drop trigger if exists updateTaskThenAddNoti;`);
+
+    await db.sequelize.query(
+      `create trigger updateTaskThenAddNoti 
+      after update on Tasks for each row 
+      if OLD.assigneeID != NEW.assigneeID
+      then
+        insert into Notifications 
+        set eventType='task',
+        authAccountID=(select id from AuthAccounts where AuthAccounts.id=NEW.assigneeID),
+        event=CONCAT("Your're assigned a new task: ", NEW.name);
+      end if;
       `
     );
   } catch (error) {

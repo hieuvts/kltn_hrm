@@ -49,16 +49,19 @@ import CurrentClock from "../components/CustomizedMUIComponents/CurrentClock";
 import NotificationBadget from "../components/CustomizedMUIComponents/NotificationsBadget";
 import { pageList } from "../utilities/appPageList";
 import jwtParser from "../utilities/jwtParser";
+import AuthAccount from "../pages/UserProfile/AuthAccount";
 // Mini variant drawer
 import {
   AppBar,
   MyDrawer,
   DrawerHeader,
 } from "./CustomizedMUIComponents/MyDrawer";
+import { getNotif } from "../stores/notifSlice";
 export default function AppBarComponent() {
   const location = useLocation();
   const theme = useTheme();
   const { user: currentUser } = useSelector((state) => state.auth);
+  const notif = useSelector((state) => state.notif);
   const pathnames = location.pathname.split("/").filter((x) => x);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -82,6 +85,10 @@ export default function AppBarComponent() {
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
+
+  useEffect(() => {
+    dispatch(getNotif({ authAccountID: currentUser.id }));
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -146,7 +153,10 @@ export default function AppBarComponent() {
                       </IconButton>
                     </Tooltip>
 
-                    <NotificationBadget notificationCount={3} />
+                    <NotificationBadget
+                      notificationCount={notif.length}
+                      notificationList={notif}
+                    />
                     <Menu
                       id="menu-appbar"
                       anchorEl={anchorEl}
@@ -184,6 +194,18 @@ export default function AppBarComponent() {
                           }}
                         >
                           Company settings
+                        </MenuItem>
+                      </Link>
+                      <Link
+                        to="/accountManage"
+                        style={{ textDecoration: "none", color: "black" }}
+                      >
+                        <MenuItem
+                          onClick={() => {
+                            handleClose();
+                          }}
+                        >
+                          Accounts Manage
                         </MenuItem>
                       </Link>
                       <Link
@@ -299,6 +321,7 @@ export default function AppBarComponent() {
           <Route path="Task" element={<Task />} />
           <Route path="others" element={<Others />} />
           <Route path="setting" element={<Company />} />
+          <Route path="accountManage" element={<AuthAccount />} />
           <Route path="profile" element={<UserProfile />} />
           <Route path="about" element={<AboutUs />} />
           <Route path="chat" element={<InternalChat />} />

@@ -1,12 +1,15 @@
 const db = require("../models");
+const { Op } = require("sequelize");
 const { QueryTypes } = require("sequelize");
 const ChatRoom = db.ChatRoom;
 const ChatMessage = db.ChatMessage;
+const ChatRoomDetails = db.ChatRoomDetails;
 const AuthAccount = db.AuthAccount;
 const moment = require("moment");
 
 // get departmens of selected company
 const getAllChatRoom = async (req, res) => {
+  const searchQuery = req.query.search;
   ChatRoom.findAll({
     include: [AuthAccount, ChatMessage],
   })
@@ -31,25 +34,22 @@ const getAllChatRoom = async (req, res) => {
 };
 
 const createChatRoom = async (req, res) => {
-  const dataToInsert = {
-    name: req.body.name,
-    manager: req.body.managerID,
-    companyID: req.body.companyID || 1,
-  };
-  ChatRoom.create(dataToInsert)
-    .then((ChatRoom) => {
-      res.status(200).json({
-        message: "Create ChatRooms successfully!",
-      });
-      console.log(moment().format("hh:mm:ss"), "[SUCCESS] createChatRoom");
-    })
-    .catch((error) => {
-      console.log(moment().format("hh:mm:ss"), "[ERROR] getAllChatRoom");
-      res.status(500).json({
-        message: "[ERROR] [getAll] Something went wrong",
-        error: error,
-      });
-    });
+  console.log("Create chatroom ", req.body.name);
+  console.log("Create chatroom ", req.body.thisMemberID);
+  console.log("Create chatroom ", req.body.thatMemberID);
+  const chatRoom = await ChatRoom.create({ name: req.body.name });
+
+  const thisMemberID = req.body.thisMemberID;
+  const thatMemberID = req.body.thatMemberID;
+
+  const cdt1 = await ChatRoomDetails.create({
+    memberID: thisMemberID,
+    chatRoomID: chatRoom.id,
+  });
+  const cdt2 = await ChatRoomDetails.create({
+    memberID: thatMemberID,
+    chatRoomID: chatRoom.id,
+  });
 };
 
 const updateChatRoom = async (req, res) => {

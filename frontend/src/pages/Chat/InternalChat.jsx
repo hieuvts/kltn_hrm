@@ -1,9 +1,15 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import List from "@mui/material/List";
+import Zoom from "@mui/material/Zoom";
+import Fab from "@mui/material/Fab";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+import Divider from "@mui/material/Divider";
+import AddIcon from "@mui/icons-material/Add";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
@@ -17,38 +23,92 @@ import { useSelector, useDispatch } from "react-redux";
 import { rowDirection, colDirection } from "../../utilities/flexBoxStyle";
 import FriendList from "../../components/Chat/FriendList";
 import ChatPanel from "../../components/Chat/ChatPanel";
-import StyledSearchBox from "../../components/CustomizedMUIComponents/StyledSearchBox";
+import MySearchBox from "../../components/CustomizedMUIComponents/StyledSearchBox";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import { getChatRoomByAuthAccount } from "../../stores/authSlice";
-import { getQtyMemberInRoomID } from "../../stores/chatRoomSlice";
+import {
+  getChatRoomByAuthAccount,
+  getAllAccount,
+} from "../../stores/authSlice";
+import {
+  getQtyMemberInRoomID,
+  createChatRoom,
+} from "../../stores/chatRoomSlice";
+import debounce from "lodash.debounce";
+
 import "./InternalChat.scss";
 
 export default function InternalChat() {
   const user = JSON.parse(localStorage.getItem("user"));
   const [value, setValue] = React.useState(0);
   const chatRooms = useSelector((state) => state.auth.chatRooms);
+  const authAccountList = useSelector((state) => state.auth.authAccountList);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
   const dispatch = useDispatch();
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const handleGetAllChatRoom = () => {
-    dispatch(getChatRoomByAuthAccount({ id: user.id }));
-  };
+  // const handleGetAllChatRoom = () => {
+  //   dispatch(getChatRoomByAuthAccount({ id: user.id }));
+  // };
   const handleGetQtyMemberInRoom = () => {
     dispatch(getQtyMemberInRoomID({ chatRoomId: value + 1 }));
   };
+
+  const handleSearchQueryChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleCreateChatRoom = (userEmail, userID) => {
+    dispatch(
+      createChatRoom({
+        name: userEmail,
+        thatMemberID: userID,
+        thisMemberID: user.id,
+      })
+    )
+      .unwrap()
+      .then(() => dispatch(debounceFetchAPI(searchQuery)))
+      .catch((error) => console.log(error));
+  };
+  const debounceFetchAPI = useCallback(
+    debounce((searchQuery) => {
+      dispatch(
+        getChatRoomByAuthAccount({ searchQuery: searchQuery, id: user.id })
+      );
+    }, 350),
+    []
+  );
+  useEffect(() => {
+    debounceFetchAPI(searchQuery);
+  }, [searchQuery]);
+
   useEffect(() => {
     console.log("Get all room message");
-    handleGetAllChatRoom();
+    debounceFetchAPI(searchQuery);
     handleGetQtyMemberInRoom();
   }, [value]);
+  useEffect(() => {
+    dispatch(getAllAccount({ searchQuery: "" }));
+  }, []);
 
   return (
     <div className="chatContainer">
       <Tabs>
         <TabList>
           <div className="friendSearch">
-            <StyledSearchBox placeholder="Search for chat..." />
+            <MySearchBox
+              placeholder="Search for chat..."
+              handleSearchQueryChange={handleSearchQueryChange}
+            />
           </div>
           {chatRooms.map((room, index) => (
             <Tab
@@ -93,8 +153,70 @@ export default function InternalChat() {
               </ListItem>
             </Tab>
           ))}
+          <div className="createChat">
+            <Fab
+              size="small"
+              color="primary"
+              aria-label="add"
+              sx={{ alignSelft: "end" }}
+              onClick={handleMenu}
+            >
+              <AddIcon />
+            </Fab>
+          </div>
         </TabList>
 
+        <Menu
+          id="menu-appbar"
+          anchorEl={anchorEl}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <div
+            style={{
+              maxHeight: "20rem",
+              minWidth: "18rem",
+              maxWidth: "18rem",
+            }}
+          >
+            <Typography variant="body1" sx={{ mt: 1, ml: 1 }}>
+              Start conversation with
+            </Typography>
+            <Divider />
+            <div>
+              {authAccountList.map((account, index) => {
+                if (account.email !== user.email) {
+                  return (
+                    <div key={index}>
+                      <MenuItem
+                        sx={{ pb: 1, minWidth: "18rem" }}
+                        onClick={() =>
+                          handleCreateChatRoom(account.email, account.id)
+                        }
+                      >
+                        {account.email !== user.email && (
+                          <Typography variant="body1">
+                            {account.email}
+                          </Typography>
+                        )}
+                      </MenuItem>
+                      {index < authAccountList.length - 1 && <Divider />}
+                    </div>
+                  );
+                }
+              })}
+            </div>
+          </div>
+        </Menu>
         {chatRooms.map((room, index) => (
           <TabPanel key={index} value={value} index={index}>
             <ChatPanel

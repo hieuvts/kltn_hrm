@@ -238,7 +238,7 @@ export default function EmployeeTable() {
   const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(7);
   const [isDialogDeleteEmployeeOpen, setDialogDeleteEmployeeOpen] =
     React.useState(false);
   const [
@@ -480,7 +480,7 @@ export default function EmployeeTable() {
                                 mx: 1,
                               }}
                             />
-                            <p style={{ paddingLeft: "15px" }}>
+                            <div style={{ paddingLeft: "15px" }}>
                               {row.fname} {row.lname}
                               {row.position === "Manager" && (
                                 <Tooltip title="Key person">
@@ -493,7 +493,7 @@ export default function EmployeeTable() {
                                   />
                                 </Tooltip>
                               )}
-                            </p>
+                            </div>
                           </Box>
                         </TableCell>
                         <TableCell align="right">

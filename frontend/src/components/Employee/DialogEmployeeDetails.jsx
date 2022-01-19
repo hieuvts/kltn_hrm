@@ -4,11 +4,6 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import AppBar from "@mui/material/AppBar";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import MenuIcon from "@mui/icons-material/Menu";
-import Paper from "@mui/material/Paper";
 import CloseIcon from "@mui/icons-material/Close";
 import Grid from "@mui/material/Grid";
 import Dialog from "@mui/material/Dialog";
@@ -21,17 +16,40 @@ import EmployeeAvatar from "./EmployeeDetails/EmployeeAvatar";
 import EffecientLevel from "./EmployeeDetails/EffecientLevel";
 import EmploymentHistory from "./EmployeeDetails/EmploymentHistory";
 import { useSelector } from "react-redux";
+import EmpProjectList from "./EmployeeProjects/EmpProjectList";
+import EmpTaskList from "./EmployeeProjects/EmpTaskList";
 
-function LinkTab(props) {
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
   return (
-    <Tab
-      component="a"
-      onClick={(event) => {
-        event.preventDefault();
-      }}
-      {...props}
-    />
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
   );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
 }
 
 export default function DialogEmployeeDetails({
@@ -59,43 +77,73 @@ export default function DialogEmployeeDetails({
               <CloseIcon fontSize="large" />
             </Button>
           </Box>
+          <Grid item sm={12} sx={{ px: 4 }}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs value={tabValue} onChange={handleTabChange}>
+                <Tab label="General" {...a11yProps(0)} />
+                <Tab label="Task" {...a11yProps(1)} />
+              </Tabs>
+            </Box>
+          </Grid>
         </DialogTitle>
         <DialogContent>
           <Grid container>
-            <Grid item sm={12} sx={{ px: 4 }}>
-              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <Tabs value={tabValue} onChange={handleTabChange}>
-                  <LinkTab label="General" href="/all" />
-                  <LinkTab label="Task" href="/task" />
-                </Tabs>
-              </Box>
-            </Grid>
-            <Grid item sm={12} lg={6}>
-              <Box sx={{ m: 3 }}>
-                <EmployeeAvatar />
-              </Box>
-              <Box sx={{ m: 3 }}>
-                <PersonalInformation />
-              </Box>
-            </Grid>
-            <Grid item sm={12} lg={6}>
-              <Box sx={{ m: 3 }}>
-                <EffecientLevel />
-              </Box>
-              <Box sx={{ m: 3 }}>
-                <AboutMe />
-              </Box>
-              <Box sx={{ m: 3 }}>
-                <EmploymentHistory />
-              </Box>
-            </Grid>
+            {/* General employee info */}
+            <TabPanel value={tabValue} index={0}>
+              <Grid
+                container
+                sx={{
+                  minWidth: "65vw",
+                  maxWidth: "65vw",
+                  maxHeight: "70vh",
+                  minHeight: "70vh",
+                }}
+              >
+                <Grid item sm={12} lg={6}>
+                  <Box sx={{ m: 3 }}>
+                    <PersonalInformation />
+                  </Box>
+                </Grid>
+                <Grid item sm={12} lg={6}>
+                  <Box sx={{ m: 3 }}>
+                    <AboutMe />
+                  </Box>
+                  <Box sx={{ m: 3 }}>
+                    <EmploymentHistory />
+                  </Box>
+                </Grid>
+              </Grid>
+            </TabPanel>
+
+            {/* Employees' projects, tasks */}
+            <TabPanel value={tabValue} index={1}>
+              <Grid
+                container
+                sx={{
+                  minWidth: "65vw",
+                  maxWidth: "65vw",
+                  maxHeight: "70vh",
+                  minHeight: "70vh",
+                }}
+              >
+                <Grid item sm={12} lg={12}>
+                  <Typography variant="h6" sx={{ ml: 3 }}>
+                    {employee.fname + " " + employee.lname}{" "}
+                    {" is working on these projects"}
+                  </Typography>
+                  <Box sx={{ m: 3 }}>
+                    <EmpTaskList />
+                  </Box>
+                </Grid>
+              </Grid>
+            </TabPanel>
           </Grid>
         </DialogContent>
       </Dialog>
     </>
   );
 }
-DialogEmployeeDetails.propTypes= {
+DialogEmployeeDetails.propTypes = {
   isDialogOpen: PropTypes.bool,
   handleCloseDialog: PropTypes.func,
 };

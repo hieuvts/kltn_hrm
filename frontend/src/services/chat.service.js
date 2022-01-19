@@ -4,8 +4,8 @@ import { apiBaseUrl } from "../config/apiBaseUrl";
 
 const API_URL = `${apiBaseUrl}/chat/`;
 
-const getAllChatRoom = () => {
-  return axios.get(API_URL + "getAll", {
+const getAllChatRoom = (searchQuery) => {
+  return axios.get(API_URL + "getAll?search=" + searchQuery, {
     headers: authHeader(),
   });
 };
@@ -31,10 +31,14 @@ const addMessageToRoom = (chatRoomId, message) => {
 // messages: [ {sender: 'hieu@gmail.com',
 // 	message: 'Hello Vinh',
 // 	isBroadcast: false}]
-const createChatRoom = (chatRoomInfo) => {
-  return axios.put(API_URL + "/createChatRoom", chatRoomInfo, {
-    headers: authHeader(),
-  });
+const createChatRoom = (name, thatMemberID, thisMemberID) => {
+  return axios.post(
+    API_URL + "/create",
+    { name: name, thatMemberID: thatMemberID, thisMemberID: thisMemberID },
+    {
+      headers: authHeader(),
+    }
+  );
 };
 
 const chatService = {

@@ -4,14 +4,15 @@ const Employee = db.Employee;
 const Department = db.Department;
 const EmploymentHistory = db.EmploymentHistory;
 const EmployeeAchievement = db.EmployeeAchievement;
+const Task = db.Task;
 const moment = require("moment");
 const { sequelize } = require("../models");
 
 const getAllEmployee = async (req, res) => {
-  const searchQuery = req.query.search;
+  const searchQuery = req.query.search || "";
   console.log("invoke 7", searchQuery);
   Employee.findAll({
-    include: [EmploymentHistory, EmployeeAchievement],
+    include: [EmploymentHistory, EmployeeAchievement, Task],
     order: [[EmploymentHistory, "date", "DESC"]],
     where: {
       [Op.or]: [

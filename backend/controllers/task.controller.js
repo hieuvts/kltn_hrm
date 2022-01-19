@@ -34,7 +34,7 @@ const createTask = async (req, res) => {
       console.log(moment().format("hh:mm:ss"), "[SUCCESS] createTask");
     })
     .catch((error) => {
-      console.log(moment().format("hh:mm:ss"), "[ERROR] createTask");
+      console.log(moment().format("hh:mm:ss"), "[ERROR] createTask \n", error);
       res.status(500).json({
         message: "[ERROR] [create] Something went wrong",
         error: error,
@@ -61,7 +61,7 @@ const updateTask = async (req, res) => {
       }
     })
     .catch((error) => {
-      console.log(moment().format("hh:mm:ss"), "[ERROR] updatetask");
+      console.log(moment().format("hh:mm:ss"), "[ERROR] updatetask ", error);
       return res.status(500).json({
         error: error,
       });

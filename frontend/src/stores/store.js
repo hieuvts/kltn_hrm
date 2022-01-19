@@ -8,6 +8,8 @@ import taskReducer from "./taskSlice";
 import projectReducer from "./projectSlice";
 import employeeKpiClusterReducer from "./employeeKpiClusterSlice";
 import companyReducer from "./companySlice";
+import notifReducer from "./notifSlice";
+
 const reducers = {
   company: companyReducer,
   auth: authReducer,
@@ -17,7 +19,8 @@ const reducers = {
   chatRoom: chatRoomReducer,
   project: projectReducer,
   task: taskReducer,
-  employeeKpiCluster: employeeKpiClusterReducer
+  employeeKpiCluster: employeeKpiClusterReducer,
+  notif: notifReducer,
 };
 const store = configureStore({
   reducer: reducers,

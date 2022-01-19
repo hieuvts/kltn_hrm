@@ -18,6 +18,7 @@ import debounce from "lodash.debounce";
 import { useDispatch } from "react-redux";
 import { getProjectAsync } from "../../stores/projectSlice";
 import { getDepartmentAsync } from "../../stores/departmentSlice";
+import { getTaskAsync } from "../../stores/taskSlice";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -68,6 +69,9 @@ export default function Project() {
     debounceFetchAPI(searchQuery);
   }, [handleSearchQueryChange]);
 
+  useEffect(() => {
+    dispatch(getTaskAsync());
+  });
   return (
     <>
       <Snackbar
@@ -102,14 +106,6 @@ export default function Project() {
         padding={{ sm: 5, md: 0 }}
         sx={{ alignItems: "center" }}
       >
-        <Grid item paddingTop={{ xs: 2, sm: 0 }} xs={12} sm={3} md={2}>
-          <Button variant="outlined">
-            <FileDownloadOutlinedIcon fontSize="medium" />
-            <Typography variant="h6" sx={{ pl: 1 }}>
-              Import
-            </Typography>
-          </Button>
-        </Grid>
         <Grid item xs={12} sm={3} md={2}>
           <Button
             variant="outlined"

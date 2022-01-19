@@ -36,10 +36,10 @@ export default function AboutMe() {
       >
         <Avatar alt="Remy Sharp" src={maleAvatar} />
         <Box sx={colDirection}>
-          <p>
+          <div>
             Share interesting life stories or tell other users about yourself,
             upload photos of memorable moments.
-          </p>
+          </div>
           <Button variant="outlined" sx={{ borderRadius: 8 }}>
             Write about yourself
           </Button>

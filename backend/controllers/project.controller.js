@@ -1,12 +1,14 @@
 const db = require("../models");
 const { Op } = require("sequelize");
 const Project = db.Project;
+const Task = db.Task;
 const moment = require("moment");
 
 const getProject = async (req, res) => {
   const searchQuery = req.query.search;
   console.log("invoke get project search ", searchQuery);
   Project.findAll({
+    include: [Task],
     where: {
       [Op.or]: [{ name: { [Op.like]: `%${searchQuery}%` } }],
     },

@@ -28,14 +28,29 @@ const changePassword = (body) => {
   return axios.post(API_URL + "changePwd", body, { headers: authHeader() });
 };
 
-const getChatRoomByAuthAccount = (authAccountID) => {
-  return axios.get(API_URL + "getChatRooms?id=" + authAccountID);
+const getChatRoomByAuthAccount = (authAccountID, searchQuery) => {
+  return axios.get(
+    API_URL + "getChatRooms?id=" + authAccountID + "&search=" + searchQuery
+  );
+};
+
+const getAllAccount = (searchQuery) => {
+  return axios.get(API_URL + "getAllAccount?search=" + searchQuery);
+};
+const getAccountInfoByID = (authAccountID) => {
+  return axios.get(API_URL + "getAccountInfoByID?id=" + authAccountID);
+};
+const deleteAccount = (authAccountID) => {
+  return axios.delete(API_URL + "delete?id=" + authAccountID);
 };
 const authService = {
   signUp,
   login,
   logout,
   getChatRoomByAuthAccount,
+  getAccountInfoByID,
+  getAllAccount,
+  deleteAccount,
   changePassword,
 };
 

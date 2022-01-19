@@ -1,0 +1,36 @@
+.dbQty {
+    min-height: 8vh;
+    max-height: 8vh;
+    margin: 8px;
+}
+
+.dbChart {
+    padding-top: 2vh;
+    min-height: 50vh;
+    max-height: 60vh;
+    padding: 8px;
+}
+
+.dbEmpList {
+    min-height: 30vh;
+    max-height: 30vh;
+    display: flex;
+    flex-direction: row;
+    margin: 8px;
+    .col1 {
+        width: 30%;
+        padding: 5px;
+    }
+    .col2 {
+        width: 30%;
+        padding: 5px;
+    }
+    .col3 {
+        width: 30%;
+        padding: 5px;
+    }
+    .col4 {
+        width: 30%;
+        padding: 5px;
+    }
+}
