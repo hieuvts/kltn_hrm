@@ -15,7 +15,7 @@ export const importDataFromCSV = createAsyncThunk(
   "employeeKpiCluster/importDataFromCSV",
   async (payload, thunkAPI) => {
     try {
-      const res = await employeeKpiClusterService.importDataFromCSV( );
+      const res = await employeeKpiClusterService.importCSVData( );
       return res.data;
     } catch (error) {
       const message =
@@ -31,6 +31,27 @@ export const importDataFromCSV = createAsyncThunk(
     }
   }
 );
+
+export const getDataFromCSV = createAsyncThunk(
+  "employeeKpiCluster/getDataFromCSV",
+  async (payload, thunkAPI) => {
+    try {
+      const res = await employeeKpiClusterService.getDataFromCSV(payload);
+      return res.data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      if (error.response.status === 401) {
+        thunkAPI.dispatch(logout());
+      }
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+)
 
 export const getEmployeeKpiCluster = createAsyncThunk(
   "employeeKpiCluster/getAllEmployKPICluster",

@@ -7,9 +7,10 @@ const { once } = require('events');
 var dataFromCSV = {};
 
 const getEmployeeKpiClusterFromCSV = async (req, res) => {
+  var inputFile = JSON.stringify(req.body);
   // spawn new child process to call the python Ascript
   let dataReturn = {};
-  const python = spawn('python', ['script1.py']);
+  const python = spawn('python', ['script1.py',inputFile]);
   // collect data from script
   python.stdout.on('data', function (data) {
     console.log('Pipe data from python script ...');
@@ -23,7 +24,6 @@ const getEmployeeKpiClusterFromCSV = async (req, res) => {
     dataFromCSV = eval(dataReturn);
   });
   await once(python, 'close')
-  console.log(dataFromCSV)
 }
 
 const getEmployeeKpiCluster = async (req, res) => {
