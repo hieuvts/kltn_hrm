@@ -18,7 +18,10 @@ export default function CurrentClock() {
       variant="h5"
       sx={{ alignSelf: "center", textAlign: "center", mx: 5 }}
     >
-      {currentTime.toLocaleTimeString("en-GB")}
+      {currentTime.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })}
     </Typography>
   );
 }
