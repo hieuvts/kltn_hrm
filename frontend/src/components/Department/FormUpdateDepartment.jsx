@@ -81,17 +81,7 @@ export default function FormUpdateDepartment({
             helperText={formik.touched.name && formik.errors.name}
             sx={{ mb: 3 }}
           />
-          <TextField
-            fullWidth
-            id="amount"
-            name="amount"
-            label="Amount of Staff"
-            value={formik.values.amount}
-            onChange={formik.handleChange}
-            error={formik.touched.amount && Boolean(formik.errors.amount)}
-            helperText={formik.touched.amount && formik.errors.amount}
-            sx={{ mb: 3 }}
-          />
+
           {/* <InputLabel id="gender">Gender</InputLabel> */}
           <FormControl fullWidth>
             <InputLabel id="manager-label">Manager</InputLabel>
@@ -106,7 +96,10 @@ export default function FormUpdateDepartment({
               sx={{ mb: 3 }}
             >
               {employees.map((employee, index) => (
-                <MenuItem key={index} value={employee.fname + " " + employee.lname}>
+                <MenuItem
+                  key={index}
+                  value={employee.fname + " " + employee.lname}
+                >
                   {employee.fname + " " + employee.lname}
                 </MenuItem>
               ))}
@@ -145,7 +138,6 @@ FormUpdateDepartment.propTypes = {
 FormUpdateDepartment.defaultProps = {
   initialValues: {
     name: "",
-    amount: "",
     manager: "",
   },
 };

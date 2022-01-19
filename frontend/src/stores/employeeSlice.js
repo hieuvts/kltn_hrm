@@ -3,7 +3,9 @@ import employeeService from "../services/employee.service";
 import { logout } from "./authSlice";
 const initialState = {
   employeeList: [],
-  currentSelectedEmployee: {},
+  currentSelectedEmployee: {
+    Tasks: [],
+  },
   selectedEmployeeList: [],
 };
 

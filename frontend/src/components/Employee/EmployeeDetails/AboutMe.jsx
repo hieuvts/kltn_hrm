@@ -2,6 +2,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Dialog from "@mui/material/Dialog";
@@ -40,9 +41,11 @@ export default function AboutMe() {
             Share interesting life stories or tell other users about yourself,
             upload photos of memorable moments.
           </div>
-          <Button variant="outlined" sx={{ borderRadius: 8 }}>
-            Write about yourself
-          </Button>
+          <Tooltip title="This feature is not available!">
+            <Button variant="outlined" sx={{ borderRadius: 8 }}>
+              Write about yourself
+            </Button>
+          </Tooltip>
         </Box>
       </Box>
     </Paper>

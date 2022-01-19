@@ -13,6 +13,7 @@ import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
 import TimelineDot from "@mui/lab/TimelineDot";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import BadgeIcon from "@mui/icons-material/Badge";
+import ReportIcon from "@mui/icons-material/Report";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import StarOutlineIcon from "@mui/icons-material/StarOutline";
 import { useSelector, useDispatch } from "react-redux";
@@ -78,7 +79,7 @@ export default function EmploymentHistory() {
             })}
           </Timeline>
         ) : (
-          <CircularProgress color="secondary" />
+          <Typography variant="h6">Not found any data!!!</Typography>
         )}
       </Box>
     </Paper>
