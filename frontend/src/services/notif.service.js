@@ -10,11 +10,14 @@ const getNotif = (authAccountID) => {
   });
 };
 
-
-const markNotifAsRead = (authAccountID, notif) => {
-  return axios.put(API_URL + "/update/?id=" + authAccountID, notif, {
-    headers: authHeader(),
-  });
+const markNotifAsRead = (notifID) => {
+  return axios.put(
+    API_URL + "/update/?id=" + notifID,
+    { isRead: true },
+    {
+      headers: authHeader(),
+    }
+  );
 };
 const deleteNotif = (notifId) => {
   return axios.delete(API_URL + "/delete/?id=" + notifId, {

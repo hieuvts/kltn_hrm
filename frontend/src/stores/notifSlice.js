@@ -36,7 +36,7 @@ export const markNotifAsRead = createAsyncThunk(
   "notif/markNotifAsRead",
   async (payload, thunkAPI) => {
     try {
-      const res = await notifService.markNotifAsRead(payload.id, payload);
+      const res = await notifService.markNotifAsRead(payload.id);
 
       return res.data;
     } catch (error) {
@@ -58,7 +58,7 @@ export const deleteNotif = createAsyncThunk(
   "notif/deleteNotif",
   async (payload, thunkAPI) => {
     try {
-      const res = await notifService.deleteTask(payload.id);
+      const res = await notifService.deleteNotif(payload.id);
       return res.data;
     } catch (error) {
       const message =
@@ -79,7 +79,7 @@ export const deleteAllNotif = createAsyncThunk(
   "notif/deleteAllNotif",
   async (payload, thunkAPI) => {
     try {
-      const res = await notifService.deleteTask(payload.authAccountID);
+      const res = await notifService.deleteAllNotif(payload.authAccountID);
       return res.data;
     } catch (error) {
       const message =

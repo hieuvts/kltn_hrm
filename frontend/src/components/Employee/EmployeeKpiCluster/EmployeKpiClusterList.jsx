@@ -393,7 +393,7 @@ export default function EmployeeKpiClusterList({initialValues}) {
       );
 }
 EmployeeKpiClusterList.propTypes = {
-  initialValues: PropTypes.object,
+  initialValues: PropTypes.array,
 }
 EmployeeKpiClusterList.defaultProps = {
   initialValues: []

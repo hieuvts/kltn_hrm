@@ -10,7 +10,7 @@ const getNotif = async (req, res) => {
     .then((tasks) => {
       if (tasks) {
         res.status(200).json(tasks);
-        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getNotif");
+        console.log(moment().format("hh:mm:ss"), "[SUCCESS] getNotif", tasks);
       } else {
         res.status(400).json({
           message: "[ERROR] [getAll] Something went wrong",
@@ -28,11 +28,14 @@ const getNotif = async (req, res) => {
 };
 
 const markNotifAsRead = async (req, res) => {
-  console.log("invoked update Notifications");
+  console.log("invoked update Notifications ", req.query.id);
+  console.log("invoked update Notifications ", req.body);
   Notification.update(req.body, {
     where: { authAccountID: req.query.id },
+    logging: console.log,
   })
     .then((affectedRows) => {
+      console.log("affectedRows ", affectedRows);
       if (affectedRows == 1) {
         console.log(moment().format("hh:mm:ss"), "[SUCCESS] markNotifAsRead");
         res.status(200).json({
@@ -81,9 +84,10 @@ const deleteNotif = async (req, res) => {
 };
 
 const deleteAllNotif = async (req, res) => {
+  console.log("delete allNotif accID ", req.query.id);
   Notification.destroy({ where: { authAccountID: req.query.id } })
     .then((affectedRows) => {
-      if (affectedRows == 1) {
+      if (affectedRows > 0) {
         console.log(moment().format("hh:mm:ss"), "[SUCCESS] deleteAllNotif");
         res.status(200).json({
           message: "Delete ALL notification successfully",
