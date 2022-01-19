@@ -192,6 +192,29 @@ const deleteEmployee = async (req, res) => {
     });
 };
 
+const createMultipleEmployee = async (req, res) => {
+  var empolyeeArr =  req.body;
+  Employee.bulkCreate(empolyeeArr).then(() => {
+    res.status(200).json({
+      message: "Add Multiple Employee successfully!",
+    });
+    console.log(
+      moment().format("hh:mm:ss"),
+      "[SUCCESS] Multiple Employee"
+    );
+  })
+  .catch((error) => {
+    console.log(
+      moment().format("hh:mm:ss"),
+      "[ERROR] Multiple Employee"
+    );
+    res.status(500).json({
+      message: "[ERROR] [create] Something went wrong",
+      error: error,
+    });
+  });
+}
+
 const deleteAllEmployee = async (req, res) => {
   Employee.destroy({ where: {}, truncate: false })
     .then((affectedRows) => {
@@ -221,4 +244,5 @@ module.exports = {
   deleteEmployee,
   updateEmployee,
   deleteAllEmployee,
+  createMultipleEmployee
 };

@@ -101,15 +101,6 @@ export default function Department() {
         padding={{ sm: 5, md: 0 }}
         sx={{ alignItems: "center" }}
       >
-        <Grid item xs={12} sm={3} md={2} paddingTop={{ xs: 1, md: 0 }}>
-          <Button variant="outlined">
-            <FileUploadOutlinedIcon fontSize="medium" />
-            <Typography variant="h6" sx={{ px: 1 }}>
-              Export
-            </Typography>
-          </Button>
-        </Grid>
-
         <Grid item xs={12} sm={6} md={3} paddingTop={{ xs: 2, md: 0 }}>
           <Button variant="contained" onClick={() => handleDialogOpen()}>
             <Typography variant="h6" sx={{ px: 1 }}>

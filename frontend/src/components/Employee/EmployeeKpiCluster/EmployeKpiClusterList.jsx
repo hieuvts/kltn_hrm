@@ -189,8 +189,6 @@ export default function EmployeeKpiClusterList({initialValues}) {
       if (event.target.checked) {
         const newSelecteds = items.map((n) => n.id);
         // Select all -> add all employee (equals to 'items') to the selectedEmployeeList
-        dispatch(setMultiSelectedEmployeeList(items));
-        setSelected(newSelecteds);
         return;
       }
       setSelected([]);
@@ -314,8 +312,6 @@ export default function EmployeeKpiClusterList({initialValues}) {
                             <TableCell padding="checkbox">
                               <Checkbox
                                 color="primary"
-                                checked={isItemSelected}
-                                onClick={(event) => handleClick(event, row)}
                                 inputProps={{
                                   "aria-labelledby": labelId,
                                 }}
@@ -327,14 +323,6 @@ export default function EmployeeKpiClusterList({initialValues}) {
                               scope="row"
                               padding="none"
                               align="right"
-                              onClick={() => {
-                                dispatch(
-                                  setCurrentSelectedEmployee({
-                                    currentSelectedEmployeeKpi: item,
-                                  })
-                                );
-                                setDialogEmployeeDetailsOpen(true);
-                              }}
                             >
                               <Box
                                 sx={{

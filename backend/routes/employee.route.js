@@ -20,5 +20,5 @@ router.delete(
   authJwt.verifyToken,
   employeeControllers.deleteAllEmployee
 );
-
+router.post('/importFromExcel', employeeControllers.createMultipleEmployee)
 module.exports = router;

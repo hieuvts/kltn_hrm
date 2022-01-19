@@ -26,11 +26,17 @@ const deleteEmployee = (employeeId) => {
     headers: authHeader(),
   });
 };
+const addMultipleEmploye = (employees) => {
+  return axios.post(API_URL + "importFromExcel"  ,employees, {
+    headers: authHeader(),
+  });
+}
 
 const employeeService = {
   getAllEmployee,
   addEmployee,
   updateEmployee,
   deleteEmployee,
+  addMultipleEmploye
 };
 export default employeeService;
