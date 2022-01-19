@@ -18,6 +18,7 @@ import debounce from "lodash.debounce";
 import { useDispatch } from "react-redux";
 import { getProjectAsync } from "../../stores/projectSlice";
 import { getDepartmentAsync } from "../../stores/departmentSlice";
+import { getTaskAsync } from "../../stores/taskSlice";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -68,6 +69,9 @@ export default function Project() {
     debounceFetchAPI(searchQuery);
   }, [handleSearchQueryChange]);
 
+  useEffect(() => {
+    dispatch(getTaskAsync());
+  });
   return (
     <>
       <Snackbar

@@ -26,7 +26,7 @@ import { visuallyHidden } from "@mui/utils";
 import DialogDeleteProject from "./DialogDeleteProject";
 import DialogDeleteMultipleProject from "./DialogDeleteMultipleProject";
 import DialogUpdateProject from "./DialogUpdateProject";
-
+import DialogProjectDetail from "./DialogProjectDetail";
 import moment from "moment";
 
 import {
@@ -356,10 +356,10 @@ export default function ProjectTable() {
         isDialogOpen={isDialogUpdateProjectOpen}
         handleCloseDialog={handleCloseDialogUpdateProject}
       />
-      {/* <DialogProjectDetails
+      <DialogProjectDetail
         isDialogOpen={isDialogProjectDetailsOpen}
         handleCloseDialog={handleCloseDialogProjectDetails}
-      /> */}
+      />
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2 }}>
           <EnhancedTableToolbar
@@ -417,6 +417,14 @@ export default function ProjectTable() {
                           scope="row"
                           padding="none"
                           align="right"
+                          onClick={() => {
+                            dispatch(
+                              setCurrentSelectedProject({
+                                currentSelectedProject: row,
+                              })
+                            );
+                            setDialogProjectDetailsOpen(true);
+                          }}
                         >
                           {row.name}
                         </TableCell>
