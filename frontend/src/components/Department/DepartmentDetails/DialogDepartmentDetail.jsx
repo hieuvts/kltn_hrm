@@ -51,7 +51,7 @@ export default function DialogDepartmentDetail({
           <Paper sx={{ mt: 3 }}>
             {department.Employees && (
               <>
-                <Typography variant="h6">
+                <Typography variant="h6" sx={{ mt: 1, ml: 5 }}>
                   Number of employees: {department.Employees.length}
                 </Typography>
                 <ListEmpsOfDepartment employeeList={department.Employees} />

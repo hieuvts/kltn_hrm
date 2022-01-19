@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.AuthAccount, {
         foreignKey: "assigneeID",
       });
+      this.belongsTo(models.Employee, {
+        foreignKey: "assigneeID",
+      });
     }
   }
   Task.init(

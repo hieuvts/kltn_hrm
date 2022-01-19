@@ -16,6 +16,8 @@ import EmployeeAvatar from "./EmployeeDetails/EmployeeAvatar";
 import EffecientLevel from "./EmployeeDetails/EffecientLevel";
 import EmploymentHistory from "./EmployeeDetails/EmploymentHistory";
 import { useSelector } from "react-redux";
+import EmpProjectList from "./EmployeeProjects/EmpProjectList";
+import EmpTaskList from "./EmployeeProjects/EmpTaskList";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -88,7 +90,15 @@ export default function DialogEmployeeDetails({
           <Grid container>
             {/* General employee info */}
             <TabPanel value={tabValue} index={0}>
-              <Grid container>
+              <Grid
+                container
+                sx={{
+                  minWidth: "65vw",
+                  maxWidth: "65vw",
+                  maxHeight: "70vh",
+                  minHeight: "70vh",
+                }}
+              >
                 <Grid item sm={12} lg={6}>
                   <Box sx={{ m: 3 }}>
                     <EmployeeAvatar />
@@ -113,24 +123,22 @@ export default function DialogEmployeeDetails({
 
             {/* Employees' projects, tasks */}
             <TabPanel value={tabValue} index={1}>
-              <Grid container>
-                <Grid item sm={12} lg={6}>
+              <Grid
+                container
+                sx={{
+                  minWidth: "65vw",
+                  maxWidth: "65vw",
+                  maxHeight: "70vh",
+                  minHeight: "70vh",
+                }}
+              >
+                <Grid item sm={12} lg={12}>
+                  <Typography variant="h6" sx={{ ml: 3 }}>
+                    {employee.fname + " " + employee.lname}{" "}
+                    {" is working on these projects"}
+                  </Typography>
                   <Box sx={{ m: 3 }}>
-                    <EmployeeAvatar />
-                  </Box>
-                  <Box sx={{ m: 3 }}>
-                    <PersonalInformation />
-                  </Box>
-                </Grid>
-                <Grid item sm={12} lg={6}>
-                  <Box sx={{ m: 3 }}>
-                    <EffecientLevel />
-                  </Box>
-                  <Box sx={{ m: 3 }}>
-                    <AboutMe />
-                  </Box>
-                  <Box sx={{ m: 3 }}>
-                    <EmploymentHistory />
+                    <EmpTaskList />
                   </Box>
                 </Grid>
               </Grid>

@@ -192,16 +192,10 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       ) : null}
 
-      {numSelected > 0 ? (
+      {numSelected > 0 && (
         <Tooltip title="Delete multiple">
           <IconButton onClick={() => handleDeleteMultipleEmployee()}>
             <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
           </IconButton>
         </Tooltip>
       )}
