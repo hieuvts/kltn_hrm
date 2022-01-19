@@ -4,6 +4,11 @@ import { apiBaseUrl } from "../config/apiBaseUrl";
 
 const API_URL = `${apiBaseUrl}/empKpiCluster/`;
 
+const getDataFromCSV =(excelFile) => {
+    return axios.put(API_URL + "getCSV",excelFile, {
+        headers: authHeader(),
+      }); 
+}
 
 const importCSVData = () => {
     return axios.post(API_URL + "importCSV", {
@@ -18,6 +23,7 @@ const getAllEmployeeKpiCluster = (searchQuery) => {
 };
 
 const employeeKpiClusterService = {
+    getDataFromCSV,
     importCSVData,
     getAllEmployeeKpiCluster
 };
