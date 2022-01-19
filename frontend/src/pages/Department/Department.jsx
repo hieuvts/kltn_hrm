@@ -62,7 +62,7 @@ export default function Department() {
   useEffect(() => {
     debounceFetchAPI(searchQuery);
   }, [handleSearchQueryChange]);
-  
+
   useEffect(() => {
     dispatch(getEmployeeAsync());
   }, []);
@@ -101,15 +101,6 @@ export default function Department() {
         padding={{ sm: 5, md: 0 }}
         sx={{ alignItems: "center" }}
       >
-        <Grid item paddingTop={{ xs: 2, sm: 0 }} xs={12} sm={3} md={2}>
-          <Button variant="outlined">
-            <FileDownloadOutlinedIcon fontSize="medium" />
-            <Typography variant="h6" sx={{ px: 1 }}>
-              Import
-            </Typography>
-          </Button>
-        </Grid>
-
         <Grid item xs={12} sm={3} md={2} paddingTop={{ xs: 1, md: 0 }}>
           <Button variant="outlined">
             <FileUploadOutlinedIcon fontSize="medium" />
