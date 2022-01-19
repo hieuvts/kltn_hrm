@@ -10,7 +10,12 @@ export const createChatRoom = createAsyncThunk(
   "chatRoom/createChatRoom",
   async (payload, thunkAPI) => {
     try {
-      const data = await chatService.createChatRoom(payload.chatRoomInfo);
+      const data = await chatService.createChatRoom(
+        payload.name,
+        payload.thatMemberID,
+        payload.thisMemberID
+      );
+      return data.data;
     } catch (error) {
       const message =
         (error.response &&

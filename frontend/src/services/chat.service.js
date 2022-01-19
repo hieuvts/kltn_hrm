@@ -31,10 +31,14 @@ const addMessageToRoom = (chatRoomId, message) => {
 // messages: [ {sender: 'hieu@gmail.com',
 // 	message: 'Hello Vinh',
 // 	isBroadcast: false}]
-const createChatRoom = (chatRoomInfo) => {
-  return axios.put(API_URL + "/createChatRoom", chatRoomInfo, {
-    headers: authHeader(),
-  });
+const createChatRoom = (name, thatMemberID, thisMemberID) => {
+  return axios.post(
+    API_URL + "/create",
+    { name: name, thatMemberID: thatMemberID, thisMemberID: thisMemberID },
+    {
+      headers: authHeader(),
+    }
+  );
 };
 
 const chatService = {
