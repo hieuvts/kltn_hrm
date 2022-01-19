@@ -84,7 +84,7 @@ const createTriggersInDB = async (req, res) => {
       insert into Notifications
       set eventType='task',
       authAccountID=(select id from AuthAccounts where AuthAccounts.id=NEW.assigneeID),
-      event=CONCAT("Your're assigned a new task: ", NEW.name, ". Check it at");
+      event=CONCAT("Your're assigned a new task: ", NEW.name);
       `
     );
 
@@ -99,7 +99,7 @@ const createTriggersInDB = async (req, res) => {
         insert into Notifications 
         set eventType='task',
         authAccountID=(select id from AuthAccounts where AuthAccounts.id=NEW.assigneeID),
-        event=CONCAT("Your're assigned a new task: ", NEW.name, ". Check it at");
+        event=CONCAT("Your're assigned a new task: ", NEW.name);
       end if;
       `
     );
